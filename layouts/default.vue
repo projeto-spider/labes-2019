@@ -5,8 +5,16 @@
   >
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-          CBCC
+        <a class="navbar-item has-dropdown is-hoverable">
+          <div class="navbar-link">Curso</div>
+          <div class="navbar-dropdown">
+            <a href="#" class="navbar-item" @click="setCourseTag('cbcc')"
+              >CBCC</a
+            >
+            <a href="#" class="navbar-item" @click="setCourseTag('cbsi')"
+              >CBSI</a
+            >
+          </div>
         </a>
 
         <a
@@ -24,7 +32,7 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item">Home</a>
+          <nuxt-link class="navbar-item" to="/">Home</nuxt-link>
 
           <a class="navbar-item">Documentation</a>
 
@@ -60,6 +68,7 @@
         :class="{ 'is-hidden-mobile': active }"
       >
         <aside class="menu is-sidebar-menu">
+          <div class="menu-label text-uppercase">{{ courseTag }}</div>
           <ul class="menu-list">
             <li>
               <a>Defesa de TCC</a>
@@ -110,9 +119,11 @@
 export default {
   data() {
     return {
-      active: this.isActive()
+      active: this.isActive(),
+      courseTag: 'cbcc'
     }
   },
+
   methods: {
     isActive: function() {
       if (window.innerWidth <= 1000) {
@@ -121,6 +132,11 @@ export default {
         return true
       }
     },
+
+    setCourseTag(tag) {
+      this.courseTag = tag
+    },
+
     openSideBar: function() {
       this.active = !this.active
     }
