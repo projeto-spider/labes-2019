@@ -22,6 +22,10 @@ exports.up = function(knex, Promise) {
       .notNullable()
       .defaultTo(false)
     table
+      .boolean('isForming')
+      .notNullable()
+      .defaultTo(false)
+    table
       .boolean('isGraduating')
       .notNullable()
       .defaultTo(false)
