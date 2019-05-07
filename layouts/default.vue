@@ -8,12 +8,20 @@
         <a class="navbar-item has-dropdown is-hoverable">
           <div class="navbar-link">Curso</div>
           <div class="navbar-dropdown">
-            <a href="#" class="navbar-item" @click="setCourseTag('cbcc')"
-              >CBCC</a
+            <nuxt-link
+              to="/allStudents"
+              class="navbar-item"
+              @click="setCourseTag('cbcc')"
             >
-            <a href="#" class="navbar-item" @click="setCourseTag('cbsi')"
-              >CBSI</a
+              CBCC
+            </nuxt-link>
+            <nuxt-link
+              to="/allStudents"
+              class="navbar-item"
+              @click="setCourseTag('cbsi')"
             >
+              CBSI
+            </nuxt-link>
           </div>
         </a>
 
