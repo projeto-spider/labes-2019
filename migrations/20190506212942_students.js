@@ -2,7 +2,10 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTable('students', table => {
     table.increments('id').primary()
     table.string('name').notNullable()
-    table.string('registrationNumber').notNullable()
+    table
+      .string('registrationNumber')
+      .notNullable()
+      .unique()
     table.float('crg').nullable()
     table.string('course').notNullable()
     table.string('email').nullable()
