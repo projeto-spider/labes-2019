@@ -83,7 +83,7 @@
               <a>Alunos Ativos</a>
             </li>
             <li>
-              <a>Alunos Totais</a>
+              <nuxt-link to="/allStudents">Alunos Totais</nuxt-link>
             </li>
           </ul>
 
