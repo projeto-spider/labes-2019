@@ -2,6 +2,7 @@ const Router = require('koa-router')
 
 const frontend = require('./controllers/frontend')
 const users = require('./controllers/users')
+const students = require('./controllers/students')
 
 const router = new Router()
 const api = new Router({ prefix: '/api' })
@@ -9,6 +10,10 @@ const api = new Router({ prefix: '/api' })
 // User Routes
 api.get('/users/', users.List)
 api.get('/users/:id', users.Show)
+
+// Student Routes
+api.get('/students/', students.List)
+api.get('/students/:id', students.Show)
 
 // Connect API routes to main router
 router.use(api.routes())
