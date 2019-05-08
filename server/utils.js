@@ -1,5 +1,16 @@
 const { knex } = require('./db')
-
+/**
+ * Given a CSV file with header make an Array of objects
+ *
+ * @param {string} str - CSV String
+ * @return {object[]} An object based on the CSV
+ *
+ * @example
+ *
+ *     const csv = `a,b,c
+ * 1,2,3`
+ *     parseCsv(csv) // [ { a: 1, b: 2, c: 3 } ]
+ */
 export function parseCsv(str) {
   const lines = str.split('\n')
   const [head, ...items] = lines
@@ -14,6 +25,34 @@ export function parseCsv(str) {
   )
 }
 
+/**
+ * Convert an object from SIGAA's CSV (see parseCsv) into
+ * proper objects to insert in the table students.
+ *
+ * @param {object[]} data - Array of objects from SIGAA's CSV
+ * @return {object[]} Array of objects ready to insert in the database
+ *
+ * @example
+ *
+ *     const csv = `Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status
+ * 201704940001,2017,FELIPE SOUZA FERREIRA,111.111.111-11,1/29/1995,VITORIA DIAS ROCHA,Belém,CIENCIA DA COMPUTACAO,ATIVO`
+ *     const data = parseCsv(csv)
+ *     digestSigaaData(data)
+ *     // [{
+ *     //   name: 'FELIPE SOUZA FERREIRA',
+ *     //   course: 'cbcc',
+ *     //   registrationNumber: '201704940001',
+ *     //   isFit: false,
+ *     //   isConcluding: false,
+ *     //   isActive: true,
+ *     //   evidence: false,
+ *     //   isForming: false,
+ *     //   isGraduating: false,
+ *     //   academicHighlight: false,
+ *     //   cancelled: false,
+ *     //   prescribed: false
+ *     // }]
+ */
 export function digestSigaaData(data) {
   function getCourse(student) {
     return student.Curso === 'CIENCIA DA COMPUTACAO' ? 'cbcc' : 'cbsi'
@@ -69,6 +108,21 @@ export function digestSigaaData(data) {
   }))
 }
 
+/**
+ * Batch upsert (insert new, update old) student data
+ *
+ * @param {object[]} data - Valid objects of student rows
+ * @return {Promise} Knex promise
+ *
+ * @example
+ *
+ *
+ *     const csv = `Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status
+ * 201704940001,2017,FELIPE SOUZA FERREIRA,111.111.111-11,1/29/1995,VITORIA DIAS ROCHA,Belém,CIENCIA DA COMPUTACAO,ATIVO`
+ *     const data = parseCsv(csv)
+ *     const digested = digestSigaaData(data)
+ *     await batchUpdateStudents(digested)
+ */
 export function batchUpdateStudents(data) {
   const query = `
     INSERT INTO

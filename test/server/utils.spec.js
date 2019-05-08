@@ -99,6 +99,18 @@ describe('utils', () => {
   })
 
   test('batchUpdateStudents', async done => {
+    /**
+     * Find a student by it's registrationNumber
+     *
+     * @param {object[]} students - Object of student from the database
+     * @param {string} registrationNumber - The wanted student's registrationNumber
+     * @return {object} The student
+     *
+     * @example
+     *
+     *     const students = [{ registrationNumber: '123', name: 'test user' }]
+     *     findByRegistrationNumber(students, '123')
+     */
     function findByRegistrationNumber(students, registrationNumber) {
       return students.find(u => u.registrationNumber === registrationNumber)
     }
