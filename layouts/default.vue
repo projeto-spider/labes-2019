@@ -63,7 +63,7 @@
               <a class="button is-primary">
                 <strong>Sign up</strong>
               </a>
-              <nuxt-link to="/login"> Log in </nuxt-link>
+              <nuxt-link to="/login">Log in</nuxt-link>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@
           <div class="menu-label">Grupos de Email</div>
           <ul class="menu-list">
             <li>
-              <nuxt-link to="/emailList"> Email </nuxt-link>
+              <nuxt-link to="/emailList">Email</nuxt-link>
             </li>
             <li>
               <a>Calouros</a>
@@ -110,15 +110,24 @@
           <div class="menu-label">Importar</div>
           <ul class="menu-list">
             <li>
-              <nuxt-link to="importar/importarAlunos">
-                Importar Alunos
-              </nuxt-link>
+              <a @click="activateModal = true">Importar Alunos</a>
             </li>
           </ul>
         </aside>
       </div>
       <div class="column has-background-grey-lighter">
         <nuxt class="Fullscreen" />
+      </div>
+      <div class="modal" :class="{ 'is-active': activateModal }">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <!-- Any other Bulma elements you want -->
+        </div>
+        <button
+          class="modal-close is-large"
+          aria-label="close"
+          @click="activateModal = false"
+        ></button>
       </div>
     </div>
   </div>
@@ -128,7 +137,7 @@ export default {
   data() {
     return {
       active: this.isActive(),
-      courseTag: 'cbcc'
+      activateModal: false
     }
   },
 
