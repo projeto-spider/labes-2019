@@ -116,17 +116,6 @@
       <div class="column has-background-grey-lighter">
         <nuxt class="Fullscreen" />
       </div>
-      <div class="modal" :class="{ 'is-active': activateModal }">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-          <!-- Any other Bulma elements you want -->
-        </div>
-        <button
-          class="modal-close is-large"
-          aria-label="close"
-          @click="activateModal = false"
-        ></button>
-      </div>
     </div>
   </div>
 </template>
