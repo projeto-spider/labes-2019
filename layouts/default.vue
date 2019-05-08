@@ -110,27 +110,22 @@
           </ul>
         </aside>
       </div>
+      <b-modal :active.sync="activateModal" :width="640" scroll="keep">
+        <import-students />
+      </b-modal>
       <div class="column has-background-grey-lighter">
         <nuxt class="Fullscreen" />
-      </div>
-      <div class="modal" :class="{ 'is-active': activateModal }">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-          <!-- Any other Bulma elements you want -->
-        </div>
-        <button
-          class="modal-close is-large"
-          aria-label="close"
-          @click="activateModal = false"
-        ></button>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-
+import ImportStudents from '../components/importStudents.vue'
 export default {
+  components: {
+    'import-students': ImportStudents
+  },
   data() {
     return {
       active: this.isActive(),
