@@ -3,16 +3,17 @@
     <div class="hero-body">
       <div class="container has-text-centered">
         <div class="column is-4 is-offset-4">
+          <figure class="avatar">
+            <img src="../assets/images/UFPA.png" />
+          </figure>
           <h3 class="title has-text-white">Login</h3>
           <p class="subtitle has-text-white">Por favor faca o login</p>
           <div class="box">
-            <figure class="avatar">
-              <img src="https://placehold.it/128x128" />
-            </figure>
             <form>
               <div class="field">
                 <div class="control">
                   <input
+                    v-model="username"
                     class="input is-large"
                     type="email"
                     placeholder="Your Email"
@@ -24,6 +25,7 @@
               <div class="field">
                 <div class="control">
                   <input
+                    v-model="password"
                     class="input is-large"
                     type="password"
                     placeholder="Your Password"
@@ -45,6 +47,7 @@
               </button>
             </form>
           </div>
+          <div v-if="error != ''">{{ error }}</div>
         </div>
       </div>
     </div>
@@ -55,9 +58,24 @@
 export default {
   name: 'Login',
   layout: 'empty',
+  data() {
+    return {
+      username: '',
+      password: '',
+      error: ''
+    }
+  },
   methods: {
-    login: function(e) {
-      this.$router.push('/')
+    async login() {
+      try {
+        await this.$store.dispatch('auth/login', {
+          email: this.username,
+          password: this.password
+        })
+        this.$router.push('/')
+      } catch (e) {
+        this.$toast.open({ message: 'Falha ao autenticar', type: 'is-danger' })
+      }
     }
   }
 }

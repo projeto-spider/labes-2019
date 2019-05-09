@@ -93,12 +93,13 @@
           <div class="menu-label">Importar</div>
           <ul class="menu-list">
             <li>
-              <a>Importar Alunos</a>
+              <nuxt-link to="importar/importarAlunos">
+                Importar Alunos
+              </nuxt-link>
             </li>
           </ul>
         </aside>
       </div>
-
       <div class="column has-background-grey-lighter">
         <nuxt class="Fullscreen" />
       </div>
