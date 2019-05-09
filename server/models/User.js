@@ -2,7 +2,8 @@ const { bookshelf } = require('../db')
 
 const User = bookshelf.model('User', {
   tableName: 'users',
-  hidden: ['password']
+  hasSecurePassword: 'passwordDigest',
+  hidden: ['password', 'passwordDigest']
 })
 
 module.exports = User
