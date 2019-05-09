@@ -1,5 +1,6 @@
 const fs = require('fs')
 const utils = require('../../utils')
+const errors = require('../../../shared/errors')
 
 module.exports = async function studentsFromCsv(ctx) {
   const filePath =
@@ -7,7 +8,7 @@ module.exports = async function studentsFromCsv(ctx) {
 
   if (!filePath) {
     ctx.status = 400
-    ctx.body = { message: `Missing 'csv' field` }
+    ctx.body = { code: errors.IMPORT_CSV_MISSING_CSV_FIELD }
     return
   }
 
@@ -15,7 +16,7 @@ module.exports = async function studentsFromCsv(ctx) {
 
   if (!csv) {
     ctx.status = 400
-    ctx.body = { message: `Failed to upload file` }
+    ctx.body = { code: errors.IMPORT_CSV_FAILED_TO_UPLOAD }
     return
   }
 
@@ -23,7 +24,7 @@ module.exports = async function studentsFromCsv(ctx) {
 
   if (typeof validation === 'string') {
     ctx.status = 400
-    ctx.body = { message: validation }
+    ctx.body = { code: validation }
     return
   }
 
@@ -58,11 +59,11 @@ function validate(csv) {
     const lines = csv.split('\n')
 
     if (lines.length < 2) {
-      return 'Invalid length'
+      return errors.IMPORT_CSV_INVALID_LENGTH
     }
 
     if (lines[0] !== validHeader) {
-      return 'Invalid header'
+      return errors.IMPORT_CSV_INVALID_HEADER
     }
 
     const rightNumberOfColumns = lines.every(
@@ -70,11 +71,11 @@ function validate(csv) {
     )
 
     if (!rightNumberOfColumns) {
-      return 'Invalid number of columns'
+      return errors.IMPORT_CSV_INVALID_COL_NUMBER
     }
 
     return true
   } catch (err) {
-    return 'Invalid file'
+    return errors.IMPORT_CSV_INVALID_FILE
   }
 }

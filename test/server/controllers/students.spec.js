@@ -10,6 +10,7 @@ chai.use(chaiHttp)
 const server = require('../../../server')
 const db = require('../../../server/db')
 const Student = require('../../../server/models/Student')
+const errors = require('../../../shared/errors')
 
 jest.useFakeTimers()
 
@@ -134,6 +135,7 @@ describe('/api/students', () => {
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_MISSING_CSV_FIELD)
     done()
   })
 
@@ -147,6 +149,7 @@ describe('/api/students', () => {
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_LENGTH)
     done()
   })
 
@@ -160,6 +163,7 @@ describe('/api/students', () => {
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_HEADER)
     done()
   })
 
@@ -173,6 +177,7 @@ describe('/api/students', () => {
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_COL_NUMBER)
     done()
   })
 
@@ -186,6 +191,7 @@ describe('/api/students', () => {
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_HEADER)
     done()
   })
 })
