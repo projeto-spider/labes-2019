@@ -4,7 +4,7 @@
       <div class="container has-text-centered">
         <div class="column is-4 is-offset-4">
           <figure class="avatar">
-            <img src="../assets/images/UFPA.png">
+            <img src="../assets/images/UFPA.png" />
           </figure>
           <h3 class="title has-text-white">Login</h3>
           <p class="subtitle has-text-white">Por favor faca o login</p>
@@ -18,7 +18,7 @@
                     type="email"
                     placeholder="Your Email"
                     autofocus
-                  >
+                  />
                 </div>
               </div>
 
@@ -29,12 +29,12 @@
                     class="input is-large"
                     type="password"
                     placeholder="Your Password"
-                  >
+                  />
                 </div>
               </div>
               <div class="field">
                 <label class="checkbox">
-                  <input type="checkbox">
+                  <input type="checkbox" />
                   Remember me
                 </label>
               </div>
@@ -42,7 +42,9 @@
                 class="button is-block is-info is-large is-fullwidth"
                 @click="login"
                 @click.prevent
-              >Login</button>
+              >
+                Login
+              </button>
             </form>
           </div>
           <div v-if="error != ''">{{ error }}</div>
@@ -72,7 +74,7 @@ export default {
         })
         this.$router.push('/')
       } catch (e) {
-        this.error = e.message
+        this.$toast.open({ message: 'Falha ao autenticar', type: 'is-danger' })
       }
     }
   }
