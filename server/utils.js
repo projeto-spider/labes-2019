@@ -11,7 +11,7 @@ const { knex } = require('./db')
  * 1,2,3`
  *     parseCsv(csv) // [ { a: 1, b: 2, c: 3 } ]
  */
-export function parseCsv(str) {
+exports.parseCsv = function parseCsv(str) {
   const lines = str.split('\n')
   const [head, ...items] = lines
 
@@ -53,7 +53,7 @@ export function parseCsv(str) {
  *     //   prescribed: false
  *     // }]
  */
-export function digestSigaaData(data) {
+exports.digestSigaaData = function digestSigaaData(data) {
   function getCourse(student) {
     return student.Curso === 'CIENCIA DA COMPUTACAO' ? 'cbcc' : 'cbsi'
   }
@@ -123,7 +123,7 @@ export function digestSigaaData(data) {
  *     const digested = digestSigaaData(data)
  *     await batchUpdateStudents(digested)
  */
-export function batchUpdateStudents(data) {
+exports.batchUpdateStudents = function batchUpdateStudents(data) {
   const query = `
     INSERT INTO
       students (name, registrationNumber, course, isFit, isConcluding, isActive, isForming, isGraduating, academicHighlight, cancelled, prescribed)
