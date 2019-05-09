@@ -8,20 +8,12 @@
         <a class="navbar-item has-dropdown is-hoverable">
           <div class="navbar-link">Curso</div>
           <div class="navbar-dropdown">
-            <nuxt-link
-              to="/allStudents"
-              class="navbar-item"
-              @click="setCourseTag('cbcc')"
-            >
+            <a class="navbar-item" @click="setCourseTag('cbcc')">
               CBCC
-            </nuxt-link>
-            <nuxt-link
-              to="/allStudents"
-              class="navbar-item"
-              @click="setCourseTag('cbsi')"
-            >
+            </a>
+            <a class="navbar-item" @click="setCourseTag('cbsi')">
               CBSI
-            </nuxt-link>
+            </a>
           </div>
         </a>
 
@@ -133,12 +125,20 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
       active: this.isActive(),
       activateModal: false
     }
+  },
+
+  computed: {
+    ...mapState({
+      courseTag: state => state.courseTag
+    })
   },
 
   methods: {
@@ -151,7 +151,8 @@ export default {
     },
 
     setCourseTag(tag) {
-      this.courseTag = tag
+      this.$store.dispatch('courseTag', { tag })
+      this.$router.push('/allStudents')
     },
 
     openSideBar: function() {
