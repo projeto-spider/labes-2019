@@ -18,11 +18,13 @@ app.use((ctx, next) => {
 app.use(router.routes())
 app.use(router.allowedMethods())
 
-const server = app.listen(port, host)
+if (!module.parent) {
+  app.listen(port, host)
+}
 
 consola.ready({
   message: `Server listening on http://${host}:${port}`,
   badge: true
 })
 
-module.exports = server
+module.exports = app

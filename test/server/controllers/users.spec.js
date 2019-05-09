@@ -19,12 +19,8 @@ describe('/api/users', () => {
     done()
   }, 100000)
 
-  afterEach(() => {
-    return db.knex.migrate.rollback()
-  })
-
   test('GET /', async done => {
-    const res = await chai.request(server).get('/api/users')
+    const res = await chai.request(server.listen()).get('/api/users')
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
@@ -32,7 +28,7 @@ describe('/api/users', () => {
   })
 
   test('GET /:id', async done => {
-    const res = await chai.request(server).get('/api/users/1')
+    const res = await chai.request(server.listen()).get('/api/users/1')
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
     expect(res.body.id).toBeDefined()
