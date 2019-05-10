@@ -34,11 +34,11 @@
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start"></div>
 
-        <div class="navbar-end">
+        <div v-if="currentUser" class="navbar-end">
           <div class="navbar-item">
             <div>
               <p>
-                {{ currentUser }}
+                {{ currentUser.email }}
               </p>
             </div>
           </div>
@@ -104,6 +104,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import ImportStudents from '../components/importStudents.vue'
 export default {
   components: {
@@ -118,7 +119,9 @@ export default {
 
   computed: {
     ...mapState({
-      courseTag: state => state.courseTag
+      courseTag: state => state.courseTag},
+    ...mapGetters({
+      currrentUser: 'auth/currentUser'
     })
   },
 
