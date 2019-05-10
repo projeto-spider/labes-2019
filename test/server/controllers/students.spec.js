@@ -194,4 +194,122 @@ describe('/api/students', () => {
     expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_HEADER)
     done()
   })
+
+  test('GET /', async done => {
+    const res = await chai.request(server.listen()).get('/api/students')
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.length).toEqual(7)
+    done()
+  })
+  test('GET /?course=cb[cc|si]', async done => {
+    const resCbcc = await chai
+      .request(server.listen())
+      .get('/api/students/?course=cbcc')
+    expect(resCbcc.status).toEqual(200)
+    expect(resCbcc.type).toEqual('application/json')
+    expect(resCbcc.body).toBeDefined()
+    expect(
+      resCbcc.body.every(student => student.course === 'cbcc')
+    ).toBeTruthy()
+    const resCbsi = await chai
+      .request(server.listen())
+      .get('/api/students/?course=cbsi')
+    expect(resCbsi.status).toEqual(200)
+    expect(resCbsi.type).toEqual('application/json')
+    expect(resCbsi.body).toBeDefined()
+    expect(
+      resCbsi.body.every(student => student.course === 'cbsi')
+    ).toBeTruthy()
+    done()
+  })
+
+  test('GET /?course=invalid', async done => {
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/?course=invalid')
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_FILTER)
+    expect(res.body.filter).toEqual('course')
+    done()
+  })
+
+  test('GET /?name=[STUDENT%20NAME]', async done => {
+    const resStudent1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?name=FELIPE SOUZA FERREIRA'))
+    expect(resStudent1.status).toEqual(200)
+    expect(resStudent1.type).toEqual('application/json')
+    expect(resStudent1.body).toBeDefined()
+    expect(
+      resStudent1.body.every(
+        student => student.name === 'FELIPE SOUZA FERREIRA'
+      )
+    ).toBeTruthy()
+    const resStudent2 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?name=%FERREIRA%'))
+    expect(resStudent2.status).toEqual(200)
+    expect(resStudent2.type).toEqual('application/json')
+    expect(resStudent2.body).toBeDefined()
+    expect(
+      resStudent2.body.every(student => student.name.includes('FERREIRA'))
+    ).toBeTruthy()
+    const resStudent3 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?name=KAUAN%'))
+    expect(resStudent3.status).toEqual(200)
+    expect(resStudent3.type).toEqual('application/json')
+    expect(resStudent3.body).toBeDefined()
+    expect(
+      resStudent3.body.every(student => student.name.startsWith('KAUAN'))
+    ).toBeTruthy()
+    const resStudent4 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?name=%SANTOS'))
+    expect(resStudent4.status).toEqual(200)
+    expect(resStudent4.type).toEqual('application/json')
+    expect(resStudent4.body).toBeDefined()
+    expect(
+      resStudent4.body.every(student => student.name.endsWith('SANTOS'))
+    ).toBeTruthy()
+    done()
+  })
+
+  test('GET /?isActive=[0|1]', async done => {
+    const resTrue = await chai
+      .request(server.listen())
+      .get('/api/students/?isActive=1')
+    expect(resTrue.status).toEqual(200)
+    expect(resTrue.type).toEqual('application/json')
+    expect(resTrue.body).toBeDefined()
+    expect(resTrue.body.every(student => student.isActive === 1)).toBeTruthy()
+    const resFalse = await chai
+      .request(server.listen())
+      .get('/api/students/?isActive=0')
+    expect(resFalse.status).toEqual(200)
+    expect(resFalse.type).toEqual('application/json')
+    expect(resFalse.body).toBeDefined()
+    expect(resFalse.body.every(student => student.isActive === 0)).toBeTruthy()
+    done()
+  })
+
+  test('GET /?course=cb[cc|si]&name=[STUDANTE%20NAME]', async done => {
+    const res = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?course=cbcc&name=%FERREIRA%'))
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(
+      res.body.every(
+        student =>
+          student.course === 'cbcc' && student.name.includes('FERREIRA')
+      )
+    ).toBeTruthy()
+    done()
+  })
 })
