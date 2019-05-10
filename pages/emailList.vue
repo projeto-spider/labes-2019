@@ -1,8 +1,9 @@
 <template>
   <div class="container">
-    <h1>
-      I am the email list
-    </h1>
+    <div v-if="courseTag" class="container">
+      <h1>I am the email list</h1>
+    </div>
+    <div v-else>Escolha um curso primeiro.</div>
   </div>
 </template>
 

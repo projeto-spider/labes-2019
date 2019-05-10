@@ -83,7 +83,7 @@
               <a href="#">Concluintes</a>
             </li>
             <li>
-              <a href="#">Alunos Ativos</a>
+              <nuxt-link to="/activeStudents">Alunos Ativos</nuxt-link>
             </li>
             <li>
               <nuxt-link to="/allStudents">Alunos Totais</nuxt-link>
@@ -159,6 +159,7 @@ export default {
     },
 
     logout() {
+      this.$store.dispatch('courseTag', { tag: '' })
       this.$store.dispatch('auth/logout')
       this.$router.push('/login')
     },
@@ -171,8 +172,6 @@ export default {
 </script>
 
 <style>
-$navbar-height: 3.25rem;
-
 .is-viewport-height {
   height: 100vh;
 }
@@ -189,13 +188,11 @@ $navbar-height: 3.25rem;
   padding: 1rem;
 }
 
-.columns {
-  &.is-fullheight {
-    flex: 1;
+.columns .column {
+  overflow-y: auto;
+}
 
-    .column {
-      overflow-y: auto;
-    }
-  }
+.columns .is-fullheight {
+  flex: 1;
 }
 </style>

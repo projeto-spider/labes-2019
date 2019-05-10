@@ -1,7 +1,15 @@
 <template>
   <div class="container">
     <div v-if="courseTag" class="container">
-      <h1>I am allStudents</h1>
+      <div class="columns">
+        <div class="column is-centered is-half">
+          <b-input
+            v-model="studentSearch"
+            placeholder="Buscar Aluno"
+            rounded
+          ></b-input>
+        </div>
+      </div>
     </div>
     <div v-else>Escolha um curso primeiro.</div>
   </div>
@@ -10,8 +18,12 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  name: 'AllStudents',
+  name: 'Active',
   middleware: 'auth',
+
+  data: () => ({
+    studentSearch: ''
+  }),
 
   computed: {
     ...mapState({
@@ -21,8 +33,4 @@ export default {
 }
 </script>
 
-<style>
-.container {
-  height: 100vh;
-}
-</style>
+<style scoped></style>
