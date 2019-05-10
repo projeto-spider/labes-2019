@@ -107,7 +107,7 @@ import { mapState } from 'vuex'
 import ImportStudents from '../components/importStudents.vue'
 export default {
   components: {
-    'import-students': ImportStudents
+    ImportStudents
   },
   data() {
     return {

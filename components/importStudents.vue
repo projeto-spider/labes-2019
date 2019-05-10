@@ -39,7 +39,7 @@ export default {
   name: 'ImportStudents',
   data() {
     return {
-      studentsCsv: false,
+      studentsCsv: File,
       hasErrors: false,
       isLoading: false
     }
@@ -55,22 +55,24 @@ export default {
           console.log(validation)
           if (typeof validation === 'string') {
             this.openErrorNotification(this.errorMessage(validation))
-            this.studentsCsv = false
+            this.studentsCsv = File
             this.hasErrors = true
           }
         }
       } else {
         this.openErrorNotification('Por favor selecione um arquivo do tipo csv')
-        this.studentsCsv = false
+        this.studentsCsv = File
         this.hasErrors = true
       }
     },
     validateCsv(csv) {
       const validHeader =
         'Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status'
+      // eslint-disable-next-line no-console
+      csv = csv.replace('\r\n', '\n')
 
       try {
-        const lines = csv.split('\r\n')
+        const lines = csv.split('\n')
         // eslint-disable-next-line no-console
         console.log(lines)
         if (lines.length < 2) {
@@ -120,10 +122,7 @@ export default {
       const body = new FormData()
       body.append('csv', this.studentsCsv)
       this.$axios
-        .post('/api/students/from-csv', {
-          headers: { 'Access-Control-Allow-Origin': '*' },
-          body: body
-        })
+        .post('/api/students/from-csv', body)
         .then(result => {
           this.isLoading = false
           this.$toast.open({
@@ -134,9 +133,9 @@ export default {
         .catch(error => {
           this.isLoading = false
           // eslint-disable-next-line no-console
-          console.error(error)
+          console.log(error.response)
           this.$toast.open({
-            message: this.errorMessage(error.message),
+            message: this.errorMessage(error.response.data.code),
             type: 'is-danger'
           })
         })
