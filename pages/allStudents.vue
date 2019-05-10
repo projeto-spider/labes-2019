@@ -8,7 +8,8 @@
 
 <script>
 export default {
-  name: 'AllStudents'
+  name: 'AllStudents',
+  middleware: 'auth'
 }
 </script>
 

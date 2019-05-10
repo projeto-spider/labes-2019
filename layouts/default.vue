@@ -5,19 +5,20 @@
   >
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item has-dropdown is-hoverable">
-          <div class="navbar-link">Curso</div>
+        <a href="#" class="navbar-item has-dropdown is-hoverable">
+          <div class="navbar-link">Alterar Curso</div>
           <div class="navbar-dropdown">
-            <a class="navbar-item" @click="setCourseTag('cbcc')">
+            <a href="#" class="navbar-item" @click="setCourseTag('cbcc')">
               CBCC
             </a>
-            <a class="navbar-item" @click="setCourseTag('cbsi')">
+            <a href="#" class="navbar-item" @click="setCourseTag('cbsi')">
               CBSI
             </a>
           </div>
         </a>
 
         <a
+          href="#"
           role="button"
           class="navbar-burger burger"
           aria-label="menu"
@@ -34,17 +35,17 @@
         <div class="navbar-start">
           <nuxt-link class="navbar-item" to="/">Home</nuxt-link>
 
-          <a class="navbar-item">Documentation</a>
+          <a href="#" class="navbar-item">Documentation</a>
 
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">More</a>
+            <a href="#" class="navbar-link">More</a>
 
             <div class="navbar-dropdown">
-              <a class="navbar-item">About</a>
-              <a class="navbar-item">Jobs</a>
-              <a class="navbar-item">Contact</a>
+              <a href="#" class="navbar-item">About</a>
+              <a href="#" class="navbar-item">Jobs</a>
+              <a href="#" class="navbar-item">Contact</a>
               <hr class="navbar-divider" />
-              <a class="navbar-item">Report an issue</a>
+              <a href="#" class="navbar-item">Report an issue</a>
             </div>
           </div>
         </div>
@@ -52,10 +53,10 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-primary">
+              <a href="#" class="button is-primary">
                 <strong>Sign up</strong>
               </a>
-              <nuxt-link to="/login">Log in</nuxt-link>
+              <a href="#" @click="logout">Log out</a>
             </div>
           </div>
         </div>
@@ -68,19 +69,21 @@
         :class="{ 'is-hidden-mobile': active }"
       >
         <aside class="menu is-sidebar-menu">
-          <div class="menu-label text-uppercase">{{ courseTag }}</div>
+          <div class="menu-label text-uppercase">
+            {{ courseTag ? courseTag : 'selecionar curso' }}
+          </div>
           <ul class="menu-list">
             <li>
-              <a>Defesa de TCC</a>
+              <a href="#">Defesa de TCC</a>
             </li>
             <li>
-              <a>Formandos</a>
+              <a href="#">Formandos</a>
             </li>
             <li>
-              <a>Concluintes</a>
+              <a href="#">Concluintes</a>
             </li>
             <li>
-              <a>Alunos Ativos</a>
+              <a href="#">Alunos Ativos</a>
             </li>
             <li>
               <nuxt-link to="/allStudents">Alunos Totais</nuxt-link>
@@ -93,16 +96,16 @@
               <nuxt-link to="/emailList">Email</nuxt-link>
             </li>
             <li>
-              <a>Calouros</a>
+              <a href="#">Calouros</a>
             </li>
             <li>
-              <a>Newsletter</a>
+              <a href="#">Newsletter</a>
             </li>
           </ul>
           <div class="menu-label">Importar</div>
           <ul class="menu-list">
             <li>
-              <a @click="activateModal = true">Importar Alunos</a>
+              <a href="#" @click="activateModal = true">Importar Alunos</a>
             </li>
           </ul>
         </aside>
@@ -153,6 +156,11 @@ export default {
     setCourseTag(tag) {
       this.$store.dispatch('courseTag', { tag })
       this.$router.push('/allStudents')
+    },
+
+    logout() {
+      this.$store.dispatch('auth/logout')
+      this.$router.push('/login')
     },
 
     openSideBar: function() {

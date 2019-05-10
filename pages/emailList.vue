@@ -8,7 +8,8 @@
 
 <script>
 export default {
-  name: 'Email'
+  name: 'Email',
+  middleware: 'auth'
 }
 </script>
 
