@@ -146,11 +146,7 @@ export default {
 
   methods: {
     isActive: function() {
-      if (window.innerWidth <= 1000) {
-        return false
-      } else {
-        return true
-      }
+      return window.innerWidth > 1000
     },
 
     setCourseTag(tag) {
