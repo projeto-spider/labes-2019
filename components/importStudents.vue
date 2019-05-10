@@ -51,8 +51,6 @@ export default {
         reader.readAsText(this.studentsCsv)
         reader.onload = e => {
           const validation = this.validateCsv(reader.result)
-          // eslint-disable-next-line no-console
-          console.log(validation)
           if (typeof validation === 'string') {
             this.openErrorNotification(this.errorMessage(validation))
             this.studentsCsv = File
@@ -68,13 +66,10 @@ export default {
     validateCsv(csv) {
       const validHeader =
         'Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status'
-      // eslint-disable-next-line no-console
       csv = csv.replace('\r\n', '\n')
 
       try {
         const lines = csv.split('\n')
-        // eslint-disable-next-line no-console
-        console.log(lines)
         if (lines.length < 2) {
           return errors.IMPORT_CSV_INVALID_LENGTH
         }
@@ -132,8 +127,6 @@ export default {
         })
         .catch(error => {
           this.isLoading = false
-          // eslint-disable-next-line no-console
-          console.log(error.response)
           this.$toast.open({
             message: this.errorMessage(error.response.data.code),
             type: 'is-danger'

@@ -47,7 +47,6 @@
               </button>
             </form>
           </div>
-          <div v-if="error != ''">{{ error }}</div>
         </div>
       </div>
     </div>
@@ -61,8 +60,7 @@ export default {
   data() {
     return {
       username: '',
-      password: '',
-      error: ''
+      password: ''
     }
   },
   methods: {
