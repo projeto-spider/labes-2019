@@ -103,8 +103,8 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import { mapGetters } from 'vuex'
+import { mapState , mapGetters } from 'vuex'
+
 import ImportStudents from '../components/importStudents.vue'
 export default {
   components: {
@@ -119,12 +119,12 @@ export default {
 
   computed: {
     ...mapState({
-      courseTag: state => state.courseTag},
+      courseTag: state => state.courseTag
+    }),
     ...mapGetters({
       currrentUser: 'auth/currentUser'
     })
   },
-
   methods: {
     isActive: function() {
       return window.innerWidth > 1000
