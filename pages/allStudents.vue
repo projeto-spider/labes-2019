@@ -10,6 +10,7 @@
 
 <script>
 import SearchInput from '~/components/searchInput'
+import axios from 'axios'
 export default {
   name: 'AllStudents',
   components: {
@@ -18,24 +19,18 @@ export default {
   data() {
     return {
       head: ['Matrícula', 'Nome', 'Email'],
-      students: {
-        a: {
-          registrationNumber: '201605498877',
-          name: 'Gloria G. Delosreyes',
-          email: 'GloriaGDelosreyes@armyspy.com'
-        },
-        b: {
-          registrationNumber: '201605498877',
-          name: 'Gloria G. Delosreyes',
-          email: 'GloriaGDelosreyes@armyspy.com'
-        },
-        c: {
-          registrationNumber: '201605498877',
-          name: 'Gloria G. Delosreyes',
-          email: 'GloriaGDelosreyes@armyspy.com'
-        }
-      } // teste
+      students: []
     }
+  },
+  created() {
+    axios
+      .get('/api/students/')
+      .then(res => {
+        this.students = res.data
+      })
+      .catch(err => {
+        alert(err)
+      })
   }
 }
 </script>
