@@ -28,8 +28,11 @@ export default {
       .then(res => {
         this.students = res.data
       })
-      .catch(err => {
-        alert(err)
+      .catch(() => {
+        this.$toast.open({
+          message: 'Falha ao carregar a lista de alunos.',
+          type: 'is-danger'
+        })
       })
   }
 }
