@@ -1,22 +1,39 @@
 <template>
   <div class="container">
-    <div v-if="courseTag" class="container">
-      <h1>I am allStudents</h1>
-    </div>
-    <div v-else>Escolha um curso primeiro.</div>
+    <search-input
+      :title="'Alunos totais'"
+      :thead="head"
+      :students="students"
+    ></search-input>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import SearchInput from '~/components/searchInput'
+import axios from 'axios'
 export default {
   name: 'AllStudents',
-  middleware: 'auth',
-
-  computed: {
-    ...mapState({
-      courseTag: state => state.courseTag
-    })
+  components: {
+    SearchInput
+  },
+  data() {
+    return {
+      head: ['Matrícula', 'Nome', 'Email'],
+      students: []
+    }
+  },
+  created() {
+    axios
+      .get('/api/students/')
+      .then(res => {
+        this.students = res.data
+      })
+      .catch(() => {
+        this.$toast.open({
+          message: 'Falha ao carregar a lista de alunos.',
+          type: 'is-danger'
+        })
+      })
   }
 }
 </script>

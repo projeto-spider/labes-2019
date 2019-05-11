@@ -4,7 +4,7 @@
       <div class="container has-text-centered">
         <div class="column is-4 is-offset-4">
           <figure class="avatar">
-            <img src="../assets/images/UFPA.png" />
+            <img src="../assets/images/UFPA.png" width="250" height="200" />
           </figure>
           <h3 class="title has-text-white">Login</h3>
           <p class="subtitle has-text-white">Por favor faca o login</p>
@@ -47,7 +47,6 @@
               </button>
             </form>
           </div>
-          <div v-if="error != ''">{{ error }}</div>
         </div>
       </div>
     </div>
@@ -61,8 +60,7 @@ export default {
   data() {
     return {
       username: '',
-      password: '',
-      error: ''
+      password: ''
     }
   },
   methods: {

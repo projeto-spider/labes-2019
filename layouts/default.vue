@@ -32,31 +32,14 @@
       </div>
 
       <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-start">
-          <nuxt-link class="navbar-item" to="/">Home</nuxt-link>
+        <div class="navbar-start"></div>
 
-          <a href="#" class="navbar-item">Documentation</a>
-
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a href="#" class="navbar-link">More</a>
-
-            <div class="navbar-dropdown">
-              <a href="#" class="navbar-item">About</a>
-              <a href="#" class="navbar-item">Jobs</a>
-              <a href="#" class="navbar-item">Contact</a>
-              <hr class="navbar-divider" />
-              <a href="#" class="navbar-item">Report an issue</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="navbar-end">
+        <div v-if="currentUser" class="navbar-end">
           <div class="navbar-item">
-            <div class="buttons">
-              <a href="#" class="button is-primary">
-                <strong>Sign up</strong>
-              </a>
-              <a href="#" @click="logout">Log out</a>
+            <div>
+              <p>
+                {{ currentUser.email }}
+              </p>
             </div>
           </div>
         </div>
@@ -110,27 +93,23 @@
           </ul>
         </aside>
       </div>
+      <b-modal :active.sync="activateModal" :width="640" scroll="keep">
+        <import-students />
+      </b-modal>
       <div class="column has-background-grey-lighter">
         <nuxt class="Fullscreen" />
-      </div>
-      <div class="modal" :class="{ 'is-active': activateModal }">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-          <!-- Any other Bulma elements you want -->
-        </div>
-        <button
-          class="modal-close is-large"
-          aria-label="close"
-          @click="activateModal = false"
-        ></button>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
+import ImportStudents from '../components/importStudents.vue'
 export default {
+  components: {
+    ImportStudents
+  },
   data() {
     return {
       active: this.isActive(),
@@ -141,9 +120,11 @@ export default {
   computed: {
     ...mapState({
       courseTag: state => state.courseTag
+    }),
+    ...mapGetters({
+      currrentUser: 'auth/currentUser'
     })
   },
-
   methods: {
     isActive: function() {
       return window.innerWidth > 1000
