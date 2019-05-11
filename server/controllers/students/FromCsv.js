@@ -56,7 +56,7 @@ const validHeader =
  */
 function validate(csv) {
   try {
-    const lines = csv.split('\n')
+    const lines = csv.replace('\r\n', '\n').split('\n')
 
     if (lines.length < 2) {
       return errors.IMPORT_CSV_INVALID_LENGTH

@@ -12,7 +12,7 @@ const { knex } = require('./db')
  *     parseCsv(csv) // [ { a: 1, b: 2, c: 3 } ]
  */
 exports.parseCsv = function parseCsv(str) {
-  const lines = str.split('\n')
+  const lines = str.replace('\r\n', '\n').split('\n')
   const [head, ...items] = lines
 
   const headerItens = head.split(',')
