@@ -55,7 +55,7 @@ export default {
             this.openErrorNotification(this.errorMessage(validation))
             this.studentsCsv = File
             this.hasErrors = true
-          }
+          } else this.hasErrors = false
         }
       } else {
         this.openErrorNotification('Por favor selecione um arquivo do tipo csv')
@@ -122,7 +122,7 @@ export default {
           this.isLoading = false
           this.$toast.open({
             message: 'Upload feito com sucesso',
-            type: 'is-sucess'
+            type: 'is-success'
           })
         })
         .catch(error => {
