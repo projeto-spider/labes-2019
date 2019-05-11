@@ -5,11 +5,20 @@
   >
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-          CBCC
+        <a href="#" class="navbar-item has-dropdown is-hoverable">
+          <div class="navbar-link">Alterar Curso</div>
+          <div class="navbar-dropdown">
+            <a href="#" class="navbar-item" @click="setCourseTag('cbcc')">
+              CBCC
+            </a>
+            <a href="#" class="navbar-item" @click="setCourseTag('cbsi')">
+              CBSI
+            </a>
+          </div>
         </a>
 
         <a
+          href="#"
           role="button"
           class="navbar-burger burger"
           aria-label="menu"
@@ -24,19 +33,19 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item">Home</a>
+          <nuxt-link class="navbar-item" to="/">Home</nuxt-link>
 
-          <a class="navbar-item">Documentation</a>
+          <a href="#" class="navbar-item">Documentation</a>
 
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">More</a>
+            <a href="#" class="navbar-link">More</a>
 
             <div class="navbar-dropdown">
-              <a class="navbar-item">About</a>
-              <a class="navbar-item">Jobs</a>
-              <a class="navbar-item">Contact</a>
+              <a href="#" class="navbar-item">About</a>
+              <a href="#" class="navbar-item">Jobs</a>
+              <a href="#" class="navbar-item">Contact</a>
               <hr class="navbar-divider" />
-              <a class="navbar-item">Report an issue</a>
+              <a href="#" class="navbar-item">Report an issue</a>
             </div>
           </div>
         </div>
@@ -44,10 +53,10 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-primary">
+              <a href="#" class="button is-primary">
                 <strong>Sign up</strong>
               </a>
-              <nuxt-link to="/login"> Log in </nuxt-link>
+              <a href="#" @click="logout">Log out</a>
             </div>
           </div>
         </div>
@@ -60,42 +69,43 @@
         :class="{ 'is-hidden-mobile': active }"
       >
         <aside class="menu is-sidebar-menu">
+          <div class="menu-label text-uppercase">
+            {{ courseTag ? courseTag : 'selecionar curso' }}
+          </div>
           <ul class="menu-list">
             <li>
-              <a>Defesa de TCC</a>
+              <a href="#">Defesa de TCC</a>
             </li>
             <li>
-              <a>Formandos</a>
+              <a href="#">Formandos</a>
             </li>
             <li>
-              <a>Concluintes</a>
+              <a href="#">Concluintes</a>
             </li>
             <li>
-              <a>Alunos Ativos</a>
+              <nuxt-link to="/activeStudents">Alunos Ativos</nuxt-link>
             </li>
             <li>
-              <a>Alunos Totais</a>
+              <nuxt-link to="/allStudents">Alunos Totais</nuxt-link>
             </li>
           </ul>
 
           <div class="menu-label">Grupos de Email</div>
           <ul class="menu-list">
             <li>
-              <nuxt-link to="/emailList"> Email </nuxt-link>
+              <nuxt-link to="/emailList">Email</nuxt-link>
             </li>
             <li>
-              <a>Calouros</a>
+              <a href="#">Calouros</a>
             </li>
             <li>
-              <a>Newsletter</a>
+              <a href="#">Newsletter</a>
             </li>
           </ul>
           <div class="menu-label">Importar</div>
           <ul class="menu-list">
             <li>
-              <nuxt-link to="importar/importarAlunos">
-                Importar Alunos
-              </nuxt-link>
+              <a href="#" @click="activateModal = true">Importar Alunos</a>
             </li>
           </ul>
         </aside>
@@ -103,24 +113,53 @@
       <div class="column has-background-grey-lighter">
         <nuxt class="Fullscreen" />
       </div>
+      <div class="modal" :class="{ 'is-active': activateModal }">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <!-- Any other Bulma elements you want -->
+        </div>
+        <button
+          class="modal-close is-large"
+          aria-label="close"
+          @click="activateModal = false"
+        ></button>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
-      active: this.isActive()
+      active: this.isActive(),
+      activateModal: false
     }
   },
+
+  computed: {
+    ...mapState({
+      courseTag: state => state.courseTag
+    })
+  },
+
   methods: {
     isActive: function() {
-      if (window.innerWidth <= 1000) {
-        return false
-      } else {
-        return true
-      }
+      return window.innerWidth > 1000
     },
+
+    setCourseTag(tag) {
+      this.$store.dispatch('courseTag', { tag })
+      this.$router.push('/allStudents')
+    },
+
+    logout() {
+      this.$store.dispatch('courseTag', { tag: '' })
+      this.$store.dispatch('auth/logout')
+      this.$router.push('/login')
+    },
+
     openSideBar: function() {
       this.active = !this.active
     }
@@ -129,8 +168,6 @@ export default {
 </script>
 
 <style>
-$navbar-height: 3.25rem;
-
 .is-viewport-height {
   height: 100vh;
 }
@@ -147,13 +184,11 @@ $navbar-height: 3.25rem;
   padding: 1rem;
 }
 
-.columns {
-  &.is-fullheight {
-    flex: 1;
+.columns .column {
+  overflow-y: auto;
+}
 
-    .column {
-      overflow-y: auto;
-    }
-  }
+.columns .is-fullheight {
+  flex: 1;
 }
 </style>
