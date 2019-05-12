@@ -1,19 +1,14 @@
 const Koa = require('koa')
 const consola = require('consola')
 const router = require('./router')
+const errorHandler = require('./error-handler')
 
 const app = new Koa()
 
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
 
-app.use((ctx, next) => {
-  return next().catch(err => {
-    console.error(err) // eslint-disable-line
-    ctx.status = 500
-    ctx.body = 'Internal Server Error'
-  })
-})
+app.use(errorHandler)
 
 app.use(router.routes())
 app.use(router.allowedMethods())
