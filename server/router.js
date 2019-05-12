@@ -1,14 +1,22 @@
 const Router = require('koa-router')
 const KoaBody = require('koa-body')
+const KoaJwt = require('koa-jwt')
 
 const errors = require('../shared/errors')
 const documents = require('./controllers/documents')
 const frontend = require('./controllers/frontend')
 const users = require('./controllers/users')
 const students = require('./controllers/students')
+const auth = require('./controllers/auth')
 
 const router = new Router()
 const api = new Router({ prefix: '/api' })
+
+api.use(KoaJwt({ secret: 'my-secret', passthrough: true }))
+
+// Middlewares
+const bodyParser = KoaBody()
+const bodyParserMultipart = KoaBody({ multipart: true })
 
 // User Routes
 api.get('/users/', users.List)
@@ -28,6 +36,11 @@ api.post(
   KoaBody({ multipart: true }),
   documents.Upload
 )
+api.post('/students/from-csv', bodyParserMultipart, students.FromCsv)
+
+// Auth routes
+api.get('/auth', isLoggedIn, auth.Show)
+api.post('/auth', bodyParser, auth.Login)
 
 // Not Found Routes
 api.all('/*', ctx => {
@@ -43,3 +56,26 @@ router.use(api.allowedMethods())
 router.get('*', frontend.Render)
 
 module.exports = router
+
+function isLoggedIn(ctx, next) {
+  const hasUser = ctx.state.user
+  const hasToken = ctx.request.get('Authorization')
+
+  if (hasToken && !hasUser) {
+    ctx.status = 400
+    ctx.body = {
+      code: errors.INVALID_TOKEN
+    }
+    return
+  }
+
+  if (!hasUser) {
+    ctx.status = 401
+    ctx.body = {
+      code: errors.UNAUTHORIZED
+    }
+    return
+  }
+
+  return next()
+}
