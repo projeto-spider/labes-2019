@@ -26,7 +26,6 @@ describe('utils', () => {
   beforeEach(async done => {
     await db.knex.migrate.rollback()
     await db.knex.migrate.latest()
-    await db.knex.seed.run()
     done()
   }, 100000)
 
