@@ -13,7 +13,8 @@
     "lint-fix": "eslint --ext .js,.vue --fix --ignore-path .gitignore .",
     "precommit": "npm run lint",
     "knex": "knex",
-    "test": "jest -i --forceExit "
+    "test": "jest -i --forceExit",
+    "test:travis": "npm test && npm run lint"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
