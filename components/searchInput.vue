@@ -55,8 +55,8 @@ export default {
       default: () => []
     },
     isActive: {
-      type: String,
-      default: () => ''
+      type: Number,
+      default: () => 0
     }
   },
   data() {
@@ -106,26 +106,24 @@ export default {
     }
   },
   methods: {
-    getStudentsFilters() {
-      pDebounce(() => {
-        this.$axios
-          .get('/api/students/', {
-            params: {
-              course: this.courseTag,
-              isActive: this.isActive
-            }
+    getStudentsFilters: pDebounce(function getStudentsFilters() {
+      this.$axios
+        .get('/api/students/', {
+          params: {
+            course: this.courseTag,
+            isActive: this.isActive
+          }
+        })
+        .then(res => {
+          this.students = res.data
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: 'Falha ao carregar a lista de alunos.',
+            type: 'is-danger'
           })
-          .then(res => {
-            this.students = res.data
-          })
-          .catch(() => {
-            this.$toast.open({
-              message: 'Falha ao carregar a lista de alunos.',
-              type: 'is-danger'
-            })
-          })
-      }, 500)
-    }
+        })
+    }, 500)
   }
 }
 </script>
