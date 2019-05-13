@@ -1,6 +1,10 @@
 <template>
   <div class="container">
-    <search-input :title="'Alunos Ativos'" :students="students"></search-input>
+    <search-input
+      :title="'Alunos Ativos'"
+      :students="students"
+      :parent-page="'activeStudents'"
+    ></search-input>
   </div>
 </template>
 

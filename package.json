@@ -30,6 +30,7 @@
     "nuxt": "^2.4.0",
     "nuxt-buefy": "^0.3.6",
     "nuxt-fontawesome": "^0.4.0",
+    "p-debounce": "^2.1.0",
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {

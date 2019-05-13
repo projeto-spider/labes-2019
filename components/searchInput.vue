@@ -38,8 +38,8 @@
 </template>
 
 <script>
+import pDebounce from 'p-debounce'
 import studentComboBox from '../components/studentComboBox'
-import debounce from '../shared/debounce.js'
 export default {
   name: 'SearchInput',
   components: {
@@ -53,6 +53,10 @@ export default {
     students: {
       type: Array,
       default: () => []
+    },
+    parentPage: {
+      type: String,
+      default: () => ''
     }
   },
   data() {
@@ -90,11 +94,21 @@ export default {
             .includes(this.search.toLowerCase())
         )
       })
+    },
+    defaultFilters() {
+      switch (this.parentPage) {
+        case 'activeStudents':
+          return { isActive: 1 }
+        case 'allStudents':
+          return { isActive: 0 }
+        default:
+          return { isActive: 0 }
+      }
     }
   },
 
-  mounted() {
-    if (this.students.length < 1) {
+  afterMounted() {
+    if (this.students.length < 1 && this.defaultFilters.isActive === 1) {
       this.$toast.open({
         message: 'Não há alunos ativos neste curso',
         type: 'is-danger'
@@ -102,12 +116,12 @@ export default {
     }
   },
   methods: {
-    getStudentsFilters: debounce(() => {
+    getStudentsFilters: pDebounce(() => {
       this.$axios
         .get('/api/students/', {
           params: {
             course: this.courseTag,
-            isActive: 1
+            isActive: this.defaultFilters.isActive
           }
         })
         .then(res => {
