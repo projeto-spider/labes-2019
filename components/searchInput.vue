@@ -1,14 +1,12 @@
 <template>
-  <div>
-    <br />
-    <br />
+  <div class="container">
     <div class="columns is-centered">
       <h1 class="title">
         <strong>{{ title }}</strong>
       </h1>
     </div>
     <br />
-    <div class="columns is-centered">
+    <div v-if="students.length" class="columns is-centered">
       <div class="column is-half">
         <div class="control has-icons-left">
           <b-input
@@ -40,7 +38,9 @@
 </template>
 
 <script>
+import { Toast } from 'buefy/dist/components/toast'
 import studentComboBox from '../components/studentComboBox'
+
 export default {
   name: 'SearchInput',
   // props: ['title', 'students', 'thead'],
@@ -79,6 +79,7 @@ export default {
       ]
     }
   },
+
   computed: {
     filteredList() {
       return this.students.filter(student => {
@@ -91,6 +92,21 @@ export default {
         )
       })
     }
+  },
+
+  mounted() {
+    if (this.students.length < 1) {
+      Toast.open({
+        message: 'Não há alunos ativos neste curso',
+        type: 'is-danger'
+      })
+    }
   }
 }
 </script>
+
+<style scoped>
+.container {
+  margin: 50px auto 50px auto;
+}
+</style>
