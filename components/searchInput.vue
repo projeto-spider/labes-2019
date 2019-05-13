@@ -21,7 +21,7 @@
         <b-table
           :striped="isStriped"
           :hoverable="isHoverabble"
-          :data="filteredList"
+          :data="students"
           :selected.sync="selectedStudent"
           :columns="columns"
           focusable
@@ -38,12 +38,10 @@
 </template>
 
 <script>
-import { Toast } from 'buefy/dist/components/toast'
 import studentComboBox from '../components/studentComboBox'
-
+import debounce from '../shared/debounce.js'
 export default {
   name: 'SearchInput',
-  // props: ['title', 'students', 'thead'],
   components: {
     studentComboBox
   },
@@ -76,7 +74,8 @@ export default {
           field: 'email',
           label: 'Email'
         }
-      ]
+      ],
+      filterOrderBy: false
     }
   },
 
@@ -96,11 +95,31 @@ export default {
 
   mounted() {
     if (this.students.length < 1) {
-      Toast.open({
+      this.$toast.open({
         message: 'Não há alunos ativos neste curso',
         type: 'is-danger'
       })
     }
+  },
+  methods: {
+    getStudentsFilters: debounce(() => {
+      this.$axios
+        .get('/api/students/', {
+          params: {
+            course: this.courseTag,
+            isActive: 1
+          }
+        })
+        .then(res => {
+          this.students = res.data
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: 'Falha ao carregar a lista de alunos.',
+            type: 'is-danger'
+          })
+        })
+    }, 500)
   }
 }
 </script>

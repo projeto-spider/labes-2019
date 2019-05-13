@@ -7,7 +7,6 @@
 <script>
 import { mapState } from 'vuex'
 import SearchInput from '~/components/searchInput'
-import '@nuxtjs/axios'
 
 export default {
   name: 'Active',
@@ -34,9 +33,12 @@ export default {
   methods: {
     async getStudents() {
       try {
-        this.students = await this.$axios.$get(
-          `/api/students/?course=${this.courseTag}&isActive=1`
-        )
+        this.students = await this.$axios.$get('/api/students/', {
+          params: {
+            course: this.courseTag,
+            isActive: 1
+          }
+        })
       } catch (e) {
         this.openErrorNotification(e.response.data.code)
       }
@@ -51,12 +53,14 @@ export default {
           return 'Arquivo csv com numero invalido de colunas'
         case 'IMPORT_CSV_INVALID_FILE':
           return 'Por favor selecione um arquivo do tipo csv'
+        default:
+          return 'Ocorreu um erro'
       }
     },
-    openErrorNotification(errorMessage) {
+    openErrorNotification(errorCode) {
       this.$notification.open({
         duration: 5000,
-        message: errorMessage,
+        message: this.errorMessage(errorCode),
         position: 'is-top',
         type: 'is-danger',
         hasIcon: true

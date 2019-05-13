@@ -128,9 +128,7 @@ export default {
       currrentUser: 'auth/currentUser'
     }),
     courseNameUppercase() {
-      if (this.courseTag) {
-        return this.courseTag.toUpperCase()
-      } else return false
+      return this.courseTag && this.courseTag.toUpperCase()
     }
   },
   methods: {

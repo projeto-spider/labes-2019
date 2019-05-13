@@ -26,7 +26,11 @@ export default {
   },
   created() {
     this.$axios
-      .get(`/api/students/?course=${this.courseTag}`)
+      .get('/api/students/', {
+        params: {
+          course: this.courseTag
+        }
+      })
       .then(res => {
         this.students = res.data
       })
