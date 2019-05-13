@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div v-if="courseTag">
+    <div v-if="courseTag && students.length > 0">
       <div class="columns">
         <div class="column is-centered is-half is-offset-one-quarter">
           <div class="control has-icons-left">
@@ -16,50 +16,61 @@
       </div>
       <div class="columns">
         <div class="column is-centered is-half is-offset-one-quarter">
-          <b-table :data="searchStudentResult" :columns="columns"></b-table>
+          <div v-if="students.length">
+            <div v-if="searchStudentResult.length > 0">
+              <b-table
+                :striped="isStriped"
+                :hoverable="isHoverabble"
+                :data="searchStudentResult"
+                :selected.sync="selectedStudent"
+                :columns="columns"
+                focusable
+              ></b-table>
+              <b-modal :active.sync="selectedStudent" has-modal-card>
+                <student-combo-box
+                  v-if="selectedStudent"
+                  :student="selectedStudent"
+                ></student-combo-box>
+              </b-modal>
+            </div>
+            <div v-else>
+              Não há alunos ativos deste curso com a chave de pesquisa "{{
+                studentSearch
+              }}"
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div v-else>Escolha um curso primeiro.</div>
+    <div v-else-if="!courseTag">Escolha um curso primeiro.</div>
+    <div v-else-if="students.length === 0">Não há alunos nesta categoria.</div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import studentComboBox from '../components/studentComboBox'
+import '@nuxtjs/axios'
+
 export default {
   name: 'Active',
   middleware: 'auth',
 
+  components: {
+    studentComboBox
+  },
+
   data: () => ({
     studentSearch: '',
-    students: [
-      {
-        number: '111122223330',
-        name: 'Student 1',
-        email: 'student1@ufpa.br'
-      },
-      {
-        number: '111122223331',
-        name: 'Student 2',
-        email: 'student2@ufpa.br'
-      },
-      {
-        number: '111122223332',
-        name: 'Student 2',
-        email: 'student2@ufpa.br'
-      },
-      {
-        number: '111122223333',
-        name: 'Student 3',
-        email: 'student3@ufpa.br'
-      }
-    ],
+    selectedStudent: null,
+    students: [],
+    isStriped: true,
+    isHoverabble: true,
 
     columns: [
       {
-        field: 'number',
-        label: 'Number',
-        width: '40'
+        field: 'registrationNumber',
+        label: 'Number'
       },
       {
         field: 'name',
@@ -75,13 +86,32 @@ export default {
   computed: {
     searchStudentResult() {
       return this.students.filter(st => {
-        return st.name.indexOf(this.studentSearch) !== -1
+        return st.name.indexOf(this.studentSearch.toUpperCase()) !== -1
       })
     },
 
     ...mapState({
       courseTag: state => state.courseTag
     })
+  },
+
+  mounted() {
+    this.getStudents()
+  },
+
+  methods: {
+    async getStudents() {
+      try {
+        this.students = await this.$axios.$get(
+          `/api/students/?course=${this.courseTag}&isActive=1`
+        )
+      } catch (e) {
+        this.$toast.open({
+          message: this.errorMessage(e.response.data.code),
+          type: 'is-danger'
+        })
+      }
+    }
   }
 }
 </script>
