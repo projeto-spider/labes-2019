@@ -1,95 +1,27 @@
 <template>
   <div class="container">
-    <div v-if="courseTag && students.length > 0">
-      <div class="columns">
-        <div class="column is-centered is-half is-offset-one-quarter">
-          <div class="control has-icons-left">
-            <b-input
-              v-model="studentSearch"
-              placeholder="Buscar aluno"
-              type="search"
-              icon="magnify"
-              rounded
-            ></b-input>
-          </div>
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column is-centered is-half is-offset-one-quarter">
-          <div v-if="students.length">
-            <div v-if="searchStudentResult.length > 0">
-              <b-table
-                :striped="isStriped"
-                :hoverable="isHoverabble"
-                :data="searchStudentResult"
-                :selected.sync="selectedStudent"
-                :columns="columns"
-                focusable
-              ></b-table>
-              <b-modal :active.sync="selectedStudent" has-modal-card>
-                <student-combo-box
-                  v-if="selectedStudent"
-                  :student="selectedStudent"
-                ></student-combo-box>
-              </b-modal>
-            </div>
-            <div v-else>
-              Não há alunos ativos deste curso com a chave de pesquisa "{{
-                studentSearch
-              }}"
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-else-if="!courseTag">Escolha um curso primeiro.</div>
-    <div v-else-if="students.length === 0">Não há alunos nesta categoria.</div>
+    <search-input :title="'Alunos Ativos'" :students="students"></search-input>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import studentComboBox from '../components/studentComboBox'
+import SearchInput from '~/components/searchInput'
 import '@nuxtjs/axios'
 
 export default {
   name: 'Active',
-  middleware: 'auth',
-
+  middleware: 'course',
   components: {
-    studentComboBox
+    SearchInput
   },
-
-  data: () => ({
-    studentSearch: '',
-    selectedStudent: null,
-    students: [],
-    isStriped: true,
-    isHoverabble: true,
-
-    columns: [
-      {
-        field: 'registrationNumber',
-        label: 'Number'
-      },
-      {
-        field: 'name',
-        label: 'Name'
-      },
-      {
-        field: 'email',
-        label: 'Email'
-      }
-    ]
-  }),
-
+  data() {
+    return {
+      head: ['Matrícula', 'Nome', 'Email'],
+      students: []
+    }
+  },
   computed: {
-    searchStudentResult() {
-      return this.students.filter(st => {
-        return st.name.indexOf(this.studentSearch.toUpperCase()) !== -1
-      })
-    },
-
     ...mapState({
       courseTag: state => state.courseTag
     })
@@ -106,11 +38,29 @@ export default {
           `/api/students/?course=${this.courseTag}&isActive=1`
         )
       } catch (e) {
-        this.$toast.open({
-          message: this.errorMessage(e.response.data.code),
-          type: 'is-danger'
-        })
+        this.openErrorNotification(e.response.data.code)
       }
+    },
+    errorMessage(errorCode) {
+      switch (errorCode) {
+        case 'IMPORT_CSV_INVALID_LENGHT':
+          return 'Arquivo csv com tamanho de linha invalido'
+        case 'IMPORT_CSV_INVALID_HEADER':
+          return 'Arquivo csv com nome de cabecalho invalido'
+        case 'IMPORT_CSV_INVALID_COL_NUMBER':
+          return 'Arquivo csv com numero invalido de colunas'
+        case 'IMPORT_CSV_INVALID_FILE':
+          return 'Por favor selecione um arquivo do tipo csv'
+      }
+    },
+    openErrorNotification(errorMessage) {
+      this.$notification.open({
+        duration: 5000,
+        message: errorMessage,
+        position: 'is-top',
+        type: 'is-danger',
+        hasIcon: true
+      })
     }
   }
 }

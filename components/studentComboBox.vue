@@ -8,15 +8,15 @@
       <div class="content">
         <div class="columns">
           <div class="column is-three-quarters">
-            <strong>Nome</strong> : {{ student.name }} <br />
-            <strong>Matricula</strong> : {{ student.registrationNumber }} <br />
-            <strong>E-mail</strong> : {{ student.email }} <br />
-            <strong>Status</strong> : {{ displayStatus() }} <br />
-            <strong>Pendências</strong> : Só 500h <br />
+            <strong>Nome</strong>: {{ student.name }} <br />
+            <strong>Matricula</strong>: {{ student.registrationNumber }} <br />
+            <strong>E-mail</strong>: {{ student.email }} <br />
+            <strong>Status</strong>: {{ displayStatus }} <br />
+            <strong>Pendências</strong>: Só 500h <br />
           </div>
           <div class="column is-one-quarter">
             <div class="box">
-              Ata :
+              Ata:
               <span v-if="student">OK</span>
             </div>
           </div>
@@ -35,7 +35,7 @@ export default {
       default: () => {}
     }
   },
-  methods: {
+  computed: {
     displayStatus() {
       return '"Sei não, hein?"'
     }
