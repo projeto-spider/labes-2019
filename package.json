@@ -17,6 +17,9 @@
     "test:travis": "npm test && npm run lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.18",
+    "@fortawesome/free-solid-svg-icons": "^5.8.2",
+    "@fortawesome/vue-fontawesome": "^0.1.6",
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/pwa": "^2.6.0",
     "bookshelf": "^0.14.2",
@@ -26,6 +29,7 @@
     "koa-router": "^7.4.0",
     "nuxt": "^2.4.0",
     "nuxt-buefy": "^0.3.6",
+    "nuxt-fontawesome": "^0.4.0",
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {
