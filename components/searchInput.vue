@@ -54,7 +54,7 @@ export default {
       type: Array,
       default: () => []
     },
-    parentPage: {
+    isActive: {
       type: String,
       default: () => ''
     }
@@ -94,16 +94,6 @@ export default {
             .includes(this.search.toLowerCase())
         )
       })
-    },
-    defaultFilters() {
-      switch (this.parentPage) {
-        case 'activeStudents':
-          return { isActive: 1 }
-        case 'allStudents':
-          return { isActive: 0 }
-        default:
-          return { isActive: 0 }
-      }
     }
   },
 
@@ -116,24 +106,26 @@ export default {
     }
   },
   methods: {
-    getStudentsFilters: pDebounce(() => {
-      this.$axios
-        .get('/api/students/', {
-          params: {
-            course: this.courseTag,
-            isActive: this.defaultFilters.isActive
-          }
-        })
-        .then(res => {
-          this.students = res.data
-        })
-        .catch(() => {
-          this.$toast.open({
-            message: 'Falha ao carregar a lista de alunos.',
-            type: 'is-danger'
+    getStudentsFilters() {
+      pDebounce(() => {
+        this.$axios
+          .get('/api/students/', {
+            params: {
+              course: this.courseTag,
+              isActive: this.isActive
+            }
           })
-        })
-    }, 500)
+          .then(res => {
+            this.students = res.data
+          })
+          .catch(() => {
+            this.$toast.open({
+              message: 'Falha ao carregar a lista de alunos.',
+              type: 'is-danger'
+            })
+          })
+      }, 500)
+    }
   }
 }
 </script>
