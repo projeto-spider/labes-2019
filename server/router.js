@@ -2,6 +2,7 @@ const Router = require('koa-router')
 const KoaBody = require('koa-body')
 
 const errors = require('../shared/errors')
+const documents = require('./controllers/documents')
 const frontend = require('./controllers/frontend')
 const users = require('./controllers/users')
 const students = require('./controllers/students')
@@ -23,6 +24,8 @@ api.all('/*', ctx => {
   ctx.status = 404
   ctx.body = { code: errors.NOT_FOUND_ROUTE }
 })
+// Documents Routes
+api.get('/documents/:studentID', documents.Show)
 
 // Connect API routes to main router
 router.use(api.routes())
