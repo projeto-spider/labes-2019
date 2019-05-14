@@ -8,22 +8,47 @@
     <br />
     <div class="columns is-centered">
       <div class="column is-half">
-        <div class="control has-icons-left">
-          <b-input
-            v-model="search"
-            placeholder="Buscar aluno"
-            type="search"
-            icon="search"
-            rounded
-          ></b-input>
-        </div>
+        <b-field horizontal class="box" label="Filtros: ">
+          <b-checkbox v-model="nameFilter">Nome</b-checkbox>
+          <b-checkbox v-model="registrationFilter">Matricula</b-checkbox>
+          <b-checkbox v-model="emailFilter">Email</b-checkbox>
+        </b-field>
+        <b-input
+          v-if="nameFilter"
+          v-model="searchName"
+          placeholder="Digite o nome"
+          type="search"
+          icon="search"
+          rounded
+          expanded
+        >
+        </b-input>
+        <b-input
+          v-if="registrationFilter"
+          v-model="searchRegistration"
+          placeholder="Digite a matricula"
+          type="number"
+          icon="search"
+          rounded
+          expanded
+        >
+        </b-input>
+        <b-input
+          v-if="emailFilter"
+          v-model="searchEmail"
+          placeholder="Digite o e-mail"
+          type="email"
+          icon="search"
+          rounded
+          expanded
+        >
+        </b-input>
         <br />
         <b-table
-          v-if="filteredList.length > 0"
+          v-if="students.length > 0"
           :striped="isStriped"
-          :hoverable="isHoverable"
-          :data="filteredList"
-          :loading="loading"
+          :hoverable="isHoverabble"
+          :data="studentsData"
           :selected.sync="selectedStudent"
           :columns="columns"
           focusable
@@ -49,6 +74,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import pDebounce from 'p-debounce'
 import studentComboBox from '../components/studentComboBox'
 export default {
@@ -88,7 +114,10 @@ export default {
   },
   data() {
     return {
-      search: '',
+      studentsData: [],
+      searchName: '',
+      searchRegistration: 0,
+      searchEmail: '',
       isStriped: true,
       isHoverable: true,
       selectedStudent: null,
@@ -115,21 +144,34 @@ export default {
       sortOrder: this.defaultSortOrder,
       course: this.defaultCourse,
       loading: false,
-      students: []
+      students: [],
+      nameFilter: false,
+      registrationFilter: false,
+      emailFilter: false
     }
   },
 
   computed: {
-    filteredList() {
-      return this.students.filter(student => {
-        return (
-          student.name.toLowerCase().includes(this.search.toLowerCase()) ||
-          // student.email.toLowerCase().includes(this.search.toLowerCase()) ||
-          student.registrationNumber
-            .toLowerCase()
-            .includes(this.search.toLowerCase())
-        )
-      })
+    ...mapState({
+      courseTag: state => state.courseTag
+    })
+  },
+
+  watch: {
+    searchName() {
+      this.getStudentsFilters()
+    },
+    searchRegistration() {
+      this.getStudentsFilters()
+    },
+    searchEmail() {
+      this.getStudentsFilters()
+    },
+    courseTag() {
+      this.getStudentsFilters()
+    },
+    students() {
+      this.studentsData = [...this.students]
     }
   },
 
@@ -173,14 +215,20 @@ export default {
         .get('/api/students/', {
           params: {
             course: this.course,
-            isActive: this.isActive,
             page: this.page,
             sort: this.sortField,
-            order: this.sortOrder === 'asc' ? 'ASC' : 'DESC'
+            order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
+            isActive: this.isActive !== 3 ? this.isActive : null,
+            name: this.searchName !== '' ? `${this.searchName}%` : null,
+            registrationNumber:
+              this.searchRegistration !== 0
+                ? `${this.searchRegistration}%`
+                : null,
+            email: this.searchEmail !== '' ? `${this.searchEmail}%` : null
           }
         })
         .then(res => {
-          this.students = res.data
+          this.studentsData = res.data
           const factor =
             this.filteredList.length < this.students.length
               ? this.filteredList.length
