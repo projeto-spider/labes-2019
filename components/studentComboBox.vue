@@ -1,8 +1,8 @@
 <template>
   <div class="card">
     <header class="card-header">
-      <b-icon pack="fas" icon="user" size="is-medium"></b-icon>
-      <p class="card-header-title">{{ student.name }}</p>
+      <b-icon pack="fas" icon="user" class="icon"></b-icon>
+      <span class="card-header-title">{{ student.name }}</span>
     </header>
     <div class="card-content">
       <div class="content">
@@ -43,4 +43,12 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.card-header {
+  align-items: center;
+}
+
+.icon {
+  margin-left: 1em;
+}
+</style>

@@ -30,6 +30,12 @@ export default {
     })
   },
 
+  watch: {
+    courseTag: function() {
+      this.getStudents()
+    }
+  },
+
   mounted() {
     this.getStudents()
   },

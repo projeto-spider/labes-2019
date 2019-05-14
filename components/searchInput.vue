@@ -6,7 +6,7 @@
       </h1>
     </div>
     <br />
-    <div v-if="students.length" class="columns is-centered">
+    <div class="columns is-centered">
       <div class="column is-half">
         <div class="control has-icons-left">
           <b-input
@@ -19,9 +19,10 @@
         </div>
         <br />
         <b-table
+          v-if="filteredList.length > 0"
           :striped="isStriped"
           :hoverable="isHoverabble"
-          :data="students"
+          :data="filteredList"
           :selected.sync="selectedStudent"
           :columns="columns"
           focusable
@@ -68,11 +69,11 @@ export default {
       columns: [
         {
           field: 'registrationNumber',
-          label: 'Number'
+          label: 'Matrícula'
         },
         {
           field: 'name',
-          label: 'Name'
+          label: 'Nome'
         },
         {
           field: 'email',
@@ -94,6 +95,19 @@ export default {
             .includes(this.search.toLowerCase())
         )
       })
+    }
+  },
+
+  watch: {
+    filteredList: function() {
+      if (this.filteredList.length < 1 && this.students.length > 0) {
+        this.$toast.open({
+          message: `Não há alunos que correspondam a chave de pesquisa ${
+            this.search
+          }`,
+          type: 'is-danger'
+        })
+      }
     }
   },
 
@@ -129,6 +143,10 @@ export default {
 </script>
 
 <style scoped>
+template {
+  overflow-y: hidden;
+}
+
 .container {
   margin: 50px auto 50px auto;
 }
