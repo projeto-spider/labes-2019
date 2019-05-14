@@ -3,7 +3,7 @@
     <search-input
       :title="'Alunos Ativos'"
       :students="students"
-      :perPage="1"
+      :default-per-page="1"
       :is-active="1"
     ></search-input>
   </div>

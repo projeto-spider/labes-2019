@@ -69,19 +69,19 @@ export default {
       type: Number,
       default: () => 0
     },
-    sortField: {
+    defaultSortField: {
       type: String,
       default: () => 'name'
     },
-    sortOrder: {
+    defaultSortOrder: {
       type: String,
       default: () => 'asc'
     },
-    page: {
+    defaultPage: {
       type: Number,
       default: () => 1
     },
-    perPage: {
+    defaultPerPage: {
       type: String,
       default: () => 10
     }
@@ -109,6 +109,10 @@ export default {
         }
       ],
       total: 0,
+      page: this.defaultPage,
+      perPage: this.defaultPerPage,
+      sortField: this.defaultSortField,
+      sortOrder: this.defaultSortOrder,
       loading: false
     }
   },
@@ -173,15 +177,39 @@ export default {
         })
     }, 500),
 
+    getStudents() {
+      this.loading = true
+      this.$axios
+        .get('/api/students/', {
+          params: {
+            course: this.courseTag,
+            isActive: this.isActive,
+            page: this.page,
+            sort: this.sortField
+          }
+        })
+        .then(res => {
+          this.students = res.data
+          this.total = this.students.length
+          this.loading = false
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: 'Falha ao carregar a lista de alunos.',
+            type: 'is-danger'
+          })
+        })
+    },
+
     onSort(filterField, order) {
       this.sortField = filterField
       this.sortOrder = order
-      this.getStudentsFilters()
+      this.getStudents()
     },
 
     onPageChange(page) {
       this.page = page
-      this.getStudentsFilters()
+      this.getStudents()
     }
   }
 }
