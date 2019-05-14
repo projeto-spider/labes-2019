@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import errors from '../shared/errors.js'
 export default {
   name: 'ImportStudents',
   data() {
@@ -66,6 +65,7 @@ export default {
     validateCsv(csv) {
       const validHeader =
         'Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status'
+      const { errors } = process.env
       csv = csv.replace('\r\n', '\n')
 
       try {
@@ -92,14 +92,15 @@ export default {
       }
     },
     errorMessage(errorCode) {
+      const { errors } = process.env
       switch (errorCode) {
-        case 'IMPORT_CSV_INVALID_LENGHT':
+        case errors.IMPORT_CSV_INVALID_LENGTH:
           return 'Arquivo csv com tamanho de linha invalido'
-        case 'IMPORT_CSV_INVALID_HEADER':
+        case errors.IMPORT_CSV_INVALID_HEADER:
           return 'Arquivo csv com nome de cabecalho invalido'
-        case 'IMPORT_CSV_INVALID_COL_NUMBER':
+        case errors.IMPORT_CSV_INVALID_COL_NUMBER:
           return 'Arquivo csv com numero invalido de colunas'
-        case 'IMPORT_CSV_INVALID_FILE':
+        case errors.IMPORT_CSV_INVALID_FILE:
           return 'Por favor selecione um arquivo do tipo csv'
         default:
           return 'Ocorreu um erro'
