@@ -21,11 +21,21 @@
         <b-table
           v-if="filteredList.length > 0"
           :striped="isStriped"
-          :hoverable="isHoverabble"
+          :hoverable="isHoverable"
           :data="filteredList"
+          :loading="loading"
           :selected.sync="selectedStudent"
           :columns="columns"
           focusable
+          paginated
+          backend-pagination
+          :total="total"
+          :per-page="perPage"
+          backend-sorting
+          :default-sort-direction="sortOrder"
+          :default-sort="[sortField, sortOrder]"
+          @page-change="onPageChange"
+          @sort="onSort"
         ></b-table>
         <b-modal :active.sync="selectedStudent" has-modal-card>
           <student-combo-box
@@ -58,29 +68,48 @@ export default {
     isActive: {
       type: Number,
       default: () => 0
+    },
+    sortField: {
+      type: String,
+      default: () => 'name'
+    },
+    sortOrder: {
+      type: String,
+      default: () => 'asc'
+    },
+    page: {
+      type: Number,
+      default: () => 1
+    },
+    perPage: {
+      type: String,
+      default: () => 10
     }
   },
   data() {
     return {
       search: '',
       isStriped: true,
-      isHoverabble: true,
+      isHoverable: true,
       selectedStudent: null,
       columns: [
         {
           field: 'registrationNumber',
-          label: 'Matrícula'
+          label: 'Matrícula',
+          sortable: true
         },
         {
           field: 'name',
-          label: 'Nome'
+          label: 'Nome',
+          sortable: true
         },
         {
           field: 'email',
           label: 'Email'
         }
       ],
-      filterOrderBy: false
+      total: 0,
+      loading: false
     }
   },
 
@@ -121,15 +150,20 @@ export default {
   },
   methods: {
     getStudentsFilters: pDebounce(function getStudentsFilters() {
+      this.loading = true
       this.$axios
         .get('/api/students/', {
           params: {
             course: this.courseTag,
-            isActive: this.isActive
+            isActive: this.isActive,
+            page: this.page,
+            sort: this.sortField
           }
         })
         .then(res => {
           this.students = res.data
+          this.total = this.students.length
+          this.loading = false
         })
         .catch(() => {
           this.$toast.open({
@@ -137,7 +171,18 @@ export default {
             type: 'is-danger'
           })
         })
-    }, 500)
+    }, 500),
+
+    onSort(filterField, order) {
+      this.sortField = filterField
+      this.sortOrder = order
+      this.getStudentsFilters()
+    },
+
+    onPageChange(page) {
+      this.page = page
+      this.getStudentsFilters()
+    }
   }
 }
 </script>
