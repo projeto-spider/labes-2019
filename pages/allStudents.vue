@@ -2,17 +2,18 @@
   <div class="container">
     <search-input
       :title="'Alunos totais'"
-      :thead="head"
       :students="students"
+      :is-active="0"
     ></search-input>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import SearchInput from '~/components/searchInput'
-import axios from 'axios'
 export default {
   name: 'AllStudents',
+  middleware: 'course',
   components: {
     SearchInput
   },
@@ -22,9 +23,18 @@ export default {
       students: []
     }
   },
+  computed: {
+    ...mapState({
+      courseTag: state => state.courseTag
+    })
+  },
   created() {
-    axios
-      .get('/api/students/')
+    this.$axios
+      .get('/api/students/', {
+        params: {
+          course: this.courseTag
+        }
+      })
       .then(res => {
         this.students = res.data
       })

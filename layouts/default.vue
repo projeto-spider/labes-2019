@@ -6,7 +6,9 @@
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a href="#" class="navbar-item has-dropdown is-hoverable">
-          <div class="navbar-link">Alterar Curso</div>
+          <div class="navbar-link">
+            {{ courseNameUppercase || 'Selecione um curso' }}
+          </div>
           <div class="navbar-dropdown">
             <a href="#" class="navbar-item" @click="setCourseTag('cbcc')">
               CBCC
@@ -107,6 +109,7 @@ import { mapState, mapGetters } from 'vuex'
 
 import ImportStudents from '../components/importStudents.vue'
 export default {
+  middleware: ['auth'],
   components: {
     ImportStudents
   },
@@ -123,7 +126,10 @@ export default {
     }),
     ...mapGetters({
       currrentUser: 'auth/currentUser'
-    })
+    }),
+    courseNameUppercase() {
+      return this.courseTag && this.courseTag.toUpperCase()
+    }
   },
   methods: {
     isActive: function() {
@@ -132,7 +138,6 @@ export default {
 
     setCourseTag(tag) {
       this.$store.dispatch('courseTag', { tag })
-      this.$router.push('/allStudents')
     },
 
     logout() {

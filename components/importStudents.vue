@@ -101,6 +101,8 @@ export default {
           return 'Arquivo csv com numero invalido de colunas'
         case 'IMPORT_CSV_INVALID_FILE':
           return 'Por favor selecione um arquivo do tipo csv'
+        default:
+          return 'Ocorreu um erro'
       }
     },
     openErrorNotification(errorMessage) {

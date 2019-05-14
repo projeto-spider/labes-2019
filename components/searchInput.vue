@@ -1,48 +1,50 @@
 <template>
-  <div>
-    <br />
-    <br />
+  <div class="container">
     <div class="columns is-centered">
       <h1 class="title">
         <strong>{{ title }}</strong>
       </h1>
     </div>
     <br />
-    <div class="columns is-centered">
+    <div v-if="students.length" class="columns is-centered">
       <div class="column is-half">
-        <div class="field is-grouped">
-          <p class="control is-expanded">
-            <input
-              v-model="search"
-              class="input"
-              type="text"
-              placeholder=" Buscar alunos"
-            />
-          </p>
+        <div class="control has-icons-left">
+          <b-input
+            v-model="search"
+            placeholder="Buscar aluno"
+            type="search"
+            icon="search"
+            rounded
+          ></b-input>
         </div>
-        <table class="table">
-          <thead v-if="search" class="thead">
-            <tr>
-              <th v-for="(value, index) in thead" :key="index">{{ value }}</th>
-            </tr>
-          </thead>
-          <tbody v-if="search" class="tbody">
-            <tr v-for="(student, index) in filteredList" :key="index">
-              <td>{{ student.registrationNumber }}</td>
-              <td>{{ student.name }}</td>
-              <td>{{ student.email }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <br />
+        <b-table
+          :striped="isStriped"
+          :hoverable="isHoverabble"
+          :data="students"
+          :selected.sync="selectedStudent"
+          :columns="columns"
+          focusable
+        ></b-table>
+        <b-modal :active.sync="selectedStudent" has-modal-card>
+          <student-combo-box
+            v-if="selectedStudent"
+            :student="selectedStudent"
+          ></student-combo-box>
+        </b-modal>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import pDebounce from 'p-debounce'
+import studentComboBox from '../components/studentComboBox'
 export default {
   name: 'SearchInput',
-  // props: ['title', 'students', 'thead'],
+  components: {
+    studentComboBox
+  },
   props: {
     title: {
       type: String,
@@ -52,14 +54,35 @@ export default {
       type: Array,
       default: () => []
     },
-    thead: {
-      type: Array,
-      default: () => []
+    isActive: {
+      type: Number,
+      default: () => 0
     }
   },
   data() {
-    return { search: '' }
+    return {
+      search: '',
+      isStriped: true,
+      isHoverabble: true,
+      selectedStudent: null,
+      columns: [
+        {
+          field: 'registrationNumber',
+          label: 'Number'
+        },
+        {
+          field: 'name',
+          label: 'Name'
+        },
+        {
+          field: 'email',
+          label: 'Email'
+        }
+      ],
+      filterOrderBy: false
+    }
   },
+
   computed: {
     filteredList() {
       return this.students.filter(student => {
@@ -72,6 +95,41 @@ export default {
         )
       })
     }
+  },
+
+  afterMounted() {
+    if (this.students.length < 1 && this.defaultFilters.isActive === 1) {
+      this.$toast.open({
+        message: 'Não há alunos ativos neste curso',
+        type: 'is-danger'
+      })
+    }
+  },
+  methods: {
+    getStudentsFilters: pDebounce(function getStudentsFilters() {
+      this.$axios
+        .get('/api/students/', {
+          params: {
+            course: this.courseTag,
+            isActive: this.isActive
+          }
+        })
+        .then(res => {
+          this.students = res.data
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: 'Falha ao carregar a lista de alunos.',
+            type: 'is-danger'
+          })
+        })
+    }, 500)
   }
 }
 </script>
+
+<style scoped>
+.container {
+  margin: 50px auto 50px auto;
+}
+</style>

@@ -8,9 +8,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'Email',
-  middleware: 'auth'
+  middleware: 'auth',
+
+  computed: {
+    ...mapState({
+      courseTag: state => state.courseTag
+    })
+  }
 }
 </script>
 
