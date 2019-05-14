@@ -50,6 +50,7 @@ exports.up = function(knex, Promise) {
         'forming'
       ])
       .defaultTo('none')
+    table.string('comments', 1400)
   })
 }
 
