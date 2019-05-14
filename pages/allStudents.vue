@@ -3,7 +3,7 @@
     <search-input
       :title="'Alunos totais'"
       :students="students"
-      :is-active="0"
+      :is-active="3"
     ></search-input>
   </div>
 </template>
