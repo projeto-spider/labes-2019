@@ -174,22 +174,6 @@ export default {
     }
   },
 
-  watch: {
-    filteredList: function() {
-      if (this.filteredList.length < this.students.length) {
-        this.total = this.filteredList.length
-      }
-      if (this.filteredList.length < 1 && this.students.length > 0) {
-        this.$toast.open({
-          message: `Não há alunos que correspondam a chave de pesquisa ${
-            this.search
-          }`,
-          type: 'is-danger'
-        })
-      }
-    }
-  },
-
   afterMounted() {
     if (this.students.length < 1 && this.defaultFilters.isActive === 1) {
       this.$toast.open({
@@ -228,12 +212,6 @@ export default {
         })
         .then(res => {
           this.studentsData = res.data
-          const factor =
-            this.filteredList.length < this.students.length
-              ? this.filteredList.length
-              : res.headers['pagination-page-count'] * this.perPage
-          this.total = factor
-          this.loading = false
         })
         .catch(() => {
           this.$toast.open({
