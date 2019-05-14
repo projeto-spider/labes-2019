@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const KoaBody = require('koa-body')
 
+const documents = require('./controllers/documents')
 const frontend = require('./controllers/frontend')
 const users = require('./controllers/users')
 const students = require('./controllers/students')
@@ -16,6 +17,9 @@ api.get('/users/:id', users.Show)
 api.get('/students/', students.List)
 api.get('/students/:id', students.Show)
 api.post('/students/from-csv', KoaBody({ multipart: true }), students.FromCsv)
+
+// Documents Routes
+api.get('/documents/:studentID', documents.Show)
 
 // Connect API routes to main router
 router.use(api.routes())
