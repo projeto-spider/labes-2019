@@ -24,6 +24,7 @@ describe('/api/users', () => {
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
+    expect(res.headers['pagination-page']).toEqual('1')
     done()
   })
 
