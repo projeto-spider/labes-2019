@@ -29,6 +29,11 @@ api.get('/documents/:studentID', documents.Show)
 // Documents Routes
 api.get('/students/:studentID/documents', documents.List)
 api.get('/students/:studentID/documents/:id', documents.Show)
+api.post(
+  '/students/:studentID/documents',
+  KoaBody({ multipart: true }),
+  documents.Upload
+)
 
 // Connect API routes to main router
 router.use(api.routes())
