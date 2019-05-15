@@ -5,10 +5,12 @@ export const state = () => ({
 
 export const mutations = {
   setUser(state, user) {
+    persist('user', user)
     state.user = user
   },
 
   setToken(state, token) {
+    persist('token', token)
     state.token = token
   }
 }
@@ -29,8 +31,6 @@ export const actions = {
       .$post('/api/auth', { username, password })
       .then(({ token, user }) => {
         this.$axios.setToken(token, 'Bearer')
-        persist('token', token)
-        persist('user', user)
         commit('setToken', token)
         return commit('setUser', user)
       })
