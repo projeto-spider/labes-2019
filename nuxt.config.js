@@ -1,4 +1,5 @@
 const pkg = require('./package')
+const errors = require('./shared/errors')
 
 module.exports = {
   mode: 'spa',
@@ -60,6 +61,9 @@ module.exports = {
    */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+  },
+  env: {
+    errors
   },
 
   /*
