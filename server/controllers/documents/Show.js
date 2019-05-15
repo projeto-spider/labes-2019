@@ -1,18 +1,18 @@
 const Documents = require('../../models/Document')
 const Students = require('../../models/Student')
+const errors = require('../../../shared/errors')
 
 module.exports = async function listUsers(ctx) {
   const { studentID } = ctx.params
   if (
-    isNaN(studentID) ||
-    (await Students.where('id', studentID)
+    await Students.where('id', studentID)
       .fetch()
       .then(value => {
         return value === null
-      }))
+      })
   ) {
     ctx.status = 400
-    ctx.body = { code: 'INVALID_PARAMS', param: 'studentID' }
+    ctx.body = { code: errors.INVALID_PARAMS, param: 'studentID' }
     return
   }
 

@@ -17,6 +17,7 @@ api.get('/users/:id', users.Show)
 // Student Routes
 api.get('/students/', students.List)
 api.get('/students/:id', students.Show)
+api.get('/students/:studentID/documents', documents.Show)
 api.post('/students/from-csv', KoaBody({ multipart: true }), students.FromCsv)
 
 // Not Found Routes
