@@ -1,5 +1,6 @@
 const Student = require('../../models/Student')
 const errors = require('../../../shared/errors')
+const utils = require('../../utils')
 
 module.exports = async function listStudents(ctx) {
   const { course } = ctx.request.query
@@ -8,7 +9,8 @@ module.exports = async function listStudents(ctx) {
     ctx.body = { code: errors.INVALID_FILTER, filter: 'course' }
     return
   }
-  ctx.body = await filterStudents(ctx.request.query)
+
+  utils.paginateContext(ctx, await filterStudents(ctx.request.query))
 }
 /**
  * Filter students 👍

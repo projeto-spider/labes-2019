@@ -201,6 +201,7 @@ describe('/api/students', () => {
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.length).toEqual(7)
+    expect(res.headers['pagination-page']).toEqual('1')
     done()
   })
   test('GET /?course=cb[cc|si]', async done => {

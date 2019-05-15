@@ -161,3 +161,18 @@ exports.batchUpdateStudents = function batchUpdateStudents(data) {
 
   return knex.raw(query, bindings)
 }
+/**
+ * Injects the pagination headers from Bookshelft to a Koa context
+ *
+ * @param   {Context} ctx - Koa context
+ * @param   {CollectionBase} collectionBase - Result from Bookshelf query
+ * @returns {void}
+ */
+exports.paginateContext = function paginateContext(ctx, collectionBase) {
+  const { pagination } = collectionBase
+  ctx.set('Pagination-Page', pagination.page)
+  ctx.set('Pagination-Page-Size', pagination.pageSize)
+  ctx.set('Pagination-Row-Count', pagination.rowCount)
+  ctx.set('Pagination-Page-Count', pagination.pageCount)
+  ctx.body = collectionBase.toJSON()
+}
