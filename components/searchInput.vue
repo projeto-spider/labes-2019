@@ -61,7 +61,7 @@ export default {
       type: String,
       default: () => "Page's title"
     },
-    students: {
+    propStudents: {
       type: Array,
       default: () => []
     },
@@ -82,7 +82,7 @@ export default {
       default: () => 1
     },
     defaultPerPage: {
-      type: String,
+      type: Number,
       default: () => 10
     }
   },
@@ -113,7 +113,8 @@ export default {
       perPage: this.defaultPerPage,
       sortField: this.defaultSortField,
       sortOrder: this.defaultSortOrder,
-      loading: false
+      loading: false,
+      students: this.propStudents
     }
   },
 

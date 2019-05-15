@@ -2,8 +2,8 @@
   <div class="container">
     <search-input
       :title="'Alunos Ativos'"
-      :students="students"
-      :default-per-page="1"
+      :prop-students="students"
+      :default-per-page="10"
       :is-active="1"
     ></search-input>
   </div>
