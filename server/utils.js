@@ -1,5 +1,6 @@
-const { knex } = require('./db')
 const jwt = require('jsonwebtoken')
+const { knex } = require('./db')
+
 /**
  * Given a CSV file with header make an Array of objects
  *
