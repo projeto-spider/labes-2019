@@ -19,7 +19,7 @@
         </div>
         <br />
         <b-table
-          v-if="filteredList.length > 0"
+          v-if="filteredList"
           :striped="isStriped"
           :hoverable="isHoverable"
           :data="filteredList"
@@ -108,7 +108,7 @@ export default {
           label: 'Email'
         }
       ],
-      total: 0,
+      total: this.propStudents.length,
       page: this.defaultPage,
       perPage: this.defaultPerPage,
       sortField: this.defaultSortField,
@@ -153,6 +153,11 @@ export default {
       })
     }
   },
+
+  created() {
+    this.getStudents()
+  },
+
   methods: {
     getStudentsFilters: pDebounce(function getStudentsFilters() {
       this.loading = true
