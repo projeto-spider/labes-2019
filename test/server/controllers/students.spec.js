@@ -440,12 +440,6 @@ describe('/api/students', () => {
 <<<<<<< HEAD
     expect(res1.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
     expect(res1.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
-=======
-    expect(
-      res1.body.every(
-        student => student.course === 'cbcc' && student.name.endsWith('SANTOS')
-      )
-    ).toBeTruthy()
 >>>>>>> Parâmetros de ordenação no endpoint de listar alunos
     const res2 = await chai
       .request(server.listen())
