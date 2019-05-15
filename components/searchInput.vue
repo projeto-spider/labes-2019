@@ -27,7 +27,7 @@
           v-if="registrationFilter"
           v-model="searchRegistration"
           placeholder="Digite a matricula"
-          type="number"
+          type="search"
           icon="search"
           rounded
           expanded
@@ -91,7 +91,7 @@ export default {
     return {
       studentsData: [],
       searchName: '',
-      searchRegistration: 0,
+      searchRegistration: '',
       searchEmail: '',
       isStriped: true,
       isHoverabble: true,
@@ -122,7 +122,6 @@ export default {
       courseTag: state => state.courseTag
     })
   },
-
   watch: {
     searchName() {
       this.getStudentsFilters()
@@ -151,17 +150,17 @@ export default {
   },
   methods: {
     getStudentsFilters: pDebounce(function getStudentsFilters() {
+      function maybeParam(key, value) {
+        return value && { [key]: `%${value}%` }
+      }
       this.$axios
         .get('/api/students/', {
           params: {
             course: this.courseTag,
             isActive: this.isActive !== 3 ? this.isActive : null,
-            name: this.searchName !== '' ? `${this.searchName}%` : null,
-            registrationNumber:
-              this.searchRegistration !== 0
-                ? `${this.searchRegistration}%`
-                : null,
-            email: this.searchEmail !== '' ? `${this.searchEmail}%` : null
+            ...maybeParam('name', this.searchName),
+            ...maybeParam('registrationNumber', this.searchRegistration),
+            ...maybeParam('email', this.searchEmail)
           }
         })
         .then(res => {
