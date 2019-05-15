@@ -29,27 +29,36 @@ module.exports = async function studentsFromCsv(ctx) {
     return
   }
 
-  const data = utils.parseCsv(csv)
+  const csvData = utils.parseCsv(csv)
+  const dbData = await Student.fetchAll()
+  const dbJSON = dbData.toJSON()
 
-  const page = 1
-  const database = await Student.fetchPage({ page })
-
-  const notInDb = []
-  data.forEach(csvEntry => {
-    let found = false
-    const eAddress = csvEntry['Endereço de e-mail']
-    database.forEach(dbEntry => {
-      if (eAddress === dbEntry.attributes.email) {
-        found = true
-      }
-    })
-    if (!found) {
-      notInDb.push(csvEntry)
+  const csvMailList = []
+  csvData.forEach(csvEntry => {
+    csvMailList.push(csvEntry['Endereço de e-mail'])
+  })
+  const dbMailList = []
+  dbData.forEach(dbEntry => {
+    dbMailList.push(dbEntry.email)
+  })
+  const notInCsv = []
+  dbJSON.forEach(dbEntry => {
+    if (!csvMailList.includes(dbEntry.email)) {
+      const previousComment = dbEntry.comments
+      notInCsv.push({
+        id: dbEntry.id,
+        comment: `Adicionar ao Grupo do Google\n${previousComment}`
+      })
     }
+  })
+  notInCsv.forEach(student => {
+    new Student({ id: student.id }).save(
+      { comments: student.comment },
+      { patch: true }
+    )
   })
 
   ctx.status = 201
-  ctx.body = notInDb
 }
 
 const validHeader =
