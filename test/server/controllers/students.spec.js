@@ -314,13 +314,18 @@ describe('/api/students', () => {
     done()
   })
 
+<<<<<<< HEAD
   test('GET /?sort=parameter&order=parameter', async done => {
+=======
+  test('GET /?sort=parameter', async done => {
+>>>>>>> Parâmetros de ordenação no endpoint de listar alunos
     const resStudent1 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?sort=name'))
     expect(resStudent1.status).toEqual(200)
     expect(resStudent1.type).toEqual('application/json')
     expect(resStudent1.body).toBeDefined()
+<<<<<<< HEAD
     expect(resStudent1.body[0].name).toEqual('EDUARDO ALVES LIMA')
     expect(resStudent1.body[1].name).toEqual('ENZO FERREIRA ALVES')
     expect(resStudent1.body[2].name).toEqual('FELIPE SOUZA FERREIRA')
@@ -328,12 +333,18 @@ describe('/api/students', () => {
     expect(resStudent1.body[4].name).toEqual('JULIAN BARBOSA SANTOS')
     expect(resStudent1.body[5].name).toEqual('KAUAN CARVALHO SANTOS')
     expect(resStudent1.body[6].name).toEqual('LAURA CARDOSO CASTRO')
+=======
+    expect(
+      resStudent1.body.every(student => student.name === 'EDUARDO ALVES LIMA')
+    ).toBeTruthy()
+>>>>>>> Parâmetros de ordenação no endpoint de listar alunos
     const resStudent2 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?sort=registrationNumber'))
     expect(resStudent2.status).toEqual(200)
     expect(resStudent2.type).toEqual('application/json')
     expect(resStudent2.body).toBeDefined()
+<<<<<<< HEAD
     expect(resStudent2.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
     expect(resStudent2.body[1].name).toEqual('JOSE FERREIRA SILVA')
     expect(resStudent2.body[2].name).toEqual('KAUAN CARVALHO SANTOS')
@@ -367,6 +378,13 @@ describe('/api/students', () => {
     expect(resStudent4.body[4].name).toEqual('KAUAN CARVALHO SANTOS')
     expect(resStudent4.body[5].name).toEqual('JOSE FERREIRA SILVA')
     expect(resStudent4.body[6].name).toEqual('JULIAN BARBOSA SANTOS')
+=======
+    expect(
+      resStudent2.body.every(
+        student => student.name === 'JULIAN BARBOSA SANTOS'
+      )
+    ).toBeTruthy()
+>>>>>>> Parâmetros de ordenação no endpoint de listar alunos
     done()
   })
   test('GET /?course=cb[cc|si]&sort=parameter', async done => {
@@ -376,6 +394,7 @@ describe('/api/students', () => {
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
     expect(res1.body).toBeDefined()
+<<<<<<< HEAD
     expect(res1.body[0].name).toEqual('EDUARDO ALVES LIMA')
     expect(res1.body[1].name).toEqual('ENZO FERREIRA ALVES')
     expect(res1.body[2].name).toEqual('FELIPE SOUZA FERREIRA')
@@ -389,6 +408,26 @@ describe('/api/students', () => {
     expect(res2.body).toBeDefined()
     expect(res2.body[0].name).toEqual('JOSE FERREIRA SILVA')
     expect(res2.body[1].name).toEqual('LAURA CARDOSO CASTRO')
+=======
+    expect(
+      res1.body.every(
+        student =>
+          student.course === 'cbcc' && student.name === 'EDUARDO ALVES LIMA'
+      )
+    ).toBeTruthy()
+    const res2 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?course=cbcc&sort=registrationNumber'))
+    expect(res2.status).toEqual(200)
+    expect(res2.type).toEqual('application/json')
+    expect(res2.body).toBeDefined()
+    expect(
+      res2.body.every(
+        student =>
+          student.course === 'cbcc' && student.name === 'JULIAN BARBOSA SANTOS'
+      )
+    ).toBeTruthy()
+>>>>>>> Parâmetros de ordenação no endpoint de listar alunos
     done()
   })
   test('GET /?course=cb[cc|si]&name=[STUDENT%20NAME]&sort=parameter', async done => {
@@ -398,8 +437,16 @@ describe('/api/students', () => {
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
     expect(res1.body).toBeDefined()
+<<<<<<< HEAD
     expect(res1.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
     expect(res1.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
+=======
+    expect(
+      res1.body.every(
+        student => student.course === 'cbcc' && student.name.endsWith('SANTOS')
+      )
+    ).toBeTruthy()
+>>>>>>> Parâmetros de ordenação no endpoint de listar alunos
     const res2 = await chai
       .request(server.listen())
       .get(
@@ -410,6 +457,7 @@ describe('/api/students', () => {
     expect(res2.status).toEqual(200)
     expect(res2.type).toEqual('application/json')
     expect(res2.body).toBeDefined()
+<<<<<<< HEAD
     expect(res2.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
     expect(res2.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
     done()
@@ -439,6 +487,13 @@ describe('/api/students', () => {
     expect(res2.body).toBeDefined()
     expect(res2.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
     expect(res2.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
+=======
+    expect(
+      res2.body.every(
+        student => student.course === 'cbcc' && student.name.endsWith('SANTOS')
+      )
+    ).toBeTruthy()
+>>>>>>> Parâmetros de ordenação no endpoint de listar alunos
     done()
   })
   test('GET /?sort=invalid', async done => {
@@ -452,6 +507,7 @@ describe('/api/students', () => {
     expect(res.body.filter).toEqual('sort')
     done()
   })
+<<<<<<< HEAD
   test('GET /?sort=parameter&order=invalid', async done => {
     const res = await chai
       .request(server.listen())
@@ -463,4 +519,6 @@ describe('/api/students', () => {
     expect(res.body.filter).toEqual('order')
     done()
   })
+=======
+>>>>>>> Parâmetros de ordenação no endpoint de listar alunos
 })

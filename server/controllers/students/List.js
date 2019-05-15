@@ -21,6 +21,10 @@ module.exports = async function listStudents(ctx) {
     return
   }
   utils.paginateContext(ctx, await filterStudents(ctx.request.query))
+    ctx.body = { code: errors.INVALID_ORDER_ARGUMENT, filter: order }
+    return
+  }
+  ctx.body = await filterStudents(ctx.request.query)
 }
 /**
  * Filter students 👍
