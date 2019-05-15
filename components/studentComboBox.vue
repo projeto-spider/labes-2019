@@ -22,72 +22,119 @@
               <p class="title is-4">
                 Documentos
               </p>
-              <b-field horizontal label="Ata">
-                <b-checkbox
-                  v-model="ataCheck"
-                  :disabled="!canEdit"
-                ></b-checkbox>
-                <a
-                  v-if="checkDocumentIsNotEmpty(ataDocument)"
-                  :href="documents"
-                >
-                  <b-icon icon="file-pdf"></b-icon>
-                </a>
-                <b-upload
-                  v-model="uploadFile"
-                  :disabled="!ataCheck"
-                  @input="validateUpload(1)"
-                >
-                  <a class="button is-primary" :disabled="!ataCheck">
-                    <b-icon icon="upload"></b-icon>
-                  </a>
-                </b-upload>
-              </b-field>
-              <b-field horizontal label="Lauda">
-                <b-checkbox
-                  v-model="laudaCheck"
-                  :disabled="!canEdit"
-                ></b-checkbox>
-                <a
-                  v-if="checkDocumentIsNotEmpty(laudaDocument)"
-                  :href="documents"
-                >
-                  <b-icon icon="file-pdf"></b-icon>
-                </a>
-                <b-upload
-                  v-model="uploadFile"
-                  :disabled="!laudaCheck"
-                  @input="validateUpload(2)"
-                >
-                  <a class="button is-primary" :disabled="!laudaCheck">
-                    <b-icon icon="upload"></b-icon>
-                  </a>
-                </b-upload>
-              </b-field>
-              <b-field horizontal label="CD">
-                <b-checkbox :disabled="!canEdit"></b-checkbox>
-              </b-field>
-              <b-field horizontal label="Lista Presc.">
-                <b-checkbox
-                  v-model="presCheck"
-                  :disabled="!canEdit"
-                ></b-checkbox>
-                <a
-                  v-if="checkDocumentIsNotEmpty(presDocument)"
-                  :href="documents"
-                >
-                  <b-icon icon="file-pdf"></b-icon>
-                </a>
-                <b-upload
-                  v-model="uploadFile"
-                  :disabled="!presCheck"
-                  @input="validateUpload(3)"
-                >
-                  <a class="button is-primary" :disabled="!presCheck">
-                    <b-icon icon="upload"></b-icon>
-                  </a>
-                </b-upload>
-              </b-field>
+              <div class="table-container">
+                <table class="table is-narrow">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <strong>Ata</strong>
+                      </td>
+                      <td>
+                        <b-checkbox
+                          v-model="ataCheck"
+                          :disabled="!canEdit"
+                        ></b-checkbox>
+                      </td>
+                      <td>
+                        <a
+                          v-if="checkDocumentIsNotEmpty(ataDocument)"
+                          :href="documents"
+                        >
+                          <b-icon icon="file-pdf"></b-icon>
+                        </a>
+                        <p v-else>
+                          Sem documento
+                        </p>
+                      </td>
+                      <td>
+                        <b-upload
+                          v-model="uploadFile"
+                          :disabled="!ataCheck"
+                          @input="validateUpload(1)"
+                        >
+                          <a class="button is-primary" :disabled="!ataCheck">
+                            <b-icon icon="upload"></b-icon>
+                          </a>
+                        </b-upload>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Lauda</strong></td>
+                      <td>
+                        <b-checkbox
+                          v-model="laudaCheck"
+                          :disabled="!canEdit"
+                        ></b-checkbox>
+                      </td>
+                      <td>
+                        <a
+                          v-if="checkDocumentIsNotEmpty(laudaDocument)"
+                          :href="documents"
+                        >
+                          <b-icon icon="file-pdf"></b-icon>
+                        </a>
+                        <p v-else>
+                          Sem documento
+                        </p>
+                      </td>
+                      <td>
+                        <b-upload
+                          v-model="uploadFile"
+                          :disabled="!laudaCheck"
+                          @input="validateUpload(2)"
+                        >
+                          <a class="button is-primary" :disabled="!laudaCheck">
+                            <b-icon icon="upload"></b-icon>
+                          </a>
+                        </b-upload>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>CD</strong></td>
+                      <td>
+                        <b-checkbox :disabled="!canEdit"></b-checkbox>
+                      </td>
+                      <td>
+                        -
+                      </td>
+                      <td>
+                        -
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Lista presc.</strong></td>
+                      <td>
+                        <b-checkbox
+                          v-model="presCheck"
+                          :disabled="!canEdit"
+                        ></b-checkbox>
+                      </td>
+                      <td>
+                        <a
+                          v-if="checkDocumentIsNotEmpty(presDocument)"
+                          :href="presDocument.url"
+                        >
+                          <b-icon icon="file-pdf"></b-icon>
+                        </a>
+                        <p v-else>
+                          Sem documento
+                        </p>
+                      </td>
+                      <td>
+                        <b-upload
+                          v-model="uploadFile"
+                          :disabled="!presCheck"
+                          @input="validateUpload(3)"
+                        >
+                          <a class="button is-primary" :disabled="!presCheck">
+                            <b-icon icon="upload"></b-icon>
+                          </a>
+                        </b-upload>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -115,8 +162,10 @@
 </template>
 
 <script>
+import { errorsHandler } from './mixins/errors'
 export default {
   name: 'StudentComboBox',
+  mixins: [errorsHandler],
   props: {
     student: {
       type: Object,
@@ -155,20 +204,27 @@ export default {
     }
   },
   created() {
-    this.$axios
-      .get(`/api/documents/${this.student.id}`)
-      .then(res => {
-        this.documents = res.data
-      })
-      .catch(() => {
-        this.$toast.open({
-          message: 'Falha ao carregar os documentos do aluno',
-          type: 'is-danger'
-        })
-      })
+    this.getStudentsDocument()
   },
 
   methods: {
+    getStudentsDocument() {
+      this.$axios
+        .get(`/api/students/${this.student.id}/documents`)
+        .then(res => {
+          this.documents = res.data
+          this.mapDocuments()
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: 'Falha ao carregar os documentos do aluno',
+            type: 'is-danger'
+          })
+        })
+    },
+    putStudents() {
+      // TODO PUT
+    },
     toggleEdit() {
       this.canEdit = !this.canEdit
     },
@@ -176,10 +232,13 @@ export default {
       this.documents.forEach(element => {
         if (element.type === '1') {
           Object.assign(this.ataDocument, element)
+          this.ataCheck = true
         } else if (element.type === '2') {
           Object.assign(this.laudaDocument, element)
+          this.laudaCheck = true
         } else if (element.type === '3') {
           Object.assign(this.presDocument, element)
+          this.presCheck = true
         }
       })
     },
@@ -196,20 +255,18 @@ export default {
       body.append('document', this.uploadFile)
       body.append('type', type)
       this.$axios
-        .post(`/api/students/${this.student.id}/documents`, body)
+        .post(`/api/students/${this.student.id}/document`, body)
         .then(result => {
           this.isLoading = false
           this.$toast.open({
             message: 'Upload feito com sucesso',
             type: 'is-success'
           })
+          this.getStudentsDocument()
         })
         .catch(error => {
           this.isLoading = false
-          this.$toast.open({
-            message: this.errorMessage(error.response.data.code),
-            type: 'is-danger'
-          })
+          this.openErrorNotification(error.response.data.code)
         })
     },
     validateUpload(type) {
