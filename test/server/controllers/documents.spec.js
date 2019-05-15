@@ -31,6 +31,18 @@ describe('/api/documents', () => {
     done()
   })
 
+  test('GET /students/:studentID/documents/:documentID', async done => {
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/1/documents/2')
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.id).toEqual(2)
+    expect(res.body.studentID).toEqual(1)
+    done()
+  })
+
   test('GET /students/:invalid/documents', async done => {
     const resChar = await chai
       .request(server.listen())
@@ -46,6 +58,20 @@ describe('/api/documents', () => {
     expect(resId.type).toEqual('application/json')
     expect(resId.body).toBeDefined()
     expect(resId.body.code).toEqual(errors.INVALID_PARAMS)
+    const resCharDoc = await chai
+      .request(server.listen())
+      .get('/api/students/1/documents/a')
+    expect(resCharDoc.status).toEqual(400)
+    expect(resCharDoc.type).toEqual('application/json')
+    expect(resCharDoc.body).toBeDefined()
+    expect(resCharDoc.body.code).toEqual(errors.INVALID_PARAMS)
+    const resIdDoc = await chai
+      .request(server.listen())
+      .get('/api/students/1/documents/39383321')
+    expect(resIdDoc.status).toEqual(400)
+    expect(resIdDoc.type).toEqual('application/json')
+    expect(resIdDoc.body).toBeDefined()
+    expect(resIdDoc.body.code).toEqual(errors.INVALID_PARAMS)
     done()
   })
 })

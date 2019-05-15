@@ -17,7 +17,6 @@ api.get('/users/:id', users.Show)
 // Student Routes
 api.get('/students/', students.List)
 api.get('/students/:id', students.Show)
-api.get('/students/:studentID/documents', documents.Show)
 api.post('/students/from-csv', KoaBody({ multipart: true }), students.FromCsv)
 
 // Not Found Routes
@@ -27,6 +26,9 @@ api.all('/*', ctx => {
 })
 // Documents Routes
 api.get('/documents/:studentID', documents.Show)
+// Documents Routes
+api.get('/students/:studentID/documents', documents.List)
+api.get('/students/:studentID/documents/:id', documents.Show)
 
 // Connect API routes to main router
 router.use(api.routes())

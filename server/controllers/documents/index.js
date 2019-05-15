@@ -1,3 +1,4 @@
 const Show = require('./Show')
+const List = require('./List')
 
-module.exports = { Show }
+module.exports = { Show, List }
