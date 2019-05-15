@@ -28,7 +28,7 @@ export const actions = {
     return this.$axios
       .$post('/api/auth', { username, password })
       .then(({ token, user }) => {
-        this.$axios.setToken(token)
+        this.$axios.setToken(token, 'Bearer')
         persist('token', token)
         persist('user', user)
         commit('setToken', token)
