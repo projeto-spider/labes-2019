@@ -313,4 +313,95 @@ describe('/api/students', () => {
     ).toBeTruthy()
     done()
   })
+
+  test('GET /?sort=parameter', async done => {
+    const resStudent1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?sort=name'))
+    expect(resStudent1.status).toEqual(200)
+    expect(resStudent1.type).toEqual('application/json')
+    expect(resStudent1.body).toBeDefined()
+    expect(
+      resStudent1.body.every(student => student.name === 'EDUARDO ALVES LIMA')
+    ).toBeTruthy()
+    const resStudent2 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?sort=registrationNumber'))
+    expect(resStudent2.status).toEqual(200)
+    expect(resStudent2.type).toEqual('application/json')
+    expect(resStudent2.body).toBeDefined()
+    expect(
+      resStudent2.body.every(
+        student => student.name === 'JULIAN BARBOSA SANTOS'
+      )
+    ).toBeTruthy()
+    done()
+  })
+  test('GET /?course=cb[cc|si]&sort=parameter', async done => {
+    const res1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?course=cbcc&sort=name'))
+    expect(res1.status).toEqual(200)
+    expect(res1.type).toEqual('application/json')
+    expect(res1.body).toBeDefined()
+    expect(
+      res1.body.every(
+        student =>
+          student.course === 'cbcc' && student.name === 'EDUARDO ALVES LIMA'
+      )
+    ).toBeTruthy()
+    const res2 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?course=cbcc&sort=registrationNumber'))
+    expect(res2.status).toEqual(200)
+    expect(res2.type).toEqual('application/json')
+    expect(res2.body).toBeDefined()
+    expect(
+      res2.body.every(
+        student =>
+          student.course === 'cbcc' && student.name === 'JULIAN BARBOSA SANTOS'
+      )
+    ).toBeTruthy()
+    done()
+  })
+  test('GET /?course=cb[cc|si]&name=[STUDENT%20NAME]&sort=parameter', async done => {
+    const res1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?course=cbcc&name=%SANTOS&sort=name'))
+    expect(res1.status).toEqual(200)
+    expect(res1.type).toEqual('application/json')
+    expect(res1.body).toBeDefined()
+    expect(
+      res1.body.every(
+        student => student.course === 'cbcc' && student.name.endsWith('SANTOS')
+      )
+    ).toBeTruthy()
+    const res2 = await chai
+      .request(server.listen())
+      .get(
+        encodeURI(
+          '/api/students/?course=cbcc&name=%SANTOS&sort=registrationNumber'
+        )
+      )
+    expect(res2.status).toEqual(200)
+    expect(res2.type).toEqual('application/json')
+    expect(res2.body).toBeDefined()
+    expect(
+      res2.body.every(
+        student => student.course === 'cbcc' && student.name.endsWith('SANTOS')
+      )
+    ).toBeTruthy()
+    done()
+  })
+  test('GET /?sort=invalid', async done => {
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/?sort=invalid')
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_SORT_ARGUMENT)
+    expect(res.body.filter).toEqual('sort')
+    done()
+  })
 })
