@@ -5,27 +5,30 @@
   >
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a href="#" class="navbar-item has-dropdown is-hoverable">
-          <div class="navbar-link">
-            {{ courseNameUppercase || 'Selecione um curso' }}
-          </div>
-          <div class="navbar-dropdown">
-            <a href="#" class="navbar-item" @click="setCourseTag('cbcc')">
-              CBCC
-            </a>
-            <a href="#" class="navbar-item" @click="setCourseTag('cbsi')">
-              CBSI
-            </a>
-          </div>
-        </a>
-
         <a
           href="#"
           role="button"
           class="navbar-burger burger"
+          :class="{ 'is-active': showNavBurger }"
           aria-label="menu"
           aria-expanded="false"
           data-target="navbarBasicExample"
+          @click="showNavBurger = !showNavBurger"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+        <a
+          v-if="showSideNavBurger"
+          href="#"
+          role="button"
+          class="navbar-burger burger"
+          :class="{ 'is-active': active }"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+          @click="active = !active"
         >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -33,15 +36,32 @@
         </a>
       </div>
 
-      <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-start"></div>
-
-        <div v-if="currentUser" class="navbar-end">
+      <div
+        id="navbarBasicExample"
+        class="navbar-menu"
+        :class="{ 'is-active': showNavBurger }"
+      >
+        <div class="navbar-start">
+          <a href="#" class="navbar-item has-dropdown is-hoverable">
+            <div class="navbar-link">
+              {{ courseNameUppercase || 'Selecione um curso' }}
+            </div>
+            <div class="navbar-dropdown">
+              <a href="#" class="navbar-item" @click="setCourseTag('cbcc')">
+                CBCC
+              </a>
+              <a href="#" class="navbar-item" @click="setCourseTag('cbsi')">
+                CBSI
+              </a>
+            </div>
+          </a>
+        </div>
+        <div class="navbar-end">
           <div class="navbar-item">
             <div>
-              <p>
-                {{ currentUser.email }}
-              </p>
+              <a class="button is-danger" @click="logout">
+                Log out
+              </a>
             </div>
           </div>
         </div>
@@ -51,7 +71,7 @@
     <div class="columns is-fullheight">
       <div
         class="column is-2 has-background-black-ter"
-        :class="{ 'is-hidden-mobile': active }"
+        :class="{ 'is-hidden-mobile': !active }"
       >
         <aside class="menu is-sidebar-menu">
           <div class="menu-label text-uppercase">
@@ -116,7 +136,8 @@ export default {
   data() {
     return {
       active: this.isActive(),
-      activateModal: false
+      activateModal: false,
+      showNavBurger: this.showSideNavBurger()
     }
   },
 
@@ -132,10 +153,12 @@ export default {
     }
   },
   methods: {
-    isActive: function() {
-      return window.innerWidth > 1000
+    isActive() {
+      return !window.innerWidth > 768
     },
-
+    showSideNavBurger() {
+      return window.innerWidth < 768
+    },
     setCourseTag(tag) {
       this.$store.dispatch('courseTag', { tag })
     },
