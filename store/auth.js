@@ -1,6 +1,6 @@
 export const state = () => ({
-  token: false,
-  user: false
+  token: recovery('token'),
+  user: recovery('user')
 })
 
 export const mutations = {
@@ -24,17 +24,16 @@ export const getters = {
 }
 
 export const actions = {
-  login({ commit }, { email, password }) {
-    commit('setToken', 'validToken')
-    if (email === 'test@facomp.br' && password === '123') {
-      return commit('setUser', {
-        user: {
-          email: email,
-          password: password
-        }
+  login({ commit }, { username, password }) {
+    return this.$axios
+      .$post('/api/auth', { username, password })
+      .then(({ token, user }) => {
+        this.$axios.setToken(token)
+        persist('token', token)
+        persist('user', user)
+        commit('setToken', token)
+        return commit('setUser', user)
       })
-    }
-    throw new Error('Usuario Nao Encontrado')
   },
 
   register({ commit, dispatch }, { email, name, password }) {
@@ -49,4 +48,13 @@ export const actions = {
     commit('setToken', false)
     commit('setUser', false)
   }
+}
+
+function persist(key, value) {
+  localStorage.setItem(key, JSON.stringify(value))
+}
+
+function recovery(key) {
+  const saved = localStorage.getItem(key)
+  return saved ? JSON.parse(saved) : false
 }

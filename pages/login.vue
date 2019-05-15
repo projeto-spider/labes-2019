@@ -7,7 +7,7 @@
             <img src="../assets/images/UFPA.png" width="250" height="200" />
           </figure>
           <h3 class="title has-text-white">Login</h3>
-          <p class="subtitle has-text-white">Por favor faca o login</p>
+          <p class="subtitle has-text-white">Por favor faça o login</p>
           <div class="box">
             <form>
               <div class="field">
@@ -15,8 +15,8 @@
                   <input
                     v-model="username"
                     class="input is-large"
-                    type="email"
-                    placeholder="Your Email"
+                    type="text"
+                    placeholder="Seu nome de usuário"
                     autofocus
                   />
                 </div>
@@ -28,14 +28,14 @@
                     v-model="password"
                     class="input is-large"
                     type="password"
-                    placeholder="Your Password"
+                    placeholder="Sua senha"
                   />
                 </div>
               </div>
               <div class="field">
                 <label class="checkbox">
                   <input type="checkbox" />
-                  Remember me
+                  Lembrar me
                 </label>
               </div>
               <button
@@ -67,7 +67,7 @@ export default {
     async login() {
       try {
         await this.$store.dispatch('auth/login', {
-          email: this.username,
+          username: this.username,
           password: this.password
         })
         this.$router.push('/')
