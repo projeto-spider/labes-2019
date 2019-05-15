@@ -321,38 +321,52 @@ describe('/api/students', () => {
     expect(resStudent1.status).toEqual(200)
     expect(resStudent1.type).toEqual('application/json')
     expect(resStudent1.body).toBeDefined()
-    expect(
-      resStudent1.body.every(student => student.name === 'EDUARDO ALVES LIMA')
-    ).toBeTruthy()
+    expect(resStudent1.body[0].name).toEqual('EDUARDO ALVES LIMA')
+    expect(resStudent1.body[1].name).toEqual('ENZO FERREIRA ALVES')
+    expect(resStudent1.body[2].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(resStudent1.body[3].name).toEqual('JOSE FERREIRA SILVA')
+    expect(resStudent1.body[4].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(resStudent1.body[5].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(resStudent1.body[6].name).toEqual('LAURA CARDOSO CASTRO')
     const resStudent2 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?sort=registrationNumber'))
     expect(resStudent2.status).toEqual(200)
     expect(resStudent2.type).toEqual('application/json')
     expect(resStudent2.body).toBeDefined()
-    expect(
-      resStudent2.body.every(
-        student => student.name === 'JULIAN BARBOSA SANTOS'
-      )
-    ).toBeTruthy()
+    expect(resStudent2.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(resStudent2.body[1].name).toEqual('JOSE FERREIRA SILVA')
+    expect(resStudent2.body[2].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(resStudent2.body[3].name).toEqual('ENZO FERREIRA ALVES')
+    expect(resStudent2.body[4].name).toEqual('LAURA CARDOSO CASTRO')
+    expect(resStudent2.body[5].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(resStudent2.body[6].name).toEqual('EDUARDO ALVES LIMA')
     const resStudent3 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?sort=name&order=DESC'))
     expect(resStudent3.status).toEqual(200)
     expect(resStudent3.type).toEqual('application/json')
     expect(resStudent3.body).toBeDefined()
-    expect(
-      resStudent3.body.every(student => student.name === 'LAURA CARDOSO CASTRO')
-    ).toBeTruthy()
+    expect(resStudent3.body[0].name).toEqual('LAURA CARDOSO CASTRO')
+    expect(resStudent3.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(resStudent3.body[2].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(resStudent3.body[3].name).toEqual('JOSE FERREIRA SILVA')
+    expect(resStudent3.body[4].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(resStudent3.body[5].name).toEqual('ENZO FERREIRA ALVES')
+    expect(resStudent3.body[6].name).toEqual('EDUARDO ALVES LIMA')
     const resStudent4 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?sort=registrationNumber&order=DESC'))
     expect(resStudent4.status).toEqual(200)
     expect(resStudent4.type).toEqual('application/json')
     expect(resStudent4.body).toBeDefined()
-    expect(
-      resStudent4.body.every(student => student.name === 'EDUARDO ALVES LIMA')
-    ).toBeTruthy()
+    expect(resStudent4.body[0].name).toEqual('EDUARDO ALVES LIMA')
+    expect(resStudent4.body[1].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(resStudent4.body[2].name).toEqual('LAURA CARDOSO CASTRO')
+    expect(resStudent4.body[3].name).toEqual('ENZO FERREIRA ALVES')
+    expect(resStudent4.body[4].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(resStudent4.body[5].name).toEqual('JOSE FERREIRA SILVA')
+    expect(resStudent4.body[6].name).toEqual('JULIAN BARBOSA SANTOS')
     done()
   })
   test('GET /?course=cb[cc|si]&sort=parameter', async done => {
@@ -362,24 +376,19 @@ describe('/api/students', () => {
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
     expect(res1.body).toBeDefined()
-    expect(
-      res1.body.every(
-        student =>
-          student.course === 'cbcc' && student.name === 'EDUARDO ALVES LIMA'
-      )
-    ).toBeTruthy()
+    expect(res1.body[0].name).toEqual('EDUARDO ALVES LIMA')
+    expect(res1.body[1].name).toEqual('ENZO FERREIRA ALVES')
+    expect(res1.body[2].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(res1.body[3].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(res1.body[4].name).toEqual('KAUAN CARVALHO SANTOS')
     const res2 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?course=cbcc&sort=registrationNumber'))
+      .get(encodeURI('/api/students/?course=cbsi&sort=registrationNumber'))
     expect(res2.status).toEqual(200)
     expect(res2.type).toEqual('application/json')
     expect(res2.body).toBeDefined()
-    expect(
-      res2.body.every(
-        student =>
-          student.course === 'cbcc' && student.name === 'JULIAN BARBOSA SANTOS'
-      )
-    ).toBeTruthy()
+    expect(res2.body[0].name).toEqual('JOSE FERREIRA SILVA')
+    expect(res2.body[1].name).toEqual('LAURA CARDOSO CASTRO')
     done()
   })
   test('GET /?course=cb[cc|si]&name=[STUDENT%20NAME]&sort=parameter', async done => {
@@ -389,11 +398,8 @@ describe('/api/students', () => {
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
     expect(res1.body).toBeDefined()
-    expect(
-      res1.body.every(
-        student => student.course === 'cbcc' && student.name.endsWith('SANTOS')
-      )
-    ).toBeTruthy()
+    expect(res1.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(res1.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
     const res2 = await chai
       .request(server.listen())
       .get(
@@ -404,11 +410,8 @@ describe('/api/students', () => {
     expect(res2.status).toEqual(200)
     expect(res2.type).toEqual('application/json')
     expect(res2.body).toBeDefined()
-    expect(
-      res2.body.every(
-        student => student.course === 'cbcc' && student.name.endsWith('SANTOS')
-      )
-    ).toBeTruthy()
+    expect(res2.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(res2.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
     done()
   })
   test('GET /?course=cb[cc|si]&name=[STUDENT%20NAME]&sort=parameter&order=parameter', async done => {
@@ -422,11 +425,8 @@ describe('/api/students', () => {
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
     expect(res1.body).toBeDefined()
-    expect(
-      res1.body.every(
-        student => student.course === 'cbcc' && student.name.endsWith('SANTOS')
-      )
-    ).toBeTruthy()
+    expect(res1.body[0].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(res1.body[1].name).toEqual('JULIAN BARBOSA SANTOS')
     const res2 = await chai
       .request(server.listen())
       .get(
@@ -437,11 +437,8 @@ describe('/api/students', () => {
     expect(res2.status).toEqual(200)
     expect(res2.type).toEqual('application/json')
     expect(res2.body).toBeDefined()
-    expect(
-      res2.body.every(
-        student => student.course === 'cbcc' && student.name.endsWith('SANTOS')
-      )
-    ).toBeTruthy()
+    expect(res2.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(res2.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
     done()
   })
   test('GET /?sort=invalid', async done => {

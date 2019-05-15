@@ -17,7 +17,7 @@ module.exports = async function listStudents(ctx) {
   }
   if (order !== undefined && !['ASC', 'DESC'].includes(order)) {
     ctx.status = 400
-    ctx.body = { code: errors.INVALID_ORDER_ARGUMENT, filter: order }
+    ctx.body = { code: errors.INVALID_ORDER_ARGUMENT, filter: 'order' }
     return
   }
   utils.paginateContext(ctx, await filterStudents(ctx.request.query))
