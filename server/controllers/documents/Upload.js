@@ -15,8 +15,8 @@ module.exports = async function uploadDocument(ctx) {
     ctx.request.files && ctx.request.files.file && ctx.request.files.file.path
 
   if (documentType === undefined || !['1', '2', '3'].includes(documentType)) {
-    ctx.status = 400
-    ctx.body = { code: errors.INVALID_PARAMS, param: 'documentType' }
+    ctx.status = 404
+    ctx.body = { code: errors.DOCUMENT_NOT_FOUND }
     return
   }
 
@@ -62,25 +62,38 @@ module.exports = async function uploadDocument(ctx) {
       })
     }
 
+    const dirUploads = path.join(__dirname, '../../../storage/')
+    if (!fs.existsSync(dirUploads)) {
+      fs.mkdirSync(dirUploads)
+    }
+
+    const dirStudents = path.join(
+      dirUploads,
+      studentFind.get('registrationNumber')
+    )
+    if (!fs.existsSync(dirStudents)) {
+      fs.mkdirSync(dirStudents)
+    }
+
     const file = ctx.request.files.file
     const reader = fs.createReadStream(file.path)
     const stream = fs.createWriteStream(
       path.join(
-        __dirname,
-        '../../../storage/',
+        dirStudents,
         studentFind.get('registrationNumber') +
           '-' +
           enumi.documents[documentType] +
           '.pdf'
       )
     )
+
     reader.pipe(stream)
     ctx.status = 201
     ctx.body = {
       count: file.size
     }
   } else {
-    ctx.status = 400
-    ctx.body = { code: errors.USER_NOT_FOUND }
+    ctx.status = 404
+    ctx.body = { code: errors.STUDENT_NOT_FOUND }
   }
 }

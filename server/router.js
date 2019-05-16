@@ -29,6 +29,7 @@ api.get('/documents/:studentID', documents.Show)
 // Documents Routes
 api.get('/students/:studentID/documents', documents.List)
 api.get('/students/:studentID/documents/:id', documents.Show)
+api.get('/students/:studentID/documents/:id/download', documents.Download)
 api.post(
   '/students/:studentID/documents',
   KoaBody({ multipart: true }),

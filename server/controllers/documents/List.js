@@ -11,8 +11,8 @@ module.exports = async function listDocuments(ctx) {
         return value === null
       })
   ) {
-    ctx.status = 400
-    ctx.body = { code: errors.INVALID_PARAMS, param: 'studentID' }
+    ctx.status = 404
+    ctx.body = { code: errors.STUDENT_NOT_FOUND }
     return
   }
 
