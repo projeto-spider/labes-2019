@@ -40,10 +40,10 @@ module.exports = async function studentsFromCsv(ctx) {
     WHERE
       students.email
     NOT IN
-      ('null','${csvMailList.join("','")}')
+      (${csvMailList.map(() => '?').join(', ')},'null')
   `
 
-  await knex.raw(query)
+  await knex.raw(query, csvMailList)
   ctx.status = 201
 }
 
