@@ -1,7 +1,7 @@
 const fs = require('fs')
 const utils = require('../../utils')
 const errors = require('../../../shared/errors')
-const Student = require('../../models/Student')
+const { knex } = require('../../db')
 
 module.exports = async function studentsFromCsv(ctx) {
   const filePath =
@@ -30,34 +30,20 @@ module.exports = async function studentsFromCsv(ctx) {
   }
 
   const csvData = utils.parseCsv(csv)
-  const dbData = await Student.fetchAll()
-  const dbJSON = dbData.toJSON()
+  const csvMailList = csvData.map(entry => entry['Endereço de e-mail'])
 
-  const csvMailList = []
-  csvData.forEach(csvEntry => {
-    csvMailList.push(csvEntry['Endereço de e-mail'])
-  })
-  const dbMailList = []
-  dbData.forEach(dbEntry => {
-    dbMailList.push(dbEntry.email)
-  })
-  const notInCsv = []
-  dbJSON.forEach(dbEntry => {
-    if (!csvMailList.includes(dbEntry.email)) {
-      const previousComment = dbEntry.comments
-      notInCsv.push({
-        id: dbEntry.id,
-        comment: `Adicionar ao Grupo do Google\n${previousComment}`
-      })
-    }
-  })
-  notInCsv.forEach(student => {
-    new Student({ id: student.id }).save(
-      { comments: student.comment },
-      { patch: true }
-    )
-  })
+  const query = `
+    UPDATE
+      students
+    SET
+      comments = 'Adicionar ao Grupo do Google'
+    WHERE
+      students.email
+    NOT IN
+      ('null','${csvMailList.join("','")}')
+  `
 
+  await knex.raw(query)
   ctx.status = 201
 }
 

@@ -1,15 +1,20 @@
 const Student = require('../../models/Student')
+const errors = require('../../../shared/errors')
 
 module.exports = async function commentStudent(ctx) {
   const studentId = ctx.request.body.comment.studentId
   const comment = ctx.request.body.comment.text
 
-  if ((await Student.where('id', studentId).fetch()) === null) {
-    ctx.status = 400
-    ctx.body = { code: 'INVALID_PARSING', param: 'studentId' }
+  if (studentId > (await Student.count())) {
+    ctx.status = 404
+    ctx.body = { code: errors.NOT_FOUND_ROUTE, param: 'studentId' }
     return
   }
 
-  new Student({ id: studentId }).save({ comments: comment }, { patch: true })
+  const newStudent = await new Student({ id: studentId }).save(
+    { comments: comment },
+    { patch: true }
+  )
   ctx.status = 201
+  ctx.body = newStudent.toJSON()
 }
