@@ -61,9 +61,9 @@ export default {
       type: String,
       default: () => "Page's title"
     },
-    propStudents: {
-      type: Array,
-      default: () => []
+    defaultCourse: {
+      type: String,
+      default: () => 'cbcc'
     },
     isActive: {
       type: Number,
@@ -108,13 +108,14 @@ export default {
           label: 'Email'
         }
       ],
-      total: this.propStudents.length,
-      page: this.defaultPage,
+      total: 0,
+      page: 1,
       perPage: this.defaultPerPage,
       sortField: this.defaultSortField,
       sortOrder: this.defaultSortOrder,
+      course: this.defaultCourse,
       loading: false,
-      students: this.propStudents
+      students: []
     }
   },
 
@@ -168,7 +169,7 @@ export default {
       this.$axios
         .get('/api/students/', {
           params: {
-            course: this.courseTag,
+            course: this.course,
             isActive: this.isActive,
             page: this.page,
             sort: this.sortField,
@@ -177,7 +178,7 @@ export default {
         })
         .then(res => {
           this.students = res.data
-          this.total = this.students.length
+          this.total = res.headers['pagination-page-count'] * this.perPage
           this.loading = false
         })
         .catch(() => {

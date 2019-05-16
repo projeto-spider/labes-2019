@@ -29,7 +29,6 @@ module.exports = async function studentsFromCsv(ctx) {
   }
 
   const data = utils.parseCsv(csv)
-
   const digested = utils.digestSigaaData(data)
   await utils.batchUpdateStudents(digested)
 
