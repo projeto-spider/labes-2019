@@ -19,7 +19,7 @@
         </div>
         <br />
         <b-table
-          v-if="filteredList"
+          v-if="filteredList.length > 0"
           :striped="isStriped"
           :hoverable="isHoverable"
           :data="filteredList"
@@ -160,27 +160,7 @@ export default {
 
   methods: {
     getStudentsFilters: pDebounce(function getStudentsFilters() {
-      this.loading = true
-      this.$axios
-        .get('/api/students/', {
-          params: {
-            course: this.courseTag,
-            isActive: this.isActive,
-            page: this.page,
-            sort: this.sortField
-          }
-        })
-        .then(res => {
-          this.students = res.data
-          this.total = this.students.length
-          this.loading = false
-        })
-        .catch(() => {
-          this.$toast.open({
-            message: 'Falha ao carregar a lista de alunos.',
-            type: 'is-danger'
-          })
-        })
+      this.getStudents()
     }, 500),
 
     getStudents() {
@@ -191,7 +171,8 @@ export default {
             course: this.courseTag,
             isActive: this.isActive,
             page: this.page,
-            sort: this.sortField
+            sort: this.sortField,
+            order: this.sortOrder
           }
         })
         .then(res => {

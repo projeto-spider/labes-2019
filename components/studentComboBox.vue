@@ -9,7 +9,7 @@
         <div class="columns">
           <div class="column is-three-quarters">
             <strong>Nome</strong>: {{ student.name }} <br />
-            <strong>Matricula</strong>: {{ student.registrationNumber }} <br />
+            <strong>Matrícula</strong>: {{ student.registrationNumber }} <br />
             <strong>E-mail</strong>: {{ student.email }} <br />
             <strong>Status</strong>: {{ displayStatus }} <br />
             <strong>Pendências</strong>: Só 500h <br />

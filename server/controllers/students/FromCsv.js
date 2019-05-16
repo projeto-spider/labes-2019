@@ -29,6 +29,7 @@ module.exports = async function studentsFromCsv(ctx) {
   }
 
   const data = utils.parseCsv(csv)
+
   const digested = utils.digestSigaaData(data)
   await utils.batchUpdateStudents(digested)
 
@@ -57,6 +58,10 @@ const validHeader =
 function validate(csv) {
   try {
     const lines = csv.replace('\r\n', '\n').split('\n')
+
+    if (!lines[lines.length - 1]) {
+      lines.splice(-1, 1)
+    }
 
     if (lines.length < 2) {
       return errors.IMPORT_CSV_INVALID_LENGTH
