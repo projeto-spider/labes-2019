@@ -1,21 +1,28 @@
 <template>
   <div class="card">
     <header class="card-header">
-      <b-icon pack="fas" icon="user" class="icon"></b-icon>
-      <span class="card-header-title">{{ student.name }}</span>
+      <b-icon pack="fas" icon="user" size="is-medium"></b-icon>
+      <p class="card-header-title">{{ studentData.name }}</p>
     </header>
     <div class="card-content">
       <div class="content">
         <div class="columns">
           <div class="column is-half">
-            <strong>Nome</strong>: {{ student.name }} <br />
-            <strong>Matrícula</strong>: {{ student.registrationNumber }} <br />
-            <strong>E-mail</strong>: {{ student.email }} <br />
+            <strong>Nome</strong>: {{ studentData.name }} <br />
+            <strong>Matricula</strong>: {{ studentData.registrationNumber }}
+            <br />
+            <strong>E-mail</strong>: {{ studentData.email }} <br />
             <strong>Status</strong>: {{ displayStatus }} <br />
-            <strong>CRG</strong>: <b-input :disabled="!canEdit"></b-input>
+            <strong>CRG</strong>:
+            <b-input v-model="studentData.crg" :disabled="!canEdit"></b-input>
             <br />
             <strong>Pendências</strong>:
-            <b-input :disabled="!canEdit"></b-input> <br />
+            <b-input
+              v-model="pendencies"
+              :disabled="!canEdit"
+              :value="studentData.pendencies"
+            ></b-input>
+            <br />
           </div>
           <div class="column is-half">
             <div class="box">
@@ -37,8 +44,11 @@
                       </td>
                       <td>
                         <a
-                          v-if="checkDocumentIsNotEmpty(ataDocument)"
-                          :href="documents"
+                          v-if="!checkDocumentIsNotEmpty(ataDocument)"
+                          :href="
+                            `http://localhost:3000${ataDocument.URL}/download`
+                          "
+                          target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
                         </a>
@@ -52,7 +62,10 @@
                           :disabled="!ataCheck"
                           @input="validateUpload(1)"
                         >
-                          <a class="button is-primary" :disabled="!ataCheck">
+                          <a
+                            class="button is-primary"
+                            :disabled="!ataCheck || !canEdit"
+                          >
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
@@ -69,7 +82,7 @@
                       <td>
                         <a
                           v-if="checkDocumentIsNotEmpty(laudaDocument)"
-                          :href="documents"
+                          :href="laudaDocument.url"
                         >
                           <b-icon icon="file-pdf"></b-icon>
                         </a>
@@ -92,7 +105,10 @@
                     <tr>
                       <td><strong>CD</strong></td>
                       <td>
-                        <b-checkbox :disabled="!canEdit"></b-checkbox>
+                        <b-checkbox
+                          v-model="CdCheck"
+                          :disabled="!canEdit"
+                        ></b-checkbox>
                       </td>
                       <td>
                         -
@@ -152,7 +168,9 @@
         <div class="level-right">
           <div class="level-item">
             <b-field>
-              <b-button class="is-primary"> Submeter</b-button>
+              <b-button class="is-primary" @click="putStudents">
+                Submeter</b-button
+              >
             </b-field>
           </div>
         </div>
@@ -178,24 +196,15 @@ export default {
       ataCheck: false,
       laudaCheck: false,
       presCheck: false,
-      documents: [
-        {
-          id: 1,
-          studentID: 10,
-          type: 2,
-          URL: 'url do documento'
-        },
-        {
-          id: 1,
-          studentID: 10,
-          type: 3,
-          URL: 'url do documento'
-        }
-      ],
+      CdCheck: false,
       ataDocument: {},
       laudaDocument: {},
       presDocument: {},
-      uploadFile: File
+      uploadFile: File,
+      crg: '',
+      pendencies: '',
+      studentData: Object.assign(this.student),
+      isLoading: false
     }
   },
   computed: {
@@ -212,8 +221,7 @@ export default {
       this.$axios
         .get(`/api/students/${this.student.id}/documents`)
         .then(res => {
-          this.documents = res.data
-          this.mapDocuments()
+          this.mapDocuments(res.data)
         })
         .catch(() => {
           this.$toast.open({
@@ -223,20 +231,40 @@ export default {
         })
     },
     putStudents() {
-      // TODO PUT
+      this.isLoading = true
+      const student = Object.assign(this.studentData)
+      // student.pendencies = this.pendencies
+      // student.cd = this.CdCheck
+
+      this.$axios
+        .put(`/api/students/${this.student.id}`, student)
+        .then(res => {
+          this.isLoading = false
+          this.studentData = res.data
+          this.$toast.open({
+            message: 'Aluno atualizado com sucesso.',
+            type: 'is-success'
+          })
+        })
+        .catch(error => {
+          this.isLoading = false
+          this.openErrorNotification(error.response.data.code)
+        })
     },
     toggleEdit() {
       this.canEdit = !this.canEdit
     },
-    mapDocuments() {
-      this.documents.forEach(element => {
-        if (element.type === '1') {
-          Object.assign(this.ataDocument, element)
+    mapDocuments(documents) {
+      // eslint-disable-next-line no-console
+      console.log(documents)
+      documents.forEach(element => {
+        if (element.type === 1) {
+          this.ataDocument = Object.assign(element)
           this.ataCheck = true
-        } else if (element.type === '2') {
+        } else if (element.type === 2) {
           Object.assign(this.laudaDocument, element)
           this.laudaCheck = true
-        } else if (element.type === '3') {
+        } else if (element.type === 3) {
           Object.assign(this.presDocument, element)
           this.presCheck = true
         }
@@ -252,12 +280,22 @@ export default {
       // TODO ENDPOINT
       this.isLoading = true
       const body = new FormData()
-      body.append('document', this.uploadFile)
-      body.append('type', type)
+      body.append('file', this.uploadFile)
+      body.append('documentType', type)
       this.$axios
-        .post(`/api/students/${this.student.id}/document`, body)
+        .post(`/api/students/${this.student.id}/documents`, body)
         .then(result => {
           this.isLoading = false
+          if (type === '1') {
+            Object.assign(this.ataDocument, result.data)
+            this.ataCheck = true
+          } else if (type === '2') {
+            Object.assign(this.laudaDocument, result.data)
+            this.laudaCheck = true
+          } else if (type === '3') {
+            Object.assign(this.presDocument, result.data)
+            this.presCheck = true
+          }
           this.$toast.open({
             message: 'Upload feito com sucesso',
             type: 'is-success'
