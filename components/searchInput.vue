@@ -124,7 +124,7 @@ export default {
       return this.students.filter(student => {
         return (
           student.name.toLowerCase().includes(this.search.toLowerCase()) ||
-          student.email.toLowerCase().includes(this.search.toLowerCase()) ||
+          // student.email.toLowerCase().includes(this.search.toLowerCase()) ||
           student.registrationNumber
             .toLowerCase()
             .includes(this.search.toLowerCase())
@@ -135,6 +135,7 @@ export default {
 
   watch: {
     filteredList: function() {
+      console.log(this.filteredList, this.students) // eslint-disable-line no-console
       if (this.filteredList.length < 1 && this.students.length > 0) {
         this.$toast.open({
           message: `Não há alunos que correspondam a chave de pesquisa ${
@@ -178,7 +179,11 @@ export default {
         })
         .then(res => {
           this.students = res.data
-          this.total = res.headers['pagination-page-count'] * this.perPage
+          const factor =
+            this.filteredList.length < this.students.length
+              ? this.filteredList.length
+              : res.headers['pagination-page-count'] * this.perPage
+          this.total = factor
           this.loading = false
         })
         .catch(() => {
