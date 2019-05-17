@@ -45,7 +45,7 @@
                       <td>
                         <a
                           v-if="!checkDocumentIsEmpty(ataDocument)"
-                          :href="`${ataDocument.url}/download`"
+                          :href="`${ataDocument.url}`"
                           target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
@@ -80,7 +80,7 @@
                       <td>
                         <a
                           v-if="!checkDocumentIsEmpty(laudaDocument)"
-                          :href="`${laudaDocument.url}/download`"
+                          :href="`${laudaDocument.url}`"
                           target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
@@ -130,7 +130,7 @@
                       <td>
                         <a
                           v-if="!checkDocumentIsEmpty(presDocument)"
-                          :href="`${presDocument.url}/download`"
+                          :href="`${presDocument.url}`"
                           target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
