@@ -6,9 +6,7 @@ const Students = require('../../models/Student')
 module.exports = async function showDocument(ctx) {
   const { studentId, id } = ctx.params
 
-  const studentFind = await Students.where('id', studentId).fetch()
-
-  if (studentFind === null) {
+  if ((await Students.where('id', studentId).count()) === 0) {
     ctx.status = 404
     ctx.body = { code: errors.NOT_FOUND }
     return

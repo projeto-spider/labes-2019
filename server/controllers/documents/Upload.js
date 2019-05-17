@@ -7,7 +7,6 @@ const Students = require('../../models/Student')
 const Documents = require('../../models/Document')
 
 module.exports = async function uploadDocument(ctx) {
-  // reference to documentTypes '../../../shared/enum'
   const { documentType } = ctx.request.body
   const { studentId } = ctx.params
 
@@ -40,6 +39,7 @@ module.exports = async function uploadDocument(ctx) {
   }
 
   const studentFind = await Students.where('id', studentId).fetch()
+
   if (studentFind !== null) {
     const documentFind = await Documents.where('studentId', studentId)
       .where('type', documentType)
