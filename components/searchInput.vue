@@ -204,7 +204,7 @@ export default {
             page: this.page,
             sort: this.sortField,
             order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
-            isActive: this.isActive !== 3 ? this.isActive : null,
+            isActive: this.isActive !== 'AllStudents' ? this.isActive : null,
             ...maybeParam('name', this.searchName),
             ...maybeParam('registrationNumber', this.searchRegistration),
             ...maybeParam('email', this.searchEmail)

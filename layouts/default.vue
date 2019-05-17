@@ -6,6 +6,21 @@
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a
+          v-if="showSideNavBurger"
+          href="#"
+          role="button"
+          class="navbar-burger burger is-marginless is-pulled-left"
+          :class="{ 'is-active': active }"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+          @click="active = !active"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+        <a
           href="#"
           role="button"
           class="navbar-burger burger"
@@ -14,21 +29,6 @@
           aria-expanded="false"
           data-target="navbarBasicExample"
           @click="showNavBurger = !showNavBurger"
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-        <a
-          v-if="showSideNavBurger"
-          href="#"
-          role="button"
-          class="navbar-burger burger"
-          :class="{ 'is-active': active }"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarBasicExample"
-          @click="active = !active"
         >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>

@@ -9,7 +9,7 @@
       <p class="title">
         Importar alunos (SIGAA)
       </p>
-      <p class="subtitle">Curso: {{ displayCurso() }}</p>
+      <p class="subtitle">Curso: {{ course }}</p>
       <b-field class="file">
         <b-upload v-model="studentsCsv" @input="validateUpload">
           <a class="button is-primary">
@@ -22,7 +22,7 @@
         </span>
         <button
           class="button is-primary"
-          :disabled="hasErrors || noFileSelected()"
+          :disabled="toggleUpload"
           @click="uploadCsv"
         >
           Submeter
@@ -45,16 +45,21 @@ export default {
   data() {
     return {
       studentsCsv: new File([''], 'Nenhum arquivo selecionado'),
-      course: '',
+      course: 'Selecione um arquivo',
       hasErrors: false,
       isLoading: false
     }
   },
-  methods: {
-    displayCurso() {
+  computed: {
+    toggleUpload() {
+      return this.hasErrors || !this.FileSelected()
+    }
+  },
+  watch: {
+    studentsCsv() {
       const reader = new FileReader()
-      let csv
-      if (!this.noFileSelected()) {
+      let csv = File
+      if (this.FileSelected()) {
         reader.readAsText(this.studentsCsv)
         reader.onload = e => {
           csv = reader.result
@@ -62,20 +67,14 @@ export default {
           csv = csv.replace('\r\n', '\n')
           const lines = csv.split('\n')
           const col = lines[1].split(',')
-          // eslint-disable-next-line no-console
-          console.log('lines', col)
           this.course = col[7]
         }
-        return this.course
       } else return 'Selecione um arquivo '
-    },
-    noFileSelected() {
-      // eslint-disable-next-line no-console
-      console.log(
-        'conditional',
-        this.hasErrors || this.studentsCsv.name === 'Nenhum arquivo selecionado'
-      )
-      return this.studentsCsv.name === 'Nenhum arquivo selecionado'
+    }
+  },
+  methods: {
+    FileSelected() {
+      return this.studentsCsv.name !== 'Nenhum arquivo selecionado'
     },
     validateUpload() {
       if (this.studentsCsv.name.split('.').pop() === 'csv') {

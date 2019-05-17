@@ -44,10 +44,8 @@
                       </td>
                       <td>
                         <a
-                          v-if="!checkDocumentIsNotEmpty(ataDocument)"
-                          :href="
-                            `http://localhost:3000${ataDocument.URL}/download`
-                          "
+                          v-if="!checkDocumentIsEmpty(ataDocument)"
+                          :href="`${ataDocument.URL}/download`"
                           target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
@@ -64,7 +62,7 @@
                         >
                           <a
                             class="button is-primary"
-                            :disabled="!ataCheck || !canEdit"
+                            :disabled="disableUpload"
                           >
                             <b-icon icon="upload"></b-icon>
                           </a>
@@ -81,8 +79,9 @@
                       </td>
                       <td>
                         <a
-                          v-if="checkDocumentIsNotEmpty(laudaDocument)"
-                          :href="laudaDocument.url"
+                          v-if="!checkDocumentIsEmpty(laudaDocument)"
+                          :href="`${ataDocument.URL}/download`"
+                          target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
                         </a>
@@ -127,8 +126,9 @@
                       </td>
                       <td>
                         <a
-                          v-if="checkDocumentIsNotEmpty(presDocument)"
-                          :href="presDocument.url"
+                          v-if="!checkDocumentIsEmpty(presDocument)"
+                          :href="`${ataDocument.URL}/download`"
+                          target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
                         </a>
@@ -203,13 +203,16 @@ export default {
       uploadFile: File,
       crg: '',
       pendencies: '',
-      studentData: Object.assign(this.student),
+      studentData: Object.assign({}, this.student),
       isLoading: false
     }
   },
   computed: {
     displayStatus() {
       return '"Sei não, hein?"'
+    },
+    disableUpload() {
+      return !this.ataCheck || !this.canEdit
     }
   },
   created() {
@@ -232,12 +235,9 @@ export default {
     },
     putStudents() {
       this.isLoading = true
-      const student = Object.assign(this.studentData)
-      // student.pendencies = this.pendencies
-      // student.cd = this.CdCheck
 
       this.$axios
-        .put(`/api/students/${this.student.id}`, student)
+        .put(`/api/students/${this.student.id}`, this.studentData)
         .then(res => {
           this.isLoading = false
           this.studentData = res.data
@@ -255,29 +255,27 @@ export default {
       this.canEdit = !this.canEdit
     },
     mapDocuments(documents) {
-      // eslint-disable-next-line no-console
-      console.log(documents)
       documents.forEach(element => {
         if (element.type === 1) {
-          this.ataDocument = Object.assign(element)
+          this.ataDocument = Object.assign({}, element)
           this.ataCheck = true
         } else if (element.type === 2) {
-          Object.assign(this.laudaDocument, element)
+          this.laudaDocument = Object.assign({}, element)
           this.laudaCheck = true
         } else if (element.type === 3) {
-          Object.assign(this.presDocument, element)
+          this.presDocument = Object.assign({}, element)
           this.presCheck = true
         }
       })
     },
-    checkDocumentIsNotEmpty(document) {
+    checkDocumentIsEmpty(document) {
       return (
-        !Object.entries(document).length === 0 &&
-        document.constructor === Object
+        Object.entries(document).length === 0 &&
+        typeof document === 'object' &&
+        document !== null
       )
     },
     documentUpload(type) {
-      // TODO ENDPOINT
       this.isLoading = true
       const body = new FormData()
       body.append('file', this.uploadFile)
@@ -308,8 +306,6 @@ export default {
         })
     },
     validateUpload(type) {
-      // eslint-disable-next-line no-console
-      console.log(this.uploadFile)
       if (this.uploadFile.name.split('.').pop() === 'pdf') {
         this.documentUpload(type)
       } else {
