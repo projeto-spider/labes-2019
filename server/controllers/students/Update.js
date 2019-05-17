@@ -6,14 +6,14 @@ module.exports = async function updateStudent(ctx) {
 
   if (studentUpdate.id === undefined) {
     ctx.status = 404
-    ctx.body = { code: errors.STUDENT_NOT_FOUND }
+    ctx.body = { code: errors.NOT_FOUND }
     return
   }
 
   const studentFind = await Student.where('id', studentUpdate.id).fetch()
   if (studentFind === null) {
     ctx.status = 404
-    ctx.body = { code: errors.STUDENT_NOT_FOUND }
+    ctx.body = { code: errors.NOT_FOUND }
     return
   }
 

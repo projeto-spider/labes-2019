@@ -12,7 +12,7 @@ module.exports = async function listDocuments(ctx) {
       })
   ) {
     ctx.status = 404
-    ctx.body = { code: errors.STUDENT_NOT_FOUND }
+    ctx.body = { code: errors.NOT_FOUND }
     return
   }
 

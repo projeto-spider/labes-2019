@@ -16,7 +16,7 @@ module.exports = async function uploadDocument(ctx) {
 
   if (documentType === undefined || !['1', '2', '3'].includes(documentType)) {
     ctx.status = 404
-    ctx.body = { code: errors.DOCUMENT_NOT_FOUND }
+    ctx.body = { code: errors.NOT_FOUND }
     return
   }
 
@@ -94,6 +94,6 @@ module.exports = async function uploadDocument(ctx) {
     }
   } else {
     ctx.status = 404
-    ctx.body = { code: errors.STUDENT_NOT_FOUND }
+    ctx.body = { code: errors.NOT_FOUND }
   }
 }

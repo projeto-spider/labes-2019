@@ -37,6 +37,12 @@ api.post(
   documents.Upload
 )
 
+// Not Found Routes
+api.all('/*', ctx => {
+  ctx.status = 404
+  ctx.body = { code: errors.NOT_FOUND }
+})
+
 // Connect API routes to main router
 router.use(api.routes())
 router.use(api.allowedMethods())
