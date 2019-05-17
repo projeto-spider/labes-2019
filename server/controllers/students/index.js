@@ -1,7 +1,7 @@
 const List = require('./List')
 const Show = require('./Show')
 const FromCsv = require('./FromCsv')
-const Comment = require('./Comment')
+const Edit = require('./Edit')
 const VerifyCsv = require('./VerifyGroupsCsv')
 
-module.exports = { List, Show, FromCsv, Comment, VerifyCsv }
+module.exports = { List, Show, FromCsv, Edit, VerifyCsv }
