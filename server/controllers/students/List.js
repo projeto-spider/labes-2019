@@ -3,7 +3,7 @@ const errors = require('../../../shared/errors')
 const utils = require('../../utils')
 
 module.exports = async function listStudents(ctx) {
-  const { course, sort, order } = ctx.request.query
+  const { course, sort, order = 'ASC' } = ctx.request.query
   if (course !== undefined && !['cbcc', 'cbsi'].includes(course)) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_FILTER, filter: 'course' }
@@ -39,10 +39,7 @@ function filterStudents(filters) {
     order
   } = filters
   let query = Student
-  if (sort !== undefined && order === undefined) {
-    query = query.forge().orderBy(sort, 'ASC')
-  }
-  if (sort !== undefined && order !== undefined) {
+  if (sort !== undefined) {
     query = query.forge().orderBy(sort, order)
   }
   if (name !== undefined) {
