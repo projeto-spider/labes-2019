@@ -11,10 +11,7 @@ module.exports = async function commentStudent(ctx) {
     return
   }
 
-  const newStudent = (await Student.where('id', studentId).fetch()).toJSON()
-  Object.keys(reqStudent).map(key => (newStudent[key] = reqStudent[key]))
-
-  await new Student({ id: studentId }).save(newStudent, { patch: true })
+  await new Student({ id: studentId }).save(reqStudent, { patch: true })
   ctx.status = 201
-  ctx.body = newStudent
+  ctx.body = reqStudent
 }
