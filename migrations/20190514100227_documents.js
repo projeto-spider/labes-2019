@@ -2,15 +2,15 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTable('documents', table => {
     table.increments('id').primary()
     table
-      .integer('studentID')
+      .integer('studentId')
       .unsigned()
       .notNullable()
     table
-      .foreign('studentID')
+      .foreign('studentId')
       .references('id')
       .inTable('students')
     table.integer('type').notNullable()
-    table.string('URL').notNullable()
+    table.string('url').notNullable()
   })
 }
 

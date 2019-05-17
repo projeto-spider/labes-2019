@@ -25,14 +25,14 @@ describe('/api/documents', () => {
 
   test('Create a Document', async done => {
     const document = await Document.forge({
-      studentID: 100,
-      type: 2,
-      URL: 'url_file'
+      studentId: 1,
+      type: 1,
+      url: 'url_file'
     }).save()
     expect(document.id).toBeDefined()
-    expect(document.attributes.studentID).toEqual(100)
-    expect(document.attributes.type).toEqual(2)
-    expect(document.attributes.URL).toEqual('url_file')
+    expect(document.attributes.studentId).toEqual(1)
+    expect(document.attributes.type).toEqual(1)
+    expect(document.attributes.url).toEqual('url_file')
     done()
   })
 })

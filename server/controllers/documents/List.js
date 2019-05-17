@@ -3,9 +3,9 @@ const Students = require('../../models/Student')
 const errors = require('../../../shared/errors')
 
 module.exports = async function listDocuments(ctx) {
-  const { studentID } = ctx.params
+  const { studentId } = ctx.params
   if (
-    await Students.where('id', studentID)
+    await Students.where('id', studentId)
       .fetch()
       .then(value => {
         return value === null
@@ -16,5 +16,5 @@ module.exports = async function listDocuments(ctx) {
     return
   }
 
-  ctx.body = await Documents.where({ studentID }).fetchAll()
+  ctx.body = await Documents.where({ studentId }).fetchAll()
 }

@@ -4,9 +4,9 @@ const Documents = require('../../models/Document')
 const Students = require('../../models/Student')
 
 module.exports = async function showDocument(ctx) {
-  const { studentID, id } = ctx.params
+  const { studentId, id } = ctx.params
 
-  const studentFind = await Students.where('id', studentID).fetch()
+  const studentFind = await Students.where('id', studentId).fetch()
 
   if (studentFind === null) {
     ctx.status = 404
@@ -14,7 +14,7 @@ module.exports = async function showDocument(ctx) {
     return
   }
 
-  const documentFind = await Documents.where({ studentID })
+  const documentFind = await Documents.where({ studentId })
     .where({ id })
     .fetch()
 

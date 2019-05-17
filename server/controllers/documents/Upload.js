@@ -9,7 +9,7 @@ const Documents = require('../../models/Document')
 module.exports = async function uploadDocument(ctx) {
   // reference to documentTypes '../../../shared/enum'
   const { documentType } = ctx.request.body
-  const { studentID } = ctx.params
+  const { studentId } = ctx.params
 
   const filePath =
     ctx.request.files && ctx.request.files.file && ctx.request.files.file.path
@@ -39,26 +39,26 @@ module.exports = async function uploadDocument(ctx) {
     return
   }
 
-  const studentFind = await Students.where('id', studentID).fetch()
+  const studentFind = await Students.where('id', studentId).fetch()
   if (studentFind !== null) {
-    const documentFind = await Documents.where('studentID', studentID)
+    const documentFind = await Documents.where('studentId', studentId)
       .where('type', documentType)
       .fetch()
-    const urlApi = '/api/students/' + studentID + '/documents/'
+    const urlApi = '/api/students/' + studentId + '/documents/'
     if (documentFind === null) {
       const documentCreated = await Documents.forge().save({
-        studentID: studentID,
+        studentId: studentId,
         type: documentType,
-        URL: urlApi
+        url: urlApi
       })
       documentCreated.save({
         id: documentCreated.get('id'),
-        URL: urlApi + documentCreated.get('id')
+        url: urlApi + documentCreated.get('id')
       })
     } else {
       documentFind.save({
         id: documentFind.get('id'),
-        URL: urlApi + documentFind.get('id')
+        url: urlApi + documentFind.get('id')
       })
     }
 

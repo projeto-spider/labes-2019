@@ -28,11 +28,11 @@ api.all('/*', ctx => {
 // Documents Routes
 api.get('/documents/:studentID', documents.Show)
 // Documents Routes
-api.get('/students/:studentID/documents', documents.List)
-api.get('/students/:studentID/documents/:id', documents.Show)
-api.get('/students/:studentID/documents/:id/download', documents.Download)
+api.get('/students/:studentId/documents', documents.List)
+api.get('/students/:studentId/documents/:id', documents.Show)
+api.get('/students/:studentId/documents/:id/download', documents.Download)
 api.post(
-  '/students/:studentID/documents',
+  '/students/:studentId/documents',
   KoaBody({ multipart: true }),
   documents.Upload
 )

@@ -20,18 +20,18 @@ describe('/api/documents', () => {
     done()
   }, 100000)
 
-  test('GET /students/:studentID/documents', async done => {
+  test('GET /students/:studentId/documents', async done => {
     const res = await chai
       .request(server.listen())
       .get('/api/students/1/documents')
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
-    expect(res.body.every(document => document.studentID === 1)).toBeTruthy()
+    expect(res.body.every(document => document.studentId === 1)).toBeTruthy()
     done()
   })
 
-  test('GET /students/:studentID/documents/:documentID', async done => {
+  test('GET /students/:studentId/documents/:documentId', async done => {
     const res = await chai
       .request(server.listen())
       .get('/api/students/1/documents/2')
@@ -39,7 +39,7 @@ describe('/api/documents', () => {
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.id).toEqual(2)
-    expect(res.body.studentID).toEqual(1)
+    expect(res.body.studentId).toEqual(1)
     done()
   })
 
