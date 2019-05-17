@@ -52,14 +52,14 @@ export default {
   },
   computed: {
     toggleUpload() {
-      return this.hasErrors || !this.FileSelected()
+      return this.hasErrors || !this.fileSelected()
     }
   },
   watch: {
     studentsCsv() {
       const reader = new FileReader()
       let csv = File
-      if (this.FileSelected()) {
+      if (this.fileSelected()) {
         reader.readAsText(this.studentsCsv)
         reader.onload = e => {
           csv = reader.result
@@ -73,7 +73,7 @@ export default {
     }
   },
   methods: {
-    FileSelected() {
+    fileSelected() {
       return this.studentsCsv.name !== 'Nenhum arquivo selecionado'
     },
     validateUpload() {

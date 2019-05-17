@@ -44,8 +44,8 @@
                       </td>
                       <td>
                         <a
-                          v-if="!checkDocumentIsEmpty(ataDocument)"
-                          :href="`${ataDocument.url}`"
+                          v-if="checkDocumentIsEmpty.ataFile"
+                          :href="`${ataDocument.URL}`"
                           target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
@@ -79,8 +79,8 @@
                       </td>
                       <td>
                         <a
-                          v-if="!checkDocumentIsEmpty(laudaDocument)"
-                          :href="`${laudaDocument.url}`"
+                          v-if="checkDocumentIsEmpty.laudaFile"
+                          :href="`${laudaDocument.URL}`"
                           target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
@@ -129,8 +129,8 @@
                       </td>
                       <td>
                         <a
-                          v-if="!checkDocumentIsEmpty(presDocument)"
-                          :href="`${presDocument.url}`"
+                          v-if="checkDocumentIsEmpty.presFile"
+                          :href="`${presDocument.URL}`"
                           target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
@@ -215,7 +215,9 @@ export default {
   },
   computed: {
     displayStatus() {
-      return '"Sei não, hein?"'
+      if (this.studentData.isActive) {
+        return 'Ativo'
+      } else return 'Inativo'
     },
     disableUploadAta() {
       return !this.ataCheck || !this.canEdit
@@ -225,6 +227,25 @@ export default {
     },
     disableUploadPres() {
       return !this.presCheck || !this.canEdit
+    },
+    checkDocumentIsEmpty() {
+      function check(document) {
+        return (
+          Object.entries(document).length === 0 &&
+          typeof document === 'object' &&
+          document !== null
+        )
+      }
+      const documents = {
+        ataFile: false,
+        laudaFile: false,
+        presFile: false
+      }
+      documents.ataFile = !check(this.ataDocument)
+      documents.laudaFile = !check(this.laudaDocument)
+      documents.presFile = !check(this.presDocument)
+
+      return documents
     }
   },
   created() {
@@ -280,13 +301,6 @@ export default {
           this.presCheck = true
         }
       })
-    },
-    checkDocumentIsEmpty(document) {
-      return (
-        Object.entries(document).length === 0 &&
-        typeof document === 'object' &&
-        document !== null
-      )
     },
     documentUpload(type) {
       this.isLoading = true
