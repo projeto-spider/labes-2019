@@ -3,7 +3,7 @@ const utils = require('../../utils')
 const errors = require('../../../shared/errors')
 const { knex } = require('../../db')
 
-module.exports = async function studentsFromCsv(ctx) {
+module.exports = async function compareGroupsCsv(ctx) {
   const filePath =
     ctx.request.files && ctx.request.files.csv && ctx.request.files.csv.path
 
