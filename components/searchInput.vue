@@ -135,7 +135,9 @@ export default {
 
   watch: {
     filteredList: function() {
-      console.log(this.filteredList, this.students) // eslint-disable-line no-console
+      if (this.filteredList.length < this.students.length) {
+        this.total = this.filteredList.length
+      }
       if (this.filteredList.length < 1 && this.students.length > 0) {
         this.$toast.open({
           message: `Não há alunos que correspondam a chave de pesquisa ${
