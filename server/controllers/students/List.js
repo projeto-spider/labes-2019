@@ -15,7 +15,7 @@ module.exports = async function listStudents(ctx) {
     ctx.body = { code: errors.INVALID_SORT_ARGUMENT, filter: 'sort' }
     return
   }
-  if (order !== undefined && !['asc', 'desc'].includes(order)) {
+  if (order !== undefined && !['ASC', 'DESC'].includes(order)) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_ORDER_ARGUMENT, filter: 'order' }
     return

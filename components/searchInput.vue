@@ -75,7 +75,7 @@ export default {
     },
     defaultSortOrder: {
       type: String,
-      default: () => 'asc'
+      default: () => 'ASC'
     },
     defaultPage: {
       type: Number,
