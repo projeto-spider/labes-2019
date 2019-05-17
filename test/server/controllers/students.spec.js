@@ -343,7 +343,7 @@ describe('/api/students', () => {
     expect(resStudent2.body[6].name).toEqual('EDUARDO ALVES LIMA')
     const resStudent3 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?sort=name&order=DESC'))
+      .get(encodeURI('/api/students/?sort=name&order=desc'))
     expect(resStudent3.status).toEqual(200)
     expect(resStudent3.type).toEqual('application/json')
     expect(resStudent3.body).toBeDefined()
@@ -356,7 +356,7 @@ describe('/api/students', () => {
     expect(resStudent3.body[6].name).toEqual('EDUARDO ALVES LIMA')
     const resStudent4 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?sort=registrationNumber&order=DESC'))
+      .get(encodeURI('/api/students/?sort=registrationNumber&order=desc'))
     expect(resStudent4.status).toEqual(200)
     expect(resStudent4.type).toEqual('application/json')
     expect(resStudent4.body).toBeDefined()
@@ -419,7 +419,7 @@ describe('/api/students', () => {
       .request(server.listen())
       .get(
         encodeURI(
-          '/api/students/?course=cbcc&name=%SANTOS&sort=name&order=DESC'
+          '/api/students/?course=cbcc&name=%SANTOS&sort=name&order=desc'
         )
       )
     expect(res1.status).toEqual(200)
@@ -431,7 +431,7 @@ describe('/api/students', () => {
       .request(server.listen())
       .get(
         encodeURI(
-          '/api/students/?course=cbcc&name=%SANTOS&sort=registrationNumber&order=ASC'
+          '/api/students/?course=cbcc&name=%SANTOS&sort=registrationNumber&order=asc'
         )
       )
     expect(res2.status).toEqual(200)
