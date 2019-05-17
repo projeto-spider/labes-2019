@@ -57,12 +57,12 @@
                       <td>
                         <b-upload
                           v-model="uploadFile"
-                          :disabled="!ataCheck"
+                          :disabled="disableUploadAta"
                           @input="validateUpload(1)"
                         >
                           <a
                             class="button is-primary"
-                            :disabled="disableUpload"
+                            :disabled="disableUploadAta"
                           >
                             <b-icon icon="upload"></b-icon>
                           </a>
@@ -92,10 +92,13 @@
                       <td>
                         <b-upload
                           v-model="uploadFile"
-                          :disabled="!laudaCheck"
+                          :disabled="disableUploadLauda"
                           @input="validateUpload(2)"
                         >
-                          <a class="button is-primary" :disabled="!laudaCheck">
+                          <a
+                            class="button is-primary"
+                            :disabled="disableUploadLauda"
+                          >
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
@@ -139,10 +142,13 @@
                       <td>
                         <b-upload
                           v-model="uploadFile"
-                          :disabled="!presCheck"
+                          :disabled="disableUploadPres"
                           @input="validateUpload(3)"
                         >
-                          <a class="button is-primary" :disabled="!presCheck">
+                          <a
+                            class="button is-primary"
+                            :disabled="disableUploadPres"
+                          >
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
@@ -211,8 +217,14 @@ export default {
     displayStatus() {
       return '"Sei não, hein?"'
     },
-    disableUpload() {
+    disableUploadAta() {
       return !this.ataCheck || !this.canEdit
+    },
+    disableUploadLauda() {
+      return !this.laudaCheck || !this.canEdit
+    },
+    disableUploadPres() {
+      return !this.presCheck || !this.canEdit
     }
   },
   created() {
