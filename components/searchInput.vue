@@ -66,6 +66,7 @@
           <student-combo-box
             v-if="selectedStudent"
             :student="selectedStudent"
+            @student-put="getStudentsFilters"
           ></student-combo-box>
         </b-modal>
       </div>

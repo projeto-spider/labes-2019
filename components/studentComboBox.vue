@@ -234,7 +234,7 @@ export default {
   methods: {
     getStudentsDocument() {
       this.$axios
-        .get(`/api/students/${this.student.id}/documents`)
+        .get(`/api/students/${this.studentData.id}/documents`)
         .then(res => {
           this.mapDocuments(res.data)
         })
@@ -249,7 +249,7 @@ export default {
       this.isLoading = true
 
       this.$axios
-        .put(`/api/students/${this.student.id}`, this.studentData)
+        .put(`/api/students/${this.studentData.id}`, this.studentData)
         .then(res => {
           this.isLoading = false
           this.studentData = res.data
@@ -257,6 +257,7 @@ export default {
             message: 'Aluno atualizado com sucesso.',
             type: 'is-success'
           })
+          this.$emit('student-put')
         })
         .catch(error => {
           this.isLoading = false
