@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const errors = require('../../../shared/errors')
-const enumi = require('../../../shared/enum')
+const enums = require('../../../shared/enums')
 
 const Students = require('../../models/Student')
 const Documents = require('../../models/Document')
@@ -82,7 +82,7 @@ module.exports = async function uploadDocument(ctx) {
         dirStudents,
         studentFind.get('registrationNumber') +
           '-' +
-          enumi.documents[documentType] +
+          enums.documents[documentType] +
           '.pdf'
       )
     )

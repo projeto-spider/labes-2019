@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const errors = require('../../../shared/errors')
-const enumi = require('../../../shared/enum')
+const enums = require('../../../shared/enums')
 
 const Documents = require('../../models/Document')
 const Students = require('../../models/Student')
@@ -37,7 +37,7 @@ module.exports = async function downloadDocument(ctx) {
     pathStudent,
     studentFind.get('registrationNumber') +
       '-' +
-      enumi.documents[documentFind.get('type')] +
+      enums.documents[documentFind.get('type')] +
       '.pdf'
   )
 
@@ -49,7 +49,7 @@ module.exports = async function downloadDocument(ctx) {
     'filename="' +
       studentFind.get('registrationNumber') +
       '-' +
-      enumi.documents[documentFind.get('type')] +
+      enums.documents[documentFind.get('type')] +
       '.pdf"'
   )
   ctx.body = reader
