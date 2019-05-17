@@ -1,7 +1,7 @@
 const Student = require('../../models/Student')
 const errors = require('../../../shared/errors')
 
-module.exports = async function showStudent(ctx) {
+module.exports = async function updateStudent(ctx) {
   const studentUpdate = ctx.request.body
 
   if (studentUpdate.id === undefined) {
@@ -15,15 +15,8 @@ module.exports = async function showStudent(ctx) {
     ctx.status = 404
     ctx.body = { code: errors.STUDENT_NOT_FOUND }
     return
-  } else {
-    try {
-      await studentFind.save(studentUpdate)
-    } catch (err) {
-      ctx.status = 400
-      ctx.body = err
-      return
-    }
   }
 
+  await studentFind.save(studentUpdate)
   ctx.body = studentFind
 }

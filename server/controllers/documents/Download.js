@@ -6,7 +6,7 @@ const enumi = require('../../../shared/enum')
 const Documents = require('../../models/Document')
 const Students = require('../../models/Student')
 
-module.exports = async function showDocument(ctx) {
+module.exports = async function downloadDocument(ctx) {
   const { studentId, id } = ctx.params
 
   const studentFind = await Students.where('id', studentId).fetch()
