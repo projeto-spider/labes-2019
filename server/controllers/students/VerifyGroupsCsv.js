@@ -36,11 +36,17 @@ module.exports = async function compareGroupsCsv(ctx) {
     UPDATE
       students
     SET
-      comments = 'Adicionar ao Grupo do Google'
-    WHERE
-      students.email
-    NOT IN
-      (${csvMailList.map(() => '?').join(', ')},'null')
+      comments =
+        CASE
+          WHEN
+            students.email
+          NOT IN
+            (${csvMailList.map(() => '?').join(', ')},'null')
+          THEN
+            'Adicionar ao Grupo do Google'
+          ELSE
+            ''
+        END
   `
 
   await knex.raw(query, csvMailList)

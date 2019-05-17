@@ -17,7 +17,6 @@ api.get('/users/:id', users.Show)
 api.get('/students/', students.List)
 api.get('/students/:id', students.Show)
 api.post('/students/from-csv', KoaBody({ multipart: true }), students.FromCsv)
-api.put('/students/edit', KoaBody(), students.Edit)
 api.post(
   '/students/compare-group-csv',
   KoaBody({ multipart: true }),
