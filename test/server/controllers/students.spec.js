@@ -270,6 +270,64 @@ describe('/api/students', () => {
     done()
   })
 
+  test('PUT /[studentId]', async done => {
+    const res = await chai
+      .request(server.listen())
+      .put('/api/students/1')
+      .send({
+        id: 1,
+        name: 'ATUALIZA NOME',
+        registrationNumber: '201704940001',
+        crg: 9,
+        course: 'cbcc',
+        email: 'null',
+        isFit: false,
+        isConcluding: false,
+        isActive: true,
+        isForming: true,
+        isGraduating: false,
+        academicHighlight: false,
+        cancelled: false,
+        prescribed: false,
+        mailingList: 'none'
+      })
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.id).toEqual(1)
+    expect(res.body.name).toEqual('ATUALIZA NOME')
+    expect(res.body.crg).toEqual(9)
+    done()
+  })
+
+  test('PUT /[invalid studentId]', async done => {
+    const res = await chai
+      .request(server.listen())
+      .put('/api/students/1000')
+      .send({
+        id: 1000,
+        name: 'FELIPE SOUZA FERREIRA',
+        registrationNumber: '201704940001',
+        crg: 'null',
+        course: 'cbcc',
+        email: 'null',
+        isFit: false,
+        isConcluding: false,
+        isActive: true,
+        isForming: true,
+        isGraduating: false,
+        academicHighlight: false,
+        cancelled: false,
+        prescribed: false,
+        mailingList: 'none'
+      })
+    expect(res.status).toEqual(404)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.NOT_FOUND)
+    done()
+  })
+
   test('GET /', async done => {
     const res = await chai.request(server.listen()).get('/api/students')
     expect(res.status).toEqual(200)
@@ -279,6 +337,7 @@ describe('/api/students', () => {
     expect(res.headers['pagination-page']).toEqual('1')
     done()
   })
+
   test('GET /?course=cb[cc|si]', async done => {
     const resCbcc = await chai
       .request(server.listen())

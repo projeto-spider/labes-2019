@@ -86,3 +86,6 @@ sw.*
 # dev and test databases
 dev.sqlite3
 test.sqlite3
+
+#storage
+storage/

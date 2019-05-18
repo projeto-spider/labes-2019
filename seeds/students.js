@@ -1,4 +1,4 @@
-const User = require('../server/models/Student')
+const Student = require('../server/models/Student')
 
 exports.seed = async function(knex, Promise) {
   // Deletes ALL existing entries
@@ -119,5 +119,5 @@ exports.seed = async function(knex, Promise) {
     }
   ]
 
-  return Promise.all(data.map(user => User.forge(user).save()))
+  return Promise.all(data.map(student => Student.forge(student).save()))
 }

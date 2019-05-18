@@ -1,5 +1,6 @@
 const pkg = require('./package')
 const errors = require('./shared/errors')
+const enums = require('./shared/enums')
 
 module.exports = {
   mode: 'spa',
@@ -63,7 +64,8 @@ module.exports = {
     // See https://github.com/nuxt-community/axios-module#options
   },
   env: {
-    errors
+    errors,
+    enums
   },
 
   /*

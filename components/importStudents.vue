@@ -6,6 +6,10 @@
       </p>
     </div>
     <div class="card-content">
+      <p class="title">
+        Importar alunos (SIGAA)
+      </p>
+      <p class="subtitle">Curso: {{ course }}</p>
       <b-field class="file">
         <b-upload v-model="studentsCsv" @input="validateUpload">
           <a class="button is-primary">
@@ -18,7 +22,7 @@
         </span>
         <button
           class="button is-primary"
-          :disabled="!studentsCsv || hasErrors"
+          :disabled="toggleUpload"
           @click="uploadCsv"
         >
           Submeter
@@ -34,16 +38,44 @@
 </template>
 
 <script>
+import { errorsHandler } from './mixins/errors'
 export default {
   name: 'ImportStudents',
+  mixins: [errorsHandler],
   data() {
     return {
-      studentsCsv: File,
+      studentsCsv: new File([''], 'Nenhum arquivo selecionado'),
+      course: 'Selecione um arquivo',
       hasErrors: false,
       isLoading: false
     }
   },
+  computed: {
+    toggleUpload() {
+      return this.hasErrors || !this.fileSelected()
+    }
+  },
+  watch: {
+    studentsCsv() {
+      const reader = new FileReader()
+      let csv = File
+      if (this.fileSelected()) {
+        reader.readAsText(this.studentsCsv)
+        reader.onload = e => {
+          csv = reader.result
+
+          csv = csv.replace('\r\n', '\n')
+          const lines = csv.split('\n')
+          const col = lines[1].split(',')
+          this.course = col[7]
+        }
+      }
+    }
+  },
   methods: {
+    fileSelected() {
+      return this.studentsCsv.name !== 'Nenhum arquivo selecionado'
+    },
     validateUpload() {
       if (this.studentsCsv.name.split('.').pop() === 'csv') {
         const reader = new FileReader()
@@ -51,14 +83,14 @@ export default {
         reader.onload = e => {
           const validation = this.validateCsv(reader.result)
           if (typeof validation === 'string') {
-            this.openErrorNotification(this.errorMessage(validation))
-            this.studentsCsv = File
+            this.openErrorNotification(validation)
+            this.studentsCsv = new File([''], 'Nenhum arquivo selecionado')
             this.hasErrors = true
           } else this.hasErrors = false
         }
       } else {
-        this.openErrorNotification('Por favor selecione um arquivo do tipo csv')
-        this.studentsCsv = File
+        this.openErrorNotification(process.env.errors.IMPORT_CSV_INVALID_FILE)
+        this.studentsCsv = new File([''], 'Nenhum arquivo selecionado')
         this.hasErrors = true
       }
     },
@@ -96,30 +128,6 @@ export default {
         return errors.IMPORT_CSV_INVALID_FILE
       }
     },
-    errorMessage(errorCode) {
-      const { errors } = process.env
-      switch (errorCode) {
-        case errors.IMPORT_CSV_INVALID_LENGTH:
-          return 'Arquivo csv com tamanho de linha invalido'
-        case errors.IMPORT_CSV_INVALID_HEADER:
-          return 'Arquivo csv com nome de cabecalho invalido'
-        case errors.IMPORT_CSV_INVALID_COL_NUMBER:
-          return 'Arquivo csv com numero invalido de colunas'
-        case errors.IMPORT_CSV_INVALID_FILE:
-          return 'Por favor selecione um arquivo do tipo csv'
-        default:
-          return 'Ocorreu um erro'
-      }
-    },
-    openErrorNotification(errorMessage) {
-      this.$notification.open({
-        duration: 5000,
-        message: errorMessage,
-        position: 'is-top',
-        type: 'is-danger',
-        hasIcon: true
-      })
-    },
     uploadCsv() {
       this.isLoading = true
       const body = new FormData()
@@ -132,13 +140,11 @@ export default {
             message: 'Upload feito com sucesso',
             type: 'is-success'
           })
+          this.$parent.close()
         })
         .catch(error => {
           this.isLoading = false
-          this.$toast.open({
-            message: this.errorMessage(error.response.data.code),
-            type: 'is-danger'
-          })
+          this.openErrorNotification(error.response.data.code)
         })
     }
   }
