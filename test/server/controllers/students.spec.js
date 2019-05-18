@@ -183,7 +183,7 @@ describe('/api/students', () => {
     const res = await chai
       .request(server.listen())
       .post('/api/students/from-csv')
-      .attach('csv', sigaaCsvFixture('valid.csv'), 'export.csv')
+      .attach('csv', sigaaCsvFixture('last-line-blank.csv'), 'export.csv')
       .type('form')
 
     expect(res.status).toEqual(201)
