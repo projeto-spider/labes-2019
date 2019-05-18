@@ -20,7 +20,7 @@ exports.seed = async function(knex, Promise) {
     {
       username: 'teacher',
       password: 'teacher',
-      role: 'admin',
+      role: 'teacher',
       email: 'teacher@domain.com'
     }
   ]
