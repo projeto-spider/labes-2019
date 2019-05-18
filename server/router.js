@@ -1,7 +1,6 @@
 const Router = require('koa-router')
 const KoaBody = require('koa-body')
 const KoaJwt = require('koa-jwt')
-const koaCompose = require('koa-compose')
 
 const errors = require('../shared/errors')
 const documents = require('./controllers/documents')
