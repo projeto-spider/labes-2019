@@ -2,6 +2,8 @@
  * @jest-environment node
  */
 
+const fs = require('fs')
+const path = require('path')
 const utils = require('../../server/utils')
 const db = require('../../server/db')
 const Student = require('../../server/models/Student')
@@ -229,6 +231,20 @@ describe('utils', () => {
     expect(julian.isGraduating).toBeFalsy()
     expect(julian.isConcluding).toBeTruthy()
     expect(julian.cancelled).toBeFalsy()
+
+    done()
+  }, 100000)
+
+  test('batchUpdateStudents with a big CSV', async done => {
+    const csvPath = path.join(__dirname, './fixtures/sigaa/big.csv')
+    const csv = fs.readFileSync(csvPath, 'utf8')
+    const data = utils.parseCsv(csv)
+    const digested = utils.digestSigaaData(data)
+    await utils.batchUpdateStudents(digested)
+
+    const students = (await Student.fetchAll()).toJSON()
+
+    expect(students.length).toEqual(335)
 
     done()
   }, 100000)

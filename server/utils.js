@@ -124,42 +124,48 @@ exports.digestSigaaData = function digestSigaaData(data) {
  *     await batchUpdateStudents(digested)
  */
 exports.batchUpdateStudents = function batchUpdateStudents(data) {
-  const query = `
-    INSERT INTO
-      students (name, registrationNumber, course, isFit, isConcluding, isActive, isForming, isGraduating, academicHighlight, cancelled, prescribed)
-    VALUES
-      ${data.map(() => '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').join(', ')}
-    ON CONFLICT
-      (registrationNumber)
-    DO UPDATE SET
-      course = excluded.course,
-      isFit = excluded.isFit,
-      isConcluding = excluded.isConcluding,
-      isActive = excluded.isActive,
-      isForming = excluded.isForming,
-      isGraduating = excluded.isGraduating,
-      academicHighlight = excluded.academicHighlight,
-      cancelled = excluded.cancelled,
-      prescribed = excluded.prescribed
-  `
+  return knex.transaction(async trx => {
+    await Promise.all(
+      chunks(data, 20).map(chunk => {
+        const query = `
+        INSERT INTO
+          students (name, registrationNumber, course, isFit, isConcluding, isActive, isForming, isGraduating, academicHighlight, cancelled, prescribed)
+        VALUES
+          ${chunk.map(() => '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').join(', ')}
+        ON CONFLICT
+          (registrationNumber)
+        DO UPDATE SET
+          course = excluded.course,
+          isFit = excluded.isFit,
+          isConcluding = excluded.isConcluding,
+          isActive = excluded.isActive,
+          isForming = excluded.isForming,
+          isGraduating = excluded.isGraduating,
+          academicHighlight = excluded.academicHighlight,
+          cancelled = excluded.cancelled,
+          prescribed = excluded.prescribed
+      `
 
-  const bindings = data
-    .map(student => [
-      student.name,
-      student.registrationNumber,
-      student.course,
-      student.isFit,
-      student.isConcluding,
-      student.isActive,
-      student.isForming,
-      student.isGraduating,
-      student.academicHighlight,
-      student.cancelled,
-      student.prescribed
-    ])
-    .reduce((acc, x) => acc.concat(x), [])
+        const bindings = chunk
+          .map(student => [
+            student.name,
+            student.registrationNumber,
+            student.course,
+            student.isFit,
+            student.isConcluding,
+            student.isActive,
+            student.isForming,
+            student.isGraduating,
+            student.academicHighlight,
+            student.cancelled,
+            student.prescribed
+          ])
+          .reduce((acc, x) => acc.concat(x), [])
 
-  return knex.raw(query, bindings)
+        return trx.raw(query, bindings)
+      })
+    )
+  })
 }
 /**
  * Injects the pagination headers from Bookshelft to a Koa context
@@ -175,4 +181,12 @@ exports.paginateContext = function paginateContext(ctx, collectionBase) {
   ctx.set('Pagination-Row-Count', pagination.rowCount)
   ctx.set('Pagination-Page-Count', pagination.pageCount)
   ctx.body = collectionBase.toJSON()
+}
+
+function chunks(xs, chunkSize) {
+  const length = Math.ceil(xs.length / chunkSize)
+
+  return Array.from({ length }, (_, i) =>
+    xs.slice(i * chunkSize, i * chunkSize + chunkSize)
+  )
 }
