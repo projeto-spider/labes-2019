@@ -146,7 +146,6 @@ export default {
       perPage: this.defaultPerPage,
       sortField: this.defaultSortField,
       sortOrder: this.defaultSortOrder,
-      course: this.defaultCourse,
       loading: false,
       nameFilter: false,
       registrationFilter: false,
@@ -203,7 +202,7 @@ export default {
       this.$axios
         .get('/api/students/', {
           params: {
-            course: this.course,
+            course: this.courseTag,
             page: this.page,
             sort: this.sortField,
             order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
