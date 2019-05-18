@@ -181,6 +181,22 @@ describe('/api/students', () => {
     done()
   })
 
+  test('POST /from-csv last line is blank', async done => {
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/from-csv')
+      .attach('csv', sigaaCsvFixture('last-line-blank.csv'), 'export.csv')
+      .type('form')
+
+    debugger
+
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_COL_NUMBER)
+    done()
+  })
+
   test('POST /from-csv invalid not CSV ', async done => {
     const res = await chai
       .request(server.listen())

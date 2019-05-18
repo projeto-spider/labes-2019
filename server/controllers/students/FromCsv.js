@@ -59,7 +59,7 @@ function validate(csv) {
     const lines = csv.replace('\r\n', '\n').split('\n')
 
     if (!lines[lines.length - 1]) {
-      lines.splice(-1, 1)
+      return errors.IMPORT_CSV_INVALID_COL_NUMBER
     }
 
     if (lines.length < 2) {

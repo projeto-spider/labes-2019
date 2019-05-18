@@ -1,10 +1,6 @@
 <template>
   <div class="container">
-    <search-input
-      :title="'Alunos totais'"
-      :students="students"
-      :is-active="0"
-    ></search-input>
+    <search-input :title="'Alunos totais'" :students="students"></search-input>
   </div>
 </template>
 
@@ -27,23 +23,6 @@ export default {
     ...mapState({
       courseTag: state => state.courseTag
     })
-  },
-  created() {
-    this.$axios
-      .get('/api/students/', {
-        params: {
-          course: this.courseTag
-        }
-      })
-      .then(res => {
-        this.students = res.data
-      })
-      .catch(() => {
-        this.$toast.open({
-          message: 'Falha ao carregar a lista de alunos.',
-          type: 'is-danger'
-        })
-      })
   }
 }
 </script>

@@ -75,7 +75,7 @@ export default {
     },
     defaultSortOrder: {
       type: String,
-      default: () => 'ASC'
+      default: () => 'asc'
     },
     defaultPage: {
       type: Number,
@@ -176,7 +176,7 @@ export default {
             isActive: this.isActive,
             page: this.page,
             sort: this.sortField,
-            order: this.sortOrder
+            order: this.sortOrder === 'asc' ? 'ASC' : 'DESC'
           }
         })
         .then(res => {
