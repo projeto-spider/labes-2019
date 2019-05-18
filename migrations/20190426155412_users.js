@@ -4,6 +4,10 @@ exports.up = function(knex, Promise) {
     table.string('username').notNullable()
     table.string('email').notNullable()
     table.string('passwordDigest').notNullable()
+    table
+      .enum('role', ['teacher', 'admin'])
+      .notNullable()
+      .defaultTo('admin')
   })
 }
 
