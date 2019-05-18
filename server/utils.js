@@ -183,6 +183,19 @@ exports.paginateContext = function paginateContext(ctx, collectionBase) {
   ctx.body = collectionBase.toJSON()
 }
 
+/**
+ * Separate arry in array of arrays (size = chunkSize)
+ *
+ * @param   {Array} xs - Elements
+ * @param   {number} chunkSize - Size of nested array
+ * @returns {Array}
+ * @example
+ *
+ *
+ *          const xs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ *          chunks(xs, 3)
+ *          // [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]
+ */
 function chunks(xs, chunkSize) {
   const length = Math.ceil(xs.length / chunkSize)
 
@@ -190,3 +203,5 @@ function chunks(xs, chunkSize) {
     xs.slice(i * chunkSize, i * chunkSize + chunkSize)
   )
 }
+
+exports.chunks = chunks
