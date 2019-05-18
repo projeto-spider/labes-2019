@@ -3,7 +3,11 @@ exports.up = function(knex, Promise) {
     table.increments('id').primary()
     table.string('username').notNullable()
     table.string('email').notNullable()
-    table.string('password').notNullable()
+    table.string('passwordDigest').notNullable()
+    table
+      .enum('role', ['teacher', 'admin'])
+      .notNullable()
+      .defaultTo('admin')
   })
 }
 

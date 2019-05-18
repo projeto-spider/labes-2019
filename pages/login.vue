@@ -7,7 +7,7 @@
             <img src="../assets/images/UFPA.png" width="250" height="200" />
           </figure>
           <h3 class="title has-text-white">Login</h3>
-          <p class="subtitle has-text-white">Por favor faca o login</p>
+          <p class="subtitle has-text-white">Por favor faça o login</p>
           <div class="box">
             <form>
               <div class="field">
@@ -15,8 +15,8 @@
                   <input
                     v-model="username"
                     class="input is-large"
-                    type="email"
-                    placeholder="Your Email"
+                    type="text"
+                    placeholder="Seu nome de usuário"
                     autofocus
                   />
                 </div>
@@ -28,14 +28,14 @@
                     v-model="password"
                     class="input is-large"
                     type="password"
-                    placeholder="Your Password"
+                    placeholder="Sua senha"
                   />
                 </div>
               </div>
               <div class="field">
                 <label class="checkbox">
-                  <input type="checkbox" />
-                  Remember me
+                  <input v-model="remember" type="checkbox" />
+                  Lembrar me
                 </label>
               </div>
               <button
@@ -59,17 +59,24 @@ export default {
   layout: 'empty',
   data() {
     return {
-      username: '',
-      password: ''
+      username: localStorage.getItem('lastLogin') || '',
+      password: '',
+      remember: false
     }
   },
   methods: {
     async login() {
       try {
-        await this.$store.dispatch('auth/login', {
-          email: this.username,
-          password: this.password
-        })
+        await this.$store
+          .dispatch('auth/login', {
+            username: this.username,
+            password: this.password
+          })
+          .then(() => {
+            if (this.remember) {
+              localStorage.setItem('lastLogin', this.username)
+            }
+          })
         this.$router.push('/')
       } catch (e) {
         this.$toast.open({ message: 'Falha ao autenticar', type: 'is-danger' })

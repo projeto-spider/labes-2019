@@ -1,14 +1,16 @@
 export const state = () => ({
-  token: false,
-  user: false
+  token: recovery('token'),
+  user: recovery('user')
 })
 
 export const mutations = {
   setUser(state, user) {
+    persist('user', user)
     state.user = user
   },
 
   setToken(state, token) {
+    persist('token', token)
     state.token = token
   }
 }
@@ -24,29 +26,31 @@ export const getters = {
 }
 
 export const actions = {
-  login({ commit }, { email, password }) {
-    commit('setToken', 'validToken')
-    if (email === 'test@facomp.br' && password === '123') {
-      return commit('setUser', {
-        user: {
-          email: email,
-          password: password
-        }
+  login({ commit }, { username, password }) {
+    return this.$axios
+      .$post('/api/auth', { username, password })
+      .then(({ token, user }) => {
+        this.$axios.setToken(token, 'Bearer')
+        commit('setToken', token)
+        return commit('setUser', user)
       })
-    }
-    throw new Error('Usuario Nao Encontrado')
   },
 
-  register({ commit, dispatch }, { email, name, password }) {
-    return this.$axios
-      .$post('/api/users', { email, name, password })
-      .then(user => {
-        return dispatch('login', { email, password })
-      })
+  register({ commit, dispatch }, { email, username, password, role }) {
+    return this.$axios.$post('/api/users', { email, username, password, role })
   },
 
   logout({ commit }) {
     commit('setToken', false)
     commit('setUser', false)
   }
+}
+
+function persist(key, value) {
+  localStorage.setItem(key, JSON.stringify(value))
+}
+
+function recovery(key) {
+  const saved = localStorage.getItem(key)
+  return saved ? JSON.parse(saved) : false
 }

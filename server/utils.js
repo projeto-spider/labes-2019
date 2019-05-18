@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken')
 const { knex } = require('./db')
+
 /**
  * Given a CSV file with header make an Array of objects
  *
@@ -210,3 +212,27 @@ function chunks(xs, chunkSize) {
 }
 
 exports.chunks = chunks
+
+/*
+ * Generate JWT for user
+ * @param  {User} user - Bookshelf model
+ * @return {string} Token
+ *
+ * @example
+ *
+ *    const token = signToken(user)
+ *    // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ */
+exports.signToken = function signToken(
+  user,
+  // 24 hours default exp
+  exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24
+) {
+  return jwt.sign(
+    {
+      user,
+      exp
+    },
+    'my-secret'
+  )
+}

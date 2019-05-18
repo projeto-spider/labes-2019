@@ -7,6 +7,7 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
+const testUtils = require('../test-utils')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const Student = require('../../../server/models/Student')
@@ -36,6 +37,7 @@ describe('/api/students', () => {
   }, 100000)
 
   test('POST /from-csv', async done => {
+    const { token } = await testUtils.user('admin')
     /**
      * Find a student by it's registrationNumber
      *
@@ -55,6 +57,7 @@ describe('/api/students', () => {
     const res = await chai
       .request(server.listen())
       .post('/api/students/from-csv')
+      .set('Authorization', `Bearer ${token}`)
       .attach('csv', sigaaCsvFixture('valid.csv'), 'export.csv')
       .type('form')
 
@@ -125,9 +128,11 @@ describe('/api/students', () => {
   })
 
   test('POST /from-csv missing csv field', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .post('/api/students/from-csv')
+      .set('Authorization', `Bearer ${token}`)
       .type('form')
 
     expect(res.status).toEqual(400)
@@ -138,9 +143,11 @@ describe('/api/students', () => {
   })
 
   test('POST /from-csv invalid CSV length', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .post('/api/students/from-csv')
+      .set('Authorization', `Bearer ${token}`)
       .attach('csv', sigaaCsvFixture('wrong-length.csv'), 'export.csv')
       .type('form')
 
@@ -152,9 +159,11 @@ describe('/api/students', () => {
   })
 
   test('POST /from-csv invalid CSV headers', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .post('/api/students/from-csv')
+      .set('Authorization', `Bearer ${token}`)
       .attach('csv', sigaaCsvFixture('wrong-headers.csv'), 'export.csv')
       .type('form')
 
@@ -166,9 +175,11 @@ describe('/api/students', () => {
   })
 
   test('POST /from-csv invalid CSV column number', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .post('/api/students/from-csv')
+      .set('Authorization', `Bearer ${token}`)
       .attach('csv', sigaaCsvFixture('wrong-col-number.csv'), 'export.csv')
       .type('form')
 
@@ -180,9 +191,11 @@ describe('/api/students', () => {
   })
 
   test('POST /from-csv import csv with last blank line', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .post('/api/students/from-csv')
+      .set('Authorization', `Bearer ${token}`)
       .attach('csv', sigaaCsvFixture('last-line-blank.csv'), 'export.csv')
       .type('form')
 
@@ -257,9 +270,11 @@ describe('/api/students', () => {
   })
 
   test('POST /from-csv invalid not CSV ', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .post('/api/students/from-csv')
+      .set('Authorization', `Bearer ${token}`)
       .attach('csv', sigaaCsvFixture('wrong-invalid-csv.csv'), 'export.csv')
       .type('form')
 
@@ -271,9 +286,11 @@ describe('/api/students', () => {
   })
 
   test('PUT /[studentId]', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .put('/api/students/1')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         id: 1,
         name: 'ATUALIZA NOME',
@@ -301,9 +318,11 @@ describe('/api/students', () => {
   })
 
   test('PUT /[invalid studentId]', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .put('/api/students/1000')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         id: 1000,
         name: 'FELIPE SOUZA FERREIRA',
@@ -329,7 +348,11 @@ describe('/api/students', () => {
   })
 
   test('GET /', async done => {
-    const res = await chai.request(server.listen()).get('/api/students')
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students')
+      .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
@@ -339,9 +362,11 @@ describe('/api/students', () => {
   })
 
   test('GET /?course=cb[cc|si]', async done => {
+    const { token } = await testUtils.user('admin')
     const resCbcc = await chai
       .request(server.listen())
       .get('/api/students/?course=cbcc')
+      .set('Authorization', `Bearer ${token}`)
     expect(resCbcc.status).toEqual(200)
     expect(resCbcc.type).toEqual('application/json')
     expect(resCbcc.body).toBeDefined()
@@ -351,6 +376,7 @@ describe('/api/students', () => {
     const resCbsi = await chai
       .request(server.listen())
       .get('/api/students/?course=cbsi')
+      .set('Authorization', `Bearer ${token}`)
     expect(resCbsi.status).toEqual(200)
     expect(resCbsi.type).toEqual('application/json')
     expect(resCbsi.body).toBeDefined()
@@ -361,9 +387,11 @@ describe('/api/students', () => {
   })
 
   test('GET /?course=invalid', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .get('/api/students/?course=invalid')
+      .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
@@ -373,9 +401,11 @@ describe('/api/students', () => {
   })
 
   test('GET /?name=[STUDENT%20NAME]', async done => {
+    const { token } = await testUtils.user('admin')
     const resStudent1 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?name=FELIPE SOUZA FERREIRA'))
+      .set('Authorization', `Bearer ${token}`)
     expect(resStudent1.status).toEqual(200)
     expect(resStudent1.type).toEqual('application/json')
     expect(resStudent1.body).toBeDefined()
@@ -387,6 +417,7 @@ describe('/api/students', () => {
     const resStudent2 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?name=%FERREIRA%'))
+      .set('Authorization', `Bearer ${token}`)
     expect(resStudent2.status).toEqual(200)
     expect(resStudent2.type).toEqual('application/json')
     expect(resStudent2.body).toBeDefined()
@@ -396,6 +427,7 @@ describe('/api/students', () => {
     const resStudent3 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?name=KAUAN%'))
+      .set('Authorization', `Bearer ${token}`)
     expect(resStudent3.status).toEqual(200)
     expect(resStudent3.type).toEqual('application/json')
     expect(resStudent3.body).toBeDefined()
@@ -405,6 +437,7 @@ describe('/api/students', () => {
     const resStudent4 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?name=%SANTOS'))
+      .set('Authorization', `Bearer ${token}`)
     expect(resStudent4.status).toEqual(200)
     expect(resStudent4.type).toEqual('application/json')
     expect(resStudent4.body).toBeDefined()
@@ -415,9 +448,11 @@ describe('/api/students', () => {
   })
 
   test('GET /?isActive=[0|1]', async done => {
+    const { token } = await testUtils.user('admin')
     const resTrue = await chai
       .request(server.listen())
       .get('/api/students/?isActive=1')
+      .set('Authorization', `Bearer ${token}`)
     expect(resTrue.status).toEqual(200)
     expect(resTrue.type).toEqual('application/json')
     expect(resTrue.body).toBeDefined()
@@ -425,6 +460,7 @@ describe('/api/students', () => {
     const resFalse = await chai
       .request(server.listen())
       .get('/api/students/?isActive=0')
+      .set('Authorization', `Bearer ${token}`)
     expect(resFalse.status).toEqual(200)
     expect(resFalse.type).toEqual('application/json')
     expect(resFalse.body).toBeDefined()
@@ -433,9 +469,11 @@ describe('/api/students', () => {
   })
 
   test('GET /?course=cb[cc|si]&name=[STUDANTE%20NAME]', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?course=cbcc&name=%FERREIRA%'))
+      .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
@@ -449,9 +487,11 @@ describe('/api/students', () => {
   })
 
   test('GET /?sort=parameter&order=parameter', async done => {
+    const { token } = await testUtils.user('admin')
     const resStudent1 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?sort=name'))
+      .set('Authorization', `Bearer ${token}`)
     expect(resStudent1.status).toEqual(200)
     expect(resStudent1.type).toEqual('application/json')
     expect(resStudent1.body).toBeDefined()
@@ -465,6 +505,7 @@ describe('/api/students', () => {
     const resStudent2 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?sort=registrationNumber'))
+      .set('Authorization', `Bearer ${token}`)
     expect(resStudent2.status).toEqual(200)
     expect(resStudent2.type).toEqual('application/json')
     expect(resStudent2.body).toBeDefined()
@@ -478,6 +519,7 @@ describe('/api/students', () => {
     const resStudent3 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?sort=name&order=DESC'))
+      .set('Authorization', `Bearer ${token}`)
     expect(resStudent3.status).toEqual(200)
     expect(resStudent3.type).toEqual('application/json')
     expect(resStudent3.body).toBeDefined()
@@ -491,6 +533,7 @@ describe('/api/students', () => {
     const resStudent4 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?sort=registrationNumber&order=DESC'))
+      .set('Authorization', `Bearer ${token}`)
     expect(resStudent4.status).toEqual(200)
     expect(resStudent4.type).toEqual('application/json')
     expect(resStudent4.body).toBeDefined()
@@ -504,6 +547,7 @@ describe('/api/students', () => {
     const resStudent5 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?sort=name&order=asc'))
+      .set('Authorization', `Bearer ${token}`)
     expect(resStudent5.status).toEqual(200)
     expect(resStudent5.type).toEqual('application/json')
     expect(resStudent5.body).toBeDefined()
@@ -516,10 +560,13 @@ describe('/api/students', () => {
     expect(resStudent5.body[6].name).toEqual('LAURA CARDOSO CASTRO')
     done()
   })
+
   test('GET /?course=cb[cc|si]&sort=parameter', async done => {
+    const { token } = await testUtils.user('admin')
     const res1 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?course=cbcc&sort=name'))
+      .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
     expect(res1.body).toBeDefined()
@@ -531,6 +578,7 @@ describe('/api/students', () => {
     const res2 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?course=cbsi&sort=registrationNumber'))
+      .set('Authorization', `Bearer ${token}`)
     expect(res2.status).toEqual(200)
     expect(res2.type).toEqual('application/json')
     expect(res2.body).toBeDefined()
@@ -538,10 +586,13 @@ describe('/api/students', () => {
     expect(res2.body[1].name).toEqual('LAURA CARDOSO CASTRO')
     done()
   })
+
   test('GET /?course=cb[cc|si]&name=[STUDENT%20NAME]&sort=parameter', async done => {
+    const { token } = await testUtils.user('admin')
     const res1 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?course=cbcc&name=%SANTOS&sort=name'))
+      .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
     expect(res1.body).toBeDefined()
@@ -554,6 +605,7 @@ describe('/api/students', () => {
           '/api/students/?course=cbcc&name=%SANTOS&sort=registrationNumber'
         )
       )
+      .set('Authorization', `Bearer ${token}`)
     expect(res2.status).toEqual(200)
     expect(res2.type).toEqual('application/json')
     expect(res2.body).toBeDefined()
@@ -561,7 +613,9 @@ describe('/api/students', () => {
     expect(res2.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
     done()
   })
+
   test('GET /?course=cb[cc|si]&name=[STUDENT%20NAME]&sort=parameter&order=parameter', async done => {
+    const { token } = await testUtils.user('admin')
     const res1 = await chai
       .request(server.listen())
       .get(
@@ -569,6 +623,7 @@ describe('/api/students', () => {
           '/api/students/?course=cbcc&name=%SANTOS&sort=name&order=DESC'
         )
       )
+      .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
     expect(res1.body).toBeDefined()
@@ -581,6 +636,7 @@ describe('/api/students', () => {
           '/api/students/?course=cbcc&name=%SANTOS&sort=registrationNumber&order=ASC'
         )
       )
+      .set('Authorization', `Bearer ${token}`)
     expect(res2.status).toEqual(200)
     expect(res2.type).toEqual('application/json')
     expect(res2.body).toBeDefined()
@@ -588,10 +644,13 @@ describe('/api/students', () => {
     expect(res2.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
     done()
   })
+
   test('GET /?sort=invalid', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .get('/api/students/?sort=invalid')
+      .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
@@ -599,10 +658,13 @@ describe('/api/students', () => {
     expect(res.body.filter).toEqual('sort')
     done()
   })
+
   test('GET /?sort=parameter&order=invalid', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .get('/api/students/?sort=name&order=invalid')
+      .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
