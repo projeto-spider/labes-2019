@@ -69,7 +69,7 @@ export default {
           const col = lines[1].split(',')
           this.course = col[7]
         }
-      } else return 'Selecione um arquivo '
+      }
     }
   },
   methods: {
