@@ -226,7 +226,6 @@ export default {
     },
 
     onSort(filterField, order) {
-      debugger
       this.sortField = filterField
       this.sortOrder = order
       this.getStudents()
