@@ -45,7 +45,6 @@
         </b-input>
         <br />
         <b-table
-          v-if="students.length > 0"
           :striped="isStriped"
           :hoverable="isHoverabble"
           :data="studentsData"
@@ -60,7 +59,6 @@
           :default-sort-direction="sortOrder"
           :default-sort="[sortField, sortOrder]"
           @page-change="onPageChange"
-          @sort="onSort"
         ></b-table>
         <b-modal :active.sync="selectedStudent" has-modal-card>
           <student-combo-box
@@ -111,6 +109,10 @@ export default {
     defaultPerPage: {
       type: Number,
       default: () => 10
+    },
+    students: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -145,7 +147,6 @@ export default {
       sortOrder: this.defaultSortOrder,
       course: this.defaultCourse,
       loading: false,
-      students: [],
       nameFilter: false,
       registrationFilter: false,
       emailFilter: false

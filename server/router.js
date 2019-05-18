@@ -19,14 +19,6 @@ api.get('/students/', students.List)
 api.get('/students/:id', students.Show)
 api.post('/students/from-csv', KoaBody({ multipart: true }), students.FromCsv)
 api.put('/students/:id', KoaBody(), students.Update)
-
-// Not Found Routes
-api.all('/*', ctx => {
-  ctx.status = 404
-  ctx.body = { code: errors.NOT_FOUND_ROUTE }
-})
-// Documents Routes
-api.get('/documents/:studentID', documents.Show)
 // Documents Routes
 api.get('/students/:studentId/documents', documents.List)
 api.get('/students/:studentId/documents/:id', documents.Show)

@@ -308,7 +308,7 @@ export default {
       body.append('file', this.uploadFile)
       body.append('documentType', type)
       this.$axios
-        .post(`/api/students/${this.student.id}/documents`, body)
+        .post(`/api/students/${this.studentData.id}/documents`, body)
         .then(result => {
           this.isLoading = false
           if (type === '1') {
