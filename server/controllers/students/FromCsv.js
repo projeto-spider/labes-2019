@@ -57,9 +57,9 @@ const validHeader =
 function validate(csv) {
   try {
     const lines = csv.replace('\r\n', '\n').split('\n')
-
+    
     if (!lines[lines.length - 1]) {
-      return errors.IMPORT_CSV_INVALID_COL_NUMBER
+      lines.splice(-1, 1)
     }
 
     if (lines.length < 2) {

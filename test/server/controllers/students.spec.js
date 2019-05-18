@@ -130,8 +130,6 @@ describe('/api/students', () => {
       .post('/api/students/from-csv')
       .type('form')
 
-    debugger
-
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
@@ -181,19 +179,80 @@ describe('/api/students', () => {
     done()
   })
 
-  test('POST /from-csv last line is blank', async done => {
+  test('POST /from-csv import csv with last blank line', async done => {
     const res = await chai
       .request(server.listen())
       .post('/api/students/from-csv')
-      .attach('csv', sigaaCsvFixture('last-line-blank.csv'), 'export.csv')
+      .attach('csv', sigaaCsvFixture('valid.csv'), 'export.csv')
       .type('form')
 
-    debugger
-
-    expect(res.status).toEqual(400)
+    expect(res.status).toEqual(201)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
-    expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_COL_NUMBER)
+    expect(res.body.count).toEqual(7)
+
+    const studentsUpdated = (await Student.fetchAll()).toJSON()
+
+    function findByRegistrationNumber(students, registrationNumber) {
+      return students.find(u => u.registrationNumber === registrationNumber)
+    }
+
+    const [felipe, laura, jose, enzo, kauan, eduardo, julian] = [
+      '201704940001',
+      '201304940002',
+      '200504940003',
+      '201104940004',
+      '200604940005',
+      '201804940006',
+      '199604940007'
+    ].map(registrationNumber =>
+      findByRegistrationNumber(studentsUpdated, registrationNumber)
+    )
+
+    expect(studentsUpdated.length).toEqual(7)
+
+    expect(felipe.isActive).toBeTruthy()
+    expect(felipe.isForming).toBeTruthy()
+    expect(felipe.isGraduating).toBeFalsy()
+    expect(felipe.isConcluding).toBeFalsy()
+    expect(felipe.cancelled).toBeFalsy()
+
+    expect(laura.isActive).toBeFalsy()
+    expect(laura.isForming).toBeFalsy()
+    expect(laura.isGraduating).toBeFalsy()
+    expect(laura.isConcluding).toBeTruthy()
+    expect(laura.cancelled).toBeFalsy()
+
+    expect(jose.isActive).toBeFalsy()
+    expect(jose.isForming).toBeFalsy()
+    expect(jose.isGraduating).toBeFalsy()
+    expect(jose.isConcluding).toBeTruthy()
+    expect(jose.cancelled).toBeFalsy()
+
+    expect(enzo.isActive).toBeTruthy()
+    expect(enzo.isGraduating).toBeFalsy()
+    expect(enzo.isGraduating).toBeFalsy()
+    expect(enzo.isConcluding).toBeFalsy()
+    expect(enzo.cancelled).toBeFalsy()
+
+    expect(kauan.isActive).toBeFalsy()
+    expect(kauan.isGraduating).toBeFalsy()
+    expect(kauan.isGraduating).toBeFalsy()
+    expect(kauan.isConcluding).toBeFalsy()
+    expect(kauan.cancelled).toBeTruthy()
+
+    expect(eduardo.isActive).toBeTruthy()
+    expect(eduardo.isGraduating).toBeFalsy()
+    expect(eduardo.isGraduating).toBeFalsy()
+    expect(eduardo.isConcluding).toBeFalsy()
+    expect(eduardo.cancelled).toBeFalsy()
+
+    expect(julian.isActive).toBeFalsy()
+    expect(julian.isGraduating).toBeFalsy()
+    expect(julian.isGraduating).toBeFalsy()
+    expect(julian.isConcluding).toBeTruthy()
+    expect(julian.cancelled).toBeFalsy()
+
     done()
   })
 
