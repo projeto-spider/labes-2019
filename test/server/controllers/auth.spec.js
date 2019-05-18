@@ -34,6 +34,19 @@ describe('/api/users', () => {
     done()
   })
 
+  test('GET /?token=x', async done => {
+    const { user, token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/auth')
+      .query({ token })
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.username).toEqual(user.get('username'))
+    done()
+  })
+
   test('GET / without credentials', async done => {
     const res = await chai.request(server.listen()).get('/api/auth')
     expect(res.status).toEqual(401)
