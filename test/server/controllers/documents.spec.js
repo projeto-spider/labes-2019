@@ -1,14 +1,18 @@
 /**
  * @jest-environment node
  */
-
+const path = require('path')
+const fs = require('fs')
+const rimraf = require('rimraf')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
+
 chai.use(chaiHttp)
 
 const server = require('../../../server')
 const db = require('../../../server/db')
 const errors = require('../../../shared/errors')
+const enums = require('../../../shared/enums')
 
 jest.useFakeTimers()
 
@@ -72,6 +76,81 @@ describe('/api/documents', () => {
     expect(resIdDoc.type).toEqual('application/json')
     expect(resIdDoc.body).toBeDefined()
     expect(resIdDoc.body.code).toEqual(errors.NOT_FOUND)
+    done()
+  })
+
+  function pdfFixture(name) {
+    return path.join(__dirname, '../fixtures/pdf', name)
+  }
+
+  test('POST /:studentId/documents', async done => {
+    const dirUploads = path.join(__dirname, '../../../storage/')
+    if (fs.existsSync(dirUploads)) {
+      rimraf.sync(dirUploads)
+    }
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/1/documents')
+      .field('documentType', enums.documents.ATA)
+      .attach('file', pdfFixture('test.pdf'), 'test.pdf')
+      .type('form')
+    expect(res.status).toEqual(201)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    done()
+  })
+
+  test('POST /:studentId/documents invalid documentType', async done => {
+    const dirUploads = path.join(__dirname, '../../../storage/')
+    if (fs.existsSync(dirUploads)) {
+      rimraf.sync(dirUploads)
+    }
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/1/documents')
+      .field('documentType', 333)
+      .attach('file', pdfFixture('test.pdf'), 'test.pdf')
+      .type('form')
+    expect(res.status).toEqual(404)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.NOT_FOUND)
+    done()
+  })
+
+  test('POST /:studentId/documents studentId invalid', async done => {
+    const dirUploads = path.join(__dirname, '../../../storage/')
+    if (fs.existsSync(dirUploads)) {
+      rimraf.sync(dirUploads)
+    }
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/10000/documents')
+      .field('documentType', enums.documents.LAUDA)
+      .attach('file', pdfFixture('test.pdf'), 'test.pdf')
+      .type('form')
+    expect(res.status).toEqual(404)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.NOT_FOUND)
+    done()
+  })
+
+  test('POST /:studentId/documents file type invalid', async done => {
+    const dirUploads = path.join(__dirname, '../../../storage/')
+    if (fs.existsSync(dirUploads)) {
+      rimraf.sync(dirUploads)
+    }
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/1/documents')
+      .field('documentType', enums.documents.ATA)
+      .attach('file', pdfFixture('file_invalid.txt'), 'file_invalid.txt')
+      .type('form')
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.UPLOAD_FILE_TYPE_INVALID)
     done()
   })
 })
