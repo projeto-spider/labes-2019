@@ -216,7 +216,7 @@ export default {
   },
   computed: {
     ...mapState({
-      token: state => state.token
+      token: state => state.auth.token
     }),
     displayStatus() {
       if (this.studentData.isActive) {
