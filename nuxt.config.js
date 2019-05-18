@@ -1,6 +1,6 @@
 const pkg = require('./package')
 const errors = require('./shared/errors')
-const enums = require('./shared/errors')
+const enums = require('./shared/enums')
 
 module.exports = {
   mode: 'spa',

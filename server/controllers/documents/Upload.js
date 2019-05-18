@@ -39,61 +39,64 @@ module.exports = async function uploadDocument(ctx) {
   }
 
   const studentFind = await Students.where('id', studentId).fetch()
-
-  if (studentFind !== null) {
-    const documentFind = await Documents.where('studentId', studentId)
-      .where('type', documentType)
-      .fetch()
-    const urlApi = '/api/students/' + studentId + '/documents/'
-    if (documentFind === null) {
-      const documentCreated = await Documents.forge().save({
-        studentId: studentId,
-        type: documentType,
-        url: urlApi
-      })
-      documentCreated.save({
-        id: documentCreated.get('id'),
-        url: urlApi + documentCreated.get('id') + '/view'
-      })
-    } else {
-      documentFind.save({
-        id: documentFind.get('id'),
-        url: urlApi + documentFind.get('id') + '/view'
-      })
-    }
-
-    const dirUploads = path.join(__dirname, '../../../storage/')
-    if (!fs.existsSync(dirUploads)) {
-      fs.mkdirSync(dirUploads)
-    }
-
-    const dirStudents = path.join(
-      dirUploads,
-      studentFind.get('registrationNumber')
-    )
-    if (!fs.existsSync(dirStudents)) {
-      fs.mkdirSync(dirStudents)
-    }
-
-    const file = ctx.request.files.file
-    const reader = fs.createReadStream(file.path)
-    const stream = fs.createWriteStream(
-      path.join(
-        dirStudents,
-        studentFind.get('registrationNumber') +
-          '-' +
-          enums.documents[documentType] +
-          '.pdf'
-      )
-    )
-
-    reader.pipe(stream)
-    ctx.status = 201
-    ctx.body = {
-      count: file.size
-    }
-  } else {
+  if (studentFind === null) {
     ctx.status = 404
     ctx.body = { code: errors.NOT_FOUND }
+    return
+  }
+
+  const documentFind = await Documents.where('studentId', studentId)
+    .where('type', documentType)
+    .fetch()
+  const urlApi = '/api/students/' + studentId + '/documents/'
+
+  if (documentFind === null) {
+    const documentCreated = await Documents.forge().save({
+      studentId,
+      type: documentType,
+      url: urlApi
+    })
+    documentCreated.save({
+      id: documentCreated.get('id'),
+      url: urlApi + documentCreated.get('id') + '/view'
+    })
+  } else {
+    documentFind.save({
+      id: documentFind.get('id'),
+      url: urlApi + documentFind.get('id') + '/view'
+    })
+  }
+
+  const dirUploads = path.join(__dirname, '../../../storage/')
+
+  if (!fs.existsSync(dirUploads)) {
+    fs.mkdirSync(dirUploads)
+  }
+
+  const dirStudents = path.join(
+    dirUploads,
+    studentFind.get('registrationNumber')
+  )
+
+  if (!fs.existsSync(dirStudents)) {
+    fs.mkdirSync(dirStudents)
+  }
+
+  const file = ctx.request.files.file
+  const reader = fs.createReadStream(file.path)
+  const stream = fs.createWriteStream(
+    path.join(
+      dirStudents,
+      studentFind.get('registrationNumber') +
+        '-' +
+        enums.documents[documentType] +
+        '.pdf'
+    )
+  )
+
+  reader.pipe(stream)
+  ctx.status = 201
+  ctx.body = {
+    count: file.size
   }
 }

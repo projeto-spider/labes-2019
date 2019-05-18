@@ -26,6 +26,7 @@ describe('/api', () => {
     expect(res.body.code).toEqual(errors.NOT_FOUND)
     done()
   })
+
   test('GET /invalid', async done => {
     const res = await chai.request(server.listen()).get('/api/invalid')
     expect(res.status).toEqual(404)
@@ -33,17 +34,18 @@ describe('/api', () => {
     expect(res.body.code).toEqual(errors.NOT_FOUND)
     done()
   })
+
   test('GET /[students|users]', async done => {
     const resStudents = await chai.request(server.listen()).get('/api/students')
     expect(resStudents.status).toEqual(200)
     expect(resStudents.type).toEqual('application/json')
     expect(resStudents.body).toBeDefined()
-    expect(resStudents.body !== { code: errors.NOT_FOUND }).toBeTruthy()
+    expect(resStudents.body).not.toBe(errors.NOT_FOUND)
     const resUsers = await chai.request(server.listen()).get('/api/users')
     expect(resUsers.status).toEqual(200)
     expect(resUsers.type).toEqual('application/json')
     expect(resUsers.body).toBeDefined()
-    expect(resUsers.body !== { code: errors.NOT_FOUND }).toBeTruthy()
+    expect(resUsers.body).not.toBe(errors.NOT_FOUND)
     done()
   })
 })

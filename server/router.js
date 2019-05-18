@@ -18,7 +18,7 @@ api.get('/users/:id', users.Show)
 api.get('/students/', students.List)
 api.get('/students/:id', students.Show)
 api.post('/students/from-csv', KoaBody({ multipart: true }), students.FromCsv)
-api.put('/students/:id', KoaBody({ multipart: true }), students.Update)
+api.put('/students/:id', KoaBody(), students.Update)
 
 // Not Found Routes
 api.all('/*', ctx => {

@@ -6,24 +6,24 @@ exports.seed = async function(knex, Promise) {
 
   const data = [
     {
-      studentID: 1,
+      studentId: 1,
       type: 1,
-      URL: 'url/file1'
+      url: 'url/file1'
     },
     {
-      studentID: 1,
+      studentId: 1,
       type: 2,
-      URL: 'url/file2'
+      url: 'url/file2'
     },
     {
-      studentID: 2,
+      studentId: 2,
       type: 3,
-      URL: 'url/file3'
+      url: 'url/file3'
     },
     {
-      studentID: 20,
+      studentId: 20,
       type: 1,
-      URL: 'url/file4'
+      url: 'url/file4'
     }
   ]
 
