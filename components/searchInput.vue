@@ -59,6 +59,7 @@
           :default-sort-direction="sortOrder"
           :default-sort="[sortField, sortOrder]"
           @page-change="onPageChange"
+          @sort="onSort"
         ></b-table>
         <b-modal :active.sync="selectedStudent" has-modal-card>
           <student-combo-box
@@ -214,6 +215,7 @@ export default {
         })
         .then(res => {
           this.studentsData = res.data
+          this.total = res.headers['pagination-row-count']
         })
         .catch(() => {
           this.$toast.open({
@@ -224,6 +226,7 @@ export default {
     },
 
     onSort(filterField, order) {
+      debugger
       this.sortField = filterField
       this.sortOrder = order
       this.getStudents()
