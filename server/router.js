@@ -21,6 +21,7 @@ const bodyParserMultipart = KoaBody({ multipart: true })
 // User Routes
 api.get('/users/', users.List)
 api.get('/users/:id', users.Show)
+api.post('/users/', bodyParser, users.Create)
 
 // Student Routes
 api.get('/students/', students.List)
