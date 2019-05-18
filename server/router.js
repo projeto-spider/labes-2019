@@ -15,8 +15,8 @@ const api = new Router({ prefix: '/api' })
 api.use(KoaJwt({ secret: 'my-secret', passthrough: true }))
 
 // Middlewares
-const bodyParser = KoaBody()
-const bodyParserMultipart = KoaBody({ multipart: true })
+const bodyJson = KoaBody()
+const bodyMultipart = KoaBody({ multipart: true })
 
 // Authorization
 api.use(['/users', '/students'], isLoggedIn, isAdmin)
@@ -24,27 +24,23 @@ api.use(['/users', '/students'], isLoggedIn, isAdmin)
 // User Routes
 api.get('/users/', users.List)
 api.get('/users/:id', users.Show)
-api.post('/users/', bodyParser, users.Create)
+api.post('/users/', bodyJson, users.Create)
 
 // Student Routes
 api.get('/students/', students.List)
 api.get('/students/:id', students.Show)
-api.post('/students/from-csv', KoaBody({ multipart: true }), students.FromCsv)
-api.put('/students/:id', KoaBody(), students.Update)
+api.post('/students/from-csv', bodyMultipart, students.FromCsv)
+api.put('/students/:id', bodyJson, students.Update)
 // Documents Routes
 api.get('/students/:studentId/documents', documents.List)
 api.get('/students/:studentId/documents/:id', documents.Show)
 api.get('/students/:studentId/documents/:id/view', documents.View)
-api.post(
-  '/students/:studentId/documents',
-  KoaBody({ multipart: true }),
-  documents.Upload
-)
-api.post('/students/from-csv', bodyParserMultipart, students.FromCsv)
+api.post('/students/:studentId/documents', bodyMultipart, documents.Upload)
+api.post('/students/from-csv', bodyMultipart, students.FromCsv)
 
 // Auth routes
 api.get('/auth', isLoggedIn, auth.Show)
-api.post('/auth', bodyParser, auth.Login)
+api.post('/auth', bodyJson, auth.Login)
 
 // Not Found Routes
 api.all('/*', ctx => {
