@@ -97,6 +97,12 @@ describe('/api/documents', () => {
     expect(res.status).toEqual(201)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
+    const resView = await chai
+      .request(server.listen())
+      .get('/api/students/1/documents/1/view')
+    expect(resView.status).toEqual(200)
+    expect(resView.type).toEqual('application/pdf')
+    expect(resView.body).toBeDefined()
     done()
   })
 

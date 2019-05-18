@@ -52,5 +52,6 @@ module.exports = async function viewDocument(ctx) {
       enums.documents[documentFind.get('type')] +
       '.pdf"'
   )
+  ctx.status = 200
   ctx.body = reader
 }
