@@ -9,6 +9,7 @@ const chaiHttp = require('chai-http')
 
 chai.use(chaiHttp)
 
+const testUtils = require('../test-utils')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const errors = require('../../../shared/errors')
@@ -25,9 +26,11 @@ describe('/api/documents', () => {
   }, 100000)
 
   test('GET /students/:studentId/documents', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .get('/api/students/1/documents')
+      .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
@@ -36,9 +39,11 @@ describe('/api/documents', () => {
   })
 
   test('GET /students/:studentId/documents/:documentId', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .get('/api/students/1/documents/2')
+      .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
@@ -48,9 +53,11 @@ describe('/api/documents', () => {
   })
 
   test('GET /students/:invalid/documents', async done => {
+    const { token } = await testUtils.user('admin')
     const resChar = await chai
       .request(server.listen())
       .get('/api/students/aaaa/documents')
+      .set('Authorization', `Bearer ${token}`)
     expect(resChar.status).toEqual(404)
     expect(resChar.type).toEqual('application/json')
     expect(resChar.body).toBeDefined()
@@ -58,6 +65,7 @@ describe('/api/documents', () => {
     const resId = await chai
       .request(server.listen())
       .get('/api/students/10000/documents')
+      .set('Authorization', `Bearer ${token}`)
     expect(resId.status).toEqual(404)
     expect(resId.type).toEqual('application/json')
     expect(resId.body).toBeDefined()
@@ -65,6 +73,7 @@ describe('/api/documents', () => {
     const resCharDoc = await chai
       .request(server.listen())
       .get('/api/students/1/documents/a')
+      .set('Authorization', `Bearer ${token}`)
     expect(resCharDoc.status).toEqual(404)
     expect(resCharDoc.type).toEqual('application/json')
     expect(resCharDoc.body).toBeDefined()
@@ -72,6 +81,7 @@ describe('/api/documents', () => {
     const resIdDoc = await chai
       .request(server.listen())
       .get('/api/students/1/documents/39383321')
+      .set('Authorization', `Bearer ${token}`)
     expect(resIdDoc.status).toEqual(404)
     expect(resIdDoc.type).toEqual('application/json')
     expect(resIdDoc.body).toBeDefined()
@@ -84,6 +94,7 @@ describe('/api/documents', () => {
   }
 
   test('POST /:studentId/documents', async done => {
+    const { token } = await testUtils.user('admin')
     const dirUploads = path.join(__dirname, '../../../storage/')
     if (fs.existsSync(dirUploads)) {
       rimraf.sync(dirUploads)
@@ -91,6 +102,7 @@ describe('/api/documents', () => {
     const res = await chai
       .request(server.listen())
       .post('/api/students/1/documents')
+      .set('Authorization', `Bearer ${token}`)
       .field('documentType', enums.documents.ATA)
       .attach('file', pdfFixture('test.pdf'), 'test.pdf')
       .type('form')
@@ -100,6 +112,7 @@ describe('/api/documents', () => {
     const resView = await chai
       .request(server.listen())
       .get('/api/students/1/documents/1/view')
+      .set('Authorization', `Bearer ${token}`)
     expect(resView.status).toEqual(200)
     expect(resView.type).toEqual('application/pdf')
     expect(resView.body).toBeDefined()
@@ -107,6 +120,7 @@ describe('/api/documents', () => {
   })
 
   test('POST /:studentId/documents invalid documentType', async done => {
+    const { token } = await testUtils.user('admin')
     const dirUploads = path.join(__dirname, '../../../storage/')
     if (fs.existsSync(dirUploads)) {
       rimraf.sync(dirUploads)
@@ -114,6 +128,7 @@ describe('/api/documents', () => {
     const res = await chai
       .request(server.listen())
       .post('/api/students/1/documents')
+      .set('Authorization', `Bearer ${token}`)
       .field('documentType', 333)
       .attach('file', pdfFixture('test.pdf'), 'test.pdf')
       .type('form')
@@ -125,6 +140,7 @@ describe('/api/documents', () => {
   })
 
   test('POST /:studentId/documents studentId invalid', async done => {
+    const { token } = await testUtils.user('admin')
     const dirUploads = path.join(__dirname, '../../../storage/')
     if (fs.existsSync(dirUploads)) {
       rimraf.sync(dirUploads)
@@ -132,6 +148,7 @@ describe('/api/documents', () => {
     const res = await chai
       .request(server.listen())
       .post('/api/students/10000/documents')
+      .set('Authorization', `Bearer ${token}`)
       .field('documentType', enums.documents.LAUDA)
       .attach('file', pdfFixture('test.pdf'), 'test.pdf')
       .type('form')
@@ -143,6 +160,7 @@ describe('/api/documents', () => {
   })
 
   test('POST /:studentId/documents file type invalid', async done => {
+    const { token } = await testUtils.user('admin')
     const dirUploads = path.join(__dirname, '../../../storage/')
     if (fs.existsSync(dirUploads)) {
       rimraf.sync(dirUploads)
@@ -150,6 +168,7 @@ describe('/api/documents', () => {
     const res = await chai
       .request(server.listen())
       .post('/api/students/1/documents')
+      .set('Authorization', `Bearer ${token}`)
       .field('documentType', enums.documents.ATA)
       .attach('file', pdfFixture('file_invalid.txt'), 'file_invalid.txt')
       .type('form')

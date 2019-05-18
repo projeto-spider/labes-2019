@@ -286,9 +286,11 @@ describe('/api/students', () => {
   })
 
   test('PUT /[studentId]', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .put('/api/students/1')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         id: 1,
         name: 'ATUALIZA NOME',
@@ -316,9 +318,11 @@ describe('/api/students', () => {
   })
 
   test('PUT /[invalid studentId]', async done => {
+    const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
       .put('/api/students/1000')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         id: 1000,
         name: 'FELIPE SOUZA FERREIRA',
