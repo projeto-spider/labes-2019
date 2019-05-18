@@ -9,6 +9,7 @@ chai.use(chaiHttp)
 const db = require('../../server/db')
 const server = require('../../server')
 const errors = require('../../shared/errors')
+const testUtils = require('./test-utils')
 
 jest.useFakeTimers()
 
@@ -36,16 +37,61 @@ describe('/api', () => {
   })
 
   test('GET /[students|users]', async done => {
-    const resStudents = await chai.request(server.listen()).get('/api/students')
+    const { token } = await testUtils.user('admin')
+    const resStudents = await chai
+      .request(server.listen())
+      .get('/api/students')
+      .set('Authorization', `Bearer ${token}`)
     expect(resStudents.status).toEqual(200)
     expect(resStudents.type).toEqual('application/json')
     expect(resStudents.body).toBeDefined()
-    expect(resStudents.body.code).not.toBe(errors.NOT_FOUND)
-    const resUsers = await chai.request(server.listen()).get('/api/users')
+    expect(resStudents.body.code).not.toBe(errors.NOT_FOUND_ROUTE)
+
+    const resUsers = await chai
+      .request(server.listen())
+      .get('/api/users')
+      .set('Authorization', `Bearer ${token}`)
     expect(resUsers.status).toEqual(200)
     expect(resUsers.type).toEqual('application/json')
     expect(resUsers.body).toBeDefined()
-    expect(resUsers.body.code).not.toBe(errors.NOT_FOUND)
+    expect(resStudents.body.code).not.toBe(errors.NOT_FOUND_ROUTE)
+    done()
+  })
+
+  test('GET /[students|users] unauthorized', async done => {
+    const resStudents = await chai.request(server.listen()).get('/api/students')
+    expect(resStudents.status).toEqual(401)
+    expect(resStudents.type).toEqual('application/json')
+    expect(resStudents.body).toBeDefined()
+    expect(resStudents.body.code).toBe(errors.UNAUTHORIZED)
+
+    const resUsers = await chai.request(server.listen()).get('/api/users')
+    expect(resUsers.status).toEqual(401)
+    expect(resUsers.type).toEqual('application/json')
+    expect(resUsers.body).toBeDefined()
+    expect(resStudents.body.code).toBe(errors.UNAUTHORIZED)
+    done()
+  })
+
+  test('GET /[students|users] with invalid role', async done => {
+    const { token } = await testUtils.user('teacher')
+    const resStudents = await chai
+      .request(server.listen())
+      .get('/api/students')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resStudents.status).toEqual(403)
+    expect(resStudents.type).toEqual('application/json')
+    expect(resStudents.body).toBeDefined()
+    expect(resStudents.body.code).toBe(errors.FORBIDDEN)
+
+    const resUsers = await chai
+      .request(server.listen())
+      .get('/api/users')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resUsers.status).toEqual(403)
+    expect(resUsers.type).toEqual('application/json')
+    expect(resUsers.body).toBeDefined()
+    expect(resStudents.body.code).toBe(errors.FORBIDDEN)
     done()
   })
 })

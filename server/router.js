@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const KoaBody = require('koa-body')
 const KoaJwt = require('koa-jwt')
+const koaCompose = require('koa-compose')
 
 const errors = require('../shared/errors')
 const documents = require('./controllers/documents')
@@ -17,6 +18,9 @@ api.use(KoaJwt({ secret: 'my-secret', passthrough: true }))
 // Middlewares
 const bodyParser = KoaBody()
 const bodyParserMultipart = KoaBody({ multipart: true })
+
+// Authorization
+api.use(['/users', '/students'], isLoggedIn, isAdmin)
 
 // User Routes
 api.get('/users/', users.List)
@@ -75,6 +79,18 @@ function isLoggedIn(ctx, next) {
     ctx.body = {
       code: errors.UNAUTHORIZED
     }
+    return
+  }
+
+  return next()
+}
+
+function isAdmin(ctx, next) {
+  const { user } = ctx.state.user
+
+  if (user.role !== 'admin') {
+    ctx.status = 403
+    ctx.body = { code: errors.FORBIDDEN }
     return
   }
 

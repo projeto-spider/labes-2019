@@ -6,6 +6,7 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
+const testUtils = require('../test-utils')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const errors = require('../../../shared/errors')
@@ -21,7 +22,11 @@ describe('/api/users', () => {
   }, 100000)
 
   test('GET /', async done => {
-    const res = await chai.request(server.listen()).get('/api/users')
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/users')
+      .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
@@ -30,7 +35,11 @@ describe('/api/users', () => {
   })
 
   test('GET /:id', async done => {
-    const res = await chai.request(server.listen()).get('/api/users/1')
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/users/1')
+      .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
     expect(res.body.id).toBeDefined()
@@ -38,6 +47,7 @@ describe('/api/users', () => {
   })
 
   test('POST /', async done => {
+    const { token } = await testUtils.user('admin')
     const payload = {
       username: 'person',
       password: 'person',
@@ -47,6 +57,7 @@ describe('/api/users', () => {
     const res = await chai
       .request(server.listen())
       .post('/api/users')
+      .set('Authorization', `Bearer ${token}`)
       .send(payload)
 
     expect(res.status).toBe(201)
@@ -59,6 +70,7 @@ describe('/api/users', () => {
   })
 
   test('POST / with missing fields', async done => {
+    const { token } = await testUtils.user('admin')
     const payload1 = {
       username: 'person',
       password: 'person',
@@ -67,6 +79,7 @@ describe('/api/users', () => {
     const res1 = await chai
       .request(server.listen())
       .post('/api/users')
+      .set('Authorization', `Bearer ${token}`)
       .send(payload1)
 
     expect(res1.status).toBe(400)
@@ -82,6 +95,7 @@ describe('/api/users', () => {
     const res2 = await chai
       .request(server.listen())
       .post('/api/users')
+      .set('Authorization', `Bearer ${token}`)
       .send(payload2)
 
     expect(res2.status).toBe(400)
@@ -92,6 +106,7 @@ describe('/api/users', () => {
   })
 
   test('POST / with duplicate username or email', async done => {
+    const { token } = await testUtils.user('admin')
     const payload1 = {
       username: 'admin',
       password: 'person',
@@ -101,6 +116,7 @@ describe('/api/users', () => {
     const res1 = await chai
       .request(server.listen())
       .post('/api/users')
+      .set('Authorization', `Bearer ${token}`)
       .send(payload1)
 
     expect(res1.status).toBe(422)
@@ -117,6 +133,7 @@ describe('/api/users', () => {
     const res2 = await chai
       .request(server.listen())
       .post('/api/users')
+      .set('Authorization', `Bearer ${token}`)
       .send(payload2)
 
     expect(res2.status).toBe(422)
