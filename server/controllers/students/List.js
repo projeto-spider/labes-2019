@@ -15,7 +15,7 @@ module.exports = async function listStudents(ctx) {
     ctx.body = { code: errors.INVALID_ARGUMENT, filter: 'sort' }
     return
   }
-  if (order !== undefined && !['ASC', 'DESC'].includes(order)) {
+  if (!['ASC', 'DESC'].includes(order.toUpperCase())) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_ARGUMENT, filter: 'order' }
     return
@@ -36,11 +36,11 @@ function filterStudents(filters) {
     maxCrg,
     eqCrg,
     sort,
-    order
+    order = 'ASC'
   } = filters
   let query = Student
   if (sort !== undefined) {
-    query = query.forge().orderBy(sort, order)
+    query = query.forge().orderBy(sort, order.toUpperCase())
   }
   if (name !== undefined) {
     query = query.where('name', 'like', name)
