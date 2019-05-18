@@ -45,7 +45,7 @@
                       <td>
                         <a
                           v-if="checkDocumentIsEmpty.ataFile"
-                          :href="`${ataDocument.url}`"
+                          :href="`${ataDocument.url}?token=${token}`"
                           target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
@@ -80,7 +80,7 @@
                       <td>
                         <a
                           v-if="checkDocumentIsEmpty.laudaFile"
-                          :href="`${laudaDocument.url}`"
+                          :href="`${laudaDocument.url}?token=${token}`"
                           target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
@@ -130,7 +130,7 @@
                       <td>
                         <a
                           v-if="checkDocumentIsEmpty.presFile"
-                          :href="`${presDocument.url}`"
+                          :href="`${presDocument.url}?token=${token}`"
                           target="_blank"
                         >
                           <b-icon icon="file-pdf"></b-icon>
@@ -186,6 +186,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { errorsHandler } from './mixins/errors'
 export default {
   name: 'StudentComboBox',
@@ -214,6 +215,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      token: state => state.auth.token
+    }),
     displayStatus() {
       if (this.studentData.isActive) {
         return 'Ativo'

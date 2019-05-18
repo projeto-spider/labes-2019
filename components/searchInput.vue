@@ -59,6 +59,7 @@
           :default-sort-direction="sortOrder"
           :default-sort="[sortField, sortOrder]"
           @page-change="onPageChange"
+          @sort="onSort"
         ></b-table>
         <b-modal :active.sync="selectedStudent" has-modal-card>
           <student-combo-box
@@ -141,11 +142,11 @@ export default {
         }
       ],
       total: 0,
+      totalPages: 0,
       page: 1,
       perPage: this.defaultPerPage,
       sortField: this.defaultSortField,
       sortOrder: this.defaultSortOrder,
-      course: this.defaultCourse,
       loading: false,
       nameFilter: false,
       registrationFilter: false,
@@ -202,7 +203,7 @@ export default {
       this.$axios
         .get('/api/students/', {
           params: {
-            course: this.course,
+            course: this.courseTag,
             page: this.page,
             sort: this.sortField,
             order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
@@ -214,6 +215,8 @@ export default {
         })
         .then(res => {
           this.studentsData = res.data
+          this.total = res.headers['pagination-row-count']
+          this.perPage = res.headers['pagination-page-size']
         })
         .catch(() => {
           this.$toast.open({

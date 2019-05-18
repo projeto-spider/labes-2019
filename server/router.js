@@ -12,7 +12,7 @@ const auth = require('./controllers/auth')
 const router = new Router()
 const api = new Router({ prefix: '/api' })
 
-api.use(KoaJwt({ secret: 'my-secret', passthrough: true }))
+api.use(KoaJwt({ getToken, secret: 'my-secret', passthrough: true }))
 
 // Middlewares
 const bodyJson = KoaBody()
@@ -56,6 +56,10 @@ router.use(api.allowedMethods())
 router.get('*', frontend.Render)
 
 module.exports = router
+
+function getToken(ctx) {
+  return ctx.request.query.token
+}
 
 function isLoggedIn(ctx, next) {
   const hasUser = ctx.state.user
