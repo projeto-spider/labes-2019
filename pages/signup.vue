@@ -7,12 +7,8 @@
       <h3 class="title has-text-white">Cadastro de Usuário</h3>
       <div class="box">
         <form>
-          <b-field label="Nome">
-            <b-input v-model="name"></b-input>
-          </b-field>
-
           <b-field label="Email">
-            <b-input v-model="email" type="email" maxlength="30"> </b-input>
+            <b-input v-model="email" type="email"> </b-input>
           </b-field>
 
           <b-field label="Nome de usuário">
@@ -25,8 +21,8 @@
           </b-field>
           <b-field label="Tipo usuário">
             <b-select placeholder="Selecione um tipo usuário" required expaned>
-              <option value="flint">Administrador</option>
-              <option value="silver">Professor</option>
+              <option value="admin">Administrador</option>
+              <option value="teacher">Professor</option>
             </b-select>
           </b-field>
           <button
@@ -47,7 +43,7 @@ export default {
   name: 'Signup',
   data() {
     return {
-      name: '',
+      username: '',
       password: '',
       email: '',
       role: ''
@@ -58,7 +54,7 @@ export default {
       try {
         await this.$store.dispatch('auth/register', {
           email: this.email,
-          name: this.name,
+          username: this.username,
           password: this.password,
           role: this.role
         })

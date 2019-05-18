@@ -36,12 +36,8 @@ export const actions = {
       })
   },
 
-  register({ commit, dispatch }, { email, name, password }) {
-    return this.$axios
-      .$post('/api/users', { email, name, password })
-      .then(user => {
-        return dispatch('login', { email, password })
-      })
+  register({ commit, dispatch }, { email, username, password, role }) {
+    return this.$axios.$post('/api/users', { email, username, password, role })
   },
 
   logout({ commit }) {
