@@ -62,7 +62,7 @@ export default {
           password: this.password,
           role: this.role
         })
-        this.$$toast.open({
+        this.$toast.open({
           message: 'Usuario cadastrado com sucesso',
           type: 'is-success'
         })
