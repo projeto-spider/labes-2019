@@ -70,6 +70,10 @@ export default {
 
       try {
         const lines = csv.split('\n')
+        if (!lines[lines.length - 1]) {
+          lines.splice(-1, 1)
+        }
+
         if (lines.length < 2) {
           return errors.IMPORT_CSV_INVALID_LENGTH
         }
@@ -78,9 +82,10 @@ export default {
           return errors.IMPORT_CSV_INVALID_HEADER
         }
 
-        const rightNumberOfColumns = lines.every(
-          line => line.split(',').length === 9
-        )
+        const rightNumberOfColumns = lines.every(line => {
+          const arr = line.split(',')
+          return arr.length === 9
+        })
 
         if (!rightNumberOfColumns) {
           return errors.IMPORT_CSV_INVALID_COL_NUMBER

@@ -130,8 +130,6 @@ describe('/api/students', () => {
       .post('/api/students/from-csv')
       .type('form')
 
-    debugger
-
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
@@ -178,6 +176,83 @@ describe('/api/students', () => {
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_COL_NUMBER)
+    done()
+  })
+
+  test('POST /from-csv import csv with last blank line', async done => {
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/from-csv')
+      .attach('csv', sigaaCsvFixture('last-line-blank.csv'), 'export.csv')
+      .type('form')
+
+    expect(res.status).toEqual(201)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.count).toEqual(7)
+
+    const studentsUpdated = (await Student.fetchAll()).toJSON()
+
+    function findByRegistrationNumber(students, registrationNumber) {
+      return students.find(u => u.registrationNumber === registrationNumber)
+    }
+
+    const [felipe, laura, jose, enzo, kauan, eduardo, julian] = [
+      '201704940001',
+      '201304940002',
+      '200504940003',
+      '201104940004',
+      '200604940005',
+      '201804940006',
+      '199604940007'
+    ].map(registrationNumber =>
+      findByRegistrationNumber(studentsUpdated, registrationNumber)
+    )
+
+    expect(studentsUpdated.length).toEqual(7)
+
+    expect(felipe.isActive).toBeTruthy()
+    expect(felipe.isForming).toBeTruthy()
+    expect(felipe.isGraduating).toBeFalsy()
+    expect(felipe.isConcluding).toBeFalsy()
+    expect(felipe.cancelled).toBeFalsy()
+
+    expect(laura.isActive).toBeFalsy()
+    expect(laura.isForming).toBeFalsy()
+    expect(laura.isGraduating).toBeFalsy()
+    expect(laura.isConcluding).toBeTruthy()
+    expect(laura.cancelled).toBeFalsy()
+
+    expect(jose.isActive).toBeFalsy()
+    expect(jose.isForming).toBeFalsy()
+    expect(jose.isGraduating).toBeFalsy()
+    expect(jose.isConcluding).toBeTruthy()
+    expect(jose.cancelled).toBeFalsy()
+
+    expect(enzo.isActive).toBeTruthy()
+    expect(enzo.isGraduating).toBeFalsy()
+    expect(enzo.isGraduating).toBeFalsy()
+    expect(enzo.isConcluding).toBeFalsy()
+    expect(enzo.cancelled).toBeFalsy()
+
+    expect(kauan.isActive).toBeFalsy()
+    expect(kauan.isGraduating).toBeFalsy()
+    expect(kauan.isGraduating).toBeFalsy()
+    expect(kauan.isConcluding).toBeFalsy()
+    expect(kauan.cancelled).toBeTruthy()
+
+    expect(eduardo.isActive).toBeTruthy()
+    expect(eduardo.isGraduating).toBeFalsy()
+    expect(eduardo.isGraduating).toBeFalsy()
+    expect(eduardo.isConcluding).toBeFalsy()
+    expect(eduardo.cancelled).toBeFalsy()
+
+    expect(julian.isActive).toBeFalsy()
+    expect(julian.isGraduating).toBeFalsy()
+    expect(julian.isGraduating).toBeFalsy()
+    expect(julian.isConcluding).toBeTruthy()
+    expect(julian.cancelled).toBeFalsy()
+
     done()
   })
 
@@ -311,6 +386,169 @@ describe('/api/students', () => {
           student.course === 'cbcc' && student.name.includes('FERREIRA')
       )
     ).toBeTruthy()
+    done()
+  })
+
+  test('GET /?sort=parameter&order=parameter', async done => {
+    const resStudent1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?sort=name'))
+    expect(resStudent1.status).toEqual(200)
+    expect(resStudent1.type).toEqual('application/json')
+    expect(resStudent1.body).toBeDefined()
+    expect(resStudent1.body[0].name).toEqual('EDUARDO ALVES LIMA')
+    expect(resStudent1.body[1].name).toEqual('ENZO FERREIRA ALVES')
+    expect(resStudent1.body[2].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(resStudent1.body[3].name).toEqual('JOSE FERREIRA SILVA')
+    expect(resStudent1.body[4].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(resStudent1.body[5].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(resStudent1.body[6].name).toEqual('LAURA CARDOSO CASTRO')
+    const resStudent2 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?sort=registrationNumber'))
+    expect(resStudent2.status).toEqual(200)
+    expect(resStudent2.type).toEqual('application/json')
+    expect(resStudent2.body).toBeDefined()
+    expect(resStudent2.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(resStudent2.body[1].name).toEqual('JOSE FERREIRA SILVA')
+    expect(resStudent2.body[2].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(resStudent2.body[3].name).toEqual('ENZO FERREIRA ALVES')
+    expect(resStudent2.body[4].name).toEqual('LAURA CARDOSO CASTRO')
+    expect(resStudent2.body[5].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(resStudent2.body[6].name).toEqual('EDUARDO ALVES LIMA')
+    const resStudent3 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?sort=name&order=DESC'))
+    expect(resStudent3.status).toEqual(200)
+    expect(resStudent3.type).toEqual('application/json')
+    expect(resStudent3.body).toBeDefined()
+    expect(resStudent3.body[0].name).toEqual('LAURA CARDOSO CASTRO')
+    expect(resStudent3.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(resStudent3.body[2].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(resStudent3.body[3].name).toEqual('JOSE FERREIRA SILVA')
+    expect(resStudent3.body[4].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(resStudent3.body[5].name).toEqual('ENZO FERREIRA ALVES')
+    expect(resStudent3.body[6].name).toEqual('EDUARDO ALVES LIMA')
+    const resStudent4 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?sort=registrationNumber&order=DESC'))
+    expect(resStudent4.status).toEqual(200)
+    expect(resStudent4.type).toEqual('application/json')
+    expect(resStudent4.body).toBeDefined()
+    expect(resStudent4.body[0].name).toEqual('EDUARDO ALVES LIMA')
+    expect(resStudent4.body[1].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(resStudent4.body[2].name).toEqual('LAURA CARDOSO CASTRO')
+    expect(resStudent4.body[3].name).toEqual('ENZO FERREIRA ALVES')
+    expect(resStudent4.body[4].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(resStudent4.body[5].name).toEqual('JOSE FERREIRA SILVA')
+    expect(resStudent4.body[6].name).toEqual('JULIAN BARBOSA SANTOS')
+    const resStudent5 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?sort=name&order=asc'))
+    expect(resStudent5.status).toEqual(200)
+    expect(resStudent5.type).toEqual('application/json')
+    expect(resStudent5.body).toBeDefined()
+    expect(resStudent5.body[0].name).toEqual('EDUARDO ALVES LIMA')
+    expect(resStudent5.body[1].name).toEqual('ENZO FERREIRA ALVES')
+    expect(resStudent5.body[2].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(resStudent5.body[3].name).toEqual('JOSE FERREIRA SILVA')
+    expect(resStudent5.body[4].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(resStudent5.body[5].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(resStudent5.body[6].name).toEqual('LAURA CARDOSO CASTRO')
+    done()
+  })
+  test('GET /?course=cb[cc|si]&sort=parameter', async done => {
+    const res1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?course=cbcc&sort=name'))
+    expect(res1.status).toEqual(200)
+    expect(res1.type).toEqual('application/json')
+    expect(res1.body).toBeDefined()
+    expect(res1.body[0].name).toEqual('EDUARDO ALVES LIMA')
+    expect(res1.body[1].name).toEqual('ENZO FERREIRA ALVES')
+    expect(res1.body[2].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(res1.body[3].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(res1.body[4].name).toEqual('KAUAN CARVALHO SANTOS')
+    const res2 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?course=cbsi&sort=registrationNumber'))
+    expect(res2.status).toEqual(200)
+    expect(res2.type).toEqual('application/json')
+    expect(res2.body).toBeDefined()
+    expect(res2.body[0].name).toEqual('JOSE FERREIRA SILVA')
+    expect(res2.body[1].name).toEqual('LAURA CARDOSO CASTRO')
+    done()
+  })
+  test('GET /?course=cb[cc|si]&name=[STUDENT%20NAME]&sort=parameter', async done => {
+    const res1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?course=cbcc&name=%SANTOS&sort=name'))
+    expect(res1.status).toEqual(200)
+    expect(res1.type).toEqual('application/json')
+    expect(res1.body).toBeDefined()
+    expect(res1.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(res1.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
+    const res2 = await chai
+      .request(server.listen())
+      .get(
+        encodeURI(
+          '/api/students/?course=cbcc&name=%SANTOS&sort=registrationNumber'
+        )
+      )
+    expect(res2.status).toEqual(200)
+    expect(res2.type).toEqual('application/json')
+    expect(res2.body).toBeDefined()
+    expect(res2.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(res2.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
+    done()
+  })
+  test('GET /?course=cb[cc|si]&name=[STUDENT%20NAME]&sort=parameter&order=parameter', async done => {
+    const res1 = await chai
+      .request(server.listen())
+      .get(
+        encodeURI(
+          '/api/students/?course=cbcc&name=%SANTOS&sort=name&order=DESC'
+        )
+      )
+    expect(res1.status).toEqual(200)
+    expect(res1.type).toEqual('application/json')
+    expect(res1.body).toBeDefined()
+    expect(res1.body[0].name).toEqual('KAUAN CARVALHO SANTOS')
+    expect(res1.body[1].name).toEqual('JULIAN BARBOSA SANTOS')
+    const res2 = await chai
+      .request(server.listen())
+      .get(
+        encodeURI(
+          '/api/students/?course=cbcc&name=%SANTOS&sort=registrationNumber&order=ASC'
+        )
+      )
+    expect(res2.status).toEqual(200)
+    expect(res2.type).toEqual('application/json')
+    expect(res2.body).toBeDefined()
+    expect(res2.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
+    expect(res2.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
+    done()
+  })
+  test('GET /?sort=invalid', async done => {
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/?sort=invalid')
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_ARGUMENT)
+    expect(res.body.filter).toEqual('sort')
+    done()
+  })
+  test('GET /?sort=parameter&order=invalid', async done => {
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/?sort=name&order=invalid')
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_ARGUMENT)
+    expect(res.body.filter).toEqual('order')
     done()
   })
 })

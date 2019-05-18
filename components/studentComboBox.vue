@@ -1,15 +1,15 @@
 <template>
   <div class="card">
     <header class="card-header">
-      <b-icon pack="fas" icon="user" size="is-medium"></b-icon>
-      <p class="card-header-title">{{ student.name }}</p>
+      <b-icon pack="fas" icon="user" class="icon"></b-icon>
+      <span class="card-header-title">{{ student.name }}</span>
     </header>
     <div class="card-content">
       <div class="content">
         <div class="columns">
           <div class="column is-three-quarters">
             <strong>Nome</strong>: {{ student.name }} <br />
-            <strong>Matricula</strong>: {{ student.registrationNumber }} <br />
+            <strong>Matrícula</strong>: {{ student.registrationNumber }} <br />
             <strong>E-mail</strong>: {{ student.email }} <br />
             <strong>Status</strong>: {{ displayStatus }} <br />
             <strong>Pendências</strong>: Só 500h <br />
@@ -43,4 +43,12 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.card-header {
+  align-items: center;
+}
+
+.icon {
+  margin-left: 1em;
+}
+</style>

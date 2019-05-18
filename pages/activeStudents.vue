@@ -1,8 +1,10 @@
 <template>
   <div class="container">
     <search-input
+      :key="courseTag"
+      :default-course="courseTag"
       :title="'Alunos Ativos'"
-      :students="students"
+      :default-per-page="10"
       :is-active="1"
     ></search-input>
   </div>
@@ -30,23 +32,7 @@ export default {
     })
   },
 
-  mounted() {
-    this.getStudents()
-  },
-
   methods: {
-    async getStudents() {
-      try {
-        this.students = await this.$axios.$get('/api/students/', {
-          params: {
-            course: this.courseTag,
-            isActive: 1
-          }
-        })
-      } catch (e) {
-        this.openErrorNotification(e.response.data.code)
-      }
-    },
     errorMessage(errorCode) {
       switch (errorCode) {
         case 'IMPORT_CSV_INVALID_LENGHT':

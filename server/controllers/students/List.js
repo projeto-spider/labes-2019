@@ -3,13 +3,23 @@ const errors = require('../../../shared/errors')
 const utils = require('../../utils')
 
 module.exports = async function listStudents(ctx) {
-  const { course } = ctx.request.query
+  const { course, sort, order = 'ASC' } = ctx.request.query
   if (course !== undefined && !['cbcc', 'cbsi'].includes(course)) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_FILTER, filter: 'course' }
     return
   }
 
+  if (sort !== undefined && !['name', 'registrationNumber'].includes(sort)) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_ARGUMENT, filter: 'sort' }
+    return
+  }
+  if (!['ASC', 'DESC'].includes(order.toUpperCase())) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_ARGUMENT, filter: 'order' }
+    return
+  }
   utils.paginateContext(ctx, await filterStudents(ctx.request.query))
 }
 /**
@@ -18,8 +28,20 @@ module.exports = async function listStudents(ctx) {
  * @return {Promise} Bookshelf
  */
 function filterStudents(filters) {
-  const { page = 1, name, registrationNumber, minCrg, maxCrg, eqCrg } = filters
+  const {
+    page = 1,
+    name,
+    registrationNumber,
+    minCrg,
+    maxCrg,
+    eqCrg,
+    sort,
+    order = 'ASC'
+  } = filters
   let query = Student
+  if (sort !== undefined) {
+    query = query.forge().orderBy(sort, order.toUpperCase())
+  }
   if (name !== undefined) {
     query = query.where('name', 'like', name)
   }
