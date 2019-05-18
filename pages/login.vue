@@ -34,7 +34,7 @@
               </div>
               <div class="field">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input v-model="remember" type="checkbox" />
                   Lembrar me
                 </label>
               </div>
@@ -59,17 +59,24 @@ export default {
   layout: 'empty',
   data() {
     return {
-      username: '',
-      password: ''
+      username: localStorage.getItem('lastLogin') || '',
+      password: '',
+      remember: false
     }
   },
   methods: {
     async login() {
       try {
-        await this.$store.dispatch('auth/login', {
-          username: this.username,
-          password: this.password
-        })
+        await this.$store
+          .dispatch('auth/login', {
+            username: this.username,
+            password: this.password
+          })
+          .then(() => {
+            if (this.remember) {
+              localStorage.setItem('lastLogin', this.username)
+            }
+          })
         this.$router.push('/')
       } catch (e) {
         this.$toast.open({ message: 'Falha ao autenticar', type: 'is-danger' })
