@@ -2,7 +2,6 @@
   <div class="container">
     <search-input
       :title="'Alunos totais'"
-      :students="students"
       :is-active="'AllStudents'"
     ></search-input>
   </div>

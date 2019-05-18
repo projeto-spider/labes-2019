@@ -142,6 +142,7 @@ export default {
         }
       ],
       total: 0,
+      totalPages: 0,
       page: 1,
       perPage: this.defaultPerPage,
       sortField: this.defaultSortField,
@@ -215,6 +216,7 @@ export default {
         .then(res => {
           this.studentsData = res.data
           this.total = res.headers['pagination-row-count']
+          this.perPage = res.headers['pagination-page-size']
         })
         .catch(() => {
           this.$toast.open({
