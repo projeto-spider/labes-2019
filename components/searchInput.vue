@@ -174,6 +174,14 @@ export default {
     },
     students() {
       this.studentsData = [...this.students]
+    },
+    total() {
+      if (+this.total === 0) {
+        this.$toast.open({
+          message: `Nenhum aluno(a) foi encontrado(a)!`,
+          type: 'is-warning'
+        })
+      }
     }
   },
 
