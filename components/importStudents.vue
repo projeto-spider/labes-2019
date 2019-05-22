@@ -25,7 +25,7 @@
           :disabled="toggleUpload"
           @click="uploadCsv"
         >
-          Submeter
+          Atualizar
         </button>
       </b-field>
       <b-loading
