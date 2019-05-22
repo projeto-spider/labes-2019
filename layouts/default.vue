@@ -60,7 +60,7 @@
           <div class="navbar-item">
             <div>
               <a class="button is-danger" @click="logout">
-                Log out
+                Sair
               </a>
             </div>
           </div>
