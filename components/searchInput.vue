@@ -177,20 +177,18 @@ export default {
     },
     total() {
       if (+this.total === 0) {
-        this.$toast.open({
-          message: `Nenhum aluno(a) foi encontrado(a)!`,
-          type: 'is-warning'
-        })
+        if (this.isActive === 1) {
+          this.$toast.open({
+            message: 'Nenhum aluno(a) ativo(a) foi encontrado(a)!',
+            type: 'is-warning'
+          })
+        } else {
+          this.$toast.open({
+            message: `Nenhum aluno(a) foi encontrado(a)!`,
+            type: 'is-warning'
+          })
+        }
       }
-    }
-  },
-
-  afterMounted() {
-    if (this.students.length < 1 && this.defaultFilters.isActive === 1) {
-      this.$toast.open({
-        message: 'Não há alunos ativos neste curso',
-        type: 'is-danger'
-      })
     }
   },
 
