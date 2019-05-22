@@ -64,6 +64,11 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div>
+              <p>{{ username }}</p>
+            </div>
+          </div>
+          <div class="navbar-item">
+            <div>
               <a class="button is-danger" @click="logout">
                 Sair
               </a>
@@ -162,6 +167,9 @@ export default {
         cbcc: 'Ciência da Computação'
       }
       return enumName[this.courseTag] || ''
+    },
+    username() {
+      return this.currrentUser.username
     }
   },
   methods: {
