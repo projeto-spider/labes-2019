@@ -16,7 +16,7 @@
             <strong>CRG</strong>:
             <b-input v-model="studentData.crg" :disabled="!canEdit"></b-input>
             <br />
-            <strong>Pendências</strong>:
+            <strong>Componentes Pendentes</strong>:
             <b-input
               v-model="pendencies"
               :disabled="!canEdit"
