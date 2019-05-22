@@ -55,6 +55,11 @@
               </a>
             </div>
           </a>
+          <div class="navbar-item">
+            <div>
+              <p>{{ courseNameExtended }}</p>
+            </div>
+          </div>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
@@ -150,6 +155,13 @@ export default {
     }),
     courseNameUppercase() {
       return this.courseTag && this.courseTag.toUpperCase()
+    },
+    courseNameExtended() {
+      const enumName = {
+        cbsi: 'Sistemas de Informação',
+        cbcc: 'Ciência da Computação'
+      }
+      return enumName[this.courseTag] || ''
     }
   },
   methods: {
