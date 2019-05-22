@@ -27,6 +27,9 @@ jest.useFakeTimers()
 function sigaaCsvFixture(name) {
   return path.join(__dirname, '../fixtures/sigaa', name)
 }
+function googleCsvFixture(name) {
+  return path.join(__dirname, '../fixtures/google', name)
+}
 
 describe('/api/students', () => {
   beforeEach(async () => {
@@ -34,6 +37,99 @@ describe('/api/students', () => {
     await db.knex.migrate.latest()
     await db.knex.seed.run()
   }, 100000)
+
+  test('POST /compare-group-csv', async done => {
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/compare-group-csv')
+      .attach('csv', googleCsvFixture('valid.csv'), 'export.csv')
+      .type('form')
+
+    expect(res.status).toEqual(201)
+
+    const studentsUpdated = (await Student.fetchAll()).toJSON()
+
+    expect(studentsUpdated.length).toEqual(7)
+
+    expect(studentsUpdated[0].comments).toEqual('')
+    expect(studentsUpdated[1].comments).toEqual('')
+    expect(studentsUpdated[2].comments).toEqual('')
+    expect(studentsUpdated[3].comments).toEqual('')
+    expect(studentsUpdated[4].comments).toEqual('')
+    expect(studentsUpdated[5].comments).toEqual('')
+    expect(studentsUpdated[6].comments).toEqual('')
+
+    done()
+  })
+
+  test('POST /compare-group-csv invalid CSV column number', async done => {
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/compare-group-csv')
+      .attach('csv', googleCsvFixture('wrong-col-number.csv'), 'export.csv')
+      .type('form')
+
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_COL_NUMBER)
+    done()
+  })
+
+  test('POST /compare-group-csv invalid CSV headers', async done => {
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/compare-group-csv')
+      .attach('csv', googleCsvFixture('wrong-headers.csv'), 'export.csv')
+      .type('form')
+
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_HEADER)
+    done()
+  })
+
+  test('POST /compare-group-csv invalid not CSV', async done => {
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/compare-group-csv')
+      .attach('csv', googleCsvFixture('wrong-invalid-csv.csv'), 'export.csv')
+      .type('form')
+
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_HEADER)
+    done()
+  })
+
+  test('POST /compare-group-csv invalid CSV length', async done => {
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/compare-group-csv')
+      .attach('csv', googleCsvFixture('wrong-length.csv'), 'export.csv')
+      .type('form')
+
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_INVALID_LENGTH)
+    done()
+  })
+
+  test('POST /compare-group-csv missing csv field', async done => {
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/compare-group-csv')
+      .type('form')
+
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.IMPORT_CSV_MISSING_CSV_FIELD)
+    done()
+  })
 
   test('POST /from-csv', async done => {
     /**
