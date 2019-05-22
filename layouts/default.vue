@@ -78,12 +78,9 @@
       </div>
     </nav>
 
-    <div class="columns is-fullheight">
-      <div
-        class="column is-2 has-background-black-ter"
-        :class="{ 'is-hidden-mobile': !active }"
-      >
-        <aside class="menu is-sidebar-menu">
+    <div class="columns is-fullheight asideBackground">
+      <div class="column is-2" :class="{ 'is-hidden-mobile': !active }">
+        <aside id="asideBar" class="menu is-sidebar-menu">
           <div class="menu-label text-uppercase">
             {{ courseTag ? courseTag : 'selecionar curso' }}
           </div>
@@ -197,6 +194,14 @@ export default {
 </script>
 
 <style>
+.asideBackground {
+  background-color: #020043;
+}
+
+#asideBar ul li a {
+  color: #ccac00;
+}
+
 .is-viewport-height {
   height: 100vh;
 }
