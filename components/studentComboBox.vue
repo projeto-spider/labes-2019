@@ -219,9 +219,11 @@ export default {
       token: state => state.auth.token
     }),
     displayStatus() {
-      if (this.studentData.isActive) {
-        return 'Ativo'
-      } else return 'Inativo'
+      if (this.studentData.isConcluding) return 'Concluinte'
+      if (this.studentData.isForming) return 'Formando'
+      if (this.studentData.isGraduating)
+        return this.studentData.isFit ? 'Graduando Apto' : 'Graduando Não Apto'
+      return 'Ativo'
     },
     disableUploadAta() {
       return !this.ataCheck || !this.canEdit

@@ -139,6 +139,10 @@ export default {
         {
           field: 'email',
           label: 'Email'
+        },
+        {
+          field: 'status',
+          label: 'Status'
         }
       ],
       total: 0,
@@ -175,9 +179,22 @@ export default {
     students() {
       this.studentsData = [...this.students]
     },
+    studentsData() {
+      for (const st in this.studentsData) {
+        if (this.studentsData[st].isConcluding)
+          this.studentsData[st].status = 'Concluinte'
+        else if (this.studentsData[st].isForming)
+          this.studentsData[st].status = 'Formando'
+        else if (this.studentsData[st].isGraduating)
+          this.studentsData[st].status = this.studentsData[st].isFit
+            ? 'Graduando Apto'
+            : 'Graduando Não Apto'
+        else this.studentsData[st].status = 'Ativo'
+      }
+    },
     total() {
       if (+this.total === 0) {
-        if (this.isActive === 1) {
+        if (this.isActive) {
           this.$toast.open({
             message: 'Nenhum aluno(a) ativo(a) foi encontrado(a)!',
             type: 'is-warning'
