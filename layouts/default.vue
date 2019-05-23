@@ -195,11 +195,31 @@ export default {
 
 <style>
 .asideBackground {
-  background-color: #020043;
+  background-color: #373737;
 }
 
 #asideBar ul li a {
-  color: #ccac00;
+  color: #aaaaaa;
+}
+
+.menu-label {
+  text-align: center;
+  font-weight: 700;
+  border-radius: 5px;
+  padding: 2px;
+  background-color: #414141;
+}
+
+.navbar-link,
+.navbar-dropdown {
+  background-color: #008d75;
+}
+
+.navbar-brand,
+#navbarBasicExample {
+  background-color: #007d68;
+  color: #000;
+  font-weight: 600;
 }
 
 .is-viewport-height {
