@@ -175,7 +175,7 @@
           <div class="level-item">
             <b-field>
               <b-button class="is-primary" @click="putStudents">
-                Submeter</b-button
+                Atualizar</b-button
               >
             </b-field>
           </div>
