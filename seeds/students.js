@@ -8,7 +8,7 @@ exports.seed = async function(knex, Promise) {
     {
       name: 'FELIPE SOUZA FERREIRA',
       registrationNumber: '201704940001',
-      crg: 'null',
+      crg: 8.3,
       course: 'cbcc',
       email: 'null',
       isFit: false,
@@ -24,7 +24,7 @@ exports.seed = async function(knex, Promise) {
     {
       name: 'LAURA CARDOSO CASTRO',
       registrationNumber: '201304940002',
-      crg: 'null',
+      crg: 6.63,
       course: 'cbsi',
       email: 'null',
       isFit: false,
@@ -40,7 +40,7 @@ exports.seed = async function(knex, Promise) {
     {
       name: 'JOSE FERREIRA SILVA',
       registrationNumber: '200504940003',
-      crg: 'null',
+      crg: 8.3,
       course: 'cbsi',
       email: 'null',
       isFit: false,
@@ -56,7 +56,7 @@ exports.seed = async function(knex, Promise) {
     {
       name: 'ENZO FERREIRA ALVES',
       registrationNumber: '201104940004',
-      crg: 'null',
+      crg: 7.89,
       course: 'cbcc',
       email: 'null',
       isFit: false,
@@ -72,7 +72,7 @@ exports.seed = async function(knex, Promise) {
     {
       name: 'KAUAN CARVALHO SANTOS',
       registrationNumber: '200604940005',
-      crg: 'null',
+      crg: 7.897,
       course: 'cbcc',
       email: 'null',
       isFit: false,
@@ -88,7 +88,7 @@ exports.seed = async function(knex, Promise) {
     {
       name: 'EDUARDO ALVES LIMA',
       registrationNumber: '201804940006',
-      crg: 'null',
+      crg: 6.001,
       course: 'cbcc',
       email: 'null',
       isFit: false,
@@ -104,7 +104,7 @@ exports.seed = async function(knex, Promise) {
     {
       name: 'JULIAN BARBOSA SANTOS',
       registrationNumber: '199604940007',
-      crg: 'null',
+      crg: 8.3,
       course: 'cbcc',
       email: 'null',
       isFit: false,

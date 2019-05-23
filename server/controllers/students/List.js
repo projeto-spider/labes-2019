@@ -10,7 +10,10 @@ module.exports = async function listStudents(ctx) {
     return
   }
 
-  if (sort !== undefined && !['name', 'registrationNumber'].includes(sort)) {
+  if (
+    sort !== undefined &&
+    !['name', 'registrationNumber', 'crg'].includes(sort)
+  ) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_ARGUMENT, filter: 'sort' }
     return
