@@ -13,6 +13,13 @@
             <br />
             <strong>E-mail</strong>: {{ studentData.email }} <br />
             <strong>Status</strong>: {{ displayStatus }} <br />
+            <strong v-if="hasDefense">Defendeu: </strong>
+            <br v-if="hasDefense" />
+            <b-input
+              v-if="hasDefense"
+              v-model="studentData.defenseDate"
+              :disabled="!canEdit"
+            ></b-input>
             <strong>CRG</strong>:
             <b-input v-model="studentData.crg" :disabled="!canEdit"></b-input>
             <br />
@@ -211,7 +218,8 @@ export default {
       crg: '',
       pendencies: '',
       studentData: Object.assign({}, this.student),
-      isLoading: false
+      isLoading: false,
+      hasDefense: false
     }
   },
   computed: {
@@ -252,8 +260,10 @@ export default {
       return documents
     }
   },
+
   created() {
     this.getStudentsDocument()
+    this.displayDefense()
   },
 
   methods: {
@@ -345,6 +355,17 @@ export default {
           type: 'is-danger'
         })
         this.file = File
+      }
+    },
+    displayDefense() {
+      if (
+        this.studentData.isForming === 1 ||
+        this.studentData.isConcluding === 1 ||
+        this.studentData.isGraduating === 1
+      ) {
+        this.hasDefense = true
+      } else {
+        this.hasDefense = false
       }
     }
   }
