@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card widescreen">
     <header class="card-header">
       <b-icon pack="fas" icon="user" size="is-medium"></b-icon>
       <p class="card-header-title">{{ studentData.name }}</p>
@@ -352,6 +352,10 @@ export default {
 </script>
 
 <style scoped>
+.widescreen {
+  width: 100vw;
+}
+
 .card-header {
   align-items: center;
 }
