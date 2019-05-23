@@ -7,7 +7,7 @@
     </div>
     <br />
     <div class="columns is-centered">
-      <div class="column is-half">
+      <div class="column is-10">
         <b-field horizontal class="box" label="Filtros: ">
           <b-checkbox v-model="nameFilter">Nome</b-checkbox>
           <b-checkbox v-model="registrationFilter">Matricula</b-checkbox>
