@@ -119,7 +119,7 @@
                         -
                       </td>
                     </tr>
-                    <tr>
+                    <tr v-if="canEdit">
                       <td><strong>Lista presc.</strong></td>
                       <td>
                         <b-checkbox
