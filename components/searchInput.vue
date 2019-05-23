@@ -98,6 +98,10 @@ export default {
       type: Number,
       default: () => 0
     },
+    isConcluding: {
+      type: Number,
+      default: () => 0
+    },
     defaultSortField: {
       type: String,
       default: () => 'name'
@@ -236,6 +240,7 @@ export default {
             sort: this.sortField,
             order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
             isActive: this.isActive !== 'AllStudents' ? this.isActive : null,
+            isConcluding: this.isConcluding || null,
             ...maybeParam('name', this.searchName),
             ...maybeParam('registrationNumber', this.searchRegistration),
             ...maybeParam('email', this.searchEmail)

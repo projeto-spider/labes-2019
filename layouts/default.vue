@@ -92,7 +92,7 @@
               <a href="#">Formandos</a>
             </li>
             <li>
-              <a href="#">Concluintes</a>
+              <nuxt-link to="/concludingStudents">Concluintes</nuxt-link>
             </li>
             <li>
               <nuxt-link to="/activeStudents">Alunos Ativos</nuxt-link>
