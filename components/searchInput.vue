@@ -50,6 +50,7 @@
           :data="tableData"
           :selected.sync="selectedStudent"
           :columns="columns"
+          class="searchInputTable"
           focusable
           paginated
           backend-pagination
@@ -274,5 +275,11 @@ template {
 
 .container {
   margin: 50px auto 50px auto;
+}
+</style>
+
+<style>
+.searchInputTable div.table-wrapper table tbody tr td:nth-child(2) span {
+  cursor: pointer;
 }
 </style>
