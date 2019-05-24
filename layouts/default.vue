@@ -210,14 +210,8 @@ export default {
   background-color: #414141;
 }
 
-.navbar-link,
-.navbar-dropdown {
-  background-color: #008d75;
-}
-
 .navbar-brand,
 #navbarBasicExample {
-  background-color: #007d68;
   color: #000;
   font-weight: 600;
 }
