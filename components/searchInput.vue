@@ -77,13 +77,13 @@
 import { mapState } from 'vuex'
 import pDebounce from 'p-debounce'
 import studentComboBox from '../components/studentComboBox'
-import { stuStatus } from './mixins/studentStatus'
+import { studentStatus } from './mixins/studentStatus'
 export default {
   name: 'SearchInput',
   components: {
     studentComboBox
   },
-  mixins: [stuStatus],
+  mixins: [studentStatus],
   props: {
     title: {
       type: String,
@@ -165,18 +165,8 @@ export default {
       courseTag: state => state.courseTag
     }),
     tableData() {
-      const tabData = []
-      for (const data of this.studentsData) {
-        const obj = Object.assign({}, data)
-        obj.status = this.getStatus(
-          data.isActive,
-          data.isConcluding,
-          data.isGraduating,
-          data.isForming,
-          data.isFit
-        )
-        tabData.push(obj)
-      }
+      const tabData = JSON.parse(JSON.stringify(this.studentsData))
+      tabData.map(data => (data.status = this.getStatus(data)))
       return tabData
     }
   },

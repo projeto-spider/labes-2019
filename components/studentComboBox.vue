@@ -188,10 +188,10 @@
 <script>
 import { mapState } from 'vuex'
 import { errorsHandler } from './mixins/errors'
-import { stuStatus } from './mixins/studentStatus'
+import { studentStatus } from './mixins/studentStatus'
 export default {
   name: 'StudentComboBox',
-  mixins: [errorsHandler, stuStatus],
+  mixins: [errorsHandler, studentStatus],
   props: {
     student: {
       type: Object,
@@ -220,13 +220,7 @@ export default {
       token: state => state.auth.token
     }),
     displayStatus() {
-      return this.getStatus(
-        this.studentData.isActive,
-        this.studentData.isConcluding,
-        this.studentData.isGraduating,
-        this.studentData.isForming,
-        this.studentData.isFit
-      )
+      return this.getStatus(this.studentData)
     },
     disableUploadAta() {
       return !this.ataCheck || !this.canEdit
