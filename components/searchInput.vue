@@ -63,8 +63,8 @@
         ></b-table>
         <b-modal :active.sync="selectedStudent" has-modal-card>
           <student-combo-box
-            v-if="selectedStudent"
-            :student="selectedStudent"
+            v-if="comboBoxStudent"
+            :student="comboBoxStudent"
             @student-put="getStudentsFilters"
           ></student-combo-box>
         </b-modal>
@@ -170,6 +170,14 @@ export default {
         obj.status = this.getStatus(data)
         return obj
       })
+    },
+    comboBoxStudent() {
+      if (!this.selectedStudent) {
+        return false
+      }
+      return this.studentsData.find(
+        student => student.id === this.selectedStudent.id
+      )
     }
   },
   watch: {
