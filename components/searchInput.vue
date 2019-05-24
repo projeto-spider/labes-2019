@@ -47,7 +47,7 @@
         <b-table
           :striped="isStriped"
           :hoverable="isHoverabble"
-          :data="studentsData"
+          :data="tableData"
           :selected.sync="selectedStudent"
           :columns="columns"
           focusable
@@ -77,11 +77,13 @@
 import { mapState } from 'vuex'
 import pDebounce from 'p-debounce'
 import studentComboBox from '../components/studentComboBox'
+import { stuStatus } from './mixins/studentStatus'
 export default {
   name: 'SearchInput',
   components: {
     studentComboBox
   },
+  mixins: [stuStatus],
   props: {
     title: {
       type: String,
@@ -161,7 +163,22 @@ export default {
   computed: {
     ...mapState({
       courseTag: state => state.courseTag
-    })
+    }),
+    tableData() {
+      const tabData = []
+      for (const data of this.studentsData) {
+        const obj = Object.assign({}, data)
+        obj.status = this.getStatus(
+          data.isActive,
+          data.isConcluding,
+          data.isGraduating,
+          data.isForming,
+          data.isFit
+        )
+        tabData.push(obj)
+      }
+      return tabData
+    }
   },
   watch: {
     searchName() {
@@ -178,19 +195,6 @@ export default {
     },
     students() {
       this.studentsData = [...this.students]
-    },
-    studentsData() {
-      for (const st in this.studentsData) {
-        if (this.studentsData[st].isConcluding)
-          this.studentsData[st].status = 'Concluinte'
-        else if (this.studentsData[st].isForming)
-          this.studentsData[st].status = 'Formando'
-        else if (this.studentsData[st].isGraduating)
-          this.studentsData[st].status = this.studentsData[st].isFit
-            ? 'Graduando Apto'
-            : 'Graduando Não Apto'
-        else this.studentsData[st].status = 'Ativo'
-      }
     },
     total() {
       if (+this.total === 0) {
