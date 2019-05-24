@@ -165,12 +165,11 @@ export default {
       courseTag: state => state.courseTag
     }),
     tableData() {
-      const tabData = this.studentsData.map(data => {
+      return this.studentsData.map(data => {
         const obj = Object.assign({}, data)
         obj.status = this.getStatus(data)
         return obj
       })
-      return tabData
     }
   },
   watch: {
