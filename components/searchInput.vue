@@ -165,8 +165,11 @@ export default {
       courseTag: state => state.courseTag
     }),
     tableData() {
-      const tabData = JSON.parse(JSON.stringify(this.studentsData))
-      tabData.map(data => (data.status = this.getStatus(data)))
+      const tabData = this.studentsData.map(data => {
+        const obj = Object.assign({}, data)
+        obj.status = this.getStatus(data)
+        return obj
+      })
       return tabData
     }
   },
