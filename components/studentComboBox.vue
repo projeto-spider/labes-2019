@@ -44,7 +44,7 @@
                       </td>
                       <td>
                         <a
-                          v-if="checkDocumentIsEmpty.ataFile"
+                          v-if="hasDocument.ataFile"
                           :href="`${ataDocument.url}?token=${token}`"
                           target="_blank"
                         >
@@ -79,7 +79,7 @@
                       </td>
                       <td>
                         <a
-                          v-if="checkDocumentIsEmpty.laudaFile"
+                          v-if="hasDocument.laudaFile"
                           :href="`${laudaDocument.url}?token=${token}`"
                           target="_blank"
                         >
@@ -119,7 +119,7 @@
                         -
                       </td>
                     </tr>
-                    <tr v-if="canEdit">
+                    <tr v-if="canEdit || hasDocument.presFile">
                       <td><strong>Lista presc.</strong></td>
                       <td>
                         <b-checkbox
@@ -129,7 +129,7 @@
                       </td>
                       <td>
                         <a
-                          v-if="checkDocumentIsEmpty.presFile"
+                          v-if="hasDocument.presFile"
                           :href="`${presDocument.url}?token=${token}`"
                           target="_blank"
                         >
@@ -231,7 +231,7 @@ export default {
     disableUploadPres() {
       return !this.presCheck || !this.canEdit
     },
-    checkDocumentIsEmpty() {
+    hasDocument() {
       function check(document) {
         return (
           Object.entries(document).length === 0 &&
