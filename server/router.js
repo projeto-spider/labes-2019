@@ -8,6 +8,7 @@ const frontend = require('./controllers/frontend')
 const users = require('./controllers/users')
 const students = require('./controllers/students')
 const auth = require('./controllers/auth')
+const solicitations = require('./controllers/solicitations')
 
 const router = new Router()
 const api = new Router({ prefix: '/api' })
@@ -41,6 +42,9 @@ api.post('/students/from-csv', bodyMultipart, students.FromCsv)
 // Auth routes
 api.get('/auth', isLoggedIn, auth.Show)
 api.post('/auth', bodyJson, auth.Login)
+
+// Solicitation routes
+api.post('/solicitations/', bodyJson, solicitations.Create)
 
 // Not Found Routes
 api.all('/*', ctx => {
