@@ -7,7 +7,7 @@
     </div>
     <br />
     <div class="columns is-centered">
-      <div class="column is-half">
+      <div class="column is-10">
         <b-field horizontal class="box" label="Filtros: ">
           <b-checkbox v-model="nameFilter">Nome</b-checkbox>
           <b-checkbox v-model="registrationFilter">Matricula</b-checkbox>
@@ -47,9 +47,10 @@
         <b-table
           :striped="isStriped"
           :hoverable="isHoverabble"
-          :data="studentsData"
+          :data="tableData"
           :selected.sync="selectedStudent"
           :columns="columns"
+          class="searchInputTable"
           focusable
           paginated
           backend-pagination
@@ -63,8 +64,8 @@
         ></b-table>
         <b-modal :active.sync="selectedStudent" has-modal-card>
           <student-combo-box
-            v-if="selectedStudent"
-            :student="selectedStudent"
+            v-if="comboBoxStudent"
+            :student="comboBoxStudent"
             @student-put="getStudentsFilters"
           ></student-combo-box>
         </b-modal>
@@ -77,11 +78,13 @@
 import { mapState } from 'vuex'
 import pDebounce from 'p-debounce'
 import studentComboBox from '../components/studentComboBox'
+import { studentStatus } from './mixins/studentStatus'
 export default {
   name: 'SearchInput',
   components: {
     studentComboBox
   },
+  mixins: [studentStatus],
   props: {
     title: {
       type: String,
@@ -139,6 +142,10 @@ export default {
         {
           field: 'email',
           label: 'Email'
+        },
+        {
+          field: 'status',
+          label: 'Status'
         }
       ],
       total: 0,
@@ -157,7 +164,22 @@ export default {
   computed: {
     ...mapState({
       courseTag: state => state.courseTag
-    })
+    }),
+    tableData() {
+      return this.studentsData.map(data => {
+        const obj = Object.assign({}, data)
+        obj.status = this.getStatus(data)
+        return obj
+      })
+    },
+    comboBoxStudent() {
+      if (!this.selectedStudent) {
+        return false
+      }
+      return this.studentsData.find(
+        student => student.id === this.selectedStudent.id
+      )
+    }
   },
   watch: {
     searchName() {
@@ -174,15 +196,21 @@ export default {
     },
     students() {
       this.studentsData = [...this.students]
-    }
-  },
-
-  afterMounted() {
-    if (this.students.length < 1 && this.defaultFilters.isActive === 1) {
-      this.$toast.open({
-        message: 'Não há alunos ativos neste curso',
-        type: 'is-danger'
-      })
+    },
+    total() {
+      if (+this.total === 0) {
+        if (this.isActive) {
+          this.$toast.open({
+            message: 'Nenhum aluno(a) ativo(a) foi encontrado(a)!',
+            type: 'is-warning'
+          })
+        } else {
+          this.$toast.open({
+            message: `Nenhum aluno(a) foi encontrado(a)!`,
+            type: 'is-warning'
+          })
+        }
+      }
     }
   },
 
@@ -247,5 +275,11 @@ template {
 
 .container {
   margin: 50px auto 50px auto;
+}
+</style>
+
+<style>
+.searchInputTable div.table-wrapper table tbody tr td:nth-child(2) span {
+  cursor: pointer;
 }
 </style>

@@ -55,12 +55,22 @@
               </a>
             </div>
           </a>
+          <div class="navbar-item">
+            <div>
+              <p>{{ courseNameExtended }}</p>
+            </div>
+          </div>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
             <div>
+              <p>{{ username }}</p>
+            </div>
+          </div>
+          <div class="navbar-item">
+            <div>
               <a class="button is-danger" @click="logout">
-                Log out
+                Sair
               </a>
             </div>
           </div>
@@ -68,12 +78,9 @@
       </div>
     </nav>
 
-    <div class="columns is-fullheight">
-      <div
-        class="column is-2 has-background-black-ter"
-        :class="{ 'is-hidden-mobile': !active }"
-      >
-        <aside class="menu is-sidebar-menu">
+    <div class="columns is-fullheight asideBackground">
+      <div class="column is-2" :class="{ 'is-hidden-mobile': !active }">
+        <aside id="asideBar" class="menu is-sidebar-menu">
           <div class="menu-label text-uppercase">
             {{ courseTag ? courseTag : 'selecionar curso' }}
           </div>
@@ -150,6 +157,16 @@ export default {
     }),
     courseNameUppercase() {
       return this.courseTag && this.courseTag.toUpperCase()
+    },
+    courseNameExtended() {
+      const enumName = {
+        cbsi: 'Sistemas de Informação',
+        cbcc: 'Ciência da Computação'
+      }
+      return enumName[this.courseTag] || ''
+    },
+    username() {
+      return this.currrentUser.username
     }
   },
   methods: {
@@ -177,6 +194,28 @@ export default {
 </script>
 
 <style>
+.asideBackground {
+  background-color: #373737;
+}
+
+#asideBar ul li a {
+  color: #aaaaaa;
+}
+
+.menu-label {
+  text-align: center;
+  font-weight: 700;
+  border-radius: 5px;
+  padding: 2px;
+  background-color: #414141;
+}
+
+.navbar-brand,
+#navbarBasicExample {
+  color: #000;
+  font-weight: 600;
+}
+
 .is-viewport-height {
   height: 100vh;
 }

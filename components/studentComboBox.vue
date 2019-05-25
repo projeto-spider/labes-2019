@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card widescreen">
     <header class="card-header">
       <b-icon pack="fas" icon="user" size="is-medium"></b-icon>
       <p class="card-header-title">{{ studentData.name }}</p>
@@ -16,7 +16,7 @@
             <strong>CRG</strong>:
             <b-input v-model="studentData.crg" :disabled="!canEdit"></b-input>
             <br />
-            <strong>Pendências</strong>:
+            <strong>Componentes Pendentes</strong>:
             <b-input
               v-model="pendencies"
               :disabled="!canEdit"
@@ -44,7 +44,7 @@
                       </td>
                       <td>
                         <a
-                          v-if="checkDocumentIsEmpty.ataFile"
+                          v-if="hasDocument.ataFile"
                           :href="`${ataDocument.url}?token=${token}`"
                           target="_blank"
                         >
@@ -79,7 +79,7 @@
                       </td>
                       <td>
                         <a
-                          v-if="checkDocumentIsEmpty.laudaFile"
+                          v-if="hasDocument.laudaFile"
                           :href="`${laudaDocument.url}?token=${token}`"
                           target="_blank"
                         >
@@ -119,7 +119,7 @@
                         -
                       </td>
                     </tr>
-                    <tr>
+                    <tr v-if="canEdit || hasDocument.presFile">
                       <td><strong>Lista presc.</strong></td>
                       <td>
                         <b-checkbox
@@ -129,7 +129,7 @@
                       </td>
                       <td>
                         <a
-                          v-if="checkDocumentIsEmpty.presFile"
+                          v-if="hasDocument.presFile"
                           :href="`${presDocument.url}?token=${token}`"
                           target="_blank"
                         >
@@ -175,7 +175,7 @@
           <div class="level-item">
             <b-field>
               <b-button class="is-primary" @click="putStudents">
-                Submeter</b-button
+                Atualizar</b-button
               >
             </b-field>
           </div>
@@ -188,9 +188,10 @@
 <script>
 import { mapState } from 'vuex'
 import { errorsHandler } from './mixins/errors'
+import { studentStatus } from './mixins/studentStatus'
 export default {
   name: 'StudentComboBox',
-  mixins: [errorsHandler],
+  mixins: [errorsHandler, studentStatus],
   props: {
     student: {
       type: Object,
@@ -219,9 +220,7 @@ export default {
       token: state => state.auth.token
     }),
     displayStatus() {
-      if (this.studentData.isActive) {
-        return 'Ativo'
-      } else return 'Inativo'
+      return this.getStatus(this.studentData)
     },
     disableUploadAta() {
       return !this.ataCheck || !this.canEdit
@@ -232,7 +231,7 @@ export default {
     disableUploadPres() {
       return !this.presCheck || !this.canEdit
     },
-    checkDocumentIsEmpty() {
+    hasDocument() {
       function check(document) {
         return (
           Object.entries(document).length === 0 &&
@@ -352,6 +351,10 @@ export default {
 </script>
 
 <style scoped>
+.widescreen {
+  width: 100vw;
+}
+
 .card-header {
   align-items: center;
 }
