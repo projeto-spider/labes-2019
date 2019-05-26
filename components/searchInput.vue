@@ -46,7 +46,7 @@
         <br />
         <b-table
           :striped="isStriped"
-          :hoverable="isHoverabble"
+          :hoverable="isHoverable"
           :data="tableData"
           :selected.sync="selectedStudent"
           :columns="columns"
