@@ -24,7 +24,6 @@ describe('/api/solicitations', () => {
   test('POST /', async done => {
     const { token } = await testUtils.user('admin')
     const payload = {
-      reason: 'Reason',
       name: 'Person',
       email: 'person.ufpa@example.com',
       registrationNumber: '201904940001'
@@ -38,17 +37,31 @@ describe('/api/solicitations', () => {
     expect(res.status).toBe(201)
     expect(res.type).toBe('application/json')
     expect(res.body).toBeDefined()
-    expect(res.body.reason).toBe(payload.reason)
     expect(res.body.name).toBe(payload.name)
     expect(res.body.email).toBe(payload.email)
     expect(res.body.registrationNumber).toBe(payload.registrationNumber)
+
+    const payload2 = {
+      name: 'Person',
+      email: 'person@example.com'
+    }
+    const res2 = await chai
+      .request(server.listen())
+      .post('/api/solicitations')
+      .set('Authorization', `Bearer ${token}`)
+      .send(payload2)
+
+    expect(res2.status).toBe(201)
+    expect(res2.type).toBe('application/json')
+    expect(res2.body).toBeDefined()
+    expect(res2.body.name).toBe(payload2.name)
+    expect(res2.body.email).toBe(payload2.email)
     done()
   })
 
   test('POST / with missing fields', async done => {
     const { token } = await testUtils.user('admin')
     const payload1 = {
-      reason: 'Reason',
       email: 'person.ufpa@example.com',
       registrationNumber: '201904940001'
     }
@@ -65,7 +78,6 @@ describe('/api/solicitations', () => {
 
     const payload2 = {
       name: 'Person',
-      email: 'person.ufpa@example.com',
       registrationNumber: '201904940001'
     }
     const res2 = await chai
@@ -84,7 +96,6 @@ describe('/api/solicitations', () => {
   test('POST / with duplicate email', async done => {
     const { token } = await testUtils.user('admin')
     const payload1 = {
-      reason: 'Example Reason',
       name: 'Victor Silva Machado',
       email: 'victorsilva@example.com',
       registrationNumber: '201904940012'
@@ -104,7 +115,6 @@ describe('/api/solicitations', () => {
   test('POST / invalid registration number', async done => {
     const { token } = await testUtils.user('admin')
     const payload1 = {
-      reason: 'Example Reason',
       name: 'Victor Silva Machado',
       email: 'victor.silva@example.com',
       registrationNumber: '2019049400012'
