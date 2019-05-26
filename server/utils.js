@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { knex } = require('./db')
+const Student = require('./models/Student')
 
 /**
  * Given a CSV file with header make an Array of objects
@@ -129,47 +130,51 @@ exports.digestSigaaData = function digestSigaaData(data) {
  *     await batchUpdateStudents(digested)
  */
 exports.batchUpdateStudents = function batchUpdateStudents(data) {
+  const registrationNumbers = data.map(
+    ({ registrationNumber }) => registrationNumber
+  )
   return knex.transaction(async trx => {
-    await Promise.all(
-      chunks(data, 20).map(chunk => {
-        const query = `
-        INSERT INTO
-          students (name, registrationNumber, course, isFit, isConcluding, isActive, isForming, isGraduating, academicHighlight, cancelled, prescribed)
-        VALUES
-          ${chunk.map(() => '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').join(', ')}
-        ON CONFLICT
-          (registrationNumber)
-        DO UPDATE SET
-          course = excluded.course,
-          isFit = excluded.isFit,
-          isConcluding = excluded.isConcluding,
-          isActive = excluded.isActive,
-          isForming = excluded.isForming,
-          isGraduating = excluded.isGraduating,
-          academicHighlight = excluded.academicHighlight,
-          cancelled = excluded.cancelled,
-          prescribed = excluded.prescribed
-      `
+    const existingStudentsCollection = await Student.query(
+      'where',
+      'registrationNumber',
+      'IN',
+      registrationNumbers
+    ).fetchAll({ transacting: trx })
 
-        const bindings = chunk
-          .map(student => [
-            student.name,
-            student.registrationNumber,
-            student.course,
-            student.isFit,
-            student.isConcluding,
-            student.isActive,
-            student.isForming,
-            student.isGraduating,
-            student.academicHighlight,
-            student.cancelled,
-            student.prescribed
-          ])
-          .reduce((acc, x) => acc.concat(x), [])
+    const existingStudents = existingStudentsCollection.toJSON()
 
-        return trx.raw(query, bindings)
-      })
+    const existingRegistrationNumbers = existingStudents.map(
+      ({ registrationNumber }) => registrationNumber
     )
+
+    const { newStudents, oldStudents } = data.reduce(
+      (acc, student) => {
+        const key = existingRegistrationNumbers.includes(
+          student.registrationNumber
+        )
+          ? 'oldStudents'
+          : 'newStudents'
+
+        acc[key].push(student)
+
+        return acc
+      },
+      { newStudents: [], oldStudents: [] }
+    )
+
+    const newPromises = newStudents.map(student =>
+      new Student(student).save(null, { transacting: trx })
+    )
+
+    const oldPromises = oldStudents.map(student => {
+      const { id } = existingStudents.find(
+        ({ registrationNumber }) =>
+          student.registrationNumber === registrationNumber
+      )
+      new Student({ id }).save(student, { patch: true, transacting: trx })
+    })
+
+    return Promise.all(newPromises.concat(oldPromises))
   })
 }
 /**
