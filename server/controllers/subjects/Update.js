@@ -2,15 +2,16 @@ const Subject = require('../../models/Subject')
 const errors = require('../../../shared/errors')
 
 module.exports = async function updateSubject(ctx) {
+  const { id } = ctx.params
   const subjectUpdate = ctx.request.body
 
-  if (subjectUpdate.id === undefined) {
+  if (id === undefined) {
     ctx.status = 404
     ctx.body = { code: errors.NOT_FOUND }
     return
   }
 
-  const subjectFind = await Subject.where('id', subjectUpdate.id).fetch()
+  const subjectFind = await Subject.where('id', id).fetch()
   if (subjectFind === null) {
     ctx.status = 404
     ctx.body = { code: errors.NOT_FOUND }
