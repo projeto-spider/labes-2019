@@ -35,4 +35,22 @@ describe('/api/users', () => {
     expect(student.attributes.email).toEqual('example@gmail.com')
     done()
   })
+
+  test('Create a Student uses only 3 CRG decimal digits', async done => {
+    const student = await Student.forge({
+      name: 'Lorem Ipsum',
+      registrationNumber: '201504940020',
+      course: 'cbcc',
+      email: 'example@gmail.com',
+      crg: 5.123456789
+    }).save()
+    expect(student.id).toBeDefined()
+    expect(student.attributes.name).toEqual('Lorem Ipsum')
+    expect(student.attributes.email).toEqual('example@gmail.com')
+    expect(student.attributes.crg).toEqual(5.123)
+
+    await student.save({ crg: 7.123456789 })
+    expect(student.attributes.crg).toEqual(7.123)
+    done()
+  })
 })
