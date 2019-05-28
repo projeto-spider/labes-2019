@@ -18,6 +18,16 @@ module.exports = async function updateSubject(ctx) {
     return
   }
 
+  if (
+    subjectUpdate.code &&
+    subjectUpdate.code !== subjectFind.get('code') &&
+    !!(await Subject.where({ code: subjectUpdate.code }).count())
+  ) {
+    ctx.status = 422
+    ctx.body = { code: errors.UNPROCESSABLE_ENTITY, prop: 'code' }
+    return
+  }
+
   await subjectFind.save(subjectUpdate)
   ctx.body = subjectFind
 }
