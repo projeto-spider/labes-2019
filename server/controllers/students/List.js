@@ -36,7 +36,8 @@ function filterStudents(filters) {
     maxCrg,
     eqCrg,
     sort,
-    order = 'ASC'
+    order = 'ASC',
+    gmail
   } = filters
   let query = Student
   if (sort !== undefined) {
@@ -56,6 +57,9 @@ function filterStudents(filters) {
   }
   if (eqCrg !== undefined) {
     query = query.where('crg', eqCrg)
+  }
+  if (gmail !== undefined && +gmail === 1) {
+    query = query.where('email', 'like', '%@gmail.com%')
   }
   const filtersNames = [
     'course',
