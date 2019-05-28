@@ -693,4 +693,50 @@ describe('/api/students', () => {
     expect(res.body.filter).toEqual('order')
     done()
   })
+
+  test('GET /actives-mailing-list', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/actives-mailing-list')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.body.mailingList).toEqual('slug@gmail.com')
+    done()
+  })
+
+  test('GET /?gmail=1', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/?gmail=1')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.body[0].email).toEqual('naosouativo@gmail.com')
+
+    expect(res.body[1].email).toEqual('slug@gmail.com')
+
+    expect(res.body[2].email).toEqual('dofuturo@gmail.com.br')
+    done()
+  })
+
+  test('GET /?', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/?gmail=0')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.body[0].email).toEqual('notgoo@gmiau.com')
+
+    expect(res.body[1].email).toEqual('youngboy@yahoo.com')
+
+    expect(res.body[2].email).toEqual('naosouativo@gmail.com')
+
+    expect(res.body[3].email).toEqual('slug@gmail.com')
+
+    expect(res.body[4].email).toEqual('dofuturo@gmail.com.br')
+
+    expect(res.body[5].email).toEqual('oldfashioned33@hotmail.com')
+
+    expect(res.body[6].email).toEqual('uneccessary@ufpa.br')
+    done()
+  })
 })
