@@ -19,7 +19,7 @@ describe('models/User', () => {
     done()
   }, 100000)
 
-  test.only('Create a User', async done => {
+  test('Create a User', async done => {
     const student = await User.forge({
       username: 'admin',
       password: 'pass',
