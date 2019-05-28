@@ -679,7 +679,7 @@ describe('/api/students', () => {
       .request(server.listen())
       .get('/api/students/actives-mailing-list')
       .set('Authorization', `Bearer ${token}`)
-    expect(res.body.toJSON().mailingList).toEqual('slug@gmail.com')
+    expect(res.body.mailingList).toEqual('slug@gmail.com')
     done()
   })
 
