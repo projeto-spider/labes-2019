@@ -55,24 +55,7 @@ describe('/api/solicitations', () => {
     expect(res2.body).toBeDefined()
     expect(res2.body.name).toBe(payload2.name)
     expect(res2.body.email).toBe(payload2.email)
-    expect(res.body.type).toBe(payload.type)
-
-    const payload3 = {
-      name: 'Person',
-      email: 'person@gmail.com',
-      registrationNumber: '201904940001'
-    }
-    const res3 = await chai
-      .request(server.listen())
-      .post('/api/solicitations')
-      .send(payload3)
-
-    expect(res3.status).toBe(201)
-    expect(res3.type).toBe('application/json')
-    expect(res3.body).toBeDefined()
-    expect(res3.body.name).toBe(payload3.name)
-    expect(res3.body.email).toBe(payload3.email)
-    expect(res3.body.registrationNumber).toBe(payload3.registrationNumber)
+    expect(res2.body.type).toBe(payload2.type)
     done()
   })
 
@@ -143,6 +126,24 @@ describe('/api/solicitations', () => {
     expect(res1.type).toBe('application/json')
     expect(res1.body).toBeDefined()
     expect(res1.body.code).toBe(errors.UNPROCESSABLE_ENTITY)
+    done()
+  })
+
+  test('POST /', async done => {
+    const payload = {
+      name: 'Person',
+      email: 'person@gmail.com',
+      registrationNumber: '201904940001'
+    }
+    const res = await chai
+      .request(server.listen())
+      .post('/api/solicitations')
+      .send(payload)
+
+    expect(res.status).toBe(400)
+    expect(res.type).toBe('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_REQUEST)
     done()
   })
 })

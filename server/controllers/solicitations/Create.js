@@ -4,7 +4,7 @@ const errors = require('../../../shared/errors')
 module.exports = async function createUser(ctx) {
   const { name, email, registrationNumber, type } = ctx.request.body
 
-  const validRequest = [name, email].every(item => item !== undefined)
+  const validRequest = [name, email, type].every(item => item !== undefined)
   if (!validRequest) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_REQUEST }
