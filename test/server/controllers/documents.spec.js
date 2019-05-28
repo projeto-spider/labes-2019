@@ -178,4 +178,52 @@ describe('/api/documents', () => {
     expect(res.body.code).toEqual(errors.UPLOAD_FILE_TYPE_INVALID)
     done()
   })
+
+  test('POST /:studentId/documents (update student)', async done => {
+    const { token } = await testUtils.user('admin')
+    const dirUploads = path.join(__dirname, '../../../storage/')
+    if (fs.existsSync(dirUploads)) {
+      rimraf.sync(dirUploads)
+    }
+    const resInsertDocument = await chai
+      .request(server.listen())
+      .post('/api/students/2/documents')
+      .set('Authorization', `Bearer ${token}`)
+      .field('documentType', enums.documents.LAUDA)
+      .attach('file', pdfFixture('test.pdf'), 'test.pdf')
+      .type('form')
+    expect(resInsertDocument.status).toEqual(201)
+    expect(resInsertDocument.type).toEqual('application/json')
+    expect(resInsertDocument.body).toBeDefined()
+    const resView1 = await chai
+      .request(server.listen())
+      .get('/api/students/2/documents/5/view')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resView1.status).toEqual(200)
+    expect(resView1.type).toEqual('application/pdf')
+    expect(resView1.body).toBeDefined()
+    const resUpdateStudent = await chai
+      .request(server.listen())
+      .put('/api/students/2')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        id: 2,
+        name: 'ATUALIZA NOME DO ESTUDANTE',
+        crg: 5
+      })
+    expect(resUpdateStudent.status).toEqual(200)
+    expect(resUpdateStudent.type).toEqual('application/json')
+    expect(resUpdateStudent.body).toBeDefined()
+    expect(resUpdateStudent.body.id).toEqual(2)
+    expect(resUpdateStudent.body.name).toEqual('ATUALIZA NOME DO ESTUDANTE')
+    expect(resUpdateStudent.body.crg).toEqual(5)
+    const resView2 = await chai
+      .request(server.listen())
+      .get('/api/students/2/documents/5/view')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resView2.status).toEqual(200)
+    expect(resView2.type).toEqual('application/pdf')
+    expect(resView2.body).toBeDefined()
+    done()
+  })
 })
