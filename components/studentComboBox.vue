@@ -11,6 +11,9 @@
             <strong>Nome</strong>: {{ studentData.name }} <br />
             <strong>Matricula</strong>: {{ studentData.registrationNumber }}
             <br />
+            <strong>Orientador</strong>: {{ studentData.advisor }} <br />
+            <strong>{{ defenseDateStatus }}</strong
+            >: {{ studentData.defenseDate }}<br />
             <strong>E-mail</strong>:
             <b-input v-model="studentData.email" :disabled="!canEdit"></b-input>
             <br />
@@ -258,8 +261,18 @@ export default {
       documents.presFile = !check(this.presDocument)
 
       return documents
+    },
+    defenseDateStatus() {
+      if (
+        this.studentData.isGraduating === true ||
+        this.studentData.isForming === true
+      ) {
+        return 'Defendeu em'
+      }
+      return 'Data de Defesa'
     }
   },
+
   created() {
     this.getStudentsDocument()
   },
