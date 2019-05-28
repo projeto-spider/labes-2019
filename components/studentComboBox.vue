@@ -11,7 +11,9 @@
             <strong>Nome</strong>: {{ studentData.name }} <br />
             <strong>Matricula</strong>: {{ studentData.registrationNumber }}
             <br />
-            <strong>E-mail</strong>: {{ studentData.email }} <br />
+            <strong>E-mail</strong>:
+            <b-input v-model="studentData.email" :disabled="!canEdit"></b-input>
+            <br />
             <strong>Status</strong>: {{ displayStatus }} <br />
             <strong>CRG</strong>:
             <b-input v-model="studentData.crg" :disabled="!canEdit"></b-input>
