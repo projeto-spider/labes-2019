@@ -672,4 +672,14 @@ describe('/api/students', () => {
     expect(res.body.filter).toEqual('order')
     done()
   })
+
+  test('GET /actives-mailing-list', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/actives-mailing-list')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.body.toJSON().mailingList).toEqual('slug@gmail.com')
+    done()
+  })
 })
