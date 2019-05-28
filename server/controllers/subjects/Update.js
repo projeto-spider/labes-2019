@@ -11,7 +11,7 @@ module.exports = async function updateSubject(ctx) {
     return
   }
 
-  const subjectFind = await Subject.where('id', id).fetch()
+  const subjectFind = await Subject.where({ id }).fetch()
   if (subjectFind === null) {
     ctx.status = 404
     ctx.body = { code: errors.NOT_FOUND }
