@@ -87,42 +87,70 @@ describe('/api/students', () => {
     expect(felipe.isGraduating).toBeFalsy()
     expect(felipe.isConcluding).toBeFalsy()
     expect(felipe.cancelled).toBeFalsy()
+    expect(felipe.recordSigned).toBeFalsy()
+    expect(felipe.termPaper).toBeFalsy()
+    expect(felipe.cd).toBeFalsy()
+    expect(felipe.isUndergraduate).toBeFalsy()
 
     expect(laura.isActive).toBeFalsy()
     expect(laura.isForming).toBeFalsy()
     expect(laura.isGraduating).toBeFalsy()
     expect(laura.isConcluding).toBeTruthy()
     expect(laura.cancelled).toBeFalsy()
+    expect(laura.recordSigned).toBeFalsy()
+    expect(laura.termPaper).toBeFalsy()
+    expect(laura.cd).toBeFalsy()
+    expect(laura.isUndergraduate).toBeFalsy()
 
     expect(jose.isActive).toBeFalsy()
     expect(jose.isForming).toBeFalsy()
     expect(jose.isGraduating).toBeFalsy()
     expect(jose.isConcluding).toBeTruthy()
     expect(jose.cancelled).toBeFalsy()
+    expect(jose.recordSigned).toBeFalsy()
+    expect(jose.termPaper).toBeFalsy()
+    expect(jose.cd).toBeFalsy()
+    expect(jose.isUndergraduate).toBeFalsy()
 
     expect(enzo.isActive).toBeTruthy()
     expect(enzo.isGraduating).toBeFalsy()
     expect(enzo.isGraduating).toBeFalsy()
     expect(enzo.isConcluding).toBeFalsy()
     expect(enzo.cancelled).toBeFalsy()
+    expect(enzo.recordSigned).toBeFalsy()
+    expect(enzo.termPaper).toBeFalsy()
+    expect(enzo.cd).toBeFalsy()
+    expect(enzo.isUndergraduate).toBeFalsy()
 
     expect(kauan.isActive).toBeFalsy()
     expect(kauan.isGraduating).toBeFalsy()
     expect(kauan.isGraduating).toBeFalsy()
     expect(kauan.isConcluding).toBeFalsy()
     expect(kauan.cancelled).toBeTruthy()
+    expect(kauan.recordSigned).toBeFalsy()
+    expect(kauan.termPaper).toBeFalsy()
+    expect(kauan.cd).toBeFalsy()
+    expect(kauan.isUndergraduate).toBeFalsy()
 
     expect(eduardo.isActive).toBeTruthy()
     expect(eduardo.isGraduating).toBeFalsy()
     expect(eduardo.isGraduating).toBeFalsy()
     expect(eduardo.isConcluding).toBeFalsy()
     expect(eduardo.cancelled).toBeFalsy()
+    expect(eduardo.recordSigned).toBeFalsy()
+    expect(eduardo.termPaper).toBeFalsy()
+    expect(eduardo.cd).toBeFalsy()
+    expect(eduardo.isUndergraduate).toBeFalsy()
 
     expect(julian.isActive).toBeFalsy()
     expect(julian.isGraduating).toBeFalsy()
     expect(julian.isGraduating).toBeFalsy()
     expect(julian.isConcluding).toBeTruthy()
     expect(julian.cancelled).toBeFalsy()
+    expect(julian.recordSigned).toBeFalsy()
+    expect(julian.termPaper).toBeFalsy()
+    expect(julian.cd).toBeFalsy()
+    expect(julian.isUndergraduate).toBeFalsy()
 
     done()
   })
@@ -229,42 +257,70 @@ describe('/api/students', () => {
     expect(felipe.isGraduating).toBeFalsy()
     expect(felipe.isConcluding).toBeFalsy()
     expect(felipe.cancelled).toBeFalsy()
+    expect(felipe.recordSigned).toBeFalsy()
+    expect(felipe.termPaper).toBeFalsy()
+    expect(felipe.cd).toBeFalsy()
+    expect(felipe.isUndergraduate).toBeFalsy()
 
     expect(laura.isActive).toBeFalsy()
     expect(laura.isForming).toBeFalsy()
     expect(laura.isGraduating).toBeFalsy()
     expect(laura.isConcluding).toBeTruthy()
     expect(laura.cancelled).toBeFalsy()
+    expect(laura.recordSigned).toBeFalsy()
+    expect(laura.termPaper).toBeFalsy()
+    expect(laura.cd).toBeFalsy()
+    expect(laura.isUndergraduate).toBeFalsy()
 
     expect(jose.isActive).toBeFalsy()
     expect(jose.isForming).toBeFalsy()
     expect(jose.isGraduating).toBeFalsy()
     expect(jose.isConcluding).toBeTruthy()
     expect(jose.cancelled).toBeFalsy()
+    expect(jose.recordSigned).toBeFalsy()
+    expect(jose.termPaper).toBeFalsy()
+    expect(jose.cd).toBeFalsy()
+    expect(jose.isUndergraduate).toBeFalsy()
 
     expect(enzo.isActive).toBeTruthy()
     expect(enzo.isGraduating).toBeFalsy()
     expect(enzo.isGraduating).toBeFalsy()
     expect(enzo.isConcluding).toBeFalsy()
     expect(enzo.cancelled).toBeFalsy()
+    expect(enzo.recordSigned).toBeFalsy()
+    expect(enzo.termPaper).toBeFalsy()
+    expect(enzo.cd).toBeFalsy()
+    expect(enzo.isUndergraduate).toBeFalsy()
 
     expect(kauan.isActive).toBeFalsy()
     expect(kauan.isGraduating).toBeFalsy()
     expect(kauan.isGraduating).toBeFalsy()
     expect(kauan.isConcluding).toBeFalsy()
     expect(kauan.cancelled).toBeTruthy()
+    expect(kauan.recordSigned).toBeFalsy()
+    expect(kauan.termPaper).toBeFalsy()
+    expect(kauan.cd).toBeFalsy()
+    expect(kauan.isUndergraduate).toBeFalsy()
 
     expect(eduardo.isActive).toBeTruthy()
     expect(eduardo.isGraduating).toBeFalsy()
     expect(eduardo.isGraduating).toBeFalsy()
     expect(eduardo.isConcluding).toBeFalsy()
     expect(eduardo.cancelled).toBeFalsy()
+    expect(eduardo.recordSigned).toBeFalsy()
+    expect(eduardo.termPaper).toBeFalsy()
+    expect(eduardo.cd).toBeFalsy()
+    expect(eduardo.isUndergraduate).toBeFalsy()
 
     expect(julian.isActive).toBeFalsy()
     expect(julian.isGraduating).toBeFalsy()
     expect(julian.isGraduating).toBeFalsy()
     expect(julian.isConcluding).toBeTruthy()
     expect(julian.cancelled).toBeFalsy()
+    expect(julian.recordSigned).toBeFalsy()
+    expect(julian.termPaper).toBeFalsy()
+    expect(julian.cd).toBeFalsy()
+    expect(julian.isUndergraduate).toBeFalsy()
 
     done()
   })
@@ -287,7 +343,7 @@ describe('/api/students', () => {
 
   test('PUT /[studentId]', async done => {
     const { token } = await testUtils.user('admin')
-    const res = await chai
+    const resComplete = await chai
       .request(server.listen())
       .put('/api/students/1')
       .set('Authorization', `Bearer ${token}`)
@@ -306,14 +362,41 @@ describe('/api/students', () => {
         academicHighlight: false,
         cancelled: false,
         prescribed: false,
-        mailingList: 'none'
+        mailingList: 'none',
+        entryDate: '05-28-2019',
+        note: null,
+        advisor: 'Novo Orientador',
+        defenseDate: '06-30-2019',
+        term: null,
+        recordSigned: false,
+        termPaper: false,
+        cd: true,
+        isUndergraduate: false
       })
-    expect(res.status).toEqual(200)
-    expect(res.type).toEqual('application/json')
-    expect(res.body).toBeDefined()
-    expect(res.body.id).toEqual(1)
-    expect(res.body.name).toEqual('ATUALIZA NOME')
-    expect(res.body.crg).toEqual(9)
+    expect(resComplete.status).toEqual(200)
+    expect(resComplete.type).toEqual('application/json')
+    expect(resComplete.body).toBeDefined()
+    expect(resComplete.body.id).toEqual(1)
+    expect(resComplete.body.name).toEqual('ATUALIZA NOME')
+    expect(resComplete.body.crg).toEqual(9)
+    expect(resComplete.body.advisor).toEqual('Novo Orientador')
+    expect(resComplete.body.cd).toBeTruthy()
+    expect(resComplete.body.defenseDate).toEqual('06-30-2019')
+
+    const resNome = await chai
+      .request(server.listen())
+      .put('/api/students/1')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        id: 1,
+        name: 'ATUALIZA SOMENTE O NOME'
+      })
+    expect(resNome.status).toEqual(200)
+    expect(resNome.type).toEqual('application/json')
+    expect(resNome.body).toBeDefined()
+    expect(resNome.body.id).toEqual(1)
+    expect(resNome.body.name).toEqual('ATUALIZA SOMENTE O NOME')
+
     done()
   })
 
