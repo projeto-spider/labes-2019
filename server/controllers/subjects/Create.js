@@ -11,10 +11,9 @@ module.exports = async function createSubject(ctx) {
     return
   }
 
-  const duplicateName = !!(await Subject.where({ name }).count())
   const duplicateCode = !!(await Subject.where({ code }).count())
 
-  if (duplicateCode || duplicateName) {
+  if (duplicateCode) {
     ctx.status = 422
     ctx.body = { code: errors.UNPROCESSABLE_ENTITY }
     return
