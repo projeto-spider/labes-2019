@@ -65,7 +65,6 @@
 <script>
 export default {
   name: 'Admission',
-  middleware: 'course',
   data: () => ({
     name: '',
     nameError: false,
