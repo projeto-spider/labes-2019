@@ -6,7 +6,7 @@ module.exports = async function destroySubject(ctx) {
 
   const studentFind = await Subject.where('id', id).fetch()
   if (studentFind === null) {
-    ctx.status = 204
+    ctx.status = 404
     ctx.body = { code: errors.NOT_FOUND }
     return
   }
