@@ -15,7 +15,10 @@ module.exports = async function createSubject(ctx) {
 
   if (duplicateCode) {
     ctx.status = 422
-    ctx.body = { code: errors.UNPROCESSABLE_ENTITY }
+    ctx.body = {
+      code: errors.UNPROCESSABLE_ENTITY,
+      prop: 'code'
+    }
     return
   }
 
