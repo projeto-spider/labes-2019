@@ -28,6 +28,9 @@ describe('/api/subjects', () => {
         name: 'UNDERWATER PROGRAMMING',
         code: 'UN52301'
       })
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(200)
     expect(res.body.id).toBeDefined()
     expect(res.body.name).toEqual('UNDERWATER PROGRAMMING')
     expect(res.body.code).toEqual('UN52301')
@@ -40,6 +43,9 @@ describe('/api/subjects', () => {
       .request(server.listen())
       .del('/api/subjects/1')
       .set('Authorization', `Bearer ${token}`)
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(200)
     expect(res.body).toEqual({})
     done()
   })
@@ -51,6 +57,8 @@ describe('/api/subjects', () => {
       .get('/api/subjects/?page=1')
       .set('Authorization', `Bearer ${token}`)
     expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(200)
     expect(res.body[1].id).toEqual(2)
     expect(res.body[1].name).toEqual('CALCULO COMPUTACIONAL I')
     expect(res.body[1].code).toEqual('EN01209')
@@ -64,6 +72,8 @@ describe('/api/subjects', () => {
       .get('/api/subjects/1')
       .set('Authorization', `Bearer ${token}`)
     expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(200)
     expect(res.body.name).toEqual('ALGEBRA LINEAR PARA COMPUTACAO')
     expect(res.body.code).toEqual('EN01208')
     done()
@@ -79,7 +89,9 @@ describe('/api/subjects', () => {
         name: 'SEIZE THE MEANS OF PRODUCTION',
         code: 'AA09099'
       })
-    expect(res).toBeDefined()
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(200)
     expect(res.body.id).toEqual(1)
     expect(res.body.name).toEqual('SEIZE THE MEANS OF PRODUCTION')
     expect(res.body.code).toEqual('AA09099')
