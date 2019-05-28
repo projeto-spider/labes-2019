@@ -19,6 +19,16 @@ exports.seed = async function(knex, Promise) {
       name: 'Gabriela Dias Cunha',
       email: 'gabrieladias@example.com',
       registrationNumber: '201804940003'
+    },
+    {
+      name: 'Marisa Correia Castro',
+      email: 'marisacastro@gmail.com',
+      registrationNumber: '201804940023'
+    },
+    {
+      name: 'Rodrigo Rodrigues Santos',
+      email: 'rrsantos@ufpa.br',
+      registrationNumber: '201604940012'
     }
   ]
 

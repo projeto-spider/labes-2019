@@ -3,7 +3,8 @@ exports.up = function(knex, Promise) {
     table.increments('id').primary()
     table.string('name').notNullable()
     table.string('email').notNullable()
-    table.string('registrationNumber').notNullable()
+    table.string('registrationNumber').nullable()
+    table.enum('type', ['freshman', 'concluding']).defaultTo('freshman')
   })
 }
 

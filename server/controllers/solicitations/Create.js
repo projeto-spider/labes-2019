@@ -2,11 +2,9 @@ const Solicitation = require('../../models/Solicitation.js')
 const errors = require('../../../shared/errors')
 
 module.exports = async function createUser(ctx) {
-  const { name, email, registrationNumber = '' } = ctx.request.body
+  const { name, email, registrationNumber, type } = ctx.request.body
 
-  const validRequest = [name, email, registrationNumber].every(
-    item => item !== undefined
-  )
+  const validRequest = [name, email].every(item => item !== undefined)
   if (!validRequest) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_REQUEST }
@@ -16,8 +14,8 @@ module.exports = async function createUser(ctx) {
   const duplicateEmail = !!(await Solicitation.where({ email }).count())
 
   if (
-    duplicateEmail ||
-    (registrationNumber.length !== 12 && registrationNumber !== '')
+    registrationNumber !== undefined &&
+    (duplicateEmail || registrationNumber.length !== 12)
   ) {
     ctx.status = 422
     ctx.body = { code: errors.UNPROCESSABLE_ENTITY }
@@ -28,6 +26,7 @@ module.exports = async function createUser(ctx) {
   ctx.body = await Solicitation.forge({
     name,
     email,
-    registrationNumber
+    registrationNumber,
+    type
   }).save()
 }

@@ -6,7 +6,6 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
-const testUtils = require('../test-utils')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const errors = require('../../../shared/errors')
@@ -22,16 +21,15 @@ describe('/api/solicitations', () => {
   }, 100000)
 
   test('POST /', async done => {
-    const { token } = await testUtils.user('admin')
     const payload = {
       name: 'Person',
       email: 'person.ufpa@example.com',
-      registrationNumber: '201904940001'
+      registrationNumber: '201904940001',
+      type: 'concluding'
     }
     const res = await chai
       .request(server.listen())
       .post('/api/solicitations')
-      .set('Authorization', `Bearer ${token}`)
       .send(payload)
 
     expect(res.status).toBe(201)
@@ -40,15 +38,16 @@ describe('/api/solicitations', () => {
     expect(res.body.name).toBe(payload.name)
     expect(res.body.email).toBe(payload.email)
     expect(res.body.registrationNumber).toBe(payload.registrationNumber)
+    expect(res.body.type).toBe(payload.type)
 
     const payload2 = {
       name: 'Person',
-      email: 'person@example.com'
+      email: 'person@example.com',
+      type: 'freshman'
     }
     const res2 = await chai
       .request(server.listen())
       .post('/api/solicitations')
-      .set('Authorization', `Bearer ${token}`)
       .send(payload2)
 
     expect(res2.status).toBe(201)
@@ -56,11 +55,28 @@ describe('/api/solicitations', () => {
     expect(res2.body).toBeDefined()
     expect(res2.body.name).toBe(payload2.name)
     expect(res2.body.email).toBe(payload2.email)
+    expect(res.body.type).toBe(payload.type)
+
+    const payload3 = {
+      name: 'Person',
+      email: 'person@gmail.com',
+      registrationNumber: '201904940001'
+    }
+    const res3 = await chai
+      .request(server.listen())
+      .post('/api/solicitations')
+      .send(payload3)
+
+    expect(res3.status).toBe(201)
+    expect(res3.type).toBe('application/json')
+    expect(res3.body).toBeDefined()
+    expect(res3.body.name).toBe(payload3.name)
+    expect(res3.body.email).toBe(payload3.email)
+    expect(res3.body.registrationNumber).toBe(payload3.registrationNumber)
     done()
   })
 
   test('POST / with missing fields', async done => {
-    const { token } = await testUtils.user('admin')
     const payload1 = {
       email: 'person.ufpa@example.com',
       registrationNumber: '201904940001'
@@ -68,7 +84,6 @@ describe('/api/solicitations', () => {
     const res1 = await chai
       .request(server.listen())
       .post('/api/solicitations')
-      .set('Authorization', `Bearer ${token}`)
       .send(payload1)
 
     expect(res1.status).toBe(400)
@@ -78,12 +93,12 @@ describe('/api/solicitations', () => {
 
     const payload2 = {
       name: 'Person',
-      registrationNumber: '201904940001'
+      registrationNumber: '201804940001',
+      type: 'concluding'
     }
     const res2 = await chai
       .request(server.listen())
-      .post('/api/users')
-      .set('Authorization', `Bearer ${token}`)
+      .post('/api/solicitations')
       .send(payload2)
 
     expect(res2.status).toBe(400)
@@ -94,16 +109,15 @@ describe('/api/solicitations', () => {
   })
 
   test('POST / with duplicate email', async done => {
-    const { token } = await testUtils.user('admin')
     const payload1 = {
       name: 'Victor Silva Machado',
       email: 'victorsilva@example.com',
-      registrationNumber: '201904940012'
+      registrationNumber: '201904940012',
+      type: 'concluding'
     }
     const res1 = await chai
       .request(server.listen())
       .post('/api/solicitations')
-      .set('Authorization', `Bearer ${token}`)
       .send(payload1)
 
     expect(res1.status).toBe(422)
@@ -112,17 +126,17 @@ describe('/api/solicitations', () => {
     expect(res1.body.code).toBe(errors.UNPROCESSABLE_ENTITY)
     done()
   })
+
   test('POST / invalid registration number', async done => {
-    const { token } = await testUtils.user('admin')
     const payload1 = {
       name: 'Victor Silva Machado',
       email: 'victor.silva@example.com',
-      registrationNumber: '2019049400012'
+      registrationNumber: '2019049400012',
+      type: 'freshman'
     }
     const res1 = await chai
       .request(server.listen())
       .post('/api/solicitations')
-      .set('Authorization', `Bearer ${token}`)
       .send(payload1)
 
     expect(res1.status).toBe(422)
