@@ -6,8 +6,8 @@ module.exports = async function updateSubject(ctx) {
   const subjectUpdate = ctx.request.body
 
   if (id === undefined) {
-    ctx.status = 404
-    ctx.body = { code: errors.NOT_FOUND }
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_REQUEST }
     return
   }
 
