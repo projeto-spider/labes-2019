@@ -149,10 +149,6 @@ export default {
       isHoverable: true,
       selectedStudent: null,
       columns: [
-        ...(this.showDefenseDate && {
-          field: 'defenseDate',
-          label: 'Defendeu em'
-        }),
         {
           field: 'registrationNumber',
           label: 'Matrícula',
@@ -262,7 +258,7 @@ export default {
             isActive: this.isActive !== 'AllStudents' ? this.isActive : null,
             isConcluding: this.isConcluding || null,
             isForming: this.isForming || null,
-            isFit: this.isFit || null,
+            isFit: this.isGraduating && this.isFit,
             isGraduating: this.isGraduating || null,
             ...maybeParam('name', this.searchName),
             ...maybeParam('registrationNumber', this.searchRegistration),
@@ -297,10 +293,6 @@ export default {
 </script>
 
 <style scoped>
-template {
-  overflow-y: hidden;
-}
-
 .container {
   margin: 50px auto 50px auto;
 }
