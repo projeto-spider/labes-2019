@@ -16,7 +16,14 @@
             <br />
             <strong>Status</strong>: {{ displayStatus }} <br />
             <strong>CRG</strong>:
-            <b-input v-model="studentData.crg" :disabled="!canEdit"></b-input>
+            <b-input
+              v-model="studentData.crg"
+              type="number"
+              :min="0"
+              :max="10"
+              :disabled="!canEdit"
+              @blur="onCrgBlur"
+            ></b-input>
             <br />
             <strong>Componentes Pendentes</strong>:
             <b-input
@@ -347,6 +354,20 @@ export default {
         })
         this.file = File
       }
+    },
+
+    onCrgBlur(e) {
+      let value = +e.target.value
+
+      if (typeof value !== 'number') {
+        return
+      }
+
+      if (value !== Math.floor(value)) {
+        value = +value.toFixed(3)
+      }
+
+      this.studentData.crg = Math.max(0, Math.min(10, value))
     }
   }
 }
