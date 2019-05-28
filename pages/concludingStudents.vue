@@ -19,7 +19,6 @@ export default {
   components: {
     SearchInput
   },
-  mixins: ['errorsHandler'],
   data() {
     return {
       head: ['Matrícula', 'Nome', 'Email'],

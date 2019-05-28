@@ -102,6 +102,22 @@ export default {
       type: Number,
       default: () => 0
     },
+    isGraduating: {
+      type: Number,
+      default: () => 0
+    },
+    showDefenseDate: {
+      type: Boolean,
+      default: () => false
+    },
+    isFit: {
+      type: Number,
+      default: () => 0
+    },
+    isForming: {
+      type: Number,
+      default: () => 0
+    },
     defaultSortField: {
       type: String,
       default: () => 'name'
@@ -133,6 +149,10 @@ export default {
       isHoverable: true,
       selectedStudent: null,
       columns: [
+        ...(this.showDefenseDate && {
+          field: 'defenseDate',
+          label: 'Defendeu em'
+        }),
         {
           field: 'registrationNumber',
           label: 'Matrícula',
@@ -241,6 +261,9 @@ export default {
             order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
             isActive: this.isActive !== 'AllStudents' ? this.isActive : null,
             isConcluding: this.isConcluding || null,
+            isForming: this.isForming || null,
+            isFit: this.isFit || null,
+            isGraduating: this.isGraduating || null,
             ...maybeParam('name', this.searchName),
             ...maybeParam('registrationNumber', this.searchRegistration),
             ...maybeParam('email', this.searchEmail)
