@@ -367,7 +367,7 @@ export default {
       }
 
       if (value !== Math.floor(value)) {
-        value = +value.toFixed(3)
+        value = value = Math.trunc(+value * 1000) / 1000
       }
 
       this.studentData.crg = Math.max(0, Math.min(10, value))
