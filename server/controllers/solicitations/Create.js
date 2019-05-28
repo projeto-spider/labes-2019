@@ -1,7 +1,7 @@
 const Solicitation = require('../../models/Solicitation.js')
 const errors = require('../../../shared/errors')
 
-module.exports = async function createUser(ctx) {
+module.exports = async function createSolicitation(ctx) {
   const { name, email, registrationNumber, type } = ctx.request.body
 
   const validRequest = [name, email, type].every(item => item !== undefined)
