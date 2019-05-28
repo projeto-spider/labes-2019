@@ -30,7 +30,7 @@ describe('/api/subjects', () => {
       })
     expect(res.body).toBeDefined()
     expect(res.type).toEqual('application/json')
-    expect(res.status).toEqual(200)
+    expect(res.status).toEqual(201)
     expect(res.body.id).toBeDefined()
     expect(res.body.name).toEqual('UNDERWATER PROGRAMMING')
     expect(res.body.code).toEqual('UN52301')
