@@ -38,7 +38,7 @@ describe('/api/subjects', () => {
     done()
   })
 
-  test('POST /subjects', async done => {
+  test('POST /subjects with duplicate code', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
@@ -117,7 +117,7 @@ describe('/api/subjects', () => {
     done()
   })
 
-  test('PUT /subjects', async done => {
+  test('PUT /subjects with duplicate code', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
