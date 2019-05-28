@@ -51,7 +51,6 @@ describe('/api/subjects', () => {
     expect(res.body).toBeDefined()
     expect(res.type).toEqual('application/json')
     expect(res.status).toEqual(422)
-    expect(res.body.id).toBeDefined()
     expect(res.body.prop).toEqual('code')
     expect(res.body.code).toEqual(errors.UNPROCESSABLE_ENTITY)
     done()
