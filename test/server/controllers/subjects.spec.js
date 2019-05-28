@@ -9,6 +9,7 @@ chai.use(chaiHttp)
 const testUtils = require('../test-utils')
 const server = require('../../../server')
 const db = require('../../../server/db')
+const errors = require('../../../shared/errors')
 
 jest.useFakeTimers()
 describe('/api/subjects', () => {
@@ -34,6 +35,25 @@ describe('/api/subjects', () => {
     expect(res.body.id).toBeDefined()
     expect(res.body.name).toEqual('UNDERWATER PROGRAMMING')
     expect(res.body.code).toEqual('UN52301')
+    done()
+  })
+
+  test('POST /subjects', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .post('/api/subjects/')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: 'UNDERWATER PROGRAMMING',
+        code: 'EN01209'
+      })
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(422)
+    expect(res.body.id).toBeDefined()
+    expect(res.body.prop).toEqual('code')
+    expect(res.body.code).toEqual(errors.UNPROCESSABLE_ENTITY)
     done()
   })
 
@@ -95,6 +115,24 @@ describe('/api/subjects', () => {
     expect(res.body.id).toEqual(1)
     expect(res.body.name).toEqual('SEIZE THE MEANS OF PRODUCTION')
     expect(res.body.code).toEqual('AA09099')
+    done()
+  })
+
+  test('PUT /subjects', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .put('/api/subjects/1')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: 'SEIZE THE MEANS OF PRODUCTION',
+        code: 'EN01209'
+      })
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(422)
+    expect(res.body.prop).toEqual('code')
+    expect(res.body.code).toEqual(errors.UNPROCESSABLE_ENTITY)
     done()
   })
 })
