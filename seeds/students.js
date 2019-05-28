@@ -19,7 +19,16 @@ exports.seed = async function(knex, Promise) {
       academicHighlight: false,
       cancelled: false,
       prescribed: false,
-      mailingList: 'none'
+      mailingList: 'none',
+      entryDate: '05-28-2019',
+      note: null,
+      advisor: 'Orientador Válido',
+      defenseDate: null,
+      term: null,
+      recordSigned: false,
+      termPaper: false,
+      cd: false,
+      isUndergraduate: false
     },
     {
       name: 'LAURA CARDOSO CASTRO',
@@ -35,7 +44,16 @@ exports.seed = async function(knex, Promise) {
       academicHighlight: false,
       cancelled: false,
       prescribed: false,
-      mailingList: 'none'
+      mailingList: 'none',
+      entryDate: '05-27-2019',
+      note: null,
+      advisor: null,
+      defenseDate: null,
+      term: null,
+      recordSigned: false,
+      termPaper: false,
+      cd: false,
+      isUndergraduate: false
     },
     {
       name: 'JOSE FERREIRA SILVA',
@@ -51,7 +69,16 @@ exports.seed = async function(knex, Promise) {
       academicHighlight: false,
       cancelled: false,
       prescribed: false,
-      mailingList: 'none'
+      mailingList: 'none',
+      entryDate: '01-28-2019',
+      note: null,
+      advisor: 'Mais um orientador',
+      defenseDate: null,
+      term: null,
+      recordSigned: false,
+      termPaper: false,
+      cd: false,
+      isUndergraduate: false
     },
     {
       name: 'ENZO FERREIRA ALVES',
@@ -67,7 +94,16 @@ exports.seed = async function(knex, Promise) {
       academicHighlight: false,
       cancelled: false,
       prescribed: false,
-      mailingList: 'none'
+      mailingList: 'none',
+      entryDate: '04-20-2019',
+      note: null,
+      advisor: null,
+      defenseDate: null,
+      term: null,
+      recordSigned: false,
+      termPaper: false,
+      cd: false,
+      isUndergraduate: false
     },
     {
       name: 'KAUAN CARVALHO SANTOS',
@@ -83,7 +119,16 @@ exports.seed = async function(knex, Promise) {
       academicHighlight: false,
       cancelled: true,
       prescribed: false,
-      mailingList: 'none'
+      mailingList: 'none',
+      entryDate: '05-18-2018',
+      note: null,
+      advisor: null,
+      defenseDate: null,
+      term: null,
+      recordSigned: false,
+      termPaper: false,
+      cd: false,
+      isUndergraduate: false
     },
     {
       name: 'EDUARDO ALVES LIMA',
@@ -99,7 +144,16 @@ exports.seed = async function(knex, Promise) {
       academicHighlight: false,
       cancelled: false,
       prescribed: false,
-      mailingList: 'none'
+      mailingList: 'none',
+      entryDate: null,
+      note: null,
+      advisor: null,
+      defenseDate: null,
+      term: null,
+      recordSigned: false,
+      termPaper: false,
+      cd: false,
+      isUndergraduate: false
     },
     {
       name: 'JULIAN BARBOSA SANTOS',
@@ -115,7 +169,16 @@ exports.seed = async function(knex, Promise) {
       academicHighlight: false,
       cancelled: false,
       prescribed: false,
-      mailingList: 'none'
+      mailingList: 'none',
+      entryDate: '02-01-2019',
+      note: null,
+      advisor: null,
+      defenseDate: null,
+      term: null,
+      recordSigned: false,
+      termPaper: false,
+      cd: false,
+      isUndergraduate: false
     }
   ]
 

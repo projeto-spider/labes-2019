@@ -50,6 +50,27 @@ exports.up = function(knex, Promise) {
         'forming'
       ])
       .defaultTo('none')
+    table.date('entryDate').nullable()
+    table.string('note').nullable()
+    table.string('advisor').nullable()
+    table.date('defenseDate').nullable()
+    table.string('term').nullable()
+    table
+      .boolean('recordSigned')
+      .notNullable()
+      .defaultTo(false)
+    table
+      .boolean('termPaper')
+      .notNullable()
+      .defaultTo(false)
+    table
+      .boolean('cd')
+      .notNullable()
+      .defaultTo(false)
+    table
+      .boolean('isUndergraduate')
+      .notNullable()
+      .defaultTo(false)
   })
 }
 
