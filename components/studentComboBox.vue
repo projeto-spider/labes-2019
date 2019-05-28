@@ -345,15 +345,18 @@ export default {
         })
     },
     validateUpload(type) {
-      if (this.uploadFile.name.split('.').pop() === 'pdf') {
-        this.documentUpload(type)
-      } else {
-        this.$toast.open({
-          message: 'Por favor selecione um arquivo PDF',
-          type: 'is-danger'
-        })
-        this.file = File
+      if (!this.uploadFile) {
+        return
       }
+      const isPDF = this.uploadFile.name.split('.').pop() === 'pdf'
+      if (isPDF) {
+        return this.documentUpload(type)
+      }
+      this.$toast.open({
+        message: 'Por favor selecione um arquivo PDF',
+        type: 'is-danger'
+      })
+      this.file = File
     },
 
     onCrgBlur(e) {
