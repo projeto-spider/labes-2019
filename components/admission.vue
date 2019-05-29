@@ -131,7 +131,7 @@ export default {
         .post('/api/solicitations', {
           name: this.name,
           email: this.email,
-          registrationNumber: this.registration,
+          ...(this.registration && { registrationNumber: this.registration }),
           type: this.mailingList
         })
         .then(response => {
@@ -141,6 +141,14 @@ export default {
           })
         })
         .catch(error => this.openErrorNotification(error.response.data.code))
+        .then(() => {
+          this.name = ''
+          this.email = ''
+          this.registration = ''
+          this.dirty.name = ''
+          this.dirty.email = ''
+          this.dirty.registration = ''
+        })
     }
   }
 }
