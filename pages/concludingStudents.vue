@@ -19,13 +19,6 @@ export default {
   components: {
     SearchInput
   },
-  mixins: ['errorsHandler'],
-  data() {
-    return {
-      head: ['Matrícula', 'Nome', 'Email'],
-      students: []
-    }
-  },
   computed: {
     ...mapState({
       courseTag: state => state.courseTag

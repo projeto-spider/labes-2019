@@ -7,7 +7,6 @@
     </div>
     <div class="columns is-centered">
       <div class="column is-half">
-        <!--- Name --->
         <b-field
           label="Nome"
           :message="{
@@ -27,7 +26,6 @@
           ></b-input>
         </b-field>
 
-        <!--- Email --->
         <b-field
           label="Email"
           :message="{
@@ -45,7 +43,6 @@
           ></b-input>
         </b-field>
 
-        <!--- Registration --->
         <b-field
           label="Matrícula"
           :message="{
@@ -139,9 +136,6 @@ export default {
             message: 'Solicitação realizada com sucesso!',
             type: 'is-success'
           })
-        })
-        .catch(error => this.openErrorNotification(error.response.data.code))
-        .then(() => {
           this.name = ''
           this.email = ''
           this.registration = ''
@@ -149,6 +143,7 @@ export default {
           this.dirty.email = ''
           this.dirty.registration = ''
         })
+        .catch(error => this.openErrorNotification(error.response.data.code))
     }
   }
 }

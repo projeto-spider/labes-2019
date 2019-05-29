@@ -11,10 +11,6 @@ export const errorsHandler = {
           return 'Arquivo csv com numero invalido de colunas'
         case errors.IMPORT_CSV_INVALID_FILE:
           return 'Por favor selecione um arquivo do tipo csv'
-        case errors.INVALID_REQUEST:
-          return 'Campo `nome` ou `email` não fornecidos'
-        case errors.UNPROCESSABLE_ENTITY:
-          return 'Campo `e-mail` duplicado ou `matrícula` inválida.'
         default:
           return 'Ocorreu um erro'
       }
