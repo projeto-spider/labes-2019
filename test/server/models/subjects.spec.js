@@ -21,13 +21,11 @@ describe('models/Subjects', () => {
 
   test('Create a Subject', async done => {
     const subject = await Subject.forge({
-      name: 'TEARS ORIENTED PROGRAMMING',
-      code: 'TR09999'
+      name: 'TEARS ORIENTED PROGRAMMING'
     }).save()
 
     expect(subject.id).toBeDefined()
     expect(subject.attributes.name).toEqual('TEARS ORIENTED PROGRAMMING')
-    expect(subject.attributes.code).toEqual('TR09999')
     done()
   })
 })
