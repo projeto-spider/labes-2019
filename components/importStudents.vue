@@ -74,9 +74,15 @@ export default {
   },
   methods: {
     fileSelected() {
+      if (!this.studentsCsv) {
+        return
+      }
       return this.studentsCsv.name !== 'Nenhum arquivo selecionado'
     },
     validateUpload() {
+      if (!this.studentsCsv) {
+        return
+      }
       if (this.studentsCsv.name.split('.').pop() === 'csv') {
         const reader = new FileReader()
         reader.readAsText(this.studentsCsv)
