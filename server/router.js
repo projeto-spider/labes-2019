@@ -7,6 +7,7 @@ const documents = require('./controllers/documents')
 const frontend = require('./controllers/frontend')
 const users = require('./controllers/users')
 const students = require('./controllers/students')
+const subjects = require('./controllers/subjects')
 const auth = require('./controllers/auth')
 const solicitations = require('./controllers/solicitations')
 
@@ -39,6 +40,12 @@ api.get('/students/:studentId/documents/:id', documents.Show)
 api.get('/students/:studentId/documents/:id/view', documents.View)
 api.post('/students/:studentId/documents', bodyMultipart, documents.Upload)
 api.post('/students/from-csv', bodyMultipart, students.FromCsv)
+// Subjects Routes
+api.get('/subjects/', subjects.List)
+api.get('/subjects/:id', subjects.Show)
+api.post('/subjects/', bodyJson, subjects.Create)
+api.put('/subjects/:id', bodyJson, subjects.Update)
+api.del('/subjects/:id', subjects.Destroy)
 
 // Auth routes
 api.get('/auth', isLoggedIn, auth.Show)
