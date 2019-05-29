@@ -1,19 +1,13 @@
 <template>
   <div class="container">
     <div class="columns is-centered">
-      <div class="column is-half">
-        <div class="level">
-          <div class="level-item">
-            <h1 class="title"><strong>Alunos Formandos</strong></h1>
-          </div>
-          <div class="level-right">
-            <div class="level-item">
-              <b-button class="is-primary">
-                Gerar lista de prescrição
-              </b-button>
-            </div>
-          </div>
-        </div>
+      <div class="column is-offset-4 is-4">
+        <h1 class="title"><strong>Alunos Formandos</strong></h1>
+      </div>
+      <div class="column is-3">
+        <b-button class="is-primary">
+          Gerar lista de prescrição
+        </b-button>
       </div>
     </div>
     <search-input
