@@ -171,9 +171,6 @@ exports.seed = async function(knex, Promise) {
       name: 'SISTEMAS DE INFORMACAO GEOGRAFICA'
     },
     {
-      name: 'SISTEMAS MULTIAGENTES'
-    },
-    {
       name: 'TEORIA DAS CATEGORIAS'
     },
     {
@@ -259,6 +256,43 @@ exports.seed = async function(knex, Promise) {
     },
     {
       name: 'ATIVIDADE COMPLEMENTAR VII'
+    },
+
+    {
+      name: 'ADMINISTRACAO APLICADA A INFORMATICA'
+    },
+    {
+      name: 'CONTABILIDADE APLICADA A INFORMATICA'
+    },
+    {
+      name: 'PROGRAMACAO DE COMPUTADORES II'
+    },
+    {
+      name: 'TEORIA DE SISTEMAS APLICADA A INFORMATICA'
+    },
+    {
+      name: 'ESTRUTURAS DE DADOS I'
+    },
+    {
+      name: 'ESTRUTURAS DE DADOS II'
+    },
+    {
+      name: 'ECONOMIA APLICADA A INFORMATICA'
+    },
+    {
+      name: 'GERENCIA DE PROJETOS DE SOFTWARE'
+    },
+    {
+      name: 'O E M PARA ANALISE DE SISTEMAS'
+    },
+    {
+      name: 'ESTUDOS ESPECIAIS EM SISTEMAS DE INFORMACAO'
+    },
+    {
+      name: '(ACC) ATIVIDADE COMPLEMENTAR'
+    },
+    {
+      name: '(ELETIVA) DISCIPLINA ELETIVA - SISTEMAS DE INFORMACAO'
     }
   ]
 
