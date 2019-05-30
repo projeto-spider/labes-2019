@@ -100,7 +100,23 @@ export default {
     },
     isConcluding: {
       type: Number,
-      default: () => 0
+      default: () => NaN
+    },
+    isGraduating: {
+      type: Number,
+      default: () => NaN
+    },
+    showDefenseDate: {
+      type: Boolean,
+      default: () => false
+    },
+    isFit: {
+      type: Number,
+      default: () => NaN
+    },
+    isForming: {
+      type: Number,
+      default: () => NaN
     },
     defaultSortField: {
       type: String,
@@ -240,7 +256,10 @@ export default {
             sort: this.sortField,
             order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
             isActive: this.isActive !== 'AllStudents' ? this.isActive : null,
-            isConcluding: this.isConcluding || null,
+            isConcluding: !isNaN(this.isConcluding) ? this.isConcluding : null,
+            isForming: !isNaN(this.isForming) ? this.isForming : null,
+            isFit: this.isGraduating && !isNaN(this.isFit) ? this.isFit : null,
+            isGraduating: !isNaN(this.isGraduating) ? this.isGraduating : null,
             ...maybeParam('name', this.searchName),
             ...maybeParam('registrationNumber', this.searchRegistration),
             ...maybeParam('email', this.searchEmail)
@@ -274,10 +293,6 @@ export default {
 </script>
 
 <style scoped>
-template {
-  overflow-y: hidden;
-}
-
 .container {
   margin: 50px auto 50px auto;
 }
