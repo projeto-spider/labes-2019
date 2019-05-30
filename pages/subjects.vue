@@ -8,7 +8,7 @@
 
     <div class="columns is-centered" style="margin: 15px 0">
       <p>
-        <b-button type="is-primary" @click="openFakeSubject()">Novo</b-button>
+        <b-button type="is-primary" @click="createSubject()">Novo</b-button>
       </p>
     </div>
 
@@ -20,9 +20,8 @@
       backend-sorting
       backend-pagination
       :total="total"
-      :per-page="fakeSubject ? perPage + 1 : perPage"
+      :per-page="perPage"
       detailed
-      detail-key="id"
       :loading="loading"
       :current-page.sync="page"
       @page-change="onPageChange"
@@ -57,23 +56,12 @@
               <b-button
                 type="is-primary"
                 :disabled="!validEditing"
-                @click.prevent="onSaveEditingSubject()"
+                @click.prevent="updateSubject(editingSubject)"
                 >Salvar</b-button
               >
               <template>
-                <b-button
-                  v-if="Number.isFinite(editingSubject.id)"
-                  type="is-danger"
-                  @click.prevent="confirmDeletion()"
-                >
+                <b-button type="is-danger" @click.prevent="confirmDeletion()">
                   Deletar
-                </b-button>
-                <b-button
-                  v-else
-                  type="is-danger"
-                  @click.prevent="deleteFakeSubject()"
-                >
-                  Cancelar
                 </b-button>
               </template>
             </div>
@@ -124,10 +112,6 @@ export default {
 
     validName() {
       return this.editingSubject && this.editingSubject.name.length
-    },
-
-    fakeSubject() {
-      return this.subjects.find(subject => !Number.isFinite(subject.id))
     }
   },
 
@@ -148,6 +132,7 @@ export default {
         .then(res => {
           this.subjects = res.data
           this.total = +res.headers['pagination-row-count']
+          this.totalPages = +res.headers['pagination-page-count']
           this.perPage = +res.headers['pagination-page-size']
         })
         .catch(() => {
@@ -164,63 +149,35 @@ export default {
     onPageChange(page) {
       this.page = page
       this.lastDetailOpenId = null
-      this.loadSubjects()
+      return this.loadSubjects()
     },
 
-    openFakeSubject() {
-      if (this.fakeSubject) {
-        this.deleteFakeSubject()
-      }
+    createSubject() {
+      this.$dialog.prompt({
+        message: 'Qual o nome do componente curricular?',
+        cancelText: 'Cancelar',
+        confirmText: 'Criar',
+        onConfirm: name => {
+          this.loading = true
+          const payload = { name }
 
-      const id = Symbol('newSubject')
-      const row = {
-        id,
-        name: ''
-      }
-      this.subjects.unshift(row)
-
-      this.$refs.table.toggleDetails(row)
-      this.onDetailsOpen(row)
-    },
-
-    onSaveEditingSubject() {
-      const { editingSubject } = this
-
-      const operation = !Number.isFinite(editingSubject.id)
-        ? this.createSubject
-        : this.updateSubject
-
-      this.loading = true
-
-      operation(editingSubject)
-        .then(() => {
-          this.$toast.open({
-            message: 'Salvo com sucesso.',
-            type: 'is-success'
-          })
-        })
-        .catch(() => {
-          this.$toast.open({
-            message: 'Falha ao salvar',
-            type: 'is-danger'
-          })
-        })
-        .finally(() => {
-          this.loading = false
-        })
-    },
-
-    createSubject(subject) {
-      const payload = { ...subject }
-      payload.id = undefined
-
-      return this.$axios.$post('/api/subjects', subject).then(subject => {
-        this.page = Math.ceil((this.total + 1) / this.perPage)
-        return this.loadSubjects()
+          return this.$axios
+            .$post('/api/subjects', payload)
+            .then(subject => {
+              this.page = Math.ceil((this.total + 1) / this.perPage)
+              return this.loadSubjects()
+            })
+            .then(this.handleSaved)
+            .catch(this.handleError)
+            .finally(() => {
+              this.loading = false
+            })
+        }
       })
     },
 
     updateSubject(subject) {
+      this.loading = true
       return this.$axios
         .$put(`/api/subjects/${subject.id}`, subject)
         .then(subject => {
@@ -231,6 +188,32 @@ export default {
             Object.assign(localSubject, subject)
           }
         })
+        .then(this.handleSaved)
+        .catch(this.handleError)
+        .finally(() => {
+          this.loading = false
+        })
+    },
+
+    handleSaved() {
+      this.$toast.open({
+        message: 'Salvo com sucesso.',
+        type: 'is-success'
+      })
+    },
+
+    handleError(err) {
+      if (err.response && err.response.status === 422) {
+        return this.$toast.open({
+          message: 'Nome já existe!',
+          type: 'is-warning'
+        })
+      }
+
+      this.$toast.open({
+        message: 'Falha ao salvar',
+        type: 'is-danger'
+      })
     },
 
     confirmDeletion() {
@@ -255,24 +238,7 @@ export default {
       })
     },
 
-    deleteFakeSubject() {
-      const index = this.subjects.indexOf(this.fakeSubject)
-
-      if (index === -1) {
-        return
-      }
-      if (this.lastDetailOpenId === this.fakeSubject.id) {
-        this.$refs.table.toggleDetails(this.fakeSubject)
-      }
-      this.subjects.splice(index, 1)
-      this.lastDetailOpenId = null
-    },
-
     onDetailsOpen(row) {
-      if (this.fakeSubject && row.id !== this.fakeSubject.id) {
-        this.deleteFakeSubject()
-      }
-
       const lastOpenedRow = this.subjects.find(
         subject => subject.id === this.lastDetailOpenId
       )
