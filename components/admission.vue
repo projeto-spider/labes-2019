@@ -10,7 +10,7 @@
         <b-field
           label="Nome"
           :message="{
-            'Campo obrigatório': !dirty.name,
+            'Campo obrigatório': !dirty.name
             [validName
               ? 'ok'
               : `Mínimo de ${nameMinLength} caracteres`]: dirty.name
@@ -29,7 +29,7 @@
         <b-field
           label="Email"
           :message="{
-            'Campo obrigatório': !dirty.email,
+            'Campo obrigatório': !dirty.email
             [validEmail ? 'ok' : 'Digite um endereço de email']: dirty.email
           }"
           :type="{
@@ -46,7 +46,7 @@
         <b-field
           label="Matrícula"
           :message="{
-            'Campo obrigatório': !dirty.registration,
+            'Campo obrigatório': !dirty.registration
             [validRegistration
               ? 'ok'
               : 'Deve ter 12 caracteres numéricos']: dirty.registration
@@ -92,7 +92,6 @@ export default {
   },
 
   data: () => ({
-    nameMinLength: 9,
     name: '',
     email: '',
     registration: '',
@@ -105,7 +104,7 @@ export default {
 
   computed: {
     validName() {
-      return this.dirty.name && this.name.length >= this.nameMinLength
+      return this.dirty.name && this.name.length >= 9
     },
 
     validEmail() {
