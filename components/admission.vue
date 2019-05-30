@@ -1,10 +1,5 @@
 <template>
-  <div class="container">
-    <div class="columns is-centered capa">
-      <div class="column texto-capa">
-        <h1 class="title">Formulário de Admissão</h1>
-      </div>
-    </div>
+  <div class="container topper-margin">
     <div class="columns is-centered">
       <div class="column is-half">
         <b-field
@@ -146,21 +141,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.container {
-  margin: 0px auto 50px auto;
-}
-
-.texto-capa {
-  text-align: center;
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.capa {
-  width: 100%;
-  height: 25%;
-  display: table;
-  background-color: #a588ad;
+<style>
+.topper-margin {
+  margin-top: 30px;
 }
 </style>

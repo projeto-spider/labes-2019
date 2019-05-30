@@ -9,6 +9,7 @@ import admission from '~/components/admission'
 
 export default {
   name: 'ConcludingAdmission',
+  layout: 'admissionLayout',
   components: {
     admission
   }
