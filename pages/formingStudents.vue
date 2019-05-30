@@ -15,6 +15,7 @@
       :default-course="courseTag"
       :title="'Graduandos Aptos'"
       :is-graduating="1"
+      :is-active="1"
       :show-defense-date="true"
       :is-fit="1"
     ></search-input>
@@ -23,6 +24,7 @@
       :default-course="courseTag"
       :title="'Graduandos Não-Aptos'"
       :is-graduating="1"
+      :is-active="1"
       :show-defense-date="true"
       :is-fit="0"
     ></search-input>
@@ -30,6 +32,7 @@
     <search-input
       :default-course="courseTag"
       :title="'Formandos'"
+      :is-active="1"
       :is-graduating="1"
       :is-fit="1"
     ></search-input>
