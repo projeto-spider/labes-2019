@@ -10,27 +10,28 @@
         </b-button>
       </div>
     </div>
+    <br />
     <search-input
-      :key="courseTag"
       :default-course="courseTag"
       :title="'Graduandos Aptos'"
       :is-graduating="1"
       :show-defense-date="true"
       :is-fit="1"
     ></search-input>
+    <br />
     <search-input
-      :key="courseTag"
       :default-course="courseTag"
       :title="'Graduandos Não-Aptos'"
       :is-graduating="1"
       :show-defense-date="true"
       :is-fit="0"
     ></search-input>
+    <br />
     <search-input
-      :key="courseTag"
       :default-course="courseTag"
       :title="'Formandos'"
-      :is-forming="1"
+      :is-graduating="1"
+      :is-fit="1"
     ></search-input>
   </div>
 </template>
