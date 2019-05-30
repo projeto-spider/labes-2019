@@ -12,8 +12,18 @@
             <strong>Matricula</strong>: {{ studentData.registrationNumber }}
             <br />
             <strong>Orientador</strong>: {{ studentData.advisor }} <br />
+
             <strong>{{ defenseDateStatus }}</strong
-            >: {{ studentData.defenseDate }}<br />
+            ><br />
+
+            <b-field>
+              <b-datepicker
+                v-model="defenseDate"
+                :date-formatter="dateFormatter"
+                :disabled="!canEdit"
+              ></b-datepicker>
+            </b-field>
+
             <strong>E-mail</strong>:
             <b-input v-model="studentData.email" :disabled="!canEdit"></b-input>
             <br />
@@ -224,7 +234,8 @@ export default {
       crg: '',
       pendencies: '',
       studentData: Object.assign({}, this.student),
-      isLoading: false
+      isLoading: false,
+      defenseDate: new Date()
     }
   },
   computed: {
@@ -264,8 +275,8 @@ export default {
     },
     defenseDateStatus() {
       if (
-        this.studentData.isGraduating === true ||
-        this.studentData.isForming === true
+        this.studentData.isGraduating === 1 ||
+        this.studentData.isForming === 1
       ) {
         return 'Defendeu em'
       }
@@ -275,6 +286,16 @@ export default {
 
   created() {
     this.getStudentsDocument()
+    this.defenseDate = this.studentData.defenseDate
+      ? new Date(
+          Date.parse(
+            this.studentData.defenseDate
+              .split('/')
+              .reverse()
+              .join('/')
+          )
+        )
+      : null
   },
 
   methods: {
@@ -293,12 +314,30 @@ export default {
     },
     putStudents() {
       this.isLoading = true
-
+      const defenseDate =
+        this.defenseDate &&
+        this.defenseDate
+          .toISOString()
+          .slice(0, 10)
+          .split('-')
+          .reverse()
+          .join('/')
+      const payload = { ...this.studentData, defenseDate }
       this.$axios
-        .put(`/api/students/${this.studentData.id}`, this.studentData)
+        .put(`/api/students/${this.studentData.id}`, payload)
         .then(res => {
           this.isLoading = false
           this.studentData = res.data
+          this.defenseDate = this.studentData.defenseDate
+            ? new Date(
+                Date.parse(
+                  this.studentData.defenseDate
+                    .split('/')
+                    .reverse()
+                    .join('/')
+                )
+              )
+            : null
           this.$toast.open({
             message: 'Aluno atualizado com sucesso.',
             type: 'is-success'
@@ -384,6 +423,14 @@ export default {
       }
 
       this.studentData.crg = Math.max(0, Math.min(10, value))
+    },
+    dateFormatter(date) {
+      return date
+        .toISOString()
+        .slice(0, 10)
+        .split('-')
+        .reverse()
+        .join('/')
     }
   }
 }
