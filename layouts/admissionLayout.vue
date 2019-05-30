@@ -1,5 +1,5 @@
 <template>
-  <div class="container is-fullhd">
+  <div class="container main is-fullhd">
     <div class="columns is-centered capa">
       <div class="column texto-capa">
         <h1 class="title">Formulário de Admissão</h1>
@@ -10,7 +10,7 @@
 </template>
 
 <style>
-.container {
+.main {
   height: 100vh;
   overflow: hidden;
   width: 100vw;
