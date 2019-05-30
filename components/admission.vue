@@ -11,9 +11,7 @@
           label="Nome"
           :message="{
             'Campo obrigatório': !dirty.name,
-            [validName
-              ? 'ok'
-              : `Mínimo de ${nameMinLength} caracteres`]: dirty.name
+            [validName ? 'ok' : `Mínimo de 9 caracteres`]: dirty.name
           }"
           :type="{
             [validName ? 'is-success' : 'is-danger']: dirty.name
