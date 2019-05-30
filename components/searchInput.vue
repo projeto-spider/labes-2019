@@ -52,6 +52,7 @@
           :hoverable="isHoverable"
           :data="tableData"
           :selected.sync="selectedStudent"
+          :row-class="row => !!row.academicHighlight && 'is-academic-highlight'"
           :columns="columns"
           class="searchInputTable"
           focusable
@@ -64,7 +65,25 @@
           :default-sort="[sortField, sortOrder]"
           @page-change="onPageChange"
           @sort="onSort"
-        ></b-table>
+        >
+          <template slot-scope="props">
+            <b-table-column
+              v-for="(column, index) in columns"
+              :key="index"
+              :label="column.label"
+              :sortable="column.sortable"
+            >
+              <b-tooltip
+                v-if="!!props.row.academicHighlight && column.field === 'name'"
+                :always="forceAcademicHighlightTooltip"
+                label="Destaque acadêmico"
+              >
+                {{ props.row[column.field] }}
+              </b-tooltip>
+              <span v-else>{{ props.row[column.field] }}</span>
+            </b-table-column>
+          </template>
+        </b-table>
         <b-modal :active.sync="selectedStudent" has-modal-card>
           <student-combo-box
             v-if="comboBoxStudent"
@@ -185,7 +204,8 @@ export default {
       nameFilter: false,
       registrationFilter: false,
       emailFilter: false,
-      blankCrgFilter: false
+      blankCrgFilter: false,
+      forceAcademicHighlightTooltip: false
     }
   },
 
@@ -252,6 +272,14 @@ export default {
     this.getStudents()
   },
 
+  mounted() {
+    this.$el.addEventListener('mouseover', this.onMouseOver)
+  },
+
+  beforeDestroy() {
+    this.$el.removeEventListener('mouseover', this.onMouseOver)
+  },
+
   methods: {
     getStudentsFilters: pDebounce(function getStudentsFilters() {
       this.getStudents()
@@ -302,6 +330,14 @@ export default {
     onPageChange(page) {
       this.page = page
       this.getStudents()
+    },
+
+    onMouseOver(e) {
+      if (e.target && e.target.closest) {
+        this.forceAcademicHighlightTooltip = !!e.target.closest(
+          '.is-academic-highlight'
+        )
+      }
     }
   }
 }
@@ -316,5 +352,8 @@ export default {
 <style>
 .searchInputTable div.table-wrapper table tbody tr td:nth-child(2) span {
   cursor: pointer;
+}
+tr.is-academic-highlight {
+  background-color: #2ecc71 !important;
 }
 </style>
