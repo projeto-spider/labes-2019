@@ -89,7 +89,7 @@
               <a href="#">Defesa de TCC</a>
             </li>
             <li>
-              <a href="#">Formandos</a>
+              <nuxt-link to="/formingStudents">Formandos</nuxt-link>
             </li>
             <li>
               <nuxt-link to="/concludingStudents">Concluintes</nuxt-link>
