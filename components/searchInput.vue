@@ -228,6 +228,9 @@ export default {
     students() {
       this.studentsData = [...this.students]
     },
+    selectedStudent() {
+      this.$emit('toggleComboBox')
+    },
     total() {
       if (+this.total === 0) {
         if (this.isActive) {
