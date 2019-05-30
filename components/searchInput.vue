@@ -46,7 +46,7 @@
         <br />
         <b-table
           :striped="isStriped"
-          :hoverable="isHoverabble"
+          :hoverable="isHoverable"
           :data="tableData"
           :selected.sync="selectedStudent"
           :columns="columns"
@@ -95,6 +95,10 @@ export default {
       default: () => 'cbcc'
     },
     isActive: {
+      type: Number,
+      default: () => 0
+    },
+    isConcluding: {
       type: Number,
       default: () => 0
     },
@@ -236,6 +240,7 @@ export default {
             sort: this.sortField,
             order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
             isActive: this.isActive !== 'AllStudents' ? this.isActive : null,
+            isConcluding: this.isConcluding || null,
             ...maybeParam('name', this.searchName),
             ...maybeParam('registrationNumber', this.searchRegistration),
             ...maybeParam('email', this.searchEmail)
