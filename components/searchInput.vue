@@ -12,6 +12,9 @@
           <b-checkbox v-model="nameFilter">Nome</b-checkbox>
           <b-checkbox v-model="registrationFilter">Matricula</b-checkbox>
           <b-checkbox v-model="emailFilter">Email</b-checkbox>
+          <b-checkbox v-if="showCrgFilter" v-model="blankCrgFilter">
+            Sem CRG
+          </b-checkbox>
         </b-field>
         <b-input
           v-if="nameFilter"
@@ -137,6 +140,10 @@ export default {
     students: {
       type: Array,
       default: () => []
+    },
+    showCrgFilter: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -177,7 +184,8 @@ export default {
       loading: false,
       nameFilter: false,
       registrationFilter: false,
-      emailFilter: false
+      emailFilter: false,
+      blankCrgFilter: false
     }
   },
 
@@ -209,6 +217,9 @@ export default {
       this.getStudentsFilters()
     },
     searchEmail() {
+      this.getStudentsFilters()
+    },
+    blankCrgFilter() {
       this.getStudentsFilters()
     },
     courseTag() {
@@ -262,7 +273,8 @@ export default {
             isGraduating: !isNaN(this.isGraduating) ? this.isGraduating : null,
             ...maybeParam('name', this.searchName),
             ...maybeParam('registrationNumber', this.searchRegistration),
-            ...maybeParam('email', this.searchEmail)
+            ...maybeParam('email', this.searchEmail),
+            ...(this.blankCrgFilter && { noCrg: true })
           }
         })
         .then(res => {
