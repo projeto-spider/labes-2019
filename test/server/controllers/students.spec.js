@@ -341,6 +341,28 @@ describe('/api/students', () => {
     done()
   })
 
+  test('POST /from-csv registrationNumber repeated', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/from-csv')
+      .set('Authorization', `Bearer ${token}`)
+      .attach(
+        'csv',
+        sigaaCsvFixture('wrong-registration-number.csv'),
+        'export.csv'
+      )
+      .type('form')
+
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(
+      errors.IMPORT_CSV_REGISTRATION_NUMBER_REPEATED
+    )
+    done()
+  })
+
   test('PUT /[studentId]', async done => {
     const { token } = await testUtils.user('admin')
     const resComplete = await chai
