@@ -33,6 +33,11 @@ api.get('/students/actives-mailing-list', students.ActiveMailList)
 api.get('/students/', students.List)
 api.get('/students/:id', students.Show)
 api.post('/students/from-csv', bodyMultipart, students.FromCsv)
+api.put(
+  '/students/update-academic-highlight',
+  bodyJson,
+  students.UpdateAcademicHighlight
+)
 api.put('/students/:id', bodyJson, students.Update)
 // Documents Routes
 api.get('/students/:studentId/documents', documents.List)
