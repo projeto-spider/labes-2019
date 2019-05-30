@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="columns is-centered">
       <h1 class="title">
         <strong>{{ title }}</strong>
