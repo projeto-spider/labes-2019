@@ -225,15 +225,24 @@ export default {
         type: 'is-danger',
         hasIcon: true,
         onConfirm: () => {
-          const index = this.subjects.findIndex(
-            localSubject => localSubject.id === this.editingSubject.id
-          )
+          this.$axios
+            .$delete(`/api/subjects/${this.editingSubject.id}`)
+            .then(() => {
+              const index = this.subjects.findIndex(
+                localSubject => localSubject.id === this.editingSubject.id
+              )
 
-          if (index !== -1) {
-            this.subjects.splice(index, 1)
-          }
-
-          this.$toast.open('Deletado com sucesso!')
+              if (index !== -1) {
+                this.subjects.splice(index, 1)
+              }
+              this.$toast.open('Deletado com sucesso!')
+            })
+            .catch(() => {
+              this.$toast.open({
+                message: 'Falha ao deletar',
+                type: 'is-danger'
+              })
+            })
         }
       })
     },
