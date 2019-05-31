@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div v-if="courseTag" class="container">
+      <export-email-list :is-active="true"></export-email-list>
       <h1>I am the email list</h1>
     </div>
     <div v-else>Escolha um curso primeiro.</div>
@@ -9,10 +10,14 @@
 
 <script>
 import { mapState } from 'vuex'
+import ExportEmailList from '~/components/exportEmailList'
 
 export default {
   name: 'Email',
   middleware: 'auth',
+  components: {
+    ExportEmailList
+  },
 
   computed: {
     ...mapState({

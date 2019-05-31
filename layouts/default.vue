@@ -100,12 +100,15 @@
             <li>
               <nuxt-link to="/allStudents">Alunos Totais</nuxt-link>
             </li>
+            <li>
+              <nuxt-link to="/subjects">Matérias</nuxt-link>
+            </li>
           </ul>
 
           <div class="menu-label">Grupos de Email</div>
           <ul class="menu-list">
             <li>
-              <nuxt-link to="/emailList">Email</nuxt-link>
+              <nuxt-link to="/emailList">Email Principal</nuxt-link>
             </li>
             <li>
               <a href="#">Calouros</a>

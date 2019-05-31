@@ -18,13 +18,15 @@ module.exports = async function updateSubject(ctx) {
     return
   }
 
-  if (
-    subjectUpdate.code &&
-    subjectUpdate.code !== subjectFind.get('code') &&
-    !!(await Subject.where({ code: subjectUpdate.code }).count())
-  ) {
+  const duplicate = !!(await Subject.where({
+    name: subjectUpdate.name
+  })
+    .where('id', '<>', id)
+    .count())
+
+  if (duplicate) {
     ctx.status = 422
-    ctx.body = { code: errors.UNPROCESSABLE_ENTITY, prop: 'code' }
+    ctx.body = { code: errors.UNPROCESSABLE_ENTITY }
     return
   }
 
