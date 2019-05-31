@@ -1,10 +1,8 @@
 <template>
   <div class="container">
     <div v-if="courseTag" class="container">
-      <export-email-list :is-active="true"></export-email-list>
-      <h1>I am the email list</h1>
+      <export-email-list></export-email-list>
     </div>
-    <div v-else>Escolha um curso primeiro.</div>
   </div>
 </template>
 
