@@ -396,6 +396,17 @@ describe('/api/students', () => {
     expect(resNome.body.id).toEqual(1)
     expect(resNome.body.name).toEqual('ATUALIZA SOMENTE O NOME')
 
+    const resEmail = await chai
+      .request(server.listen())
+      .put('/api/students/1')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ email: 'novoemail@gmail.com' })
+    expect(resEmail.status).toEqual(200)
+    expect(resEmail.type).toEqual('application/json')
+    expect(resEmail.body).toBeDefined()
+    expect(resEmail.body.id).toEqual(1)
+    expect(resEmail.body.email).toEqual('novoemail@gmail.com')
+
     done()
   })
 
