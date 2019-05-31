@@ -166,13 +166,20 @@ exports.batchUpdateStudents = function batchUpdateStudents(data) {
       new Student(student).save(null, { transacting: trx })
     )
 
-    const oldPromises = oldStudents.map(student => {
+    function getId(student) {
       const { id } = existingStudents.find(
         ({ registrationNumber }) =>
           student.registrationNumber === registrationNumber
       )
-      new Student({ id }).save(student, { patch: true, transacting: trx })
-    })
+      return id
+    }
+
+    const oldPromises = oldStudents.map(student =>
+      new Student({ id: getId(student) }).save(student, {
+        patch: true,
+        transacting: trx
+      })
+    )
 
     return Promise.all(newPromises.concat(oldPromises))
   })

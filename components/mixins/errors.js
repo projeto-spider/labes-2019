@@ -11,6 +11,8 @@ export const errorsHandler = {
           return 'Arquivo csv com numero invalido de colunas'
         case errors.IMPORT_CSV_INVALID_FILE:
           return 'Por favor selecione um arquivo do tipo csv'
+        case errors.IMPORT_CSV_REGISTRATION_NUMBER_REPEATED:
+          return 'Arquivo csv com números de matrícula repetidos'
         default:
           return 'Ocorreu um erro'
       }

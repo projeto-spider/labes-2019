@@ -30,6 +30,19 @@ module.exports = async function studentsFromCsv(ctx) {
 
   const data = utils.parseCsv(csv)
   const digested = utils.digestSigaaData(data)
+  const hasRepeatRegistrationNumber = (() => {
+    const registrationNumbers = digested.map(
+      ({ registrationNumber }) => registrationNumber
+    )
+    return new Set(registrationNumbers).size !== registrationNumbers.length
+  })()
+
+  if (hasRepeatRegistrationNumber) {
+    ctx.status = 400
+    ctx.body = { code: errors.IMPORT_CSV_REGISTRATION_NUMBER_REPEATED }
+    return
+  }
+
   await utils.batchUpdateStudents(digested)
 
   ctx.status = 201
