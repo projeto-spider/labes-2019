@@ -11,6 +11,35 @@
             <strong>Nome</strong>: {{ studentData.name }} <br />
             <strong>Matricula</strong>: {{ studentData.registrationNumber }}
             <br />
+            <strong>Orientador</strong>: {{ studentData.advisor }} <br />
+
+            <strong>{{ defenseDateStatus }}</strong
+            ><br />
+
+            <b-field>
+              <b-datepicker
+                v-model="defenseDate"
+                :date-formatter="dateFormatter"
+                :disabled="!canEdit"
+                :month-names="[
+                  'Janeiro',
+                  'Fevereiro',
+                  'Março',
+                  'Abril',
+                  'Maio',
+                  'Junho',
+                  'Julho',
+                  'Agosto',
+                  'Setembro',
+                  'Outubro',
+                  'Novembro',
+                  'Dezembro'
+                ]"
+                :day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
+                first-day-of-week="0"
+              ></b-datepicker>
+            </b-field>
+
             <strong>E-mail</strong>:
             <b-input v-model="studentData.email" :disabled="!canEdit"></b-input>
             <br />
@@ -221,7 +250,8 @@ export default {
       crg: '',
       pendencies: '',
       studentData: Object.assign({}, this.student),
-      isLoading: false
+      isLoading: false,
+      defenseDate: new Date()
     }
   },
   computed: {
@@ -258,10 +288,30 @@ export default {
       documents.presFile = !check(this.presDocument)
 
       return documents
+    },
+    defenseDateStatus() {
+      if (
+        this.studentData.isGraduating === 1 ||
+        this.studentData.isForming === 1
+      ) {
+        return 'Defendeu em'
+      }
+      return 'Data de Defesa'
     }
   },
+
   created() {
     this.getStudentsDocument()
+    this.defenseDate = this.studentData.defenseDate
+      ? new Date(
+          Date.parse(
+            this.studentData.defenseDate
+              .split('/')
+              .reverse()
+              .join('/')
+          )
+        )
+      : null
   },
 
   methods: {
@@ -280,12 +330,30 @@ export default {
     },
     putStudents() {
       this.isLoading = true
-
+      const defenseDate =
+        this.defenseDate &&
+        this.defenseDate
+          .toISOString()
+          .slice(0, 10)
+          .split('-')
+          .reverse()
+          .join('/')
+      const payload = { ...this.studentData, defenseDate }
       this.$axios
-        .put(`/api/students/${this.studentData.id}`, this.studentData)
+        .put(`/api/students/${this.studentData.id}`, payload)
         .then(res => {
           this.isLoading = false
           this.studentData = res.data
+          this.defenseDate = this.studentData.defenseDate
+            ? new Date(
+                Date.parse(
+                  this.studentData.defenseDate
+                    .split('/')
+                    .reverse()
+                    .join('/')
+                )
+              )
+            : null
           this.$toast.open({
             message: 'Aluno atualizado com sucesso.',
             type: 'is-success'
@@ -371,6 +439,14 @@ export default {
       }
 
       this.studentData.crg = Math.max(0, Math.min(10, value))
+    },
+    dateFormatter(date) {
+      return date
+        .toISOString()
+        .slice(0, 10)
+        .split('-')
+        .reverse()
+        .join('/')
     }
   }
 }
