@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="columns is-centered">
       <h1 class="title">
         <strong>{{ title }}</strong>
@@ -12,6 +12,9 @@
           <b-checkbox v-model="nameFilter">Nome</b-checkbox>
           <b-checkbox v-model="registrationFilter">Matricula</b-checkbox>
           <b-checkbox v-model="emailFilter">Email</b-checkbox>
+          <b-checkbox v-if="showCrgFilter" v-model="blankCrgFilter">
+            Sem CRG
+          </b-checkbox>
         </b-field>
         <b-input
           v-if="nameFilter"
@@ -49,6 +52,7 @@
           :hoverable="isHoverable"
           :data="tableData"
           :selected.sync="selectedStudent"
+          :row-class="row => !!row.academicHighlight && 'is-academic-highlight'"
           :columns="columns"
           class="searchInputTable"
           focusable
@@ -61,7 +65,25 @@
           :default-sort="[sortField, sortOrder]"
           @page-change="onPageChange"
           @sort="onSort"
-        ></b-table>
+        >
+          <template slot-scope="props">
+            <b-table-column
+              v-for="(column, index) in columns"
+              :key="index"
+              :label="column.label"
+              :sortable="column.sortable"
+            >
+              <b-tooltip
+                v-if="!!props.row.academicHighlight && column.field === 'name'"
+                :always="forceAcademicHighlightTooltip"
+                label="Destaque acadêmico"
+              >
+                {{ props.row[column.field] }}
+              </b-tooltip>
+              <span v-else>{{ props.row[column.field] }}</span>
+            </b-table-column>
+          </template>
+        </b-table>
         <b-modal :active.sync="selectedStudent" has-modal-card>
           <student-combo-box
             v-if="comboBoxStudent"
@@ -137,6 +159,10 @@ export default {
     students: {
       type: Array,
       default: () => []
+    },
+    showCrgFilter: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -177,7 +203,9 @@ export default {
       loading: false,
       nameFilter: false,
       registrationFilter: false,
-      emailFilter: false
+      emailFilter: false,
+      blankCrgFilter: false,
+      forceAcademicHighlightTooltip: false
     }
   },
 
@@ -211,11 +239,17 @@ export default {
     searchEmail() {
       this.getStudentsFilters()
     },
+    blankCrgFilter() {
+      this.getStudentsFilters()
+    },
     courseTag() {
       this.getStudentsFilters()
     },
     students() {
       this.studentsData = [...this.students]
+    },
+    selectedStudent() {
+      this.$emit('toggleComboBox')
     },
     total() {
       if (+this.total === 0) {
@@ -236,6 +270,14 @@ export default {
 
   created() {
     this.getStudents()
+  },
+
+  mounted() {
+    this.$el.addEventListener('mouseover', this.onMouseOver)
+  },
+
+  beforeDestroy() {
+    this.$el.removeEventListener('mouseover', this.onMouseOver)
   },
 
   methods: {
@@ -262,7 +304,8 @@ export default {
             isGraduating: !isNaN(this.isGraduating) ? this.isGraduating : null,
             ...maybeParam('name', this.searchName),
             ...maybeParam('registrationNumber', this.searchRegistration),
-            ...maybeParam('email', this.searchEmail)
+            ...maybeParam('email', this.searchEmail),
+            ...(this.blankCrgFilter && { noCrg: true })
           }
         })
         .then(res => {
@@ -287,6 +330,14 @@ export default {
     onPageChange(page) {
       this.page = page
       this.getStudents()
+    },
+
+    onMouseOver(e) {
+      if (e.target && e.target.closest) {
+        this.forceAcademicHighlightTooltip = !!e.target.closest(
+          '.is-academic-highlight'
+        )
+      }
     }
   }
 }
@@ -301,5 +352,8 @@ export default {
 <style>
 .searchInputTable div.table-wrapper table tbody tr td:nth-child(2) span {
   cursor: pointer;
+}
+tr.is-academic-highlight {
+  background-color: #2ecc71 !important;
 }
 </style>

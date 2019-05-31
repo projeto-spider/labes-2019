@@ -462,6 +462,157 @@ describe('/api/students', () => {
     done()
   })
 
+  test('PUT /update-academic-highlight', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const [a, b, c] = await Promise.all(
+      [
+        {
+          name: 'AAAAA',
+          registrationNumber: '222004940001',
+          crg: 5,
+          course: 'cbcc', // important
+          email: null,
+          isFit: true, // important
+          isActive: true, // important
+          isForming: true, // important
+          isConcluding: false,
+          isGraduating: true,
+          academicHighlight: false,
+          cancelled: false,
+          prescribed: false
+        },
+        {
+          name: 'BBBBB',
+          registrationNumber: '222004940002',
+          crg: 5,
+          course: 'cbcc', // important
+          email: null,
+          isFit: true, // important
+          isActive: true, // important
+          isForming: true, // important
+          isConcluding: false,
+          isGraduating: true,
+          academicHighlight: true,
+          cancelled: false,
+          prescribed: false
+        },
+        {
+          name: 'CCCCC',
+          registrationNumber: '222004940003',
+          crg: 5,
+          course: 'cbsi', // important
+          email: null,
+          isFit: true, // important
+          isActive: true, // important
+          isForming: true, // important
+          isConcluding: false,
+          isGraduating: true,
+          academicHighlight: true,
+          cancelled: false,
+          prescribed: false
+        }
+      ].map(props => Student.forge(props).save())
+    )
+
+    const res = await chai
+      .request(server.listen())
+      .put('/api/students/update-academic-highlight')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ id: a.id })
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.id).toEqual(a.id)
+    expect(res.body.academicHighlight).toEqual(true)
+
+    expect(
+      (await Student.forge({ id: a.id }).fetch()).get('academicHighlight')
+    ).toBeTruthy()
+    expect(
+      (await Student.forge({ id: b.id }).fetch()).get('academicHighlight')
+    ).toBeFalsy()
+    expect(
+      (await Student.forge({ id: c.id }).fetch()).get('academicHighlight')
+    ).toBeTruthy()
+
+    done()
+  })
+
+  test('PUT /update-academic-highlight with invalid id', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const [a, b, c] = await Promise.all(
+      [
+        {
+          name: 'AAAAA',
+          registrationNumber: '222004940001',
+          crg: 5,
+          course: 'cbcc', // important
+          email: null,
+          isFit: true, // important
+          isActive: true, // important
+          isForming: true, // important
+          isConcluding: false,
+          isGraduating: true,
+          academicHighlight: false,
+          cancelled: false,
+          prescribed: false
+        },
+        {
+          name: 'BBBBB',
+          registrationNumber: '222004940002',
+          crg: 5,
+          course: 'cbcc', // important
+          email: null,
+          isFit: true, // important
+          isActive: true, // important
+          isForming: true, // important
+          isConcluding: false,
+          isGraduating: true,
+          academicHighlight: true,
+          cancelled: false,
+          prescribed: false
+        },
+        {
+          name: 'CCCCC',
+          registrationNumber: '222004940003',
+          crg: 5,
+          course: 'cbsi', // important
+          email: null,
+          isFit: true, // important
+          isActive: true, // important
+          isForming: true, // important
+          isConcluding: false,
+          isGraduating: true,
+          academicHighlight: true,
+          cancelled: false,
+          prescribed: false
+        }
+      ].map(props => Student.forge(props).save())
+    )
+
+    const res = await chai
+      .request(server.listen())
+      .put('/api/students/update-academic-highlight')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ id: 1000000000 })
+    expect(res.status).toEqual(404)
+    expect(res.type).toEqual('application/json')
+
+    expect(
+      (await Student.forge({ id: a.id }).fetch()).get('academicHighlight')
+    ).toBeFalsy()
+    expect(
+      (await Student.forge({ id: b.id }).fetch()).get('academicHighlight')
+    ).toBeTruthy()
+    expect(
+      (await Student.forge({ id: c.id }).fetch()).get('academicHighlight')
+    ).toBeTruthy()
+
+    done()
+  })
+
   test('GET /', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai

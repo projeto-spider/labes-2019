@@ -38,6 +38,7 @@ function filterStudents(filters) {
     minCrg,
     maxCrg,
     eqCrg,
+    noCrg,
     sort,
     order = 'ASC',
     gmail,
@@ -64,6 +65,9 @@ function filterStudents(filters) {
   }
   if (eqCrg !== undefined) {
     query = query.where('crg', eqCrg)
+  }
+  if (noCrg) {
+    query = query.where('crg', null)
   }
   if (gmail !== undefined && +gmail === 1) {
     query = query.where('email', 'like', '%@gmail.com%')

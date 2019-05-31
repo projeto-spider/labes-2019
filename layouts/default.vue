@@ -242,4 +242,9 @@ export default {
 .columns .is-fullheight {
   flex: 1;
 }
+
+.container.Fullscreen {
+  height: unset;
+  min-height: 100vh;
+}
 </style>
