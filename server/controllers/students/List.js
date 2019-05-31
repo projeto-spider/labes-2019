@@ -40,7 +40,8 @@ function filterStudents(filters) {
     eqCrg,
     sort,
     order = 'ASC',
-    gmail
+    gmail,
+    email
   } = filters
   let query = Student
   if (sort !== undefined) {
@@ -51,6 +52,9 @@ function filterStudents(filters) {
   }
   if (registrationNumber !== undefined) {
     query = query.where('registrationNumber', 'like', registrationNumber)
+  }
+  if (email !== undefined) {
+    query = query.where('email', 'like', email)
   }
   if (minCrg !== undefined) {
     query = query.where('crg', '>', minCrg)
@@ -66,7 +70,6 @@ function filterStudents(filters) {
   }
   const filtersNames = [
     'course',
-    'email',
     'isFit',
     'isConcluding',
     'isActive',

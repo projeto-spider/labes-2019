@@ -832,4 +832,51 @@ describe('/api/students', () => {
     expect(res.body[6].email).toEqual('uneccessary@ufpa.br')
     done()
   })
+
+  test('GET /?email=[STUDENT-EMAIL]', async done => {
+    const { token } = await testUtils.user('admin')
+    const resStudent1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?email=naosouativo@gmail.com'))
+      .set('Authorization', `Bearer ${token}`)
+    expect(resStudent1.status).toEqual(200)
+    expect(resStudent1.type).toEqual('application/json')
+    expect(resStudent1.body).toBeDefined()
+    expect(
+      resStudent1.body.every(
+        student => student.email === 'naosouativo@gmail.com'
+      )
+    ).toBeTruthy()
+    const resStudent2 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?email=%@gmail.com%'))
+      .set('Authorization', `Bearer ${token}`)
+    expect(resStudent2.status).toEqual(200)
+    expect(resStudent2.type).toEqual('application/json')
+    expect(resStudent2.body).toBeDefined()
+    expect(
+      resStudent2.body.every(student => student.email.includes('@gmail.com'))
+    ).toBeTruthy()
+    const resStudent3 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?email=slug%'))
+      .set('Authorization', `Bearer ${token}`)
+    expect(resStudent3.status).toEqual(200)
+    expect(resStudent3.type).toEqual('application/json')
+    expect(resStudent3.body).toBeDefined()
+    expect(
+      resStudent3.body.every(student => student.email.startsWith('slug'))
+    ).toBeTruthy()
+    const resStudent4 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?email=%@gmail.com'))
+      .set('Authorization', `Bearer ${token}`)
+    expect(resStudent4.status).toEqual(200)
+    expect(resStudent4.type).toEqual('application/json')
+    expect(resStudent4.body).toBeDefined()
+    expect(
+      resStudent4.body.every(student => student.email.endsWith('@gmail.com'))
+    ).toBeTruthy()
+    done()
+  })
 })
