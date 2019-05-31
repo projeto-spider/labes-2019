@@ -26,6 +26,7 @@
       :current-page.sync="page"
       @page-change="onPageChange"
       @details-open="onDetailsOpen"
+      @details-close="onDetailsClose"
     >
       <template slot="detail">
         <article v-if="editingSubject" class="media">
@@ -259,6 +260,16 @@ export default {
       this.lastDetailOpenId = row.id
       this.editingSubjectDirty = defaultSubjectDirty()
       this.editingSubject = { ...row }
+    },
+
+    onDetailsClose(row) {
+      const lastOpenedRow = this.subjects.find(
+        subject => subject.id === this.lastDetailOpenId
+      )
+
+      if (lastOpenedRow && lastOpenedRow === row) {
+        this.lastDetailOpenId = null
+      }
     }
   }
 }
