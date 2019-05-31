@@ -364,7 +364,6 @@ describe('/api/students', () => {
         prescribed: false,
         mailingList: 'none',
         entryDate: '05-28-2019',
-        note: null,
         advisor: 'Novo Orientador',
         defenseDate: '06-30-2019',
         term: null,

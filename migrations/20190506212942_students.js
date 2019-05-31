@@ -51,7 +51,6 @@ exports.up = function(knex, Promise) {
       ])
       .defaultTo('none')
     table.date('entryDate').nullable()
-    table.string('note').nullable()
     table.string('advisor').nullable()
     table.date('defenseDate').nullable()
     table.string('term').nullable()
