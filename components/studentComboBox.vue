@@ -21,6 +21,22 @@
                 v-model="defenseDate"
                 :date-formatter="dateFormatter"
                 :disabled="!canEdit"
+                :month-names="[
+                  'Janeiro',
+                  'Fevereiro',
+                  'Março',
+                  'Abril',
+                  'Maio',
+                  'Junho',
+                  'Julho',
+                  'Agosto',
+                  'Setembro',
+                  'Outubro',
+                  'Novembro',
+                  'Dezembro'
+                ]"
+                :day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
+                first-day-of-week="0"
               ></b-datepicker>
             </b-field>
 
