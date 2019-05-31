@@ -1,12 +1,11 @@
 <template>
   <div>
     <a
-      v-if="isActive"
       class="button is-normal is-primary is-modal"
       @click.stop.prevent="openModal"
       >Gerar lista de E-mail</a
     >
-    <div class="modal" :class="acitve">
+    <div class="modal" :class="{ 'is-active': isActive }">
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
@@ -36,25 +35,17 @@
 <script>
 export default {
   name: 'ExportEmailList',
-  props: {
-    isActive: {
-      type: Boolean,
-      default: () => false
-    }
-  },
 
   data() {
     return {
-      acitve: {
-        'is-active': false
-      },
-      emailList: 'email list'
+      isActive: false,
+      emailList: ''
     }
   },
 
   methods: {
     openModal() {
-      this.acitve['is-active'] = !this.acitve['is-active']
+      this.isActive = !this.isActive
       this.$axios
         .get('/api/students/actives-mailing-list')
         .then(res => {
