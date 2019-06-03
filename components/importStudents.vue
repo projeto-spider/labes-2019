@@ -94,7 +94,6 @@ export default {
         const reader = new FileReader()
         reader.readAsText(this.studentsCsv)
         reader.onload = e => {
-          debugger
           const validation = this.validateCsv(reader.result)
           if (typeof validation === 'string') {
             this.openErrorNotification(validation)
