@@ -13,6 +13,8 @@ export const errorsHandler = {
           return 'Por favor selecione um arquivo do tipo csv'
         case errors.IMPORT_CSV_REGISTRATION_NUMBER_REPEATED:
           return 'Arquivo csv com números de matrícula repetidos'
+        case errors.MAX_FILE_SIZE_EXCEEDED:
+          return 'Arquivo com tamanho superior a 6MB'
         default:
           return 'Ocorreu um erro'
       }
