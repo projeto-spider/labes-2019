@@ -1,7 +1,7 @@
 const pkg = require('./package')
 const errors = require('./shared/errors')
 const enums = require('./shared/enums')
-
+const config = require('./shared/config')
 module.exports = {
   mode: 'spa',
 
@@ -65,7 +65,8 @@ module.exports = {
   },
   env: {
     errors,
-    enums
+    enums,
+    config
   },
 
   /*

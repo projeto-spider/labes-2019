@@ -413,7 +413,14 @@ export default {
         })
     },
     validateUpload(type) {
+      const { config } = process.env
       if (!this.uploadFile) {
+        return
+      }
+      if (this.uploadFile.size >= config.MAX_FILE_SIZE) {
+        this.openErrorNotification(process.env.errors.MAX_FILE_SIZE_EXCEEDED)
+        this.uploadFile = new File([''], 'Nenhum arquivo selecionado')
+        this.hasErrors = true
         return
       }
       const isPDF = this.uploadFile.name.split('.').pop() === 'pdf'

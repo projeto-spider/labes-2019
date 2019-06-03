@@ -80,7 +80,14 @@ export default {
       return this.studentsCsv.name !== 'Nenhum arquivo selecionado'
     },
     validateUpload() {
+      const { config } = process.env
       if (!this.studentsCsv) {
+        return
+      }
+      if (this.studentsCsv.size >= config.MAX_FILE_SIZE) {
+        this.openErrorNotification(process.env.errors.MAX_FILE_SIZE_EXCEEDED)
+        this.studentsCsv = new File([''], 'Nenhum arquivo selecionado')
+        this.hasErrors = true
         return
       }
       if (this.studentsCsv.name.split('.').pop() === 'csv') {
