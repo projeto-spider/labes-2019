@@ -196,9 +196,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.container {
-  margin: 50px auto 50px auto;
-}
-</style>

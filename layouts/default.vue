@@ -247,4 +247,7 @@ export default {
   height: unset;
   min-height: 100vh;
 }
+.container {
+  margin: 4rem auto 4rem auto;
+}
 </style>
