@@ -1052,4 +1052,41 @@ describe('/api/students', () => {
     ).toBeTruthy()
     done()
   })
+
+  test('GET /?prescribed=1', async done => {
+    const { token } = await testUtils.user('admin')
+    const res1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?prescribed=1'))
+      .set('Authorization', `Bearer ${token}`)
+    expect(res1.status).toEqual(200)
+    expect(res1.type).toEqual('application/json')
+    expect(res1.body).toBeDefined()
+    expect(res1.body[0].name).toEqual('LAURA CARDOSO CASTRO')
+    done()
+  })
+  test('GET /?prescribed=1&sort=name&order=desc', async done => {
+    const { token } = await testUtils.user('admin')
+    const res1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?prescribed=1&sort=name&order=desc'))
+      .set('Authorization', `Bearer ${token}`)
+    expect(res1.status).toEqual(200)
+    expect(res1.type).toEqual('application/json')
+    expect(res1.body).toBeDefined()
+    expect(res1.body[0].name).toEqual('LAURA CARDOSO CASTRO')
+    done()
+  })
+  test('GET /?prescribed=1&registrationNumber=201304940002&sort=name&order=desc', async done => {
+    const { token } = await testUtils.user('admin')
+    const res1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?prescribed=1&sort=name&order=desc'))
+      .set('Authorization', `Bearer ${token}`)
+    expect(res1.status).toEqual(200)
+    expect(res1.type).toEqual('application/json')
+    expect(res1.body).toBeDefined()
+    expect(res1.body[0].name).toEqual('LAURA CARDOSO CASTRO')
+    done()
+  })
 })
