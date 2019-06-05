@@ -12,6 +12,7 @@ const server = require('../../../server')
 const db = require('../../../server/db')
 const Student = require('../../../server/models/Student')
 const errors = require('../../../shared/errors')
+const document = require('../../../server/models/Document')
 
 jest.useFakeTimers()
 
@@ -1065,11 +1066,29 @@ describe('/api/students', () => {
     expect(res1.body[0].name).toEqual('LAURA CARDOSO CASTRO')
     done()
   })
-  test('GET /?prescribed=1&sort=name&order=desc', async done => {
+  test('GET /?prescribed=1&registrationNumber=201304940002&sort=name&order=desc', async done => {
     const { token } = await testUtils.user('admin')
+    await Promise.all(
+      [
+        {
+          studentId: 1,
+          type: 3,
+          url: 'url/file5'
+        },
+        {
+          studentId: 4,
+          type: 3,
+          url: 'url/file6'
+        }
+      ].map(props => document.forge(props).save())
+    )
     const res1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?prescribed=1&sort=name&order=desc'))
+      .get(
+        encodeURI(
+          '/api/students/?prescribed=1&registrationNumber=201304940002&sort=name&order=desc'
+        )
+      )
       .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
@@ -1077,8 +1096,23 @@ describe('/api/students', () => {
     expect(res1.body[0].name).toEqual('LAURA CARDOSO CASTRO')
     done()
   })
-  test('GET /?prescribed=1&registrationNumber=201304940002&sort=name&order=desc', async done => {
+
+  test('GET /?prescribed=1&sort=name&order=desc', async done => {
     const { token } = await testUtils.user('admin')
+    await Promise.all(
+      [
+        {
+          studentId: 1,
+          type: 3,
+          url: 'url/file5'
+        },
+        {
+          studentId: 4,
+          type: 3,
+          url: 'url/file6'
+        }
+      ].map(props => document.forge(props).save())
+    )
     const res1 = await chai
       .request(server.listen())
       .get(encodeURI('/api/students/?prescribed=1&sort=name&order=desc'))
@@ -1087,6 +1121,8 @@ describe('/api/students', () => {
     expect(res1.type).toEqual('application/json')
     expect(res1.body).toBeDefined()
     expect(res1.body[0].name).toEqual('LAURA CARDOSO CASTRO')
+    expect(res1.body[1].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(res1.body[2].name).toEqual('ENZO FERREIRA ALVES')
     done()
   })
 })

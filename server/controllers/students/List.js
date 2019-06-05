@@ -43,8 +43,6 @@ function filterStudents(filters) {
     order = 'ASC',
     gmail,
     email,
-    isForming,
-    isGraduating,
     prescribed
   } = filters
   let query = Student
@@ -56,7 +54,7 @@ function filterStudents(filters) {
     query = query.query(qb => {
       qb.innerJoin('documents', 'documents.studentId', 'students.id')
         .where('documents.type', '=', '3')
-        .andWhere(qb => qb.where('isGraduating', 1).orWhere('isForming', 1))
+        .andWhere(qb => qb.where('isGraduating', '1').orWhere('isForming', '1'))
     })
   }
   if (name !== undefined) {
@@ -83,13 +81,6 @@ function filterStudents(filters) {
   if (gmail !== undefined && +gmail === 1) {
     query = query.where('email', 'like', '%@gmail.com%')
   }
-
-  if (isGraduating === '1' && isForming === '1') {
-    query = query.query(qb => {
-      qb.where('isGraduating', isGraduating).orWhere('isForming', isGraduating)
-    })
-  }
-
   const defaultFiltersNames = [
     'course',
     'academicHighlight',
