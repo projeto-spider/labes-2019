@@ -312,6 +312,7 @@ export default {
           )
         )
       : null
+    this.hasCd()
   },
 
   methods: {
@@ -338,7 +339,8 @@ export default {
           .split('-')
           .reverse()
           .join('/')
-      const payload = { ...this.studentData, defenseDate }
+      const cd = this.CdCheck ? 1 : 0
+      const payload = { ...this.studentData, defenseDate, cd }
       this.$axios
         .put(`/api/students/${this.studentData.id}`, payload)
         .then(res => {
@@ -454,6 +456,14 @@ export default {
         .split('-')
         .reverse()
         .join('/')
+    },
+    hasCd() {
+      if (this.studentData.cd === 1) {
+        this.CdCheck = true
+        return true
+      }
+      this.CdCheck = false
+      return false
     }
   }
 }
