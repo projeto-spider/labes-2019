@@ -160,6 +160,10 @@ export default {
       type: Array,
       default: () => []
     },
+    isActiveEmailList: {
+      type: Boolean,
+      default: () => false
+    },
     showCrgFilter: {
       type: Boolean,
       default: false

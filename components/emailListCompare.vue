@@ -2,14 +2,16 @@
   <div class="box">
     <b-tabs position="is-centered" class="block">
       <b-tab-item label="Emails a serem adicionados">
-        <div v-for="student in students" :key="student.id">{{ student }}</div>
+        <b-table :data="studentsToAdd" :columns="columns"> </b-table>
       </b-tab-item>
-      <b-tab-item label="Emails a serem removidos"></b-tab-item>
+      <b-tab-item label="Emails a serem removidos">
+        <b-table :data="studentsToRemove" :columns="columns"> </b-table>
+      </b-tab-item>
     </b-tabs>
     <div class="level">
       <div class="level-right">
         <div class="level-item">
-          <button class="button is-primary">
+          <button class="button is-primary" @click="confirmChanges">
             Confirmar Alterações
           </button>
         </div>
@@ -21,12 +23,34 @@
 <script>
 export default {
   name: 'EmailCompare',
+  props: {
+    studentsToAdd: {
+      type: Object,
+      default: () => {}
+    },
+    studentsToRemove: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
-      students: [
-        { id: 1, name: 'something1', email: 'something@something.br' },
-        { id: 2, name: 'something1', email: 'something@something.br' }
+      columns: [
+        { field: 'name', label: 'Nome' },
+        { field: 'email', label: 'E-mail' }
       ]
+    }
+  },
+  methods: {
+    confirmChanges() {
+      this.$dialog.confirm({
+        message:
+          'Este processo é irreversivel, tem certeza que já foi realizado todas as alterações ?',
+        onConfirm: () => {
+          this.$parent.close()
+          this.$toast.open('Alterações realizadas com sucesso')
+        }
+      })
     }
   }
 }

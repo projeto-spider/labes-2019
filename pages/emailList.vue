@@ -5,9 +5,15 @@
         :key="courseTag"
         :default-course="courseTag"
         :title="'Lista de Email - Ativos'"
-        :is-active="1"
+        :is-active-email-list="1"
       ></search-input>
-      <button class="button is-primary" @click="activateModal"></button>
+      <button
+        v-if="hasEmailChanges"
+        class="button is-primary"
+        @click="activateModal"
+      >
+        Alterações pendentes
+      </button>
       <b-modal :active.sync="activate">
         <email-compare></email-compare>
       </b-modal>
@@ -29,7 +35,8 @@ export default {
   },
   data() {
     return {
-      activate: false
+      activate: false,
+      hasEmailChanges: false
     }
   },
 
@@ -37,6 +44,9 @@ export default {
     ...mapState({
       courseTag: state => state.courseTag
     })
+  },
+  created() {
+    // REQUEST TO GET POSSIBLE CHANGES
   },
 
   methods: {
