@@ -70,20 +70,15 @@ export default {
       this.$axios
         .get('/api/students/?academicHighlight=1')
         .then(response => {
-          this.highlighted = response.data.map(st => {
-            st.push(...{ period: 'test' })
-          })
+          this.highlighted = response.data
         })
         .catch(e => {
           this.$toast.open({
-            message: `Ocorreu algum erro: ${e.response.data.code}`,
+            message: 'Erro em resposta do servidor',
             type: 'is-danger'
           })
         })
-
-      // toggle modal
-      this.activeModal = !this.activeModal
-      return this.activeModal
+      this.activeModal = true
     }
   }
 }
