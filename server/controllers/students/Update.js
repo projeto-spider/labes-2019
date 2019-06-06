@@ -1,5 +1,4 @@
 const Student = require('../../models/Student')
-const Documents = require('../../models/Document')
 const errors = require('../../../shared/errors')
 
 module.exports = async function updateStudent(ctx) {
@@ -20,16 +19,6 @@ module.exports = async function updateStudent(ctx) {
   }
 
   await studentFind.save(studentUpdate)
-
-  const docTypes = (await Documents.where({ studentId: id }).fetchAll())
-    .toJSON()
-    .map(entry => entry.type)
-  const studentIsFit =
-    !!studentFind.get('cd') && docTypes.includes(1) && docTypes.includes(2)
-  if (!!studentFind.get('isFit') !== studentIsFit) {
-    const newValue = studentIsFit ? 1 : 0
-    await studentFind.save({ isFit: newValue })
-  }
 
   ctx.body = studentFind
 }
