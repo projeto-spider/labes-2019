@@ -24,10 +24,10 @@ module.exports = async function updateStudent(ctx) {
   const docTypes = (await Documents.where({ studentId: id }).fetchAll())
     .toJSON()
     .map(entry => entry.type)
-  const stuIsFit =
+  const studentIsFit =
     !!studentFind.get('cd') && docTypes.includes(1) && docTypes.includes(2)
-  if (studentFind.get('isFit') !== stuIsFit) {
-    studentUpdate.isFit = stuIsFit
+  if (studentFind.get('isFit') !== studentIsFit) {
+    studentUpdate.isFit = studentIsFit
     await studentFind.save(studentUpdate)
   }
 
