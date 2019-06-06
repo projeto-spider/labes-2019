@@ -148,6 +148,7 @@
                         <b-checkbox
                           v-model="CdCheck"
                           :disabled="!canEdit"
+                          @input="value => (studentData.cd = value ? '1' : '0')"
                         ></b-checkbox>
                       </td>
                       <td>
@@ -242,7 +243,6 @@ export default {
       ataCheck: false,
       laudaCheck: false,
       presCheck: false,
-      CdCheck: false,
       ataDocument: {},
       laudaDocument: {},
       presDocument: {},
@@ -297,6 +297,9 @@ export default {
         return 'Defendeu em'
       }
       return 'Data de Defesa'
+    },
+    CdCheck() {
+      return this.studentData.cd === 1
     }
   },
 
@@ -312,7 +315,6 @@ export default {
           )
         )
       : null
-    this.hasCd()
   },
 
   methods: {
@@ -339,8 +341,7 @@ export default {
           .split('-')
           .reverse()
           .join('/')
-      const cd = this.CdCheck ? 1 : 0
-      const payload = { ...this.studentData, defenseDate, cd }
+      const payload = { ...this.studentData, defenseDate }
       this.$axios
         .put(`/api/students/${this.studentData.id}`, payload)
         .then(res => {
@@ -456,14 +457,6 @@ export default {
         .split('-')
         .reverse()
         .join('/')
-    },
-    hasCd() {
-      if (this.studentData.cd === 1) {
-        this.CdCheck = true
-        return true
-      }
-      this.CdCheck = false
-      return false
     }
   }
 }
