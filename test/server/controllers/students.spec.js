@@ -1125,4 +1125,36 @@ describe('/api/students', () => {
     expect(res1.body[2].name).toEqual('ENZO FERREIRA ALVES')
     done()
   })
+
+  test('GET /?isConcluding=1&academicHighlight=1', async done => {
+    const { token } = await testUtils.user('admin')
+    await chai
+      .request(server.listen())
+      .put('/api/students/1')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ isConcluding: 1, academicHighlight: 1 })
+
+    await chai
+      .request(server.listen())
+      .put('/api/students/2')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ isConcluding: 1, academicHighlight: 1 })
+
+    const res1 = await chai
+      .request(server.listen())
+      .get(encodeURI('/api/students/?isConcluding=1&academicHighlight=1'))
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res1.status).toEqual(200)
+    expect(res1.type).toEqual('application/json')
+    expect(res1.body).toBeDefined()
+    expect(res1.body.length).toEqual(2)
+    expect(res1.body[0].name).toEqual('FELIPE SOUZA FERREIRA')
+    expect(res1.body[0].isConcluding).toEqual(1)
+    expect(res1.body[0].academicHighlight).toEqual(1)
+    expect(res1.body[1].name).toEqual('LAURA CARDOSO CASTRO')
+    expect(res1.body[1].isConcluding).toEqual(1)
+    expect(res1.body[1].academicHighlight).toEqual(1)
+    done()
+  })
 })
