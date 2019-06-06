@@ -42,11 +42,20 @@ function filterStudents(filters) {
     sort,
     order = 'ASC',
     gmail,
-    email
+    email,
+    prescribed
   } = filters
   let query = Student
   if (sort !== undefined) {
     query = query.forge().orderBy(sort, order.toUpperCase())
+  }
+  const isPrescribed = prescribed !== undefined && prescribed === '1'
+  if (isPrescribed) {
+    query = query.query(qb => {
+      qb.innerJoin('documents', 'documents.studentId', 'students.id')
+        .where('documents.type', '=', '3')
+        .andWhere(qb => qb.where('isGraduating', '1').orWhere('isForming', '1'))
+    })
   }
   if (name !== undefined) {
     query = query.where('name', 'like', name)
@@ -72,18 +81,23 @@ function filterStudents(filters) {
   if (gmail !== undefined && +gmail === 1) {
     query = query.where('email', 'like', '%@gmail.com%')
   }
-  const filtersNames = [
+  const defaultFiltersNames = [
     'course',
+    'academicHighlight',
+    'cancelled',
+    'mailingList'
+  ]
+  const flagsFiltersNames = [
     'isFit',
     'isConcluding',
     'isActive',
     'isForming',
-    'isGraduating',
-    'academicHighlight',
-    'cancelled',
-    'prescribed',
-    'mailingList'
+    'isGraduating'
   ]
+  const filtersNames = isPrescribed
+    ? defaultFiltersNames
+    : defaultFiltersNames.concat(flagsFiltersNames)
+
   query = filtersNames.reduce((query, filterName) => {
     if (filters[filterName] !== undefined) {
       return query.where(filterName, filters[filterName])
