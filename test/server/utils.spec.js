@@ -255,50 +255,50 @@ describe('utils', () => {
       [
         {
           name: 'ESSE CARA E BOM',
-          registrationNumber: 2015121200,
-          course: 'CBSI',
+          registrationNumber: '2015121200',
+          course: 'cbsi',
           cd: 1
         },
         {
           name: 'SEM CD',
-          registrationNumber: 2015121201,
-          course: 'CBSI',
+          registrationNumber: '2015121201',
+          course: 'cbsi',
           cd: 0
         },
         {
           name: 'SEM ATA',
-          registrationNumber: 2015121202,
-          course: 'CBSI',
+          registrationNumber: '2015121202',
+          course: 'cbsi',
           cd: 1
         },
         {
           name: 'SEM CD E SEM ATA',
-          registrationNumber: 2015121203,
-          course: 'CBSI',
+          registrationNumber: '2015121203',
+          course: 'cbsi',
           cd: 0
         },
         {
           name: 'SEM LAUDA',
-          registrationNumber: 2015121204,
-          course: 'CBSI',
+          registrationNumber: '2015121204',
+          course: 'cbsi',
           cd: 1
         },
         {
           name: 'SEM LAUDA E SEM CD',
-          registrationNumber: 2015121205,
-          course: 'CBSI',
+          registrationNumber: '2015121205',
+          course: 'cbsi',
           cd: 0
         },
         {
           name: 'SEM LAUDA E SEM ATA',
-          registrationNumber: 2015121206,
-          course: 'CBSI',
+          registrationNumber: '2015121206',
+          course: 'cbsi',
           cd: 1
         },
         {
           name: 'SEM LAUDA E SEM ATA E SEM CD',
-          registrationNumber: 2015121221,
-          course: 'CBSI',
+          registrationNumber: '2015121221',
+          course: 'cbsi',
           cd: 0
         }
       ].map(props => Student.forge(props).save())
