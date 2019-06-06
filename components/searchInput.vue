@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="columns is-centered">
+    <div v-if="title" class="columns is-centered">
       <h1 class="title">
         <strong>{{ title }}</strong>
       </h1>
@@ -110,7 +110,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: () => "Page's title"
+      default: () => ''
     },
     defaultCourse: {
       type: String,
