@@ -54,10 +54,10 @@ import { errorsHandler } from '../components/mixins/errors'
 export default {
   name: 'Concluding',
   middleware: 'course',
-  mixins: [errorsHandler],
   components: {
     SearchInput
   },
+  mixins: [errorsHandler],
   data: () => ({
     activeModal: false,
     highlighted: []
