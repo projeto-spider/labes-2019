@@ -26,8 +26,8 @@ module.exports = async function updateStudent(ctx) {
     .map(entry => entry.type)
   const studentIsFit =
     !!studentFind.get('cd') && docTypes.includes(1) && docTypes.includes(2)
-  if (studentFind.get('isFit') !== studentIsFit) {
-    studentUpdate.isFit = studentIsFit
+  if (!!studentFind.get('isFit') !== studentIsFit) {
+    studentUpdate.isFit = studentIsFit ? 1 : 0
     await studentFind.save(studentUpdate)
   }
 
