@@ -99,11 +99,11 @@ module.exports = async function uploadDocument(ctx) {
   const docTypes = (await Documents.where({ studentId }).fetchAll())
     .toJSON()
     .map(entry => entry.type)
-  const stuIsFit =
+  const studentIsFit =
     !!studentFind.get('cd') && docTypes.includes(1) && docTypes.includes(2)
-  if (studentFind.get('isFit') !== stuIsFit) {
+  if (studentFind.get('isFit') !== studentIsFit) {
     const studentUpdate = studentFind.toJSON()
-    studentUpdate.isFit = stuIsFit
+    studentUpdate.isFit = studentIsFit
     await studentFind.save(studentUpdate)
   }
 
