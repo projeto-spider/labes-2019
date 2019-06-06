@@ -146,7 +146,7 @@
                       <td><strong>CD</strong></td>
                       <td>
                         <b-checkbox
-                          v-model="CdCheck"
+                          v-model="cdCheck"
                           :disabled="!canEdit"
                           @input="value => (studentData.cd = value ? '1' : '0')"
                         ></b-checkbox>
@@ -298,7 +298,7 @@ export default {
       }
       return 'Data de Defesa'
     },
-    CdCheck() {
+    cdCheck() {
       return this.studentData.cd === 1
     }
   },
