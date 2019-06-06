@@ -10,8 +10,8 @@
     <div class="columns">
       <div class="column is-3 is-offset-8 to-left">
         <b-button class="is-primary" @click="getAcademicHighlights">
-          Gerar lista de destaques acadêmicos</b-button
-        >
+          Gerar lista de destaques acadêmicos
+        </b-button>
       </div>
     </div>
     <search-input
