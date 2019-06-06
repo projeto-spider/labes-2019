@@ -263,4 +263,5 @@ exports.updateStudentFitness = async function updateStudentFitness(student) {
     const newValue = studentIsFit ? 1 : 0
     await student.save({ isFit: newValue })
   }
+  return student
 }
