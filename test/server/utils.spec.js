@@ -7,6 +7,7 @@ const path = require('path')
 const utils = require('../../server/utils')
 const db = require('../../server/db')
 const Student = require('../../server/models/Student')
+const Document = require('../../server/models/Document')
 
 const exampleSigaaCsv = `Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status
 201704940001,2017,FELIPE SOUZA FERREIRA,111.111.111-11,1/29/1995,VITORIA DIAS ROCHA,Belém,CIENCIA DA COMPUTACAO,ATIVO
@@ -248,4 +249,143 @@ describe('utils', () => {
 
     done()
   }, 100000)
+
+  test('updateStudentFitness', async done => {
+    const studentsPromise = await Promise.all(
+      [
+        {
+          name: 'ESSE CARA E BOM',
+          registrationNumber: 2015121200,
+          course: 'CBSI',
+          cd: 1
+        },
+        {
+          name: 'SEM CD',
+          registrationNumber: 2015121201,
+          course: 'CBSI',
+          cd: 0
+        },
+        {
+          name: 'SEM ATA',
+          registrationNumber: 2015121202,
+          course: 'CBSI',
+          cd: 1
+        },
+        {
+          name: 'SEM CD E SEM ATA',
+          registrationNumber: 2015121203,
+          course: 'CBSI',
+          cd: 0
+        },
+        {
+          name: 'SEM LAUDA',
+          registrationNumber: 2015121204,
+          course: 'CBSI',
+          cd: 1
+        },
+        {
+          name: 'SEM LAUDA E SEM CD',
+          registrationNumber: 2015121205,
+          course: 'CBSI',
+          cd: 0
+        },
+        {
+          name: 'SEM LAUDA E SEM ATA',
+          registrationNumber: 2015121206,
+          course: 'CBSI',
+          cd: 1
+        },
+        {
+          name: 'SEM LAUDA E SEM ATA E SEM CD',
+          registrationNumber: 2015121221,
+          course: 'CBSI',
+          cd: 0
+        }
+      ].map(props => Student.forge(props).save())
+    )
+
+    const studentIdList = studentsPromise.reduce((studentIdList, student) => {
+      studentIdList.push(student.get('id'))
+      return studentIdList
+    }, [])
+
+    await Promise.all(
+      [
+        {
+          studentId: studentIdList[0],
+          type: 1,
+          url: 'a'
+        },
+        {
+          studentId: studentIdList[1],
+          type: 1,
+          url: 'b'
+        },
+        {
+          studentId: studentIdList[4],
+          type: 1,
+          url: 'c'
+        },
+        {
+          studentId: studentIdList[5],
+          type: 1,
+          url: 'd'
+        },
+        {
+          studentId: studentIdList[0],
+          type: 2,
+          url: 'e'
+        },
+        {
+          studentId: studentIdList[1],
+          type: 2,
+          url: 'f'
+        },
+        {
+          studentId: studentIdList[2],
+          type: 2,
+          url: 'g'
+        },
+        {
+          studentId: studentIdList[3],
+          type: 2,
+          url: 'h'
+        }
+      ].map(props => Document.forge(props).save())
+    )
+
+    let student = await Student.where({ id: studentIdList[0] }).fetch()
+    await utils.updateStudentFitness(student)
+    expect(student.get('isFit')).toBeTruthy()
+
+    student = await Student.where({ id: studentIdList[1] }).fetch()
+    await utils.updateStudentFitness(student)
+    expect(student.get('isFit')).toBeFalsy()
+
+    student = await Student.where({ id: studentIdList[2] }).fetch()
+    await utils.updateStudentFitness(student)
+    expect(student.get('isFit')).toBeFalsy()
+
+    student = await Student.where({ id: studentIdList[3] }).fetch()
+    await utils.updateStudentFitness(student)
+    expect(student.get('isFit')).toBeFalsy()
+
+    student = await Student.where({ id: studentIdList[4] }).fetch()
+    await utils.updateStudentFitness(student)
+    expect(student.get('isFit')).toBeFalsy()
+
+    student = await Student.where({ id: studentIdList[5] }).fetch()
+    await utils.updateStudentFitness(student)
+    expect(student.get('isFit')).toBeFalsy()
+
+    student = await Student.where({ id: studentIdList[6] }).fetch()
+    await utils.updateStudentFitness(student)
+    expect(student.get('isFit')).toBeFalsy()
+
+    student = await Student.where({ id: studentIdList[7] }).fetch()
+    await utils.updateStudentFitness(student)
+    expect(student.get('isFit')).toBeFalsy()
+
+    done()
+  })
 })
