@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const { knex } = require('./db')
 const Student = require('./models/Student')
+const Documents = require('./models/Document')
 
 /**
  * Given a CSV file with header make an Array of objects
@@ -245,4 +246,22 @@ exports.signToken = function signToken(
     },
     'my-secret'
   )
+}
+
+/*
+ * Update Student isFit flag
+ * @param {Student} student - Bookshelf model
+ * @returns {void}
+ *
+ */
+exports.updateStudentFitness = async function updateStudentFitness(student) {
+  const docTypes = (await Documents.where({ studentId: student.id }).fetchAll())
+    .toJSON()
+    .map(entry => entry.type)
+  const studentIsFit =
+    !!student.get('cd') && docTypes.includes(1) && docTypes.includes(2)
+  if (!!student.get('isFit') !== studentIsFit) {
+    const newValue = studentIsFit ? 1 : 0
+    await student.save({ isFit: newValue })
+  }
 }
