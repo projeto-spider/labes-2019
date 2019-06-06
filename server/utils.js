@@ -251,7 +251,7 @@ exports.signToken = function signToken(
 /*
  * Update Student isFit flag
  * @param {Student} student - Bookshelf model
- * @returns {void}
+ * @returns {Student} student - Bookshelf model
  */
 exports.updateStudentFitness = async function updateStudentFitness(student) {
   const docTypes = (await Documents.where({ studentId: student.id }).fetchAll())
