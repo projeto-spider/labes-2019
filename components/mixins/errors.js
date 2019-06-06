@@ -15,6 +15,8 @@ export const errorsHandler = {
           return 'Arquivo csv com números de matrícula repetidos'
         case errors.MAX_FILE_SIZE_EXCEEDED:
           return 'Arquivo com tamanho superior a 6MB'
+        case errors.NOT_FOUND:
+          return 'Recurso não encontrado'
         default:
           return 'Ocorreu um erro'
       }

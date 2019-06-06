@@ -49,10 +49,12 @@
 <script>
 import { mapState } from 'vuex'
 import SearchInput from '~/components/searchInput'
+import { errorsHandler } from '../components/mixins/errors'
 
 export default {
   name: 'Concluding',
   middleware: 'course',
+  mixins: [errorsHandler],
   components: {
     SearchInput
   },
@@ -72,12 +74,7 @@ export default {
         .then(response => {
           this.highlighted = response.data
         })
-        .catch(e => {
-          this.$toast.open({
-            message: 'Erro em resposta do servidor',
-            type: 'is-danger'
-          })
-        })
+        .catch(e => this.openNotificationError(e))
       this.activeModal = true
     }
   }
