@@ -146,7 +146,7 @@
                       <td><strong>CD</strong></td>
                       <td>
                         <b-checkbox
-                          v-model="CdCheck"
+                          v-model="cdCheck"
                           :disabled="!canEdit"
                         ></b-checkbox>
                       </td>
@@ -242,7 +242,6 @@ export default {
       ataCheck: false,
       laudaCheck: false,
       presCheck: false,
-      CdCheck: false,
       ataDocument: {},
       laudaDocument: {},
       presDocument: {},
@@ -297,6 +296,14 @@ export default {
         return 'Defendeu em'
       }
       return 'Data de Defesa'
+    },
+    cdCheck: {
+      get() {
+        return this.studentData.cd === 1
+      },
+      set(newValue) {
+        this.studentData.cd = newValue ? '1' : '0'
+      }
     }
   },
 
