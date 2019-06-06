@@ -354,37 +354,25 @@ describe('utils', () => {
       ].map(props => Document.forge(props).save())
     )
 
-    let student = await Student.where({ id: studentIdList[0] }).fetch()
-    await utils.updateStudentFitness(student)
-    expect(student.get('isFit')).toBeTruthy()
+    const expectations = [
+      { position: 0, isFit: true },
+      { position: 1, isFit: false },
+      { position: 2, isFit: false },
+      { position: 3, isFit: false },
+      { position: 4, isFit: false },
+      { position: 5, isFit: false },
+      { position: 6, isFit: false },
+      { position: 7, isFit: false }
+    ]
 
-    student = await Student.where({ id: studentIdList[1] }).fetch()
-    await utils.updateStudentFitness(student)
-    expect(student.get('isFit')).toBeFalsy()
-
-    student = await Student.where({ id: studentIdList[2] }).fetch()
-    await utils.updateStudentFitness(student)
-    expect(student.get('isFit')).toBeFalsy()
-
-    student = await Student.where({ id: studentIdList[3] }).fetch()
-    await utils.updateStudentFitness(student)
-    expect(student.get('isFit')).toBeFalsy()
-
-    student = await Student.where({ id: studentIdList[4] }).fetch()
-    await utils.updateStudentFitness(student)
-    expect(student.get('isFit')).toBeFalsy()
-
-    student = await Student.where({ id: studentIdList[5] }).fetch()
-    await utils.updateStudentFitness(student)
-    expect(student.get('isFit')).toBeFalsy()
-
-    student = await Student.where({ id: studentIdList[6] }).fetch()
-    await utils.updateStudentFitness(student)
-    expect(student.get('isFit')).toBeFalsy()
-
-    student = await Student.where({ id: studentIdList[7] }).fetch()
-    await utils.updateStudentFitness(student)
-    expect(student.get('isFit')).toBeFalsy()
+    for (const { position, isFit } of expectations) {
+      const assertType = isFit ? 'toBeTruthy' : 'toBeFalsy'
+      const student = await Student.where({
+        id: studentIdList[position]
+      }).fetch()
+      const updated = await utils.updateStudentFitness(student)
+      expect(updated.get('isFit'))[assertType]()
+    }
 
     done()
   })
