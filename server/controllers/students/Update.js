@@ -1,5 +1,5 @@
 const Student = require('../../models/Student')
-const Document = require('../../models/Document')
+const Documents = require('../../models/Document')
 const errors = require('../../../shared/errors')
 
 module.exports = async function updateStudent(ctx) {
@@ -21,7 +21,7 @@ module.exports = async function updateStudent(ctx) {
 
   await studentFind.save(studentUpdate)
 
-  const docTypes = (await Document.where({ studentId: id }).fetchAll())
+  const docTypes = (await Documents.where({ studentId: id }).fetchAll())
     .toJSON()
     .map(entry => entry.type)
   const stuIsFit =

@@ -96,7 +96,7 @@ module.exports = async function uploadDocument(ctx) {
 
   reader.pipe(stream)
 
-  const docTypes = (await Document.where({ studentId }).fetchAll())
+  const docTypes = (await Documents.where({ studentId }).fetchAll())
     .toJSON()
     .map(entry => entry.type)
   const stuIsFit =
