@@ -95,6 +95,18 @@ module.exports = async function uploadDocument(ctx) {
   )
 
   reader.pipe(stream)
+
+  const docTypes = (await Document.where({ studentId }).fetchAll())
+    .toJSON()
+    .map(entry => entry.type)
+  const stuIsFit =
+    !!studentFind.get('cd') && docTypes.includes(1) && docTypes.includes(2)
+  if (studentFind.get('isFit') !== stuIsFit) {
+    const studentUpdate = studentFind.toJSON()
+    studentUpdate.isFit = stuIsFit
+    await studentFind.save(studentUpdate)
+  }
+
   ctx.status = 201
   ctx.body = {
     count: file.size
