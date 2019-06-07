@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const errors = require('../../../shared/errors')
 const enums = require('../../../shared/enums')
+const utils = require('../../utils')
 
 const Students = require('../../models/Student')
 const Documents = require('../../models/Document')
@@ -95,6 +96,9 @@ module.exports = async function uploadDocument(ctx) {
   )
 
   reader.pipe(stream)
+
+  await utils.updateStudentFitness(studentFind)
+
   ctx.status = 201
   ctx.body = {
     count: file.size

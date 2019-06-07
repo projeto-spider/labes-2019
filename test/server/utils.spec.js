@@ -7,6 +7,7 @@ const path = require('path')
 const utils = require('../../server/utils')
 const db = require('../../server/db')
 const Student = require('../../server/models/Student')
+const Document = require('../../server/models/Document')
 
 const exampleSigaaCsv = `Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status
 201704940001,2017,FELIPE SOUZA FERREIRA,111.111.111-11,1/29/1995,VITORIA DIAS ROCHA,Belém,CIENCIA DA COMPUTACAO,ATIVO
@@ -248,4 +249,131 @@ describe('utils', () => {
 
     done()
   }, 100000)
+
+  test('updateStudentFitness', async done => {
+    const studentsPromise = await Promise.all(
+      [
+        {
+          name: 'ESSE CARA E BOM',
+          registrationNumber: '2015121200',
+          course: 'cbsi',
+          cd: 1
+        },
+        {
+          name: 'SEM CD',
+          registrationNumber: '2015121201',
+          course: 'cbsi',
+          cd: 0
+        },
+        {
+          name: 'SEM ATA',
+          registrationNumber: '2015121202',
+          course: 'cbsi',
+          cd: 1
+        },
+        {
+          name: 'SEM CD E SEM ATA',
+          registrationNumber: '2015121203',
+          course: 'cbsi',
+          cd: 0
+        },
+        {
+          name: 'SEM LAUDA',
+          registrationNumber: '2015121204',
+          course: 'cbsi',
+          cd: 1
+        },
+        {
+          name: 'SEM LAUDA E SEM CD',
+          registrationNumber: '2015121205',
+          course: 'cbsi',
+          cd: 0
+        },
+        {
+          name: 'SEM LAUDA E SEM ATA',
+          registrationNumber: '2015121206',
+          course: 'cbsi',
+          cd: 1
+        },
+        {
+          name: 'SEM LAUDA E SEM ATA E SEM CD',
+          registrationNumber: '2015121221',
+          course: 'cbsi',
+          cd: 0
+        }
+      ].map(props => Student.forge(props).save())
+    )
+
+    const studentIdList = studentsPromise.reduce((studentIdList, student) => {
+      studentIdList.push(student.get('id'))
+      return studentIdList
+    }, [])
+
+    await Promise.all(
+      [
+        {
+          studentId: studentIdList[0],
+          type: 1,
+          url: 'a'
+        },
+        {
+          studentId: studentIdList[1],
+          type: 1,
+          url: 'b'
+        },
+        {
+          studentId: studentIdList[4],
+          type: 1,
+          url: 'c'
+        },
+        {
+          studentId: studentIdList[5],
+          type: 1,
+          url: 'd'
+        },
+        {
+          studentId: studentIdList[0],
+          type: 2,
+          url: 'e'
+        },
+        {
+          studentId: studentIdList[1],
+          type: 2,
+          url: 'f'
+        },
+        {
+          studentId: studentIdList[2],
+          type: 2,
+          url: 'g'
+        },
+        {
+          studentId: studentIdList[3],
+          type: 2,
+          url: 'h'
+        }
+      ].map(props => Document.forge(props).save())
+    )
+
+    const expectations = [
+      { position: 0, isFit: true },
+      { position: 1, isFit: false },
+      { position: 2, isFit: false },
+      { position: 3, isFit: false },
+      { position: 4, isFit: false },
+      { position: 5, isFit: false },
+      { position: 6, isFit: false },
+      { position: 7, isFit: false }
+    ]
+
+    for (const { position, isFit } of expectations) {
+      const assertType = isFit ? 'toBeTruthy' : 'toBeFalsy'
+      const student = await Student.where({
+        id: studentIdList[position]
+      }).fetch()
+      const updated = await utils.updateStudentFitness(student)
+      expect(updated.get('isFit'))[assertType]()
+    }
+
+    done()
+  })
 })

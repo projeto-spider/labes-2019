@@ -1,4 +1,5 @@
 const Student = require('../../models/Student')
+const utils = require('../../utils')
 const errors = require('../../../shared/errors')
 
 module.exports = async function updateStudent(ctx) {
@@ -19,5 +20,8 @@ module.exports = async function updateStudent(ctx) {
   }
 
   await studentFind.save(studentUpdate)
+
+  await utils.updateStudentFitness(studentFind)
+
   ctx.body = studentFind
 }
