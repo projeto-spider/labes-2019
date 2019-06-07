@@ -12,10 +12,9 @@
             <strong>Matricula</strong>: {{ studentData.registrationNumber }}
             <br />
             <strong>Orientador</strong>: {{ studentData.advisor }} <br />
-
+            <strong>Status</strong>: {{ displayStatus }} <br />
             <strong>{{ defenseDateStatus }}</strong
             ><br />
-
             <b-field>
               <b-datepicker
                 v-model="defenseDate"
@@ -39,11 +38,9 @@
                 first-day-of-week="0"
               ></b-datepicker>
             </b-field>
-
             <strong>E-mail</strong>:
             <b-input v-model="studentData.email" :disabled="!canEdit"></b-input>
             <br />
-            <strong>Status</strong>: {{ displayStatus }} <br />
             <strong>CRG</strong>:
             <b-input
               v-model="studentData.crg"
