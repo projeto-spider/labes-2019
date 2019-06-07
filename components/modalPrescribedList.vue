@@ -17,9 +17,7 @@
           ></button>
         </header>
         <section class="modal-card-body">
-          <!-- {{ studentsData[0].name }} -->
-          <!-- botar um table -->
-          <div class="list is-hoverable">
+          <div v-if="lenList" class="list">
             <a
               v-for="student in studentsData"
               :key="student.id"
@@ -28,10 +26,15 @@
               <div class="level">
                 <div class="level-left">{{ student.name }}</div>
                 <div class="level-right">
-                  <span class="tag is-light">{{ student.status }}</span>
+                  <span class="tag is-white">{{
+                    displayStatus[studentsData.indexOf(student)]
+                  }}</span>
                 </div>
               </div>
             </a>
+          </div>
+          <div v-else>
+            <strong> Não há alunos na lista de prescrição </strong>
           </div>
         </section>
         <footer class="modal-card-foot">
@@ -58,6 +61,17 @@ export default {
     }
   },
 
+  computed: {
+    displayStatus() {
+      return this.studentsData.map(data => {
+        return this.getStatus(data)
+      })
+    },
+    lenList() {
+      return this.studentsData.length > 0
+    }
+  },
+
   methods: {
     openModal() {
       this.isActive = !this.isActive
@@ -77,4 +91,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+a {
+  color: #363b47;
+}
+</style>
