@@ -17,6 +17,7 @@ exports.up = function(knex, Promise) {
       .foreign('subjectId')
       .references('id')
       .inTable('subjects')
+    table.unique(['studentId', 'subjectId'])
   })
 }
 
