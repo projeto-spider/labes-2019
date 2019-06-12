@@ -49,10 +49,11 @@
 
 <script>
 import { studentStatus } from './mixins/studentStatus'
+import { errorsHandler } from './mixins/errors'
 export default {
   name: 'ModalPrescribedList',
 
-  mixins: [studentStatus],
+  mixins: [studentStatus, errorsHandler],
 
   data() {
     return {
@@ -80,11 +81,8 @@ export default {
         .then(res => {
           this.studentsData = res.data
         })
-        .catch(() => {
-          this.$toast.open({
-            message: 'Erro ao carregar lista de prescrição',
-            type: 'is-danger'
-          })
+        .catch(e => {
+          this.openErrorNotification(e)
         })
     }
   }
