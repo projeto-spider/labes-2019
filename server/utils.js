@@ -58,7 +58,8 @@ exports.parseCsv = function parseCsv(str) {
  *     //   isGraduating: false,
  *     //   academicHighlight: false,
  *     //   cancelled: false,
- *     //   prescribed: false
+ *     //   prescribed: false,
+ *     //   mailingListToAdd: 'active'
  *     // }]
  */
 exports.digestSigaaData = function digestSigaaData(data) {
@@ -83,7 +84,8 @@ exports.digestSigaaData = function digestSigaaData(data) {
       isGraduating: false,
       academicHighlight: false,
       cancelled: false,
-      prescribed: false
+      prescribed: false,
+      mailingListToAdd: 'none'
     }
 
     const translateStatus = {
@@ -102,6 +104,14 @@ exports.digestSigaaData = function digestSigaaData(data) {
     const inactive = base.isConcluding || base.cancelled
     if (inactive) {
       base.isActive = false
+    }
+
+    if (base.isConcluding) {
+      base.mailingListToAdd = 'concluding'
+    }
+
+    if (base.isActive) {
+      base.mailingListToAdd = 'active'
     }
 
     return base
@@ -144,45 +154,38 @@ exports.batchUpdateStudents = function batchUpdateStudents(data) {
 
     const existingStudents = existingStudentsCollection.toJSON()
 
-    const existingRegistrationNumbers = existingStudents.map(
-      ({ registrationNumber }) => registrationNumber
+    const existingRegistrationNumbers = new Set(
+      existingStudents.map(({ registrationNumber }) => registrationNumber)
     )
 
-    const { newStudents, oldStudents } = data.reduce(
-      (acc, student) => {
-        const key = existingRegistrationNumbers.includes(
-          student.registrationNumber
+    return Promise.all(
+      data.map(student => {
+        // New student
+        if (!existingRegistrationNumbers.has(student.registrationNumber)) {
+          return new Student(student).save(null, { transacting: trx })
+        }
+
+        // Old student
+        const model = existingStudents.find(
+          ({ registrationNumber }) =>
+            registrationNumber === student.registrationNumber
         )
-          ? 'oldStudents'
-          : 'newStudents'
-
-        acc[key].push(student)
-
-        return acc
-      },
-      { newStudents: [], oldStudents: [] }
-    )
-
-    const newPromises = newStudents.map(student =>
-      new Student(student).save(null, { transacting: trx })
-    )
-
-    function getId(student) {
-      const { id } = existingStudents.find(
-        ({ registrationNumber }) =>
-          student.registrationNumber === registrationNumber
-      )
-      return id
-    }
-
-    const oldPromises = oldStudents.map(student =>
-      new Student({ id: getId(student) }).save(student, {
-        patch: true,
-        transacting: trx
+        const { id } = model
+        const changedMailingList =
+          student.mailingListToAdd !== model.mailingList
+        const mailingListToAdd = changedMailingList
+          ? student.mailingListToAdd
+          : 'none'
+        const mailingListToRemove = changedMailingList
+          ? model.mailingList
+          : model.mailingListToRemove
+        const payload = { ...student, mailingListToAdd, mailingListToRemove }
+        return Student.forge({ id }).save(payload, {
+          patch: true,
+          transacting: trx
+        })
       })
     )
-
-    return Promise.all(newPromises.concat(oldPromises))
   })
 }
 /**
