@@ -70,12 +70,16 @@ export default {
   methods: {
     getAcademicHighlights() {
       this.$axios
-        .get('/api/students/?academicHighlight=1')
+        .get('/api/students/', {
+          params: {
+            isHighlighted: 1
+          }
+        })
         .then(response => {
           this.highlighted = response.data
+          this.activeModal = true
         })
         .catch(e => this.openNotificationError(e))
-      this.activeModal = true
     }
   }
 }
