@@ -57,7 +57,7 @@
             <b-button class="is-primary" @click="getPendencies">
               {{ !canEdit ? 'Verificar Pendências' : 'Editar Pendências' }}
             </b-button>
-            <b-modal :active.sync="editPendencies">
+            <b-modal :active.sync="showPendencies">
               <div class="card">
                 <header class="card-header">
                   <b-icon pack="fas" icon="check" size="is-medium"></b-icon>
@@ -65,17 +65,24 @@
                 </header>
                 <div class="card-content">
                   <div class="content">
-                    <div
-                      v-for="pendency of totalPendencies"
-                      :key="pendency.id"
-                      :label="pendency"
-                      class="field"
-                    >
-                      <b-checkbox
-                        v-model="studentPendencies"
-                        :native-value="pendency.id"
-                      ></b-checkbox>
-                    </div>
+                    <table class="table is-narrow">
+                      <tbody>
+                        <tr
+                          v-for="pendency of totalPendencies"
+                          :key="pendency.id"
+                          class="field"
+                        >
+                          <td>{{ pendency.name }}</td>
+                          <td>
+                            <b-checkbox
+                              v-model="studentPendencies"
+                              :native-value="pendency"
+                              :disabled="!canEdit"
+                            ></b-checkbox>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                     <b-button @click="updatePendencies">Confirmar</b-button>
                   </div>
                 </div>
@@ -263,7 +270,7 @@ export default {
       ataCheck: false,
       laudaCheck: false,
       presCheck: false,
-      editPendencies: false,
+      showPendencies: false,
       ataDocument: {},
       laudaDocument: {},
       presDocument: {},
@@ -405,7 +412,7 @@ export default {
           this.totalPendencies = response.data
         })
         .catch(e => {
-          this.editPendencies = false
+          this.showPendencies = false
           this.openErrorNotification(e)
         })
 
@@ -413,8 +420,12 @@ export default {
         .get(`/api/students/${this.student.id}/pendencies`)
         .then(response => {
           this.studentPendencies = response.data
+          this.showPendencies = true
         })
-        .catch(e => this.openErrorNotification(e))
+        .catch(e => {
+          this.showPendencies = false
+          this.openErrorNotification(e)
+        })
     },
     updatePendencies() {
       this.$axios
@@ -429,7 +440,7 @@ export default {
           })
         })
         .catch(e => this.openErrorNotification(e))
-      this.editPendencies = false
+      this.showPendencies = false
     },
     mapDocuments(documents) {
       documents.forEach(element => {
