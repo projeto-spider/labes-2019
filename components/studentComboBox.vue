@@ -54,12 +54,33 @@
               @blur="onCrgBlur"
             ></b-input>
             <br />
-            <strong>Componentes Pendentes</strong>:
-            <b-input
-              v-model="pendencies"
-              :disabled="!canEdit"
-              :value="studentData.pendencies"
-            ></b-input>
+            <b-button class="is-primary" @click="getPendencies">
+              {{ !canEdit ? 'Verificar Pendências' : 'Editar Pendências' }}
+            </b-button>
+            <b-modal :active.sync="editPendencies">
+              <div class="card">
+                <header class="card-header">
+                  <b-icon pack="fas" icon="check" size="is-medium"></b-icon>
+                  <p class="card-header-title">Pendências</p>
+                </header>
+                <div class="card-content">
+                  <div class="content">
+                    <div
+                      v-for="pendency of totalPendencies"
+                      :key="pendency.id"
+                      :label="pendency"
+                      class="field"
+                    >
+                      <b-checkbox
+                        v-model="studentPendencies"
+                        :native-value="pendency.id"
+                      ></b-checkbox>
+                    </div>
+                    <b-button @click="updatePendencies">Confirmar</b-button>
+                  </div>
+                </div>
+              </div>
+            </b-modal>
             <br />
           </div>
           <div class="column is-half">
@@ -242,12 +263,14 @@ export default {
       ataCheck: false,
       laudaCheck: false,
       presCheck: false,
+      editPendencies: false,
       ataDocument: {},
       laudaDocument: {},
       presDocument: {},
       uploadFile: File,
       crg: '',
-      pendencies: '',
+      totalPendencies: [],
+      studentPendencies: [],
       studentData: Object.assign({}, this.student),
       isLoading: false,
       defenseDate: new Date()
@@ -374,6 +397,39 @@ export default {
     },
     toggleEdit() {
       this.canEdit = !this.canEdit
+    },
+    getPendencies() {
+      this.$axios
+        .get('/api/pendencies')
+        .then(response => {
+          this.totalPendencies = response.data
+        })
+        .catch(e => {
+          this.editPendencies = false
+          this.openErrorNotification(e)
+        })
+
+      this.$axios
+        .get(`/api/students/${this.student.id}/pendencies`)
+        .then(response => {
+          this.studentPendencies = response.data
+        })
+        .catch(e => this.openErrorNotification(e))
+    },
+    updatePendencies() {
+      this.$axios
+        .post(
+          `/api/students/${this.student.id}/pendencies`,
+          this.studentPendencies
+        )
+        .then(response => {
+          this.$toast.open({
+            message: 'Pendências de aluno atualizadas com sucesso',
+            type: 'is-success'
+          })
+        })
+        .catch(e => this.openErrorNotification(e))
+      this.editPendencies = false
     },
     mapDocuments(documents) {
       documents.forEach(element => {
