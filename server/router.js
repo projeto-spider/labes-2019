@@ -30,6 +30,7 @@ api.get('/users/:id', users.Show)
 api.post('/users/', bodyJson, users.Create)
 
 // Student Routes
+api.get('/students/email-changes', students.EmailChanges)
 api.get('/students/actives-mailing-list', students.ActiveMailList)
 api.get('/students/', students.List)
 api.get('/students/:id', students.Show)

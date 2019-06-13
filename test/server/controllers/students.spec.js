@@ -1152,4 +1152,92 @@ describe('/api/students', () => {
     expect(res1.body[1].academicHighlight).toEqual(1)
     done()
   })
+  test('GET /email-changes?mailingList=active', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/email-changes')
+      .query({ mailingList: 'active' })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.additions.length).toBeDefined()
+    expect(res.body.deletions.length).toBeDefined()
+
+    expect(
+      [
+        'FELIPE SOUZA FERREIRA',
+        'LAURA CARDOSO CASTRO',
+        'ENZO FERREIRA ALVES',
+        'EDUARDO ALVES LIMA'
+      ].filter(
+        name => !res.body.additions.find(student => student.name === name)
+      )
+    ).toEqual([])
+
+    expect(
+      [
+        'JOSE FERREIRA SILVA',
+        'KAUAN CARVALHO SANTOS',
+        'JULIAN BARBOSA SANTOS'
+      ].filter(
+        name => !res.body.deletions.find(student => student.name === name)
+      )
+    ).toEqual([])
+
+    done()
+  })
+})
+
+test('GET /email-changes?mailingList=concluding', async done => {
+  const { token } = await testUtils.user('admin')
+
+  const res = await chai
+    .request(server.listen())
+    .get('/api/students/email-changes')
+    .query({ mailingList: 'concluding' })
+    .set('Authorization', `Bearer ${token}`)
+  expect(res.status).toEqual(200)
+  expect(res.type).toEqual('application/json')
+  expect(res.body).toBeDefined()
+  expect(res.body.additions.length).toBeDefined()
+  expect(res.body.deletions.length).toBeDefined()
+  expect(res.body.deletions.length).toEqual(0)
+
+  expect(
+    [
+      'JOSE FERREIRA SILVA',
+      'JULIAN BARBOSA SANTOS',
+      'Ana Goncalves Gomes',
+      'Gabriela Dias Cunha',
+      'Rodrigo Rodrigues Santos'
+    ].filter(name => !res.body.additions.find(student => student.name === name))
+  ).toEqual([])
+
+  done()
+})
+
+test('GET /email-changes?mailingList=freshman', async done => {
+  const { token } = await testUtils.user('admin')
+
+  const res = await chai
+    .request(server.listen())
+    .get('/api/students/email-changes')
+    .query({ mailingList: 'freshman' })
+    .set('Authorization', `Bearer ${token}`)
+  expect(res.status).toEqual(200)
+  expect(res.type).toEqual('application/json')
+  expect(res.body).toBeDefined()
+  expect(res.body.additions.length).toBeDefined()
+  expect(res.body.deletions.length).toBeDefined()
+  expect(res.body.deletions.length).toEqual(0)
+
+  expect(
+    ['Victor Silva Carvalho', 'Marisa Correia Castro'].filter(
+      name => !res.body.additions.find(student => student.name === name)
+    )
+  ).toEqual([])
+
+  done()
 })
