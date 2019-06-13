@@ -58,10 +58,12 @@ export default {
     SearchInput
   },
   mixins: [errorsHandler],
-  data: () => ({
-    activeModal: false,
-    highlighted: []
-  }),
+  data() {
+    return {
+      activeModal: false,
+      highlighted: []
+    }
+  },
   computed: {
     ...mapState({
       courseTag: state => state.courseTag
