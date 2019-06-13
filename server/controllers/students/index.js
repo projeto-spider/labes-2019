@@ -5,6 +5,7 @@ const Update = require('./Update')
 const ActiveMailList = require('./ActiveMailList')
 const UpdateAcademicHighlight = require('./UpdateAcademicHighlight')
 const EmailChanges = require('./EmailChanges')
+const UpdateMailingList = require('./UpdateMailingList')
 
 module.exports = {
   List,
@@ -13,5 +14,6 @@ module.exports = {
   Update,
   ActiveMailList,
   UpdateAcademicHighlight,
-  EmailChanges
+  EmailChanges,
+  UpdateMailingList
 }

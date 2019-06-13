@@ -46,6 +46,7 @@ api.put('/students/:id', bodyJson, students.Update)
 api.get('/students/:studentId/documents', documents.List)
 api.get('/students/:studentId/documents/:id', documents.Show)
 api.get('/students/:studentId/documents/:id/view', documents.View)
+api.post('/students/update-mailing-list', bodyJson, students.UpdateMailingList)
 api.post('/students/:studentId/documents', bodyMultipart, documents.Upload)
 api.post('/students/from-csv', bodyMultipart, students.FromCsv)
 

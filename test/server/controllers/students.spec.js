@@ -11,6 +11,7 @@ const testUtils = require('../test-utils')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const Student = require('../../../server/models/Student')
+const Solicitation = require('../../../server/models/Solicitation')
 const errors = require('../../../shared/errors')
 const document = require('../../../server/models/Document')
 
@@ -1188,56 +1189,179 @@ describe('/api/students', () => {
 
     done()
   })
-})
 
-test('GET /email-changes?mailingList=concluding', async done => {
-  const { token } = await testUtils.user('admin')
+  test('GET /email-changes?mailingList=concluding', async done => {
+    const { token } = await testUtils.user('admin')
 
-  const res = await chai
-    .request(server.listen())
-    .get('/api/students/email-changes')
-    .query({ mailingList: 'concluding' })
-    .set('Authorization', `Bearer ${token}`)
-  expect(res.status).toEqual(200)
-  expect(res.type).toEqual('application/json')
-  expect(res.body).toBeDefined()
-  expect(res.body.additions.length).toBeDefined()
-  expect(res.body.deletions.length).toBeDefined()
-  expect(res.body.deletions.length).toEqual(0)
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/email-changes')
+      .query({ mailingList: 'concluding' })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.additions.length).toBeDefined()
+    expect(res.body.deletions.length).toBeDefined()
+    expect(res.body.deletions.length).toEqual(0)
 
-  expect(
-    [
-      'JOSE FERREIRA SILVA',
-      'JULIAN BARBOSA SANTOS',
-      'Ana Goncalves Gomes',
-      'Gabriela Dias Cunha',
-      'Rodrigo Rodrigues Santos'
-    ].filter(name => !res.body.additions.find(student => student.name === name))
-  ).toEqual([])
+    expect(
+      [
+        'JOSE FERREIRA SILVA',
+        'JULIAN BARBOSA SANTOS',
+        'Ana Goncalves Gomes',
+        'Gabriela Dias Cunha',
+        'Rodrigo Rodrigues Santos'
+      ].filter(
+        name => !res.body.additions.find(student => student.name === name)
+      )
+    ).toEqual([])
 
-  done()
-})
+    done()
+  })
 
-test('GET /email-changes?mailingList=freshman', async done => {
-  const { token } = await testUtils.user('admin')
+  test('GET /email-changes?mailingList=freshman', async done => {
+    const { token } = await testUtils.user('admin')
 
-  const res = await chai
-    .request(server.listen())
-    .get('/api/students/email-changes')
-    .query({ mailingList: 'freshman' })
-    .set('Authorization', `Bearer ${token}`)
-  expect(res.status).toEqual(200)
-  expect(res.type).toEqual('application/json')
-  expect(res.body).toBeDefined()
-  expect(res.body.additions.length).toBeDefined()
-  expect(res.body.deletions.length).toBeDefined()
-  expect(res.body.deletions.length).toEqual(0)
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/email-changes')
+      .query({ mailingList: 'freshman' })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.additions.length).toBeDefined()
+    expect(res.body.deletions.length).toBeDefined()
+    expect(res.body.deletions.length).toEqual(0)
 
-  expect(
-    ['Victor Silva Carvalho', 'Marisa Correia Castro'].filter(
-      name => !res.body.additions.find(student => student.name === name)
+    expect(
+      ['Victor Silva Carvalho', 'Marisa Correia Castro'].filter(
+        name => !res.body.additions.find(student => student.name === name)
+      )
+    ).toEqual([])
+
+    done()
+  })
+
+  test('POST /update-mailing-list for actives then concluding', async done => {
+    const { token } = await testUtils.user('admin')
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/update-mailing-list')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ mailingList: 'active' })
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.additions).toEqual(4)
+      expect(res.body.deletions).toEqual(3)
+    }
+
+    expect(await Student.where({ mailingList: 'active' }).count()).toEqual(4)
+    expect(await Student.where({ mailingListToAdd: 'active' }).count()).toEqual(
+      0
     )
-  ).toEqual([])
+    expect(
+      await Student.where({ mailingListToRemove: 'active' }).count()
+    ).toEqual(0)
 
-  done()
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/update-mailing-list')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ mailingList: 'concluding' })
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.additions).toEqual(2)
+      expect(res.body.deletions).toEqual(3)
+    }
+
+    expect(await Student.where({ mailingList: 'concluding' }).count()).toEqual(
+      2
+    )
+    expect(
+      await Student.where({ mailingListToAdd: 'concluding' }).count()
+    ).toEqual(0)
+    expect(
+      await Student.where({ mailingListToRemove: 'concluding' }).count()
+    ).toEqual(0)
+    expect(await Solicitation.where({ type: 'concluding' }).count()).toEqual(0)
+
+    done()
+  })
+
+  test('POST /update-mailing-list for concluding then actives', async done => {
+    const { token } = await testUtils.user('admin')
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/update-mailing-list')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ mailingList: 'concluding' })
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.additions).toEqual(2)
+      expect(res.body.deletions).toEqual(3)
+    }
+
+    expect(await Student.where({ mailingList: 'concluding' }).count()).toEqual(
+      2
+    )
+    expect(
+      await Student.where({ mailingListToAdd: 'concluding' }).count()
+    ).toEqual(0)
+    expect(
+      await Student.where({ mailingListToRemove: 'concluding' }).count()
+    ).toEqual(0)
+    expect(await Solicitation.where({ type: 'concluding' }).count()).toEqual(0)
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/update-mailing-list')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ mailingList: 'active' })
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.additions).toEqual(4)
+      expect(res.body.deletions).toEqual(3)
+    }
+
+    expect(await Student.where({ mailingList: 'active' }).count()).toEqual(4)
+    expect(await Student.where({ mailingListToAdd: 'active' }).count()).toEqual(
+      0
+    )
+    expect(
+      await Student.where({ mailingListToRemove: 'active' }).count()
+    ).toEqual(0)
+
+    done()
+  })
+
+  test('POST /update-mailing-list for freshman', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/update-mailing-list')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ mailingList: 'freshman' })
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.additions).toEqual(0)
+    expect(res.body.deletions).toEqual(2)
+
+    expect(await Solicitation.where({ type: 'freshman' }).count()).toEqual(0)
+
+    done()
+  })
 })
