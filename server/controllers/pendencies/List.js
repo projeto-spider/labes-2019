@@ -13,12 +13,6 @@ module.exports = async function listPendencies(ctx) {
     return
   }
 
-  if ((await Pendencies.where({ studentId }).count()) === 0) {
-    ctx.status = 404
-    ctx.body = { code: errors.NOT_FOUND }
-    return
-  }
-
   const subjectsIds = await Pendencies.where({ studentId })
     .fetchAll()
     .then(collection => collection.map(pendency => pendency.get('subjectId')))
