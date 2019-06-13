@@ -407,7 +407,7 @@ export default {
     },
     getPendencies() {
       this.$axios
-        .get('/api/pendencies')
+        .get('/api/subjects')
         .then(response => {
           this.totalPendencies = response.data
         })
@@ -428,18 +428,20 @@ export default {
         })
     },
     updatePendencies() {
-      this.$axios
-        .post(
-          `/api/students/${this.student.id}/pendencies`,
-          this.studentPendencies
-        )
-        .then(response => {
-          this.$toast.open({
-            message: 'Pendências de aluno atualizadas com sucesso',
-            type: 'is-success'
+      if (this.canEdit) {
+        this.$axios
+          .post(
+            `/api/students/${this.student.id}/pendencies`,
+            this.studentPendencies
+          )
+          .then(response => {
+            this.$toast.open({
+              message: 'Pendências de aluno atualizadas com sucesso',
+              type: 'is-success'
+            })
           })
-        })
-        .catch(e => this.openErrorNotification(e))
+          .catch(e => this.openErrorNotification(e))
+      }
       this.showPendencies = false
     },
     mapDocuments(documents) {
