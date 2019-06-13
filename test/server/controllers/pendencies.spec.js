@@ -73,4 +73,17 @@ describe('/api/students/:id/pendencies/', () => {
     expect(res.body.code).toEqual(errors.NOT_FOUND)
     done()
   })
+
+  test('GET /students/4/pendencies/ NO PENDENCIES', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/4/pendencies/')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(200)
+    expect(res.body.length).toEqual(0)
+    done()
+  })
 })
