@@ -1128,17 +1128,12 @@ describe('/api/students', () => {
 
   test('GET /?isConcluding=1&academicHighlight=1', async done => {
     const { token } = await testUtils.user('admin')
-    await chai
-      .request(server.listen())
-      .put('/api/students/1')
-      .set('Authorization', `Bearer ${token}`)
-      .send({ isConcluding: 1, academicHighlight: 1 })
-
-    await chai
-      .request(server.listen())
-      .put('/api/students/2')
-      .set('Authorization', `Bearer ${token}`)
-      .send({ isConcluding: 1, academicHighlight: 1 })
+    await Promise.all(
+      [
+        { id: 1, isConcluding: 1, academicHighlight: 1 },
+        { id: 2, isConcluding: 1, academicHighlight: 1 }
+      ].map(props => Student.forge(props).save())
+    )
 
     const res1 = await chai
       .request(server.listen())
