@@ -33,7 +33,7 @@
                 <th scope="col">Período</th>
               </thead>
               <tbody>
-                <tr v-for="(student, id) in highlighted" :key="id">
+                <tr v-for="student highlighted" :key="student.id">
                   <td>{{ student.name }}</td>
                   <td>{{ student.period || '-' }}</td>
                 </tr>
