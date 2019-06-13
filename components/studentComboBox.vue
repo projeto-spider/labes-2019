@@ -65,8 +65,8 @@
                 </header>
                 <div class="card-content">
                   <div class="content">
-                    <table class="table is-narrow">
-                      <tbody>
+                    <table class="table is-narrow scrollable">
+                      <tbody height="200px">
                         <tr
                           v-for="pendency of totalPendencies"
                           :key="pendency.id"
@@ -84,6 +84,18 @@
                       </tbody>
                     </table>
                     <b-button @click="updatePendencies">Confirmar</b-button>
+                    <div class="level-right">
+                      <b-pagination
+                        :total="totalPendenciesLength"
+                        :current.sync="currentPendenciesPage"
+                        :order="'default'"
+                        :size="'default'"
+                        :simple="false"
+                        :rounded="false"
+                        :per-page="10"
+                        @change="onPageChange"
+                      ></b-pagination>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -280,7 +292,9 @@ export default {
       studentPendencies: [],
       studentData: Object.assign({}, this.student),
       isLoading: false,
-      defenseDate: new Date()
+      defenseDate: new Date(),
+      currentPendenciesPage: 1,
+      totalPendenciesLength: 0
     }
   },
   computed: {
@@ -349,6 +363,12 @@ export default {
           )
         )
       : null
+    this.$axios
+      .get(`/api/students/${this.student.id}/pendencies`)
+      .then(response => {
+        this.studentPendencies = response.data
+      })
+      .catch(e => this.openErrorNotification(e))
   },
 
   methods: {
@@ -407,19 +427,14 @@ export default {
     },
     getPendencies() {
       this.$axios
-        .get('/api/subjects')
+        .get(`/api/subjects`, {
+          params: {
+            page: this.currentPendenciesPage
+          }
+        })
         .then(response => {
+          this.totalPendenciesLength = response.headers['pagination-row-count']
           this.totalPendencies = response.data
-        })
-        .catch(e => {
-          this.showPendencies = false
-          this.openErrorNotification(e)
-        })
-
-      this.$axios
-        .get(`/api/students/${this.student.id}/pendencies`)
-        .then(response => {
-          this.studentPendencies = response.data
           this.showPendencies = true
         })
         .catch(e => {
@@ -443,6 +458,10 @@ export default {
           .catch(e => this.openErrorNotification(e))
       }
       this.showPendencies = false
+    },
+    onPageChange(page) {
+      this.currentPendenciesPage = page
+      this.getPendencies()
     },
     mapDocuments(documents) {
       documents.forEach(element => {
@@ -546,5 +565,9 @@ export default {
 
 .icon {
   margin-left: 1em;
+}
+
+.scrollable {
+  overflow-y: scroll;
 }
 </style>
