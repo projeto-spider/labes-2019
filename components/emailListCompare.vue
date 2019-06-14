@@ -2,7 +2,7 @@
   <div class="box">
     <b-tabs position="is-centered" class="block">
       <b-tab-item label="Emails a serem adicionados">
-        <b-table :data="studentsToAdd" :columns="columns"> </b-table>
+        <b-table :data="studentsToAdd" :columns="columns"></b-table>
       </b-tab-item>
       <b-tab-item label="Emails a serem removidos">
         <b-table :data="studentsToRemove" :columns="columns"> </b-table>
@@ -21,16 +21,22 @@
 </template>
 
 <script>
+import { errorsHandler } from '../components/mixins/errors'
 export default {
   name: 'EmailCompare',
+  mixins: [errorsHandler],
   props: {
     studentsToAdd: {
-      type: Object,
-      default: () => {}
+      type: Array,
+      default: () => []
     },
     studentsToRemove: {
-      type: Object,
-      default: () => {}
+      type: Array,
+      default: () => []
+    },
+    mailingList: {
+      type: String,
+      default: () => ''
     }
   },
   data() {
@@ -47,8 +53,20 @@ export default {
         message:
           'Este processo é irreversivel, tem certeza que já foi realizado todas as alterações ?',
         onConfirm: () => {
-          this.$parent.close()
-          this.$toast.open('Alterações realizadas com sucesso')
+          this.$axios
+            .post('/api/students/update-mailing-list', {
+              mailingList: this.mailingList
+            })
+            .then(res => {
+              this.$toast.open('Alterações realizadas com sucesso')
+              this.$emit('email-list-changed')
+            })
+            .catch(error => {
+              this.openErrorNotification(error)
+            })
+            .finally(() => {
+              this.$parent.close()
+            })
         }
       })
     }

@@ -160,9 +160,9 @@ export default {
       type: Array,
       default: () => []
     },
-    isActiveEmailList: {
-      type: Boolean,
-      default: () => false
+    mailingList: {
+      type: String,
+      default: () => ''
     },
     showCrgFilter: {
       type: Boolean,
@@ -302,6 +302,7 @@ export default {
             sort: this.sortField,
             order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
             isActive: this.isActive !== 'AllStudents' ? this.isActive : null,
+            mailingList: this.mailingList !== '' ? this.mailingList : null,
             isConcluding: !isNaN(this.isConcluding) ? this.isConcluding : null,
             isForming: !isNaN(this.isForming) ? this.isForming : null,
             isFit: this.isGraduating && !isNaN(this.isFit) ? this.isFit : null,
