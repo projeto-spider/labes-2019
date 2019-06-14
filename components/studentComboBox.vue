@@ -68,15 +68,15 @@
                     <table class="table is-narrow scrollable">
                       <tbody height="200px">
                         <tr
-                          v-for="pendency of totalPendencies"
-                          :key="pendency.id"
+                          v-for="subject of totalSubjects"
+                          :key="subject.id"
                           class="field"
                         >
-                          <td>{{ pendency.name }}</td>
+                          <td>{{ subject.name }}</td>
                           <td>
                             <b-checkbox
                               v-model="studentPendencies"
-                              :native-value="pendency"
+                              :native-value="subject.id"
                               :disabled="!canEdit"
                             ></b-checkbox>
                           </td>
@@ -86,7 +86,7 @@
                     <b-button @click="updatePendencies">Confirmar</b-button>
                     <div class="level-right">
                       <b-pagination
-                        :total="totalPendenciesLength"
+                        :total="totalSubjectsLength"
                         :current.sync="currentPendenciesPage"
                         :order="'default'"
                         :size="'default'"
@@ -288,13 +288,13 @@ export default {
       presDocument: {},
       uploadFile: File,
       crg: '',
-      totalPendencies: [],
+      totalSubjects: [],
       studentPendencies: [],
       studentData: Object.assign({}, this.student),
       isLoading: false,
       defenseDate: new Date(),
       currentPendenciesPage: 1,
-      totalPendenciesLength: 0
+      totalSubjectsLength: 0
     }
   },
   computed: {
@@ -366,7 +366,7 @@ export default {
     this.$axios
       .get(`/api/students/${this.student.id}/pendencies`)
       .then(response => {
-        this.studentPendencies = response.data
+        this.studentPendencies = response.data.map(pendency => pendency.id)
       })
       .catch(e => this.openErrorNotification(e))
   },
@@ -433,8 +433,8 @@ export default {
           }
         })
         .then(response => {
-          this.totalPendenciesLength = response.headers['pagination-row-count']
-          this.totalPendencies = response.data
+          this.totalSubjectsLength = response.headers['pagination-row-count']
+          this.totalSubjects = response.data
           this.showPendencies = true
         })
         .catch(e => {
@@ -446,7 +446,7 @@ export default {
       if (this.canEdit) {
         this.$axios
           .post(
-            `/api/students/${this.student.id}/pendencies`,
+            `/api/students/${this.student.id}/pendencies/batch`,
             this.studentPendencies
           )
           .then(response => {
