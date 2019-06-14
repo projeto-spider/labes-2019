@@ -1,4 +1,5 @@
 const errors = require('../../../shared/errors')
+const { knex } = require('../../db')
 
 const Students = require('../../models/Student')
 const Pendencies = require('../../models/Pendency')
@@ -13,9 +14,14 @@ module.exports = async function listPendencies(ctx) {
     return
   }
 
-  const subjectsIds = await Pendencies.where({ studentId })
-    .fetchAll()
-    .then(collection => collection.map(pendency => pendency.get('subjectId')))
+  ctx.body = await knex.transaction(async trx => {
+    const subjectsIds = await Pendencies.where({ studentId })
+      .fetchAll({ transacting: trx })
+      .then(collection => collection.map(pendency => pendency.get('subjectId')))
 
-  ctx.body = await Subjects.where('id', 'in', subjectsIds).fetchAll()
+    const subjectsFind = await Subjects.where('id', 'in', subjectsIds).fetchAll(
+      { transacting: trx }
+    )
+    return subjectsFind
+  })
 }
