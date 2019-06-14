@@ -2,7 +2,6 @@ const errors = require('../../../shared/errors')
 
 const Students = require('../../models/Student')
 const Pendencies = require('../../models/Pendency')
-const Subjects = require('../../models/Subject')
 
 module.exports = async function showPendency(ctx) {
   const { studentId, id } = ctx.params
@@ -13,14 +12,13 @@ module.exports = async function showPendency(ctx) {
     return
   }
 
-  if (
-    (await Pendencies.where({ studentId, subjectId: id }).count()) === 0 ||
-    (await Subjects.where({ id }).count()) === 0
-  ) {
+  const pendencyFind = await Pendencies.where({ id }).fetch()
+
+  if (pendencyFind === null) {
     ctx.status = 404
     ctx.body = { code: errors.NOT_FOUND }
     return
   }
 
-  ctx.body = await Subjects.where({ id }).fetch()
+  ctx.body = pendencyFind
 }
