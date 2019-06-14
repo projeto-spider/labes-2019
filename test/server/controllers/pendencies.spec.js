@@ -29,9 +29,12 @@ describe('/api/students/:id/pendencies/', () => {
     expect(res.type).toEqual('application/json')
     expect(res.status).toEqual(200)
     expect(res.body.length).toEqual(3)
-    expect(res.body[0].name).toEqual('ALGEBRA LINEAR PARA COMPUTACAO')
-    expect(res.body[1].name).toEqual('CALCULO COMPUTACIONAL I')
-    expect(res.body[2].name).toEqual('FISICA PARA COMPUTACAO')
+    expect(res.body[0].studentId).toEqual(1)
+    expect(res.body[0].subjectId).toEqual(1)
+    expect(res.body[1].studentId).toEqual(1)
+    expect(res.body[1].subjectId).toEqual(2)
+    expect(res.body[2].studentId).toEqual(1)
+    expect(res.body[2].subjectId).toEqual(3)
     done()
   })
 
@@ -44,7 +47,8 @@ describe('/api/students/:id/pendencies/', () => {
     expect(res.body).toBeDefined()
     expect(res.type).toEqual('application/json')
     expect(res.status).toEqual(200)
-    expect(res.body.name).toEqual('ALGEBRA LINEAR PARA COMPUTACAO')
+    expect(res.body.subjectId).toEqual(1)
+    expect(res.body.studentId).toEqual(1)
     done()
   })
 
@@ -87,36 +91,23 @@ describe('/api/students/:id/pendencies/', () => {
     done()
   })
 
-  test('GET /students/1/pendencies/ UPDATE PENDENCIES', async done => {
+  test('POST /students/1/pendencies/batch UPDATE PENDENCIES', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .post('/api/students/1/pendencies/')
+      .post('/api/students/1/pendencies/batch')
       .set('Authorization', `Bearer ${token}`)
-      .send([
-        {
-          id: 2,
-          name: 'CALCULO COMPUTACIONAL I'
-        },
-        {
-          id: 3,
-          name: 'FISICA PARA COMPUTACAO'
-        },
-        {
-          id: 4,
-          name: 'ALGORITMOS'
-        }
-      ])
+      .send([2, 3, 4])
     expect(res.body).toBeDefined()
     expect(res.type).toEqual('application/json')
     expect(res.status).toEqual(200)
     expect(res.body.length).toEqual(3)
-    expect(res.body[0].id).toEqual(2)
-    expect(res.body[0].name).toEqual('CALCULO COMPUTACIONAL I')
-    expect(res.body[1].id).toEqual(3)
-    expect(res.body[1].name).toEqual('FISICA PARA COMPUTACAO')
-    expect(res.body[2].id).toEqual(4)
-    expect(res.body[2].name).toEqual('ALGORITMOS')
+    expect(res.body[0].studentId).toEqual(1)
+    expect(res.body[0].subjectId).toEqual(2)
+    expect(res.body[1].studentId).toEqual(1)
+    expect(res.body[1].subjectId).toEqual(3)
+    expect(res.body[2].studentId).toEqual(1)
+    expect(res.body[2].subjectId).toEqual(4)
     done()
   })
 })
