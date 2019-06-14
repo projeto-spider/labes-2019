@@ -49,6 +49,7 @@ api.post('/students/from-csv', bodyMultipart, students.FromCsv)
 // Pendencies Routes
 api.get('/students/:studentId/pendencies/:id', pendencies.Show)
 api.get('/students/:studentId/pendencies/', pendencies.List)
+api.post('/students/:studentId/pendencies/', bodyJson, pendencies.Update)
 // Subjects Routes
 api.get('/subjects/', subjects.List)
 api.get('/subjects/:id', subjects.Show)

@@ -86,4 +86,37 @@ describe('/api/students/:id/pendencies/', () => {
     expect(res.body.length).toEqual(0)
     done()
   })
+
+  test('GET /students/1/pendencies/ UPDATE PENDENCIES', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/1/pendencies/')
+      .set('Authorization', `Bearer ${token}`)
+      .send([
+        {
+          id: 2,
+          name: 'CALCULO COMPUTACIONAL I'
+        },
+        {
+          id: 3,
+          name: 'FISICA PARA COMPUTACAO'
+        },
+        {
+          id: 4,
+          name: 'ALGORITMOS'
+        }
+      ])
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(200)
+    expect(res.body.length).toEqual(3)
+    expect(res.body[0].id).toEqual(2)
+    expect(res.body[0].name).toEqual('CALCULO COMPUTACIONAL I')
+    expect(res.body[1].id).toEqual(3)
+    expect(res.body[1].name).toEqual('FISICA PARA COMPUTACAO')
+    expect(res.body[2].id).toEqual(4)
+    expect(res.body[2].name).toEqual('ALGORITMOS')
+    done()
+  })
 })
