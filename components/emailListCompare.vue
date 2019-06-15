@@ -48,7 +48,7 @@ export default {
     }
   },
   methods: {
-    confirmChanges() {
+    confirmChange() {
       this.$dialog.confirm({
         message:
           'Este processo é irreversivel, tem certeza que já foi realizado todas as alterações ?',
