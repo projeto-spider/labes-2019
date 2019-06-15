@@ -51,7 +51,7 @@ export default {
     confirmChange() {
       this.$dialog.confirm({
         message:
-          'Este processo é irreversivel, tem certeza que já foi realizado todas as alterações ?',
+          'Este processo é irreversivel, tem certeza que já foram realizadas todas as alterações?',
         onConfirm: () => {
           this.$axios
             .post('/api/students/update-mailing-list', {
