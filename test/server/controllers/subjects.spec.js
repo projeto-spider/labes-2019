@@ -121,4 +121,21 @@ describe('/api/subjects', () => {
     expect(res.status).toEqual(422)
     done()
   })
+
+  test('GET /subjects?paginate=0 ALL SUBJECTS', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/subjects?paginate=0')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(200)
+    expect(res.body.length).toEqual(96)
+    expect(res.body[0].name).toEqual('ALGEBRA LINEAR PARA COMPUTACAO')
+    expect(res.body[95].name).toEqual(
+      '(ELETIVA) DISCIPLINA ELETIVA - SISTEMAS DE INFORMACAO'
+    )
+    done()
+  })
 })
