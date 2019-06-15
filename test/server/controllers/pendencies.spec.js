@@ -91,7 +91,7 @@ describe('/api/students/:id/pendencies/', () => {
     done()
   })
 
-  test('POST /students/1/pendencies/batch UPDATE PENDENCIES', async done => {
+  test('POST /students/1/pendencies/batch PENDENCIES FROM BATCH', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())

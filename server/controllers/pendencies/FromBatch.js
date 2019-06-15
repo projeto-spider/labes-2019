@@ -3,7 +3,7 @@ const Students = require('../../models/Student')
 const Pendencies = require('../../models/Pendency')
 const { knex } = require('../../db')
 
-module.exports = async function updatePendencies(ctx) {
+module.exports = async function pendenciesFromBatch(ctx) {
   const { studentId } = ctx.params
   const subjectsIdsReceived = ctx.request.body
 

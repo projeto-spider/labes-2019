@@ -1,5 +1,5 @@
 const Show = require('./Show')
 const List = require('./List')
-const Update = require('./Update')
+const FromBatch = require('./FromBatch')
 
-module.exports = { Show, List, Update }
+module.exports = { Show, List, FromBatch }
