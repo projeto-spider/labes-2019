@@ -66,7 +66,7 @@
                 <div class="card-content">
                   <div class="content">
                     <table class="table is-narrow scrollable">
-                      <tbody height="200px">
+                      <tbody>
                         <tr
                           v-for="subject of totalSubjects"
                           :key="subject.id"
@@ -83,18 +83,10 @@
                         </tr>
                       </tbody>
                     </table>
-                    <b-button @click="updatePendencies">Confirmar</b-button>
-                    <div class="level-right">
-                      <b-pagination
-                        :total="totalSubjectsLength"
-                        :current.sync="currentPendenciesPage"
-                        :order="'default'"
-                        :size="'default'"
-                        :simple="false"
-                        :rounded="false"
-                        :per-page="10"
-                        @change="onPageChange"
-                      ></b-pagination>
+                    <div class="modal-card-foot bottom-sticky">
+                      <b-button @click="updatePendencies">
+                        Confirmar
+                      </b-button>
                     </div>
                   </div>
                 </div>
@@ -292,9 +284,7 @@ export default {
       studentPendencies: [],
       studentData: Object.assign({}, this.student),
       isLoading: false,
-      defenseDate: new Date(),
-      currentPendenciesPage: 1,
-      totalSubjectsLength: 0
+      defenseDate: new Date()
     }
   },
   computed: {
@@ -429,7 +419,7 @@ export default {
       this.$axios
         .get(`/api/subjects`, {
           params: {
-            page: this.currentPendenciesPage
+            paginate: 0
           }
         })
         .then(response => {
@@ -458,10 +448,6 @@ export default {
           .catch(e => this.openErrorNotification(e))
       }
       this.showPendencies = false
-    },
-    onPageChange(page) {
-      this.currentPendenciesPage = page
-      this.getPendencies()
     },
     mapDocuments(documents) {
       documents.forEach(element => {
@@ -569,5 +555,10 @@ export default {
 
 .scrollable {
   overflow-y: scroll;
+}
+
+.bottom-sticky {
+  bottom: 0;
+  position: sticky;
 }
 </style>
