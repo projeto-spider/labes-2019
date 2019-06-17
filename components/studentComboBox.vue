@@ -75,7 +75,7 @@
                           <td>{{ subject.name }}</td>
                           <td>
                             <b-checkbox
-                              v-model="studentPendencies"
+                              v-model="studentSubjects"
                               :native-value="subject.id"
                               :disabled="!canEdit"
                             ></b-checkbox>
@@ -281,7 +281,7 @@ export default {
       uploadFile: File,
       crg: '',
       totalSubjects: [],
-      studentPendencies: [],
+      studentSubjects: [],
       studentData: Object.assign({}, this.student),
       isLoading: false,
       defenseDate: new Date()
@@ -356,7 +356,9 @@ export default {
     this.$axios
       .get(`/api/students/${this.student.id}/pendencies`)
       .then(response => {
-        this.studentPendencies = response.data.map(pendency => pendency.id)
+        this.studentSubjects = response.data.map(
+          pendency => pendency.subjectId
+        )
       })
       .catch(e => this.openErrorNotification(e))
   },
@@ -437,7 +439,7 @@ export default {
         this.$axios
           .post(
             `/api/students/${this.student.id}/pendencies/batch`,
-            this.studentPendencies
+            this.studentSubjects
           )
           .then(response => {
             this.$toast.open({
