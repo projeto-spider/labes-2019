@@ -3,8 +3,9 @@
     <a
       class="button is-normal is-primary is-modal"
       @click.stop.prevent="openModal"
-      >Gerar lista de prescrição</a
     >
+      Gerar lista de prescrição
+    </a>
     <div class="modal" :class="{ 'is-active': isActive }">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -19,16 +20,14 @@
         <section class="modal-card-body">
           <div v-if="lenList" class="list">
             <a
-              v-for="student in studentsData"
+              v-for="(student, index) in studentsData"
               :key="student.id"
               class="list-item"
             >
               <div class="level">
                 <div class="level-left">{{ student.name }}</div>
                 <div class="level-right">
-                  <span class="tag is-white">{{
-                    displayStatus[studentsData.indexOf(student)]
-                  }}</span>
+                  <span class="tag is-white">{{ displayStatus[index] }}</span>
                 </div>
               </div>
             </a>
