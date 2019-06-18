@@ -138,6 +138,14 @@
                           </a>
                         </b-upload>
                       </td>
+                      <td v-if="hasDocument.ataFile">
+                        <b-button
+                          class="button is-primary"
+                          :disabled="disableUploadAta"
+                          @click="deleteDocument(ataDocument)"
+                          ><b-icon icon="trash"></b-icon
+                        ></b-button>
+                      </td>
                     </tr>
                     <tr>
                       <td><strong>Lauda</strong></td>
@@ -172,6 +180,14 @@
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
+                      </td>
+                      <td v-if="hasDocument.laudaFile">
+                        <b-button
+                          class="button is-primary"
+                          :disabled="disableUploadLauda"
+                          @click="deleteDocument(laudaDocument)"
+                          ><b-icon icon="trash"></b-icon
+                        ></b-button>
                       </td>
                     </tr>
                     <tr>
@@ -222,6 +238,14 @@
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
+                      </td>
+                      <td v-if="hasDocument.presFile">
+                        <b-button
+                          class="button is-primary"
+                          :disabled="disableUploadPres"
+                          @click="deleteDocument(presDocument)"
+                          ><b-icon icon="trash"></b-icon
+                        ></b-button>
                       </td>
                     </tr>
                   </tbody>
@@ -451,6 +475,9 @@ export default {
       this.showPendencies = false
     },
     mapDocuments(documents) {
+      this.ataDocument = {}
+      this.laudaDocument = {}
+      this.presDocument = {}
       documents.forEach(element => {
         if (element.type === 1) {
           this.ataDocument = Object.assign({}, element)
@@ -473,16 +500,6 @@ export default {
         .post(`/api/students/${this.studentData.id}/documents`, body)
         .then(result => {
           this.isLoading = false
-          if (type === '1') {
-            Object.assign(this.ataDocument, result.data)
-            this.ataCheck = true
-          } else if (type === '2') {
-            Object.assign(this.laudaDocument, result.data)
-            this.laudaCheck = true
-          } else if (type === '3') {
-            Object.assign(this.presDocument, result.data)
-            this.presCheck = true
-          }
           this.$toast.open({
             message: 'Upload feito com sucesso',
             type: 'is-success'
@@ -515,7 +532,23 @@ export default {
       })
       this.file = File
     },
-
+    deleteDocument(document) {
+      this.isLoading = true
+      this.$axios
+        .delete(`/api/students/${this.studentData.id}/documents/${document.id}`)
+        .then(result => {
+          this.isLoading = false
+          this.$toast.open({
+            message: 'Exclusão feita com sucesso',
+            type: 'is-success'
+          })
+          this.getStudentsDocument()
+        })
+        .catch(error => {
+          this.isLoading = false
+          this.openErrorNotification(error.response.data.code)
+        })
+    },
     onCrgBlur(e) {
       let value = +e.target.value
 

@@ -1,4 +1,6 @@
+const path = require('path')
 const jwt = require('jsonwebtoken')
+const enums = require('../shared/enums')
 const { knex } = require('./db')
 const Student = require('./models/Student')
 const Documents = require('./models/Document')
@@ -267,4 +269,14 @@ exports.updateStudentFitness = async function updateStudentFitness(student) {
     await student.save({ isFit: newValue })
   }
   return student
+}
+
+exports.fileName = function filename(dirStudents, studentFind, documentType) {
+  return path.join(
+    dirStudents,
+    studentFind.get('registrationNumber') +
+      '-' +
+      enums.documents[documentType] +
+      '.pdf'
+  )
 }
