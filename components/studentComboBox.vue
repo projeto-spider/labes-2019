@@ -18,6 +18,9 @@
             <b-field>
               <b-datepicker
                 v-model="defenseDate"
+                :max-date="
+                  defenseDateStatus === 'Defendeu em' ? new Date() : undefined
+                "
                 :date-formatter="dateFormatter"
                 :disabled="!canEdit"
                 :month-names="[
@@ -398,7 +401,7 @@ export default {
                 )
               )
             : null
-          this.canEdit = !this.canEdit
+          this.canEdit = false
           this.$toast.open({
             message: 'Aluno atualizado com sucesso.',
             type: 'is-success'
