@@ -356,9 +356,7 @@ export default {
     this.$axios
       .get(`/api/students/${this.student.id}/pendencies`)
       .then(response => {
-        this.studentSubjects = response.data.map(
-          pendency => pendency.subjectId
-        )
+        this.studentSubjects = response.data.map(pendency => pendency.subjectId)
       })
       .catch(e => this.openErrorNotification(e))
   },
