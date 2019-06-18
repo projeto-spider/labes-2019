@@ -10,6 +10,7 @@ const students = require('./controllers/students')
 const subjects = require('./controllers/subjects')
 const auth = require('./controllers/auth')
 const solicitations = require('./controllers/solicitations')
+const pendencies = require('./controllers/pendencies')
 
 const router = new Router()
 const api = new Router({ prefix: '/api' })
@@ -39,12 +40,23 @@ api.put(
   students.UpdateAcademicHighlight
 )
 api.put('/students/:id', bodyJson, students.Update)
+
 // Documents Routes
 api.get('/students/:studentId/documents', documents.List)
 api.get('/students/:studentId/documents/:id', documents.Show)
 api.get('/students/:studentId/documents/:id/view', documents.View)
 api.post('/students/:studentId/documents', bodyMultipart, documents.Upload)
 api.post('/students/from-csv', bodyMultipart, students.FromCsv)
+
+// Pendencies Routes
+api.get('/students/:studentId/pendencies/:id', pendencies.Show)
+api.get('/students/:studentId/pendencies/', pendencies.List)
+api.post(
+  '/students/:studentId/pendencies/batch',
+  bodyJson,
+  pendencies.FromBatch
+)
+
 // Subjects Routes
 api.get('/subjects/', subjects.List)
 api.get('/subjects/:id', subjects.Show)

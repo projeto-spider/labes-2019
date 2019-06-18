@@ -54,12 +54,44 @@
               @blur="onCrgBlur"
             ></b-input>
             <br />
-            <strong>Componentes Pendentes</strong>:
-            <b-input
-              v-model="pendencies"
-              :disabled="!canEdit"
-              :value="studentData.pendencies"
-            ></b-input>
+            <b-button class="is-primary" @click="getPendencies">
+              {{ !canEdit ? 'Verificar Pendências' : 'Editar Pendências' }}
+            </b-button>
+            <b-modal :active.sync="showPendencies">
+              <div class="card">
+                <header class="card-header">
+                  <b-icon pack="fas" icon="check" size="is-medium"></b-icon>
+                  <p class="card-header-title">Pendências</p>
+                </header>
+                <div class="card-content">
+                  <div class="content">
+                    <table class="table is-narrow scrollable">
+                      <tbody>
+                        <tr
+                          v-for="subject of totalSubjects"
+                          :key="subject.id"
+                          class="field"
+                        >
+                          <td>{{ subject.name }}</td>
+                          <td>
+                            <b-checkbox
+                              v-model="studentSubjects"
+                              :native-value="subject.id"
+                              :disabled="!canEdit"
+                            ></b-checkbox>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="modal-card-foot bottom-sticky">
+                      <b-button @click="updatePendencies">
+                        Confirmar
+                      </b-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </b-modal>
             <br />
           </div>
           <div class="column is-half">
@@ -242,12 +274,14 @@ export default {
       ataCheck: false,
       laudaCheck: false,
       presCheck: false,
+      showPendencies: false,
       ataDocument: {},
       laudaDocument: {},
       presDocument: {},
       uploadFile: File,
       crg: '',
-      pendencies: '',
+      totalSubjects: [],
+      studentSubjects: [],
       studentData: Object.assign({}, this.student),
       isLoading: false,
       defenseDate: new Date()
@@ -319,6 +353,12 @@ export default {
           )
         )
       : null
+    this.$axios
+      .get(`/api/students/${this.student.id}/pendencies`)
+      .then(response => {
+        this.studentSubjects = response.data.map(pendency => pendency.subjectId)
+      })
+      .catch(e => this.openErrorNotification(e))
   },
 
   methods: {
@@ -374,6 +414,40 @@ export default {
     },
     toggleEdit() {
       this.canEdit = !this.canEdit
+    },
+    getPendencies() {
+      this.$axios
+        .get(`/api/subjects`, {
+          params: {
+            paginate: 0
+          }
+        })
+        .then(response => {
+          this.totalSubjectsLength = response.headers['pagination-row-count']
+          this.totalSubjects = response.data
+          this.showPendencies = true
+        })
+        .catch(e => {
+          this.showPendencies = false
+          this.openErrorNotification(e)
+        })
+    },
+    updatePendencies() {
+      if (this.canEdit) {
+        this.$axios
+          .post(
+            `/api/students/${this.student.id}/pendencies/batch`,
+            this.studentSubjects
+          )
+          .then(response => {
+            this.$toast.open({
+              message: 'Pendências de aluno atualizadas com sucesso',
+              type: 'is-success'
+            })
+          })
+          .catch(e => this.openErrorNotification(e))
+      }
+      this.showPendencies = false
     },
     mapDocuments(documents) {
       documents.forEach(element => {
@@ -477,5 +551,14 @@ export default {
 
 .icon {
   margin-left: 1em;
+}
+
+.scrollable {
+  overflow-y: scroll;
+}
+
+.bottom-sticky {
+  bottom: 0;
+  position: sticky;
 }
 </style>
