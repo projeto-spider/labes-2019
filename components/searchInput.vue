@@ -234,6 +234,24 @@ export default {
     }
   },
   watch: {
+    nameFilter() {
+      if (!this.nameFilter) {
+        this.searchName = ''
+        this.getStudentsFilters()
+      }
+    },
+    registrationFilter() {
+      if (!this.registrationFilter) {
+        this.searchRegistration = ''
+        this.getStudentsFilters()
+      }
+    },
+    emailFilter() {
+      if (!this.emailFilter) {
+        this.searchEmail = ''
+        this.getStudentsFilters()
+      }
+    },
     searchName() {
       this.getStudentsFilters()
     },
