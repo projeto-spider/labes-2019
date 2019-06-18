@@ -1,7 +1,6 @@
 const fs = require('fs')
 const path = require('path')
 const errors = require('../../../shared/errors')
-const enums = require('../../../shared/enums')
 const utils = require('../../utils')
 
 const Students = require('../../models/Student')
