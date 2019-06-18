@@ -398,6 +398,7 @@ export default {
                 )
               )
             : null
+          this.canEdit = !this.canEdit
           this.$toast.open({
             message: 'Aluno atualizado com sucesso.',
             type: 'is-success'
