@@ -274,9 +274,8 @@ exports.updateStudentFitness = async function updateStudentFitness(student) {
 exports.fileName = function filename(dirStudents, studentFind, documentType) {
   return path.join(
     dirStudents,
-    studentFind.get('registrationNumber') +
-      '-' +
-      enums.documents[documentType] +
-      '.pdf'
+    `${studentFind.get('registrationNumber')}-${
+      enums.documents[documentType]
+    }.pdf`
   )
 }

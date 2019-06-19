@@ -143,8 +143,9 @@
                           class="button is-primary"
                           :disabled="disableUploadAta"
                           @click="deleteDocument(ataDocument)"
-                          ><b-icon icon="trash"></b-icon
-                        ></b-button>
+                        >
+                          <b-icon icon="trash"></b-icon>
+                        </b-button>
                       </td>
                     </tr>
                     <tr>
@@ -186,8 +187,9 @@
                           class="button is-primary"
                           :disabled="disableUploadLauda"
                           @click="deleteDocument(laudaDocument)"
-                          ><b-icon icon="trash"></b-icon
-                        ></b-button>
+                        >
+                          <b-icon icon="trash"></b-icon>
+                        </b-button>
                       </td>
                     </tr>
                     <tr>
@@ -244,8 +246,9 @@
                           class="button is-primary"
                           :disabled="disableUploadPres"
                           @click="deleteDocument(presDocument)"
-                          ><b-icon icon="trash"></b-icon
-                        ></b-button>
+                        >
+                          <b-icon icon="trash"></b-icon>
+                        </b-button>
                       </td>
                     </tr>
                   </tbody>
