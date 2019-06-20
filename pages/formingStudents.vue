@@ -2,9 +2,7 @@
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-3 is-offset-1">
-        <b-button class="is-primary">
-          Gerar lista de prescrição
-        </b-button>
+        <modal-prescribed-list></modal-prescribed-list>
       </div>
 
       <div class="column is-4">
@@ -92,12 +90,14 @@
 <script>
 import { mapState } from 'vuex'
 import SearchInput from '~/components/searchInput'
+import ModalPrescribedList from '~/components/modalPrescribedList'
 
 export default {
   name: 'Forming',
   middleware: 'course',
   components: {
-    SearchInput
+    SearchInput,
+    ModalPrescribedList
   },
   data: () => ({
     allCrgsReady: false,
