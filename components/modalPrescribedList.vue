@@ -38,7 +38,7 @@
         </section>
         <footer class="modal-card-foot">
           <button class="button" @click.stop.prevent="openModal">
-            fechar
+            Fechar
           </button>
         </footer>
       </div>
