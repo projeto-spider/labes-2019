@@ -108,13 +108,13 @@
           <div class="menu-label">Grupos de Email</div>
           <ul class="menu-list">
             <li>
-              <nuxt-link to="/emailList">Email Principal</nuxt-link>
+              <nuxt-link to="/emailListActive">Email Principal</nuxt-link>
             </li>
             <li>
-              <a href="#">Calouros</a>
+              <nuxt-link to="/emailListFreshman">Calouros</nuxt-link>
             </li>
             <li>
-              <a href="#">Newsletter</a>
+              <nuxt-link to="/emailListNewsletter">Newsletter</nuxt-link>
             </li>
           </ul>
           <div class="menu-label">Importar</div>
@@ -246,5 +246,8 @@ export default {
 .container.Fullscreen {
   height: unset;
   min-height: 100vh;
+}
+.container {
+  margin: 4rem auto 4rem auto;
 }
 </style>

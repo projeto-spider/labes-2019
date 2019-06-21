@@ -4,6 +4,8 @@ const FromCsv = require('./FromCsv')
 const Update = require('./Update')
 const ActiveMailList = require('./ActiveMailList')
 const UpdateAcademicHighlight = require('./UpdateAcademicHighlight')
+const EmailChanges = require('./EmailChanges')
+const UpdateMailingList = require('./UpdateMailingList')
 
 module.exports = {
   List,
@@ -11,5 +13,7 @@ module.exports = {
   FromCsv,
   Update,
   ActiveMailList,
-  UpdateAcademicHighlight
+  UpdateAcademicHighlight,
+  EmailChanges,
+  UpdateMailingList
 }

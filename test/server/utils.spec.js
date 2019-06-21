@@ -98,6 +98,12 @@ describe('utils', () => {
     expect(kauan.isGraduating).toBeTruthy()
     expect(kauan.isConcluding).toBeFalsy()
     expect(kauan.cancelled).toBeFalsy()
+
+    expect(felipe.mailingListToAdd).toEqual('active')
+    expect(laura.mailingListToAdd).toEqual('active')
+    expect(jose.mailingListToAdd).toEqual('concluding')
+    expect(enzo.mailingListToAdd).toEqual('none')
+    expect(kauan.mailingListToAdd).toEqual('active')
   })
 
   test('batchUpdateStudents', async done => {
@@ -163,6 +169,24 @@ describe('utils', () => {
     expect(kauan.isGraduating).toBeTruthy()
     expect(kauan.isConcluding).toBeFalsy()
     expect(kauan.cancelled).toBeFalsy()
+
+    expect(felipe.mailingList).toEqual('none')
+    expect(laura.mailingList).toEqual('none')
+    expect(jose.mailingList).toEqual('none')
+    expect(enzo.mailingList).toEqual('none')
+    expect(kauan.mailingList).toEqual('none')
+
+    expect(felipe.mailingListToAdd).toEqual('active')
+    expect(laura.mailingListToAdd).toEqual('active')
+    expect(jose.mailingListToAdd).toEqual('concluding')
+    expect(enzo.mailingListToAdd).toEqual('none')
+    expect(kauan.mailingListToAdd).toEqual('active')
+
+    expect(felipe.mailingListToRemove).toEqual('none')
+    expect(laura.mailingListToRemove).toEqual('none')
+    expect(jose.mailingListToRemove).toEqual('none')
+    expect(enzo.mailingListToRemove).toEqual('none')
+    expect(kauan.mailingListToRemove).toEqual('none')
 
     const dataUpdated = utils.parseCsv(exampleSigaaCsvNext)
     const digestedUpdated = utils.digestSigaaData(dataUpdated)
@@ -232,6 +256,138 @@ describe('utils', () => {
     expect(julian.isGraduating).toBeFalsy()
     expect(julian.isConcluding).toBeTruthy()
     expect(julian.cancelled).toBeFalsy()
+
+    expect(felipeUpdated.mailingList).toEqual('none')
+    expect(lauraUpdated.mailingList).toEqual('none')
+    expect(joseUpdated.mailingList).toEqual('none')
+    expect(enzoUpdated.mailingList).toEqual('none')
+    expect(kauanUpdated.mailingList).toEqual('none')
+    expect(eduardo.mailingList).toEqual('none')
+    expect(julian.mailingList).toEqual('none')
+
+    expect(felipeUpdated.mailingListToAdd).toEqual('active')
+    expect(lauraUpdated.mailingListToAdd).toEqual('concluding')
+    expect(joseUpdated.mailingListToAdd).toEqual('concluding')
+    expect(enzoUpdated.mailingListToAdd).toEqual('active')
+    expect(kauanUpdated.mailingListToAdd).toEqual('none')
+    expect(eduardo.mailingListToAdd).toEqual('active')
+    expect(julian.mailingListToAdd).toEqual('concluding')
+
+    expect(felipeUpdated.mailingListToRemove).toEqual('none')
+    expect(lauraUpdated.mailingListToRemove).toEqual('none')
+    expect(joseUpdated.mailingListToRemove).toEqual('none')
+    expect(enzoUpdated.mailingListToRemove).toEqual('none')
+    expect(kauanUpdated.mailingListToRemove).toEqual('none')
+    expect(eduardo.mailingListToRemove).toEqual('none')
+    expect(julian.mailingListToRemove).toEqual('none')
+
+    done()
+  }, 100000)
+
+  test('batchUpdateStudents with consolidated emails', async done => {
+    /**
+     * Find a student by it's registrationNumber
+     *
+     * @param {object[]} students - Object of student from the database
+     * @param {string} registrationNumber - The wanted student's registrationNumber
+     * @return {object} The student
+     *
+     * @example
+     *
+     *     const students = [{ registrationNumber: '123', name: 'test user' }]
+     *     findByRegistrationNumber(students, '123')
+     */
+    function findByRegistrationNumber(students, registrationNumber) {
+      return students.find(u => u.registrationNumber === registrationNumber)
+    }
+
+    const data = utils.parseCsv(exampleSigaaCsv)
+    const digested = utils.digestSigaaData(data)
+    await utils.batchUpdateStudents(digested)
+    const models = await Student.fetchAll()
+    await Promise.all(
+      models.map(model => {
+        model.set('mailingList', model.get('mailingListToAdd'))
+        model.set('mailingListToAdd', 'none')
+        return model.save()
+      })
+    )
+    const students = (await Student.fetchAll()).toJSON()
+
+    const [felipe, laura, jose, enzo, kauan] = [
+      '201704940001',
+      '201304940002',
+      '200504940003',
+      '201104940004',
+      '200604940005'
+    ].map(registrationNumber =>
+      findByRegistrationNumber(students, registrationNumber)
+    )
+
+    expect(students.length).toEqual(5)
+
+    expect(felipe.mailingList).toEqual('active')
+    expect(laura.mailingList).toEqual('active')
+    expect(jose.mailingList).toEqual('concluding')
+    expect(enzo.mailingList).toEqual('none')
+    expect(kauan.mailingList).toEqual('active')
+
+    expect(felipe.mailingListToAdd).toEqual('none')
+    expect(laura.mailingListToAdd).toEqual('none')
+    expect(jose.mailingListToAdd).toEqual('none')
+    expect(enzo.mailingListToAdd).toEqual('none')
+    expect(kauan.mailingListToAdd).toEqual('none')
+
+    const dataUpdated = utils.parseCsv(exampleSigaaCsvNext)
+    const digestedUpdated = utils.digestSigaaData(dataUpdated)
+    await utils.batchUpdateStudents(digestedUpdated)
+    const studentsUpdated = (await Student.fetchAll()).toJSON()
+
+    const [
+      felipeUpdated,
+      lauraUpdated,
+      joseUpdated,
+      enzoUpdated,
+      kauanUpdated,
+      eduardo,
+      julian
+    ] = [
+      '201704940001',
+      '201304940002',
+      '200504940003',
+      '201104940004',
+      '200604940005',
+      '201804940006',
+      '199604940007'
+    ].map(registrationNumber =>
+      findByRegistrationNumber(studentsUpdated, registrationNumber)
+    )
+
+    expect(studentsUpdated.length).toEqual(7)
+
+    expect(felipeUpdated.mailingList).toEqual('active')
+    expect(lauraUpdated.mailingList).toEqual('active')
+    expect(joseUpdated.mailingList).toEqual('concluding')
+    expect(enzoUpdated.mailingList).toEqual('none')
+    expect(kauanUpdated.mailingList).toEqual('active')
+    expect(eduardo.mailingList).toEqual('none')
+    expect(julian.mailingList).toEqual('none')
+
+    expect(felipeUpdated.mailingListToAdd).toEqual('none')
+    expect(lauraUpdated.mailingListToAdd).toEqual('concluding')
+    expect(joseUpdated.mailingListToAdd).toEqual('none')
+    expect(enzoUpdated.mailingListToAdd).toEqual('active')
+    expect(kauanUpdated.mailingListToAdd).toEqual('none')
+    expect(eduardo.mailingListToAdd).toEqual('active')
+    expect(julian.mailingListToAdd).toEqual('concluding')
+
+    expect(felipeUpdated.mailingListToRemove).toEqual('none')
+    expect(lauraUpdated.mailingListToRemove).toEqual('active')
+    expect(joseUpdated.mailingListToRemove).toEqual('none')
+    expect(enzoUpdated.mailingListToRemove).toEqual('none')
+    expect(kauanUpdated.mailingListToRemove).toEqual('active')
+    expect(eduardo.mailingListToRemove).toEqual('none')
+    expect(julian.mailingListToRemove).toEqual('none')
 
     done()
   }, 100000)

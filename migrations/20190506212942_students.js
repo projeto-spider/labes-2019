@@ -1,3 +1,5 @@
+const mailingList = ['none', 'active', 'concluding']
+
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('students', table => {
     table.increments('id').primary()
@@ -41,15 +43,9 @@ exports.up = function(knex, Promise) {
       .boolean('prescribed')
       .notNullable()
       .defaultTo(false)
-    table
-      .enum('mailingList', [
-        'none',
-        'active',
-        'graduating',
-        'concluding',
-        'forming'
-      ])
-      .defaultTo('none')
+    table.enum('mailingList', mailingList).defaultTo('none')
+    table.enum('mailingListToAdd', mailingList).defaultTo('none')
+    table.enum('mailingListToRemove', mailingList).defaultTo('none')
     table.date('entryDate').nullable()
     table.string('advisor').nullable()
     table.date('defenseDate').nullable()

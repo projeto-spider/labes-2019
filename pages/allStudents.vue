@@ -29,9 +29,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.container {
-  height: 100vh;
-}
-</style>
