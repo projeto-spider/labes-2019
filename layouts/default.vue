@@ -86,7 +86,7 @@
           </div>
           <ul class="menu-list">
             <li>
-              <a href="#">Defesa de TCC</a>
+              <nuxt-link to="/tccDefense">Defesas de TCC</nuxt-link>
             </li>
             <li>
               <nuxt-link to="/formingStudents">Formandos</nuxt-link>
