@@ -13,7 +13,7 @@ module.exports = async function listStudents(ctx) {
 
   if (
     sort !== undefined &&
-    !['name', 'registrationNumber', 'crg'].includes(sort)
+    !['name', 'registrationNumber', 'crg', 'period'].includes(sort)
   ) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_ARGUMENT, filter: 'sort' }
@@ -44,7 +44,8 @@ function filterStudents(filters) {
     order = 'ASC',
     gmail,
     email,
-    prescribed
+    prescribed,
+    period
   } = filters
   let query = Student
   if (sort !== undefined) {
@@ -85,6 +86,9 @@ function filterStudents(filters) {
   }
   if (gmail === 'true') {
     query = query.where('email', 'like', '%@gmail.com%')
+  }
+  if (period !== undefined) {
+    query = query.where('period', period)
   }
   const defaultFiltersNames = [
     { name: 'course', type: 'string' },
