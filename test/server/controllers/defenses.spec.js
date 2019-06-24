@@ -66,6 +66,7 @@ describe('/api/documents', () => {
     )
     expect(defense.get('evaluator1Name')).toEqual(payload.evaluator1Name)
     expect(defense.get('summary')).toEqual(payload.summary)
+    expect(defense.get('status')).toEqual('pending')
 
     done()
   })
