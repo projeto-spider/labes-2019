@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Login',
   layout: 'empty',
@@ -63,6 +65,9 @@ export default {
       password: '',
       remember: false
     }
+  },
+  computed: {
+    ...mapGetters({ user: 'auth/currentUser' })
   },
   methods: {
     async login() {
@@ -77,7 +82,11 @@ export default {
               localStorage.setItem('lastLogin', this.username)
             }
           })
-        this.$router.push('/')
+        if (this.user.role === 'admin') {
+          this.$router.push('/')
+        } else if (this.user.role === 'teacher') {
+          this.$router.push('/teacher/home')
+        }
       } catch (e) {
         this.$toast.open({ message: 'Falha ao autenticar', type: 'is-danger' })
       }

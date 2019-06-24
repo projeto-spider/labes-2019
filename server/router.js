@@ -11,6 +11,7 @@ const subjects = require('./controllers/subjects')
 const auth = require('./controllers/auth')
 const solicitations = require('./controllers/solicitations')
 const pendencies = require('./controllers/pendencies')
+const defenses = require('./controllers/defenses')
 
 const router = new Router()
 const api = new Router({ prefix: '/api' })
@@ -23,6 +24,7 @@ const bodyMultipart = KoaBody({ multipart: true })
 
 // Authorization
 api.use(['/users', '/students'], isLoggedIn, isAdmin)
+api.use(['/defenses'], isLoggedIn, isTeacher)
 
 // User Routes
 api.get('/users/', users.List)
@@ -65,6 +67,8 @@ api.get('/subjects/:id', subjects.Show)
 api.post('/subjects/', bodyJson, subjects.Create)
 api.put('/subjects/:id', bodyJson, subjects.Update)
 api.del('/subjects/:id', subjects.Destroy)
+// Defenses Routes
+api.post('/defenses/', bodyJson, defenses.Create)
 
 // Auth routes
 api.get('/auth', isLoggedIn, auth.Show)
@@ -116,9 +120,17 @@ function isLoggedIn(ctx, next) {
 }
 
 function isAdmin(ctx, next) {
+  return checkRole(ctx, next, 'admin')
+}
+
+function isTeacher(ctx, next) {
+  return checkRole(ctx, next, 'teacher')
+}
+
+function checkRole(ctx, next, role) {
   const { user } = ctx.state.user
 
-  if (user.role !== 'admin') {
+  if (user.role !== role) {
     ctx.status = 403
     ctx.body = { code: errors.FORBIDDEN }
     return
