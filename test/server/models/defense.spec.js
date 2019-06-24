@@ -21,6 +21,7 @@ describe('models/Defense', () => {
 
   test('Create a Defense', async done => {
     const payload = {
+      userId: 3, // teacher
       course: 'cbcc',
       registrationNumbers: '201704940001, 201304940002',
       students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',

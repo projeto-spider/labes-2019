@@ -40,6 +40,7 @@ const allFields = requiredFields.concat(optionalFields)
 
 module.exports = async function createDefense(ctx) {
   const payload = ctx.request.body
+  const { user } = ctx.state.user
 
   const validRequest = requiredFields.every(item => payload[item] !== undefined)
   if (!validRequest) {
@@ -48,14 +49,19 @@ module.exports = async function createDefense(ctx) {
     return
   }
 
-  ctx.status = 201
-  ctx.body = await Defense.forge(
-    allFields.reduce((acc, field) => {
-      if (payload[field] !== undefined) {
-        acc[field] = payload[field]
-      }
+  const fromPayload = allFields.reduce((acc, field) => {
+    if (payload[field] !== undefined) {
+      acc[field] = payload[field]
+    }
 
-      return acc
-    }, {})
-  ).save()
+    return acc
+  }, {})
+
+  const data = {
+    ...fromPayload,
+    userId: user.id
+  }
+
+  ctx.status = 201
+  ctx.body = await Defense.forge(data).save()
 }

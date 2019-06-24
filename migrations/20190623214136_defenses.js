@@ -2,6 +2,14 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTable('defenses', table => {
     table.increments('id').primary()
     table
+      .integer('userId')
+      .unsigned()
+      .notNullable()
+    table
+      .foreign('userId')
+      .references('id')
+      .inTable('users')
+    table
       .enum('course', ['cbcc', 'cbsi'])
       .notNullable()
       .defaultTo('cbcc')
