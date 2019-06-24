@@ -54,7 +54,38 @@ module.exports = async function generateAllDocs(ctx) {
     tituloPessoa: 'titulopessoa',
     condicao: 'condicao'
   }
-  // FILL ALL DATA
+  dados.curso = studentFind.get('course')
+  dados.tituloTCC = 'T.T'
+  dados.nomeDosAlunos = studentFind.get('name')
+  dados.tituloOrientador = 'T.O'
+  dados.orientador = studentFind.get('advisor')
+  dados.tituloCoOrientador = 'T.C.O'
+  dados.coOrientador = 'C.O'
+  // como vai ser esse defenseDate?
+  dados.diaDefesa = studentFind.get('defenseDate')
+  dados.mesDefesa = studentFind.get('defenseDate')
+  dados.anoDefesa = studentFind.get('defenseDate')
+  dados.tituloAvaliador1 = 'T.A.1'
+  dados.avaliador1 = 'A.1'
+  dados.tituloAvaliador2 = 'T.A.2'
+  dados.avaliador2 = 'A.2'
+  dados.tituloAvaliador3 = 'T.A.3'
+  dados.avaliador3 = 'A.3'
+  const date = new Date()
+  dados.dia = date.getUTCDate()
+  dados.mes = date.getUTCMonth()
+  dados.ano = date.getUTCFullYear()
+  dados.tituloDiretor = 'T.D'
+  dados.diretor = 'D'
+  dados.matricula = studentFind.get('registrationNumber')
+  dados.membroConvidado = 'M.C'
+  dados.discente = studentFind.get('name')
+  dados.palavrasChave = 'Keywords'
+  dados.horarioDefesa = 'H.D'
+  dados.salaDefesa = 'S.D'
+  dados.resumo = 'R'
+  dados.tituloPessoa = 'T.P'
+  dados.condicao = 'C'
 
   let doc = new PDFDocument()
   doc = Ata(doc, dados)
