@@ -52,6 +52,24 @@ describe('/api/documents', () => {
     done()
   })
 
+  test('DELETE /students/:studentId/documents/:documentId', async done => {
+    jest.setTimeout(30000)
+    const dir = path.join(__dirname, '../../../storage/201704940001')
+    const file = path.join(dir, '201704940001-ATA.pdf')
+    fs.mkdirSync(dir)
+    fs.writeFileSync(file)
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .del('/api/students/1/documents/1')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(200)
+    expect(res.body).toEqual({})
+    done()
+  })
+
   test('GET /students/:invalid/documents', async done => {
     const { token } = await testUtils.user('admin')
     const resChar = await chai
