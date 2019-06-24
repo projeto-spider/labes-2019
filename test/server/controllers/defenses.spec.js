@@ -98,4 +98,66 @@ describe('/api/documents', () => {
     expect(res.body.code).toEqual(errors.INVALID_REQUEST)
     done()
   })
+
+  test('PUT /defenses', async done => {
+    const { token } = await testUtils.user('teacher')
+
+    const payload = {
+      userId: 1,
+      course: 'cbcc',
+      registrationNumbers: '201704940001, 201304940002',
+      students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+      local: 'Auditório do ICEN',
+      title: 'Fundamentos da Comunicação Analógica',
+      keywords: 'Fundamental, comunicacional, analógico',
+      summary: 'Sumário fundamentacional',
+
+      advisorName: 'Jonathan Joestar',
+      advisorTitle: 'doctor',
+      advisorType: 'internal',
+
+      evaluator1Name: 'Robert E. O. Speedwagon',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+
+      evaluator2Name: 'Narciso Anasui',
+      evaluator2Title: 'master',
+      evaluator2Type: 'external'
+    }
+
+    const defense = await Defense.forge(payload).save()
+
+    const update = { status: 'done' }
+
+    const res = await chai
+      .request(server.listen())
+      .put(`/api/defenses/${defense.get('id')}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(update)
+
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.id).toBeDefined()
+    expect(res.body.status).toEqual(update.status)
+
+    done()
+  })
+
+  test('PUT /defenses for invalid id', async done => {
+    const { token } = await testUtils.user('teacher')
+
+    const update = { status: 'done' }
+
+    const res = await chai
+      .request(server.listen())
+      .put(`/api/defenses/1221323123123123`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(update)
+
+    expect(res.status).toEqual(404)
+    expect(res.type).toEqual('application/json')
+
+    done()
+  })
 })

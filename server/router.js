@@ -69,6 +69,7 @@ api.put('/subjects/:id', bodyJson, subjects.Update)
 api.del('/subjects/:id', subjects.Destroy)
 // Defenses Routes
 api.post('/defenses/', bodyJson, defenses.Create)
+api.put('/defenses/:id', bodyJson, defenses.Update)
 
 // Auth routes
 api.get('/auth', isLoggedIn, auth.Show)
