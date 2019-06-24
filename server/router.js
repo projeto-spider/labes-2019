@@ -53,6 +53,7 @@ api.get('/students/:studentId/documents', documents.List)
 api.get('/students/:studentId/documents/:id', documents.Show)
 api.del('/students/:studentId/documents/:id', documents.Delete)
 api.get('/students/:studentId/documents/:id/view', documents.View)
+api.get('/students/:studentId/tccdocuments', documents.TccGenerate)
 api.post('/students/:studentId/documents', bodyMultipart, documents.Upload)
 
 // Pendencies Routes
