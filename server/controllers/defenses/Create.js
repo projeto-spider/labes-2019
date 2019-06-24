@@ -24,6 +24,9 @@ const requiredFields = [
 ]
 
 const optionalFields = [
+  'date',
+  'time',
+
   'coAdvisorName',
   'coAdvisorTitle',
   'coAdvisorType',
