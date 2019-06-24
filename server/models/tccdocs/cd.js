@@ -57,24 +57,17 @@ module.exports = function model(
 
   doc
     .fontSize(10)
-    .text(`Orientador(a): ${tituloOrientador}(a) ${orientador}`, 30, 270, {
+    .text(`Orientador: ${tituloOrientador} ${orientador}`, 100, 270, {
       align: 'left'
     })
 
-  if (coOrientador) {
-    doc
-      .fontSize(10)
-      .text(
-        `Co-Orientador(a): ${tituloCoOrientador}(a) ${coOrientador}`,
-        30,
-        290,
-        {
-          align: 'left'
-        }
-      )
-  }
+  doc
+    .fontSize(10)
+    .text(`Co-Orientador: ${tituloCoOrientador} ${coOrientador}`, 100, 290, {
+      align: 'left'
+    })
 
-  doc.fontSize(10).text(`Belém, ${ano}`, -300, 330, {
+  doc.fontSize(10).text(`Belem, ${ano}`, -300, 330, {
     align: 'center'
   })
 
@@ -101,13 +94,15 @@ finalizado conforme minha orientação.`, // Manter colado desse jeito, para que
 
   doc.fontSize(10).text(`____________________________________`, 450, 250)
 
-  doc.fontSize(10).text(`${tituloOrientador}(a) ${orientador}`, 470, 270)
+  doc.fontSize(10).text(`${tituloOrientador} ${orientador}`, 450, 270)
 
   doc.fontSize(12).text(
-    `Deve ser entregue na secretaria da faculdade, já com a assinatura do seu Orientador(a).
+    `Deve ser entregue na secretaria da faculdade, já com a assinatura do seu Orientador.
 
-Em caso de rasura, ou quaisquer formas de deterioração deste papel, por favor, trocar na secretaria.`,
+  Em caso de rasura, ou quaisquer formas de deterioração deste papel, por favor, trocar na secretaria.`,
     100,
     450
   )
+
+  return doc
 }
