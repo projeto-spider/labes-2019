@@ -371,6 +371,17 @@ describe('/api/documents', () => {
     expect(res.body.code).toBe(errors.INVALID_QUERY)
     expect(res.body.invalidParams.length).toBe(1)
     expect(res.body.invalidParams).toContainEqual('invalid')
+  })
+
+  test('GET /:studentId/tccdocuments', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/1/tccdocuments/')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/octet-stream')
+    expect(res.body).toBeDefined()
     done()
   })
 })
