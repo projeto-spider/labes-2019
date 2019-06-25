@@ -10,9 +10,8 @@
       <div class="column is-10">
         <b-input
           v-model="searchStudentName"
-          placeholder="   Digite o nome"
+          placeholder="Digite um nome"
           type="search"
-          icon="search"
           rounded
           expanded
         >
@@ -117,6 +116,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import pDebounce from 'p-debounce'
 import { errorsHandler } from './mixins/errors'
 import DefenseForm from './defenseForm'
 
@@ -158,20 +158,6 @@ export default {
       selectedDefense: false,
       editDefense: false,
       searchStudentName: '',
-      course: '',
-      registration: '',
-      tccStudents: [],
-      defenseLocal: '',
-      defenseDate: null,
-      defenseTime: null,
-      tccTitle: '',
-      keywords: '',
-      abstract: '',
-      advisor: '',
-      coAdvisor: '',
-      eval1: '',
-      eval2: '',
-      eval3: '',
       columns: [
         {
           field: 'advisorName',
@@ -207,6 +193,12 @@ export default {
     })
   },
 
+  watch: {
+    searchStudentName: pDebounce(function triggerSearch() {
+      this.loadDefenses()
+    }, 500)
+  },
+
   created() {
     this.loadDefenses()
   },
@@ -226,9 +218,13 @@ export default {
 
     loadDefenses() {
       this.loading = true
-      const { courseTag, status, page = 1 } = this
+      const { courseTag, status, page = 1, searchStudentName } = this
 
-      const config = { params: { page, course: courseTag, status } }
+      const query = searchStudentName ? `%${searchStudentName}%` : undefined
+
+      const config = {
+        params: { page, course: courseTag, status, query }
+      }
       return this.$axios
         .get('/api/defenses', config)
         .then(res => {

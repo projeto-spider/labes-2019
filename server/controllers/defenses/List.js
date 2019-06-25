@@ -22,5 +22,9 @@ function filter(filters) {
     query = query.where('course', course)
   }
 
+  if (filters.query !== undefined) {
+    query = query.where('students', 'like', filters.query)
+  }
+
   return query.fetchPage({ page })
 }

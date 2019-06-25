@@ -96,7 +96,7 @@ describe('/api/documents', () => {
       status: 'done',
       course: 'cbcc',
       registrationNumbers: '201704940001, 201304940002',
-      students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+      students: 'JOSE FERREIRA SILVA, KAUAN CARVALHO SANTOS',
       local: 'Auditório do ICEN',
       title: 'Fundamentos da Comunicação Analógica',
       keywords: 'Fundamental, comunicacional, analógico',
@@ -148,6 +148,20 @@ describe('/api/documents', () => {
       expect(res.body.length).toEqual(1)
       expect(res.body[0].id).toEqual(defenses[0].get('id'))
       expect(res.body.every(item => item.course === 'cbsi')).toBeTruthy()
+    }
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .get('/api/defenses/')
+        .query({ query: '%FELIPE%' })
+        .set('Authorization', `Bearer ${token}`)
+
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.length).toEqual(1)
+      expect(res.body[0].id).toEqual(defenses[0].get('id'))
     }
 
     done()
