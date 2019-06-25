@@ -21,14 +21,18 @@
         <b-table
           :striped="true"
           :hoverable="true"
-          :data="tccDefenses"
-          :selected.sync="selectedDefense"
+          :data="defenses"
           :columns="columns"
-          class="searchInputTable scrollable"
+          class="searchInputTable"
           focusable
-        >
-        </b-table>
-        <b-modal :active.sync="selectedDefense" has-modal-card>
+          backend-pagination
+          :total="total"
+          :per-page="perPage"
+          backend-sorting
+          @page-change="onPageChange"
+          @select="selectDefense"
+        />
+        <b-modal :active.sync="modalOpen" has-modal-card>
           <div class="card widescreen">
             <div class="card-content">
               <div class="content">
@@ -43,55 +47,11 @@
                 <div class="columns scrollable-modal">
                   <div class="column is-left is-half">
                     <p>Informações da defesa</p>
-                    <b-field label="Curso">
-                      <b-input v-model="course"></b-input>
-                    </b-field>
-                    <b-field label="Matrícula(s)">
-                      <b-input
-                        v-for="stud in tccStudents"
-                        :key="stud.id"
-                        v-model="stud.name"
-                      ></b-input>
-                    </b-field>
-                    <b-field label="Local">
-                      <b-input v-model="defenseLocal"></b-input>
-                    </b-field>
-                    <b-field label="Data">
-                      <b-datepicker
-                        v-model="defenseDate"
-                        placeholder="Escolha uma data..."
-                      ></b-datepicker>
-                    </b-field>
-                    <b-field label="Hora">
-                      <b-timepicker
-                        v-model="defenseTime"
-                        placeholder="Escolha um horário..."
-                      ></b-timepicker>
-                    </b-field>
-                    <b-field label="Título do TCC">
-                      <b-input v-model="tccTitle"></b-input>
-                    </b-field>
-                    <b-field label="Palavras-chave">
-                      <b-input v-model="keywords"></b-input>
-                    </b-field>
-                    <b-field label="Resumo">
-                      <b-input maxlength="500" type="textarea"></b-input>
-                    </b-field>
-                    <b-field label="Orientador(a)">
-                      <b-input v-model="advisor"></b-input>
-                    </b-field>
-                    <b-field label="Co-orientador(a)">
-                      <b-input v-model="coAdvisor"></b-input>
-                    </b-field>
-                    <b-field label="Avaliador 1">
-                      <b-input v-model="eval1"></b-input>
-                    </b-field>
-                    <b-field label="Avaliador 2">
-                      <b-input v-model="eval2"></b-input>
-                    </b-field>
-                    <b-field label="Avaliador 3">
-                      <b-input v-model="eval3"></b-input>
-                    </b-field>
+                    <DefenseForm
+                      v-if="modalOpen"
+                      v-model="selectedDefense"
+                      :on-submit="onSubmit"
+                    />
                   </div>
                   <div class="column is-right is-half">
                     <p>Documentos gerados</p>
@@ -107,23 +67,45 @@
 </template>
 
 <script>
-import http from 'http'
+import { mapState } from 'vuex'
+import { errorsHandler } from './mixins/errors'
+import DefenseForm from './defenseForm'
+
 export default {
   name: 'TccDefenseSearch',
+
+  components: {
+    DefenseForm
+  },
+  mixins: [errorsHandler],
+
   props: {
     publish: {
       type: Boolean,
       default: () => false
     },
+
     title: {
       type: String,
       default: () => ''
+    },
+
+    status: {
+      type: String,
+      required: false,
+      default: undefined
     }
   },
+
   data() {
     return {
-      tccDefenses: [],
-      selectedDefense: null,
+      total: 0,
+      totalPages: 0,
+      page: 1,
+      perPage: 10,
+      defenses: [],
+      modalOpen: false,
+      selectedDefense: false,
       searchStudentName: '',
       course: '',
       registration: '',
@@ -141,42 +123,93 @@ export default {
       eval3: '',
       columns: [
         {
-          field: 'advisor',
+          field: 'advisorName',
           label: 'Orientador'
         },
         {
-          field: 'registration',
-          label: 'Matrícula'
+          field: 'registrationNumbers',
+          label: 'Matrículas'
         },
         {
-          field: 'name',
-          label: 'Nome'
+          field: 'students',
+          label: 'Nomes'
         },
         {
-          field: 'defenseDate',
+          field: 'date',
           label: 'Data'
         },
         {
-          field: 'defenseTime',
+          field: 'time',
           label: 'Hora'
         },
         {
-          field: 'defenseLocal',
+          field: 'local',
           label: 'Local'
         }
       ]
     }
   },
-  created() {
-    http.get('http://localhost:3341/defenses', res => {
-      let body = ''
-      res.on('data', data => {
-        body += data
-      })
-      res.on('end', () => {
-        this.tccDefenses = JSON.parse(body)
-      })
+
+  computed: {
+    ...mapState({
+      courseTag: state => state.courseTag
     })
+  },
+
+  created() {
+    this.loadDefenses()
+  },
+
+  methods: {
+    selectDefense(row) {
+      this.modalOpen = true
+      this.selectedDefense = row
+    },
+
+    loadDefenses() {
+      const { courseTag, status, page = 1 } = this
+
+      const config = { params: { page, course: courseTag, status } }
+      return this.$axios
+        .get('/api/defenses', config)
+        .then(res => {
+          this.defenses = res.data
+          this.total = +res.headers['pagination-row-count']
+          this.perPage = +res.headers['pagination-page-size']
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: 'Falha ao carregar a lista de defesas.',
+            type: 'is-danger'
+          })
+        })
+    },
+
+    onPageChange(page) {
+      this.page = page
+      this.loadDefenses()
+    },
+
+    onSubmit(payload) {
+      const endpoint = `/api/defenses/${payload.id}`
+      return this.$axios
+        .$put(endpoint, payload)
+        .then(updated => {
+          this.$toast.open({
+            message: 'Solicitação atualizada com sucesso!',
+            type: 'is-success'
+          })
+
+          const original = this.defenses.find(
+            defense => defense.id === updated.id
+          )
+
+          if (original) {
+            Object.assign(original, updated)
+          }
+        })
+        .catch(error => this.openErrorNotification(error.response.data.code))
+    }
   }
 }
 </script>
@@ -192,11 +225,6 @@ export default {
 
 .icon {
   margin-left: 1em;
-}
-
-.scrollable {
-  overflow-y: scroll;
-  height: 200px;
 }
 
 .scrollable-modal {

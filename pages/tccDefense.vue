@@ -1,6 +1,14 @@
 <template>
   <div class="container">
-    <tcc-defense-search :title="'Pendentes'"></tcc-defense-search>
+    <tcc-defense-search title="Pendentes" status="pending"></tcc-defense-search>
+    <br />
+    <br />
+
+    <tcc-defense-search title="Aceitas" status="accepted"></tcc-defense-search>
+    <br />
+    <br />
+
+    <tcc-defense-search title="Realizadas" status="done"></tcc-defense-search>
   </div>
 </template>
 
