@@ -11,7 +11,7 @@
     <div class="level">
       <div class="level-right">
         <div class="level-item">
-          <button class="button is-primary" @click="confirmChanges">
+          <button class="button is-primary" @click="confirmChange">
             Confirmar Alterações
           </button>
         </div>
