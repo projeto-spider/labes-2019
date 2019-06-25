@@ -124,6 +124,4 @@ ${avaliador3 ? `${tituloAvaliador3}(a) ${avaliador3} (Avaliador(a))` : ``}`,
       align: 'center'
     }
   )
-
-  return doc
 }

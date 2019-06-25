@@ -22,46 +22,47 @@ module.exports = async function generateAllDocs(ctx) {
   }
 
   const dados = {
-    curso: 'curso',
-    tituloTCC: 'titulotcc',
-    nomeDosAlunos: 'nome dos alunos',
-    tituloOrientador: 'tituloorientador',
-    orientador: 'orientador',
-    tituloCoOrientador: 'titulocoorientador',
-    coOrientador: 'coorientador',
-    diaDefesa: 'diadefesa',
-    mesDefesa: 'mesdefesa',
-    anoDefesa: 'anodefesa',
-    tituloAvaliador1: 'tituloavaliador1',
-    avaliador1: 'avaliador1',
-    tituloAvaliador2: 'tituloavaliador2',
-    avaliador2: 'avaliador2',
-    tituloAvaliador3: 'tituloavaliador3',
-    avaliador3: 'avaliador3',
-    dia: 'dia',
-    mes: 'mes',
-    ano: 'ano',
-    tituloDiretor: 'titulodiretor',
-    diretor: 'diretor',
-    matricula: 'matricula',
-    membroConvidado: 'membro convidado',
-    discente: 'discente',
-    palavrasChave: 'palavras chave',
-    horarioDefesa: 'horariodefesa',
-    salaDefesa: 'saladefesa',
-    resumo: 'resumo',
-    pessoa: 'pessoa',
-    tituloPessoa: 'titulopessoa',
-    condicao: 'condicao'
+    curso: '',
+    tituloTCC: '',
+    nomeDosAlunos: '',
+    tituloOrientador: '',
+    orientador: '',
+    tituloCoOrientador: '',
+    coOrientador: '',
+    diaDefesa: '',
+    mesDefesa: '',
+    anoDefesa: '',
+    tituloAvaliador1: '',
+    avaliador1: '',
+    tituloAvaliador2: '',
+    avaliador2: '',
+    tituloAvaliador3: '',
+    avaliador3: '',
+    dia: '',
+    mes: '',
+    ano: '',
+    tituloDiretor: '',
+    diretor: '',
+    matricula: '',
+    membroConvidado: '',
+    discente: '',
+    palavrasChave: '',
+    horarioDefesa: '',
+    salaDefesa: '',
+    resumo: '',
+    pessoa: '',
+    tituloPessoa: '',
+    condicao: ''
   }
-  dados.curso = studentFind.get('course')
+
+  const course = studentFind.get('course')
+  dados.curso = ''
   dados.tituloTCC = 'T.T'
   dados.nomeDosAlunos = studentFind.get('name')
   dados.tituloOrientador = 'T.O'
   dados.orientador = studentFind.get('advisor')
   dados.tituloCoOrientador = 'T.C.O'
   dados.coOrientador = 'C.O'
-  // como vai ser esse defenseDate?
   dados.diaDefesa = studentFind.get('defenseDate')
   dados.mesDefesa = studentFind.get('defenseDate')
   dados.anoDefesa = studentFind.get('defenseDate')
@@ -87,15 +88,15 @@ module.exports = async function generateAllDocs(ctx) {
   dados.tituloPessoa = 'T.P'
   dados.condicao = 'C'
 
-  let doc = new PDFDocument()
-  doc = Ata(doc, dados)
-  doc = Cd(doc, dados)
+  const doc = new PDFDocument()
+  Ata(doc, dados)
+  Cd(doc, dados)
   doc.addPage()
-  doc = Certificado(doc, dados)
+  Certificado(doc, dados)
   doc.addPage()
-  doc = Credenciamento(doc, dados)
+  Credenciamento(doc, dados)
   doc.addPage()
-  doc = Divulgacao(doc, dados)
+  Divulgacao(doc, dados)
   doc.end()
 
   ctx.status = 200

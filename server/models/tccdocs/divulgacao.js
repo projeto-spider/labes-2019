@@ -147,6 +147,4 @@ ${avaliador3 ? `${tituloAvaliador3}(a) ${avaliador3} (Avaliador(a))` : ``}`,
   doc.fontSize(12).text(`${resumo}`, 100, 480, {
     align: 'center'
   })
-
-  return doc
 }

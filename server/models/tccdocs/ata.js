@@ -57,6 +57,8 @@ module.exports = function model(
       }
     )
 
+  const trechoCoorientador = 'QUEBROU A ATA'
+  const trechoAv3 = 'QUEBROU A ATA'
   doc
     .fontSize(12)
     .text(
@@ -127,6 +129,4 @@ AVALIADOR(A)`,
     380,
     690
   )
-
-  return doc
 }

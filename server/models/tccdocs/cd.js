@@ -110,6 +110,4 @@ Em caso de rasura, ou quaisquer formas de deterioração deste papel, por favor,
     100,
     450
   )
-
-  return doc
 }
