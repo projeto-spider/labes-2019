@@ -102,20 +102,22 @@ module.exports = function model(
       align: 'left'
     })
 
-  doc
-    .fontSize(12)
-    .text(
-      `${tituloOrientador} ${orientador} (Orientador(a))\n` +
-        `${tituloCoOrientador} ${coOrientador} (Co-Orientador(a))\n` +
-        `${tituloAvaliador1} ${avaliador1} (Avaliador(a))\n` +
-        `${tituloAvaliador2} ${avaliador2} (Avaliador(a))\n` +
-        `${tituloAvaliador3} ${avaliador3} (Avaliador(a))`,
-      150,
-      340,
-      {
-        align: 'left'
-      }
-    )
+  doc.fontSize(12).text(
+    `${tituloOrientador}(a) ${orientador} (Orientador(a))
+${
+  coOrientador
+    ? `${tituloCoOrientador}(a) ${coOrientador} (Co-Orientador(a))`
+    : ``
+}
+${tituloAvaliador1}(a) ${avaliador1} (Avaliador(a))
+${tituloAvaliador2}(a) ${avaliador2} (Avaliador(a))
+${avaliador3 ? `${tituloAvaliador3}(a) ${avaliador3} (Avaliador(a))` : ``}`,
+    150,
+    340,
+    {
+      align: 'left'
+    }
+  )
 
   doc
     .font('Times-BoldItalic')
