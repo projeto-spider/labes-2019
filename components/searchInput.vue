@@ -118,7 +118,7 @@ export default {
     },
     isActive: {
       type: Number,
-      default: () => 0
+      default: () => 'AllStudents'
     },
     isConcluding: {
       type: Number,
