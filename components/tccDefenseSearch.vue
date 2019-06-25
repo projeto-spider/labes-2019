@@ -25,6 +25,7 @@
           :columns="columns"
           class="searchInputTable"
           focusable
+          paginated
           backend-pagination
           :total="total"
           :per-page="perPage"
