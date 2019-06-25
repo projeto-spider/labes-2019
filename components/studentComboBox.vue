@@ -542,14 +542,6 @@ export default {
   width: 100vw;
 }
 
-.card-header {
-  align-items: center;
-}
-
-.icon {
-  margin-left: 1em;
-}
-
 .scrollable {
   overflow-y: scroll;
 }
@@ -557,5 +549,15 @@ export default {
 .bottom-sticky {
   bottom: 0;
   position: sticky;
+}
+</style>
+
+<style>
+.card-header {
+  align-items: center;
+}
+
+.icon {
+  margin-left: 1em;
 }
 </style>

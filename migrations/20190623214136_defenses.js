@@ -13,6 +13,10 @@ exports.up = function(knex, Promise) {
       .enum('course', ['cbcc', 'cbsi'])
       .notNullable()
       .defaultTo('cbcc')
+    table
+      .enum('status', ['pending', 'accepted', 'done'])
+      .notNullable()
+      .defaultTo('pending')
     table.string('registrationNumbers').notNullable()
     table.string('students').notNullable()
     table.string('local').notNullable()

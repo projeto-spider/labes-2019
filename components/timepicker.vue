@@ -3,6 +3,7 @@
     v-model="date"
     placeholder="Selecionar hora"
     hour-format="24"
+    :disabled="disabled"
     @input="onInput"
   />
 </template>
@@ -15,6 +16,11 @@ export default {
     value: {
       type: String,
       default: '00:00:00'
+    },
+
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
 

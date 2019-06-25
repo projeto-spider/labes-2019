@@ -24,7 +24,7 @@ const bodyMultipart = KoaBody({ multipart: true })
 
 // Authorization
 api.use(['/users', '/students'], isLoggedIn, isAdmin)
-api.use(['/defenses'], isLoggedIn, isTeacher)
+api.use(['/defenses'], isLoggedIn)
 
 // User Routes
 api.get('/users/', users.List)
@@ -68,7 +68,9 @@ api.post('/subjects/', bodyJson, subjects.Create)
 api.put('/subjects/:id', bodyJson, subjects.Update)
 api.del('/subjects/:id', subjects.Destroy)
 // Defenses Routes
-api.post('/defenses/', bodyJson, defenses.Create)
+api.get('/defenses/', isAdmin, defenses.List)
+api.post('/defenses/', isTeacher, bodyJson, defenses.Create)
+api.put('/defenses/:id', isAdmin, bodyJson, defenses.Update)
 
 // Auth routes
 api.get('/auth', isLoggedIn, auth.Show)

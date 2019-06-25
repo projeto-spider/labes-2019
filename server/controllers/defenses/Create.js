@@ -59,7 +59,8 @@ module.exports = async function createDefense(ctx) {
 
   const data = {
     ...fromPayload,
-    userId: user.id
+    userId: user.id,
+    status: 'pending'
   }
 
   ctx.status = 201
