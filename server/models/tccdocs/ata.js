@@ -60,11 +60,9 @@ module.exports = function model(
   doc
     .fontSize(12)
     .text(
-      `Realizou-se na ${salaDefesa}, do Campus Básico da Universidade Federal do Pará, situado no Bairro do Guamá, nesta cidade de Belém do Pará, a sessão de Defesa Pública do Trabalho de Conclusão de Curso intitulado '${tituloTCC}', apresentado pelo(a) discente ${discente.toUpperCase()}. A sessão foi instalada às ${horarioDefesa} h pelo(a)${tituloOrientador} ${orientador}. A referida banca foi constituída pelos seguintes membros:${tituloOrientador} ${orientador} (ORIENTADOR(A)) ${
-        /*, */ tituloCoOrientador
-      }${coOrientador} (COORIENTADOR(A)) ${
+      `Realizou-se na ${salaDefesa}, do Campus Básico da Universidade Federal do Pará, situado no Bairro do Guamá, nesta cidade de Belém do Pará, a sessão de Defesa Pública do Trabalho de Conclusão de Curso intitulado '${tituloTCC}', apresentado pelo(a) discente ${discente.toUpperCase()}. A sessão foi instalada às ${horarioDefesa} h pelo(a) ${tituloOrientador}(a) ${orientador}. A referida banca foi constituída pelos seguintes membros: ${tituloOrientador}(a) ${orientador} (ORIENTADOR(A))${trechoCoorientador} ${
         /*, */ tituloAvaliador1
-      } ${avaliador1} (AVALIADOR(A))${tituloAvaliador2} ${avaliador2} (AVALIADOR(A)) ${tituloAvaliador3} ${avaliador3} (AVALIADOR(A)). A Banca Examinadora, após a exposição do mencionado Trabalho pelo discente, passou a arguí-lo. E nada mais havendo a tratar, o presidente deu por encerrada a Defesa do Trabalho, agradecendo a presença de todos, e para constar a legitimidade do que foi deliberado, lavrou-se a presente ata que após lida, será assinada pelos membros presentes na reunião. Belém, ${diaDefesa} de ${mesDefesa} de ${anoDefesa}.`,
+      }(a) ${avaliador1} (AVALIADOR(A)), ${tituloAvaliador2}(a) ${avaliador2} (AVALIADOR(A))${trechoAv3}. A Banca Examinadora, após a exposição do mencionado Trabalho pelo discente, passou a arguí-lo. E nada mais havendo a tratar, o presidente deu por encerrada a Defesa do Trabalho, agradecendo a presença de todos, e para constar a legitimidade do que foi deliberado, lavrou-se a presente ata que após lida, será assinada pelos membros presentes na reunião. Belém, ${diaDefesa} de ${mesDefesa} de ${anoDefesa}.`,
       20,
       300,
       {
@@ -84,34 +82,38 @@ module.exports = function model(
   doc.fontSize(10).text(`____________________________________`, 30, 600)
 
   doc.fontSize(10).text(
-    `${tituloOrientador} ${orientador}
-    ORIENTADOR(A)`,
+    `${tituloOrientador}(a) ${orientador}
+   ORIENTADOR(A)`,
     60,
     620
   )
 
   doc.fontSize(10).text(`____________________________________`, 30, 670)
 
-  doc.fontSize(10).text(
-    `${tituloCoOrientador} ${coOrientador}
-    CO-ORIENTADOR(A)`,
-    60,
-    690
-  )
+  if (coOrientador) {
+    doc.fontSize(10).text(
+      `${tituloCoOrientador}(a) ${coOrientador}
+CO-ORIENTADOR(A)`,
+      60,
+      690
+    )
 
-  doc.fontSize(10).text(`____________________________________`, 350, 530)
+    doc.fontSize(10).text(`____________________________________`, 350, 530)
+  }
 
-  doc.fontSize(10).text(
-    `${tituloAvaliador3} ${avaliador3}
+  if (avaliador3) {
+    doc.fontSize(10).text(
+      `${tituloAvaliador3}(a) ${avaliador3}
 AVALIADOR(A)`,
-    380,
-    550
-  )
+      380,
+      550
+    )
 
-  doc.fontSize(10).text(`____________________________________`, 350, 600)
+    doc.fontSize(10).text(`____________________________________`, 350, 600)
+  }
 
   doc.fontSize(10).text(
-    `${tituloAvaliador1} ${avaliador1}
+    `${tituloAvaliador1}(a) ${avaliador1}
 AVALIADOR(A)`,
     380,
     620
@@ -120,7 +122,7 @@ AVALIADOR(A)`,
   doc.fontSize(10).text(`____________________________________`, 350, 670)
 
   doc.fontSize(10).text(
-    `${tituloAvaliador2} ${avaliador2}
+    `${tituloAvaliador2}(a) ${avaliador2}
 AVALIADOR(A)`,
     380,
     690
