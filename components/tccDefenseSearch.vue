@@ -19,6 +19,7 @@
         </b-input>
         <br />
         <b-table
+          :loading="loading"
           :striped="true"
           :hoverable="true"
           :data="defenses"
@@ -43,20 +44,68 @@
                       <p class="card-header-title">Informações da defesa</p>
                     </header>
                   </div>
+
+                  <div class="column is-half">
+                    <header class="card-header">
+                      <b-icon pack="fas" icon="info" size="is-small"></b-icon>
+                      <p class="card-header-title">Documentos Gerados</p>
+                    </header>
+                  </div>
                 </div>
                 <div class="columns scrollable-modal">
                   <div class="column is-left is-half">
-                    <p>Informações da defesa</p>
                     <DefenseForm
                       v-if="modalOpen"
                       v-model="selectedDefense"
                       :on-submit="onSubmit"
+                      :force-disable="!editDefense"
                     />
                   </div>
+
                   <div class="column is-right is-half">
-                    <p>Documentos gerados</p>
+                    <p>???</p>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div class="card-buttons">
+              <div class="buttons">
+                <b-button @click.prevent="editDefense = !editDefense">
+                  {{ editDefense ? 'Cancelar Edição' : 'Editar' }}
+                </b-button>
+
+                <b-button
+                  v-if="status === 'pending'"
+                  type="is-success"
+                  @click="move(selectedDefense, 'accepted')"
+                >
+                  Confirmar
+                </b-button>
+
+                <template v-if="status === 'accepted'">
+                  <b-button
+                    type="is-warning"
+                    @click="move(selectedDefense, 'pending')"
+                  >
+                    Mover para Pendentes
+                  </b-button>
+
+                  <b-button
+                    type="is-success"
+                    @click="move(selectedDefense, 'done')"
+                  >
+                    Finalizar
+                  </b-button>
+                </template>
+
+                <b-button
+                  v-if="status === 'done'"
+                  type="is-warning"
+                  @click="move(selectedDefense, 'accepted')"
+                >
+                  Mover para Aceitas
+                </b-button>
               </div>
             </div>
           </div>
@@ -99,6 +148,7 @@ export default {
 
   data() {
     return {
+      loading: false,
       total: 0,
       totalPages: 0,
       page: 1,
@@ -106,6 +156,7 @@ export default {
       defenses: [],
       modalOpen: false,
       selectedDefense: false,
+      editDefense: false,
       searchStudentName: '',
       course: '',
       registration: '',
@@ -162,11 +213,19 @@ export default {
 
   methods: {
     selectDefense(row) {
+      this.editDefense = false
       this.modalOpen = true
       this.selectedDefense = row
     },
 
+    unselectDefense() {
+      this.editDefense = false
+      this.modalOpen = false
+      this.selectedDefense = false
+    },
+
     loadDefenses() {
+      this.loading = true
       const { courseTag, status, page = 1 } = this
 
       const config = { params: { page, course: courseTag, status } }
@@ -176,12 +235,14 @@ export default {
           this.defenses = res.data
           this.total = +res.headers['pagination-row-count']
           this.perPage = +res.headers['pagination-page-size']
+          this.loading = false
         })
         .catch(() => {
           this.$toast.open({
             message: 'Falha ao carregar a lista de defesas.',
             type: 'is-danger'
           })
+          this.loading = false
         })
     },
 
@@ -191,24 +252,44 @@ export default {
     },
 
     onSubmit(payload) {
-      const endpoint = `/api/defenses/${payload.id}`
-      return this.$axios
-        .$put(endpoint, payload)
-        .then(updated => {
-          this.$toast.open({
-            message: 'Solicitação atualizada com sucesso!',
-            type: 'is-success'
-          })
-
-          const original = this.defenses.find(
-            defense => defense.id === updated.id
-          )
-
-          if (original) {
-            Object.assign(original, updated)
-          }
+      return this.put(payload).then(updated => {
+        this.$toast.open({
+          message: 'Solicitação atualizada com sucesso!',
+          type: 'is-success'
         })
-        .catch(error => this.openErrorNotification(error.response.data.code))
+
+        const original = this.defenses.find(
+          defense => defense.id === updated.id
+        )
+
+        if (original) {
+          Object.assign(original, updated)
+        }
+      })
+    },
+
+    move(defense, status) {
+      return this.put(defense, { status }).then(updated => {
+        this.$toast.open({
+          message: 'Solicitação movida com sucesso!',
+          type: 'is-success'
+        })
+
+        this.unselectDefense()
+        this.$emit('move')
+      })
+    },
+
+    put(defense, payload) {
+      if (!payload) {
+        payload = defense
+      }
+
+      const endpoint = `/api/defenses/${defense.id}`
+      return this.$axios.$put(endpoint, payload).catch(error => {
+        this.openErrorNotification(error.response.data.code)
+        throw error
+      })
     }
   }
 }
@@ -230,5 +311,11 @@ export default {
 .scrollable-modal {
   overflow-y: scroll;
   height: 500px;
+}
+
+.card-buttons {
+  position: absolute;
+  right: 0;
+  bottom: -40px;
 }
 </style>

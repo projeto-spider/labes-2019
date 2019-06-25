@@ -1,14 +1,29 @@
 <template>
   <div class="container">
-    <tcc-defense-search title="Pendentes" status="pending"></tcc-defense-search>
+    <tcc-defense-search
+      ref="searchPending"
+      title="Pendentes"
+      status="pending"
+      @move="handleMove"
+    ></tcc-defense-search>
     <br />
     <br />
 
-    <tcc-defense-search title="Aceitas" status="accepted"></tcc-defense-search>
+    <tcc-defense-search
+      ref="searchAccepted"
+      title="Aceitas"
+      status="accepted"
+      @move="handleMove"
+    ></tcc-defense-search>
     <br />
     <br />
 
-    <tcc-defense-search title="Realizadas" status="done"></tcc-defense-search>
+    <tcc-defense-search
+      ref="searchDone"
+      title="Realizadas"
+      status="done"
+      @move="handleMove"
+    ></tcc-defense-search>
   </div>
 </template>
 
@@ -26,6 +41,22 @@ export default {
     ...mapState({
       courseTag: state => state.courseTag
     })
+  },
+
+  methods: {
+    handleMove() {
+      const refs = [
+        this.$refs.searchPending,
+        this.$refs.searchAccepted,
+        this.$refs.searchDone
+      ]
+
+      for (const ref of refs) {
+        if (ref && ref.loadDefenses) {
+          ref.loadDefenses()
+        }
+      }
+    }
   }
 }
 </script>

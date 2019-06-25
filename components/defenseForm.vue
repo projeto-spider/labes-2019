@@ -6,7 +6,11 @@
 
     <b-field v-for="(student, i) in model.students" :key="i" grouped>
       <b-field label="Nome do(a) Aluno(a)" expanded>
-        <b-input v-model="model.students[i].name" required></b-input>
+        <b-input
+          v-model="model.students[i].name"
+          required
+          :disabled="forceDisable"
+        ></b-input>
       </b-field>
 
       <b-field label="Matrícula do(a) Aluno(a)" expanded>
@@ -14,10 +18,12 @@
           v-model="model.students[i].registrationNumber"
           expanded
           required
+          :disabled="forceDisable"
+          pattern="\d{12}"
         ></b-input>
       </b-field>
 
-      <b-field label="⠀">
+      <b-field v-if="!forceDisable" label="⠀">
         <div v-if="i === 0" class="control">
           <b-button
             class="button is-primary"
@@ -41,23 +47,39 @@
     </b-field>
 
     <b-field label="Local">
-      <b-input v-model="model.local" required></b-input>
+      <b-input
+        v-model="model.local"
+        required
+        :disabled="forceDisable"
+      ></b-input>
     </b-field>
 
     <b-field label="Data">
-      <datepicker v-model="model.date" placeholder="Selecionar data" />
+      <datepicker
+        v-model="model.date"
+        placeholder="Selecionar data"
+        :disabled="forceDisable"
+      />
     </b-field>
 
     <b-field label="Horário inicial">
-      <timepicker v-model="model.time" />
+      <timepicker v-model="model.time" :disabled="forceDisable" />
     </b-field>
 
     <b-field label="Título TCC">
-      <b-input v-model="model.title" required></b-input>
+      <b-input
+        v-model="model.title"
+        required
+        :disabled="forceDisable"
+      ></b-input>
     </b-field>
 
     <b-field label="Palavras Chave">
-      <b-input v-model="model.keywords" required></b-input>
+      <b-input
+        v-model="model.keywords"
+        required
+        :disabled="forceDisable"
+      ></b-input>
     </b-field>
 
     <b-field label="Resumo">
@@ -66,107 +88,146 @@
         maxlength="400"
         type="textarea"
         required
+        :disabled="forceDisable"
       ></b-input>
     </b-field>
 
-    <h2 class="subtitle">Banco examinadora:</h2>
+    <h2 class="subtitle">Banca examinadora:</h2>
 
     <b-field grouped>
       <b-field label="Orientador(a)" expanded>
-        <b-input v-model="model.advisorName" required></b-input>
+        <b-input
+          v-model="model.advisorName"
+          required
+          :disabled="forceDisable"
+        ></b-input>
       </b-field>
-      <b-field label="Titulo">
-        <b-select v-model="model.advisorTitle" required>
+      <b-field v-if="!forceDisable" label="Titulo">
+        <b-select
+          v-model="model.advisorTitle"
+          required
+          :disabled="forceDisable"
+        >
           <option value="other">Outro</option>
           <option value="doctor">Doutor</option>
           <option value="master">Mestre</option>
         </b-select>
       </b-field>
-      <b-field label="Tipo">
-        <b-select v-model="model.advisorType" required>
-          <option value="internal">Membro Interno</option>
-          <option value="external">Membro Externo</option>
+      <b-field v-if="!forceDisable" label="Tipo">
+        <b-select v-model="model.advisorType" required :disabled="forceDisable">
+          <option value="internal">Interno</option>
+          <option value="external">Externo</option>
         </b-select>
       </b-field>
     </b-field>
 
     <b-field grouped>
       <b-field label="Coorientador(a) (Opcional)" expanded>
-        <b-input v-model="model.coAdvisorName"></b-input>
+        <b-input
+          v-model="model.coAdvisorName"
+          :disabled="forceDisable"
+        ></b-input>
       </b-field>
       <b-field label="Titulo">
-        <b-select v-model="model.coAdvisorTitle">
+        <b-select v-model="model.coAdvisorTitle" :disabled="forceDisable">
           <option value="other">Outro</option>
           <option value="doctor">Doutor</option>
           <option value="master">Mestre</option>
         </b-select>
       </b-field>
       <b-field label="Tipo">
-        <b-select v-model="model.coAdvisorType">
-          <option value="internal">Membro Interno</option>
-          <option value="external">Membro Externo</option>
+        <b-select v-model="model.coAdvisorType" :disabled="forceDisable">
+          <option value="internal">Interno</option>
+          <option value="external">Externo</option>
         </b-select>
       </b-field>
     </b-field>
 
     <b-field grouped>
       <b-field label="Avaliador(a) 1" expanded>
-        <b-input v-model="model.evaluator1Name" required></b-input>
+        <b-input
+          v-model="model.evaluator1Name"
+          required
+          :disabled="forceDisable"
+        ></b-input>
       </b-field>
       <b-field label="Titulo">
-        <b-select v-model="model.evaluator1Title" required>
+        <b-select
+          v-model="model.evaluator1Title"
+          required
+          :disabled="forceDisable"
+        >
           <option value="other">Outro</option>
           <option value="doctor">Doutor</option>
           <option value="master">Mestre</option>
         </b-select>
       </b-field>
       <b-field label="Tipo">
-        <b-select v-model="model.evaluator1Type" required>
-          <option value="internal">Membro Interno</option>
-          <option value="external">Membro Externo</option>
+        <b-select
+          v-model="model.evaluator1Type"
+          required
+          :disabled="forceDisable"
+        >
+          <option value="internal">Interno</option>
+          <option value="external">Externo</option>
         </b-select>
       </b-field>
     </b-field>
 
     <b-field grouped>
       <b-field label="Avaliador(a) 2" expanded>
-        <b-input v-model="model.evaluator2Name" required></b-input>
+        <b-input
+          v-model="model.evaluator2Name"
+          required
+          :disabled="forceDisable"
+        ></b-input>
       </b-field>
       <b-field label="Titulo">
-        <b-select v-model="model.evaluator2Title" required>
+        <b-select
+          v-model="model.evaluator2Title"
+          required
+          :disabled="forceDisable"
+        >
           <option value="other">Outro</option>
           <option value="doctor">Doutor</option>
           <option value="master">Mestre</option>
         </b-select>
       </b-field>
       <b-field label="Tipo">
-        <b-select v-model="model.evaluator2Type" required>
-          <option value="internal">Membro Interno</option>
-          <option value="external">Membro Externo</option>
+        <b-select
+          v-model="model.evaluator2Type"
+          required
+          :disabled="forceDisable"
+        >
+          <option value="internal">Interno</option>
+          <option value="external">Externo</option>
         </b-select>
       </b-field>
     </b-field>
 
     <b-field grouped>
       <b-field label="Avaliador(a) 3 (Opcional)" expanded>
-        <b-input v-model="model.evaluator3Name"></b-input>
+        <b-input
+          v-model="model.evaluator3Name"
+          :disabled="forceDisable"
+        ></b-input>
       </b-field>
       <b-field label="Titulo">
-        <b-select v-model="model.evaluator3Title">
+        <b-select v-model="model.evaluator3Title" :disabled="forceDisable">
           <option value="other">Outro</option>
           <option value="doctor">Doutor</option>
           <option value="master">Mestre</option>
         </b-select>
       </b-field>
       <b-field label="Tipo">
-        <b-select v-model="model.evaluator3Type">
-          <option value="internal">Membro Interno</option>
-          <option value="external">Membro Externo</option>
+        <b-select v-model="model.evaluator3Type" :disabled="forceDisable">
+          <option value="internal">Interno</option>
+          <option value="external">Externo</option>
         </b-select>
       </b-field>
     </b-field>
 
-    <div class="control">
+    <div v-if="!forceDisable" class="control">
       <b-button type="is-primary is-large" native-type="submit">
         Enviar
       </b-button>
@@ -222,6 +283,11 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+
+    forceDisable: {
+      type: Boolean,
+      default: false
     },
 
     onSubmit: {
