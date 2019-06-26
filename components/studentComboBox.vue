@@ -38,7 +38,7 @@
                   'Dezembro'
                 ]"
                 :day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
-                first-day-of-week="0"
+                :first-day-of-week="0"
               ></b-datepicker>
             </b-field>
             <strong>E-mail</strong>:
