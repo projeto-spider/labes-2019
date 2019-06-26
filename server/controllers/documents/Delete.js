@@ -37,7 +37,7 @@ module.exports = async function removeDocument(ctx) {
 
   await del(file)
 
-  ctx.status = 200
+  ctx.status = 204
   ctx.body = await Documents.where({ id })
     .where({ studentId })
     .destroy()
