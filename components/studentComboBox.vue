@@ -96,11 +96,9 @@
           </div>
           <div class="column is-half">
             <div class="box">
-              <p class="title is-4">
-                Documentos
-              </p>
+              <p class="title is-4">Documentos</p>
               <div class="table-container">
-                <table class="table is-narrow">
+                <table class="table is-narrow table-documents">
                   <tbody>
                     <tr>
                       <td>
@@ -118,13 +116,14 @@
                           :href="`${ataDocument.url}?token=${token}`"
                           target="_blank"
                         >
-                          <b-icon icon="file-pdf"></b-icon>
+                          <b-icon
+                            icon="file-pdf"
+                            class="is-inline-block"
+                          ></b-icon>
                         </a>
-                        <p v-else>
-                          Sem documento
-                        </p>
+                        <p v-else>Sem documento</p>
                       </td>
-                      <td>
+                      <td class="has-text-centered">
                         <b-upload
                           v-model="uploadFile"
                           :disabled="disableUploadAta"
@@ -137,9 +136,9 @@
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
-                      </td>
-                      <td v-if="hasDocument.ataFile">
+
                         <b-button
+                          v-if="hasDocument.ataFile"
                           class="button is-primary"
                           :disabled="disableUploadAta"
                           @click="deleteDocument(ataDocument)"
@@ -148,8 +147,11 @@
                         </b-button>
                       </td>
                     </tr>
+
                     <tr>
-                      <td><strong>Lauda</strong></td>
+                      <td>
+                        <strong>Lauda</strong>
+                      </td>
                       <td>
                         <b-checkbox
                           v-model="laudaCheck"
@@ -162,13 +164,14 @@
                           :href="`${laudaDocument.url}?token=${token}`"
                           target="_blank"
                         >
-                          <b-icon icon="file-pdf"></b-icon>
+                          <b-icon
+                            icon="file-pdf"
+                            class="is-inline-block"
+                          ></b-icon>
                         </a>
-                        <p v-else>
-                          Sem documento
-                        </p>
+                        <p v-else>Sem documento</p>
                       </td>
-                      <td>
+                      <td class="has-text-centered">
                         <b-upload
                           v-model="uploadFile"
                           :disabled="disableUploadLauda"
@@ -181,9 +184,9 @@
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
-                      </td>
-                      <td v-if="hasDocument.laudaFile">
+
                         <b-button
+                          v-if="hasDocument.laudaFile"
                           class="button is-primary"
                           :disabled="disableUploadLauda"
                           @click="deleteDocument(laudaDocument)"
@@ -192,23 +195,23 @@
                         </b-button>
                       </td>
                     </tr>
+
                     <tr>
-                      <td><strong>CD</strong></td>
+                      <td>
+                        <strong>CD</strong>
+                      </td>
                       <td>
                         <b-checkbox
                           v-model="cdCheck"
                           :disabled="!canEdit"
                         ></b-checkbox>
                       </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
+                      <tda  colspan="2"></td>
                     </tr>
                     <tr v-if="canEdit || hasDocument.presFile">
-                      <td><strong>Lista presc.</strong></td>
+                      <td>
+                        <strong>Lista presc.</strong>
+                      </td>
                       <td>
                         <b-checkbox
                           v-model="presCheck"
@@ -221,13 +224,14 @@
                           :href="`${presDocument.url}?token=${token}`"
                           target="_blank"
                         >
-                          <b-icon icon="file-pdf"></b-icon>
+                          <b-icon
+                            icon="file-pdf"
+                            class="is-inline-block"
+                          ></b-icon>
                         </a>
-                        <p v-else>
-                          Sem documento
-                        </p>
+                        <p v-else>Sem documento</p>
                       </td>
-                      <td>
+                      <td class="has-text-centered">
                         <b-upload
                           v-model="uploadFile"
                           :disabled="disableUploadPres"
@@ -240,9 +244,9 @@
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
-                      </td>
-                      <td v-if="hasDocument.presFile">
+
                         <b-button
+                          v-if="hasDocument.presFile"
                           class="button is-primary"
                           :disabled="disableUploadPres"
                           @click="deleteDocument(presDocument)"
@@ -262,17 +266,15 @@
         <div class="level-left">
           <div class="level-item">
             <b-field>
-              <b-button class="is-primary" @click="toggleEdit">
-                Editar
-              </b-button>
+              <b-button class="is-primary" @click="toggleEdit">Editar</b-button>
             </b-field>
           </div>
         </div>
         <div class="level-right">
           <div class="level-item">
             <b-field>
-              <b-button class="is-primary" @click="putStudents">
-                Atualizar</b-button
+              <b-button class="is-primary" @click="putStudents"
+                >Atualizar</b-button
               >
             </b-field>
           </div>
@@ -599,5 +601,9 @@ export default {
 
 .icon {
   margin-left: 1em;
+}
+
+.table-documents td {
+  vertical-align: middle;
 }
 </style>
