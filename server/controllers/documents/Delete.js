@@ -25,15 +25,18 @@ module.exports = async function removeDocument(ctx) {
   const file = utils.fileName(diretory, studentFind, documentType)
 
   const exists = promisify(fs.access)
-  const existsNoFile = await exists(file)
-
-  if (existsNoFile) {
+  try {
+    await exists(file)
+  } catch (e) {
+    ctx.status = 404
+    ctx.body = { code: errors.NOT_FOUND }
     return
   }
 
   const del = promisify(fs.unlink)
   await del(file)
 
+  ctx.status = 200
   ctx.body = await Documents.where({ id })
     .where({ studentId })
     .destroy()

@@ -53,7 +53,6 @@ describe('/api/documents', () => {
   })
 
   test('DELETE /students/:studentId/documents/:documentId', async done => {
-    jest.setTimeout(30000)
     const dir = path.join(__dirname, '../../../storage/201704940001')
     const file = path.join(dir, '201704940001-ATA.pdf')
     fs.mkdirSync(dir)
