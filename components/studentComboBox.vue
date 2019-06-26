@@ -17,9 +17,11 @@
             <strong>Orientador:</strong>
             <span>{{ studentData.advisor }}</span>
             <br />
-            <strong>Orientador:</strong> <span>{{ studentData.advisor }}</span> <br />
+            <strong>Orientador:</strong> <span>{{ studentData.advisor }}</span>
+            <br />
             <strong>Status:</strong> <span>{{ displayStatus }}</span> <br />
-            <strong>{{ defenseDateStatus }}</strong><br />
+            <strong>{{ defenseDateStatus }}</strong
+            ><br />
             <b-field>
               <b-datepicker
                 v-model="defenseDate"
