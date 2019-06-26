@@ -8,13 +8,18 @@
       <div class="content">
         <div class="columns">
           <div class="column is-half">
-            <strong>Nome</strong>: {{ studentData.name }} <br />
-            <strong>Matricula</strong>: {{ studentData.registrationNumber }}
+            <strong>Nome:</strong>
+            <span>{{ studentData.name }}</span>
             <br />
-            <strong>Orientador</strong>: {{ studentData.advisor }} <br />
-            <strong>Status</strong>: {{ displayStatus }} <br />
-            <strong>{{ defenseDateStatus }}</strong
-            ><br />
+            <strong>Matricula:</strong>
+            <span>{{ studentData.registrationNumber }}</span>
+            <br />
+            <strong>Orientador:</strong>
+            <span>{{ studentData.advisor }}</span>
+            <br />
+            <strong>Orientador:</strong> <span>{{ studentData.advisor }}</span> <br />
+            <strong>Status:</strong> <span>{{ displayStatus }}</span> <br />
+            <strong>{{ defenseDateStatus }}</strong><br />
             <b-field>
               <b-datepicker
                 v-model="defenseDate"
@@ -206,7 +211,7 @@
                           :disabled="!canEdit"
                         ></b-checkbox>
                       </td>
-                      <tda  colspan="2"></td>
+                      <td colspan="2"></td>
                     </tr>
                     <tr v-if="canEdit || hasDocument.presFile">
                       <td>
