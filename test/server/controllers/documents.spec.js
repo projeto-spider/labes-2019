@@ -62,7 +62,6 @@ describe('/api/documents', () => {
       .request(server.listen())
       .del('/api/students/1/documents/1')
       .set('Authorization', `Bearer ${token}`)
-    expect(res.body).toBeDefined()
     expect(res.status).toEqual(204)
     expect(res.body).toEqual({})
     expect(fs.existsSync(file)).toEqual(false)
