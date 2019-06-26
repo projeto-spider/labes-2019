@@ -8,16 +8,26 @@
       <div class="content">
         <div class="columns">
           <div class="column is-half">
-            <strong>Nome</strong>: {{ studentData.name }} <br />
-            <strong>Matricula</strong>: {{ studentData.registrationNumber }}
+            <strong>Nome:</strong>
+            <span>{{ studentData.name }}</span>
             <br />
-            <strong>Orientador</strong>: {{ studentData.advisor }} <br />
-            <strong>Status</strong>: {{ displayStatus }} <br />
+            <strong>Matricula:</strong>
+            <span>{{ studentData.registrationNumber }}</span>
+            <br />
+            <strong>Orientador:</strong>
+            <span>{{ studentData.advisor }}</span>
+            <br />
+            <strong>Orientador:</strong> <span>{{ studentData.advisor }}</span>
+            <br />
+            <strong>Status:</strong> <span>{{ displayStatus }}</span> <br />
             <strong>{{ defenseDateStatus }}</strong
             ><br />
             <b-field>
               <b-datepicker
                 v-model="defenseDate"
+                :max-date="
+                  defenseDateStatus === 'Defendeu em' ? new Date() : undefined
+                "
                 :date-formatter="dateFormatter"
                 :disabled="!canEdit"
                 :month-names="[
@@ -35,7 +45,7 @@
                   'Dezembro'
                 ]"
                 :day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
-                first-day-of-week="0"
+                :first-day-of-week="0"
               ></b-datepicker>
             </b-field>
             <strong>E-mail</strong>:
@@ -93,11 +103,9 @@
           </div>
           <div class="column is-half">
             <div class="box">
-              <p class="title is-4">
-                Documentos
-              </p>
+              <p class="title is-4">Documentos</p>
               <div class="table-container">
-                <table class="table is-narrow">
+                <table class="table is-narrow table-documents">
                   <tbody>
                     <tr>
                       <td>
@@ -115,13 +123,14 @@
                           :href="`${ataDocument.url}?token=${token}`"
                           target="_blank"
                         >
-                          <b-icon icon="file-pdf"></b-icon>
+                          <b-icon
+                            icon="file-pdf"
+                            class="is-inline-block"
+                          ></b-icon>
                         </a>
-                        <p v-else>
-                          Sem documento
-                        </p>
+                        <p v-else>Sem documento</p>
                       </td>
-                      <td>
+                      <td class="has-text-centered">
                         <b-upload
                           v-model="uploadFile"
                           :disabled="disableUploadAta"
@@ -134,10 +143,22 @@
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
+
+                        <b-button
+                          v-if="hasDocument.ataFile"
+                          class="button is-primary"
+                          :disabled="disableUploadAta"
+                          @click="deleteDocument(ataDocument)"
+                        >
+                          <b-icon icon="trash"></b-icon>
+                        </b-button>
                       </td>
                     </tr>
+
                     <tr>
-                      <td><strong>Lauda</strong></td>
+                      <td>
+                        <strong>Lauda</strong>
+                      </td>
                       <td>
                         <b-checkbox
                           v-model="laudaCheck"
@@ -150,13 +171,14 @@
                           :href="`${laudaDocument.url}?token=${token}`"
                           target="_blank"
                         >
-                          <b-icon icon="file-pdf"></b-icon>
+                          <b-icon
+                            icon="file-pdf"
+                            class="is-inline-block"
+                          ></b-icon>
                         </a>
-                        <p v-else>
-                          Sem documento
-                        </p>
+                        <p v-else>Sem documento</p>
                       </td>
-                      <td>
+                      <td class="has-text-centered">
                         <b-upload
                           v-model="uploadFile"
                           :disabled="disableUploadLauda"
@@ -169,25 +191,34 @@
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
+
+                        <b-button
+                          v-if="hasDocument.laudaFile"
+                          class="button is-primary"
+                          :disabled="disableUploadLauda"
+                          @click="deleteDocument(laudaDocument)"
+                        >
+                          <b-icon icon="trash"></b-icon>
+                        </b-button>
                       </td>
                     </tr>
+
                     <tr>
-                      <td><strong>CD</strong></td>
+                      <td>
+                        <strong>CD</strong>
+                      </td>
                       <td>
                         <b-checkbox
                           v-model="cdCheck"
                           :disabled="!canEdit"
                         ></b-checkbox>
                       </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
+                      <td colspan="2"></td>
                     </tr>
                     <tr v-if="canEdit || hasDocument.presFile">
-                      <td><strong>Lista presc.</strong></td>
+                      <td>
+                        <strong>Lista presc.</strong>
+                      </td>
                       <td>
                         <b-checkbox
                           v-model="presCheck"
@@ -200,13 +231,14 @@
                           :href="`${presDocument.url}?token=${token}`"
                           target="_blank"
                         >
-                          <b-icon icon="file-pdf"></b-icon>
+                          <b-icon
+                            icon="file-pdf"
+                            class="is-inline-block"
+                          ></b-icon>
                         </a>
-                        <p v-else>
-                          Sem documento
-                        </p>
+                        <p v-else>Sem documento</p>
                       </td>
-                      <td>
+                      <td class="has-text-centered">
                         <b-upload
                           v-model="uploadFile"
                           :disabled="disableUploadPres"
@@ -219,6 +251,15 @@
                             <b-icon icon="upload"></b-icon>
                           </a>
                         </b-upload>
+
+                        <b-button
+                          v-if="hasDocument.presFile"
+                          class="button is-primary"
+                          :disabled="disableUploadPres"
+                          @click="deleteDocument(presDocument)"
+                        >
+                          <b-icon icon="trash"></b-icon>
+                        </b-button>
                       </td>
                     </tr>
                   </tbody>
@@ -232,17 +273,15 @@
         <div class="level-left">
           <div class="level-item">
             <b-field>
-              <b-button class="is-primary" @click="toggleEdit">
-                Editar
-              </b-button>
+              <b-button class="is-primary" @click="toggleEdit">Editar</b-button>
             </b-field>
           </div>
         </div>
         <div class="level-right">
           <div class="level-item">
             <b-field>
-              <b-button class="is-primary" @click="putStudents">
-                Atualizar</b-button
+              <b-button class="is-primary" @click="putStudents"
+                >Atualizar</b-button
               >
             </b-field>
           </div>
@@ -398,6 +437,7 @@ export default {
                 )
               )
             : null
+          this.canEdit = false
           this.$toast.open({
             message: 'Aluno atualizado com sucesso.',
             type: 'is-success'
@@ -447,6 +487,9 @@ export default {
       this.showPendencies = false
     },
     mapDocuments(documents) {
+      this.ataDocument = {}
+      this.laudaDocument = {}
+      this.presDocument = {}
       documents.forEach(element => {
         if (element.type === 1) {
           this.ataDocument = Object.assign({}, element)
@@ -469,16 +512,6 @@ export default {
         .post(`/api/students/${this.studentData.id}/documents`, body)
         .then(result => {
           this.isLoading = false
-          if (type === '1') {
-            Object.assign(this.ataDocument, result.data)
-            this.ataCheck = true
-          } else if (type === '2') {
-            Object.assign(this.laudaDocument, result.data)
-            this.laudaCheck = true
-          } else if (type === '3') {
-            Object.assign(this.presDocument, result.data)
-            this.presCheck = true
-          }
           this.$toast.open({
             message: 'Upload feito com sucesso',
             type: 'is-success'
@@ -511,7 +544,23 @@ export default {
       })
       this.file = File
     },
-
+    deleteDocument(document) {
+      this.isLoading = true
+      this.$axios
+        .delete(`/api/students/${this.studentData.id}/documents/${document.id}`)
+        .then(result => {
+          this.isLoading = false
+          this.$toast.open({
+            message: 'Exclusão feita com sucesso',
+            type: 'is-success'
+          })
+          this.getStudentsDocument()
+        })
+        .catch(error => {
+          this.isLoading = false
+          this.openErrorNotification(error.response.data.code)
+        })
+    },
     onCrgBlur(e) {
       let value = +e.target.value
 
@@ -559,5 +608,9 @@ export default {
 
 .icon {
   margin-left: 1em;
+}
+
+.table-documents td {
+  vertical-align: middle;
 }
 </style>

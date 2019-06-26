@@ -1,7 +1,6 @@
 const fs = require('fs')
 const path = require('path')
 const errors = require('../../../shared/errors')
-const enums = require('../../../shared/enums')
 const utils = require('../../utils')
 
 const Students = require('../../models/Student')
@@ -86,15 +85,8 @@ module.exports = async function uploadDocument(ctx) {
   const file = ctx.request.files.file
   const reader = fs.createReadStream(file.path)
   const stream = fs.createWriteStream(
-    path.join(
-      dirStudents,
-      studentFind.get('registrationNumber') +
-        '-' +
-        enums.documents[documentType] +
-        '.pdf'
-    )
+    utils.fileName(dirStudents, studentFind, documentType)
   )
-
   reader.pipe(stream)
 
   await utils.updateStudentFitness(studentFind)
