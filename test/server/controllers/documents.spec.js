@@ -66,6 +66,7 @@ describe('/api/documents', () => {
     expect(res.type).toEqual('application/json')
     expect(res.status).toEqual(200)
     expect(res.body).toEqual({})
+    expect(fs.existsSync(file)).toEqual(false)
     done()
   })
 

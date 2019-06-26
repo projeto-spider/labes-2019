@@ -7,6 +7,9 @@ const utils = require('../../utils')
 const Documents = require('../../models/Document')
 const Students = require('../../models/Student')
 
+const exists = promisify(fs.access)
+const del = promisify(fs.unlink)
+
 module.exports = async function removeDocument(ctx) {
   const { studentId, id } = ctx.params
 
@@ -24,7 +27,6 @@ module.exports = async function removeDocument(ctx) {
   const diretory = path.join(dirUploads, studentFind.get('registrationNumber'))
   const file = utils.fileName(diretory, studentFind, documentType)
 
-  const exists = promisify(fs.access)
   try {
     await exists(file)
   } catch (e) {
@@ -33,7 +35,6 @@ module.exports = async function removeDocument(ctx) {
     return
   }
 
-  const del = promisify(fs.unlink)
   await del(file)
 
   ctx.status = 200
