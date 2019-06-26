@@ -7,7 +7,7 @@
     <div class="card-content">
       <div class="content">
         <div class="columns">
-          <div class="column is-half">
+          <div class="column is-half" style="overflow-y: unset">
             <strong>Nome:</strong>
             <span>{{ studentData.name }}</span>
             <br />
