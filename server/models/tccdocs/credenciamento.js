@@ -3,7 +3,7 @@ module.exports = function model(
   {
     tituloDiretor,
     curso,
-    nomeDosAlunos,
+    discente,
     matricula,
     membroConvidado,
     tituloOrientador,
@@ -20,65 +20,53 @@ module.exports = function model(
     .text(`REQUERIMENTO DE CREDENCIAMENTO PARA PARTICIPAÇÃO DE BANCA`, 80, 50, {
       align: 'center'
     })
-
   doc
     .fontSize(12)
     .text(
-      `Para o diretor(a) da Faculdade de Computação da Universidade Federal do Pará, ${tituloDiretor}(a) ${diretor}`,
+      `Para o diretor(a) da Faculdade de Computação da Universidade Federal do Pará, ${tituloDiretor}${diretor}`,
       50,
       100,
       {
         align: 'justify'
       }
     )
-
   doc
     .fontSize(12)
     .text(
-      `De acordo com o Art. 94 do Regulamento da Graduação desta Universidade, solicito o credenciamento para participação de bancas de defesa de Trabalhos de Conclusão de Curso. Informo o convite recebido pelo(a) professor(a) ${tituloOrientador}(a) ${orientador}, para compor a banca de defesa do aluno concluinte do Curso de Bacharelado em ${curso}, ${nomeDosAlunos}, matrícula ${matricula}.`,
+      `De acordo com o Art. 94 do Regulamento da Graduação desta Universidade, solicito o credenciamento para participação de bancas de defesa de Trabalhos de Conclusão de Curso. Informo o convite recebido pelo(a) professor(a) ${tituloOrientador}${orientador}, para compor a banca de defesa do aluno concluinte do Curso de Bacharelado em ${curso}, ${discente}, matrícula ${matricula}.`,
       50,
       140,
       {
         align: 'justify'
       }
     )
-
   doc.fontSize(12).text(`Nestes termos, peço deferimento.`, 100, 210, {
     align: 'left'
   })
-
   doc.fontSize(12).text(`Belém, ${dia} de ${mes} de ${ano}.`, 100, 240, {
     align: 'left'
   })
-
   doc.fontSize(12).text(`____________________________________`, 80, 300, {
     align: 'center'
   })
-
-  doc.fontSize(12).text(
-    `${membroConvidado}\n
-      (Membro convidado)`,
-    70,
-    320,
-    {
+  doc
+    .fontSize(12)
+    .text(`${membroConvidado}\n\n      (Membro convidado)`, 70, 320, {
       align: 'center'
-    }
-  )
-
+    })
   doc.fontSize(12).text(`____________________________________`, 80, 400, {
     align: 'center'
   })
-
-  doc.fontSize(12).text(
-    `${tituloOrientador}(a) ${orientador}\n
-      (Orientador(a))`,
-    70,
-    420,
-    {
-      align: 'center'
-    }
-  )
-
+  doc
+    .fontSize(12)
+    .text(
+      `${tituloOrientador}${orientador}\n\n      (Orientador(a))`,
+      70,
+      420,
+      {
+        align: 'center'
+      }
+    )
   doc.fontSize(12).text(
     `Art. 94. O TCC será defendido em sessão pública, perante banca examinadora  constituída  de,  no  mínimo,  dois  membros,  sendo  um  deles,  obrigatoriamente,  o orientador, que presidirá a sessão.\n
         § 1° A  sessão  pública  será  organizada  pela  Faculdade  ou  Escola  e  realizada durante o período letivo.\n
