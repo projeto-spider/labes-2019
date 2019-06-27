@@ -252,13 +252,19 @@ export default {
 }
 
 .slide-fade-vertical-enter-active,
-.slide-fade-vertical-leave-active {
+.slide-fade-vertical-leave-active,
+.slide-fade-horizontal-enter-active,
+.slide-fade-horizontal-leave-active {
   transition: all 0.3s ease;
 }
 .slide-fade-vertical-enter,
 .slide-fade-vertical-leave-to {
-  transition: all 0.3s ease;
   transform: translateY(10px);
+  opacity: 0;
+}
+.slide-fade-horizontal-enter,
+.slide-fade-horizontal-leave-to {
+  transform: translateX(10px);
   opacity: 0;
 }
 </style>
