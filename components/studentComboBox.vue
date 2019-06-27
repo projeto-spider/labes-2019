@@ -207,8 +207,6 @@ export default {
       ataDocument: {},
       laudaDocument: {},
       presDocument: {},
-      uploadFile: File,
-      crg: '',
       totalSubjects: [],
       studentSubjects: [],
       studentData: Object.assign({}, this.student),
@@ -301,14 +299,13 @@ export default {
 
     getPendencies() {
       this.$axios
-        .get(`/api/subjects`, {
+        .$get(`/api/subjects`, {
           params: {
             paginate: 0
           }
         })
-        .then(response => {
-          this.totalSubjectsLength = response.headers['pagination-row-count']
-          this.totalSubjects = response.data
+        .then(data => {
+          this.totalSubjects = data
           this.showPendencies = true
         })
         .catch(e => {
