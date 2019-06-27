@@ -1,17 +1,17 @@
 <template>
   <div class="container">
-    <admission :mailing-list="'concluding'"></admission>
+    <AdmissionForm :mailing-list="'concluding'"></AdmissionForm>
   </div>
 </template>
 
 <script>
-import admission from '~/components/admission'
+import AdmissionForm from '~/components/AdmissionForm'
 
 export default {
   name: 'ConcludingAdmission',
   layout: 'admissionLayout',
   components: {
-    admission
+    AdmissionForm
   }
 }
 </script>

@@ -36,7 +36,8 @@ export default {
 
     maxDate: {
       type: Date,
-      required: false
+      required: false,
+      default: undefined
     },
 
     disabled: {

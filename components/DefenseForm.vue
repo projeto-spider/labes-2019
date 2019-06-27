@@ -55,7 +55,7 @@
     </b-field>
 
     <b-field label="Data">
-      <datepicker
+      <DatePicker
         v-model="model.date"
         placeholder="Selecionar data"
         :disabled="forceDisable"
@@ -63,7 +63,7 @@
     </b-field>
 
     <b-field label="Horário inicial">
-      <timepicker v-model="model.time" :disabled="forceDisable" />
+      <TimePicker v-model="model.time" :disabled="forceDisable" />
     </b-field>
 
     <b-field label="Título TCC">
@@ -237,8 +237,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import Datepicker from './datepicker'
-import Timepicker from './timepicker'
+import DatePicker from './DatePicker'
+import TimePicker from './TimePicker'
 
 const defaultStudent = () => ({ name: '', registrationNumber: '' })
 const defaultModel = () => ({
@@ -275,8 +275,8 @@ export default {
   name: 'DefenseForm',
 
   components: {
-    Datepicker,
-    Timepicker
+    DatePicker,
+    TimePicker
   },
 
   props: {

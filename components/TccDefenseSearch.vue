@@ -119,7 +119,7 @@
 import { mapState } from 'vuex'
 import pDebounce from 'p-debounce'
 import { errorsHandler } from './mixins/errors'
-import DefenseForm from './defenseForm'
+import DefenseForm from './DefenseForm'
 
 export default {
   name: 'TccDefenseSearch',

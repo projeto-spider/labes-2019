@@ -75,7 +75,7 @@
 import { errorsHandler } from './mixins/errors'
 
 export default {
-  name: 'Admission',
+  name: 'AdmissionForm',
   mixins: [errorsHandler],
   props: {
     mailingList: {

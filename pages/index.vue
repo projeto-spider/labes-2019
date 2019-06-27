@@ -1,7 +1,6 @@
 <template>
   <section class="container">
     <div>
-      <logo />
       <h1 class="title">labes</h1>
       <h2 class="subtitle">My magnificent Nuxt.js project</h2>
       <div class="links">
@@ -21,12 +20,8 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
 export default {
-  middleware: 'auth',
-  components: {
-    Logo
-  }
+  middleware: 'auth'
 }
 </script>
 

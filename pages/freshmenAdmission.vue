@@ -1,17 +1,17 @@
 <template>
   <div class="container">
-    <admission :mailing-list="'freshman'"></admission>
+    <admissionForm :mailing-list="'freshman'"></admissionForm>
   </div>
 </template>
 
 <script>
-import admission from '~/components/admission'
+import admissionForm from '~/components/AdmissionForm'
 
 export default {
   name: 'FreshmenAdmission',
   layout: 'admissionLayout',
   components: {
-    admission
+    admissionForm
   }
 }
 </script>

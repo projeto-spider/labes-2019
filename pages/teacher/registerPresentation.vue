@@ -14,7 +14,7 @@
 
 <script>
 import { errorsHandler } from '../../components/mixins/errors'
-import DefenseForm from '../../components/defenseForm'
+import DefenseForm from '../../components/DefenseForm'
 
 export default {
   name: 'RegisterPresentation',

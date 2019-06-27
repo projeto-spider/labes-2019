@@ -2,7 +2,7 @@
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-3 is-offset-1">
-        <modal-prescribed-list></modal-prescribed-list>
+        <ModalPrescribedList></ModalPrescribedList>
       </div>
 
       <div class="column is-4">
@@ -27,7 +27,7 @@
       </div>
     </div>
     <br />
-    <search-input
+    <SearchInput
       ref="fitGraduatingSearchInput"
       :default-course="courseTag"
       :title="'Graduandos Aptos'"
@@ -39,23 +39,23 @@
       :default-sort-order="'desc'"
       :show-crg-filter="true"
       @toggleComboBox="onToggleComboBox"
-    ></search-input>
+    ></SearchInput>
     <br />
-    <search-input
+    <SearchInput
       :default-course="courseTag"
       :title="'Graduandos Não-Aptos'"
       :is-graduating="1"
       :is-active="1"
       :show-defense-date="true"
       :is-fit="0"
-    ></search-input>
+    ></SearchInput>
     <br />
-    <search-input
+    <SearchInput
       :default-course="courseTag"
       :title="'Formandos'"
       :is-active="1"
       :is-forming="1"
-    ></search-input>
+    ></SearchInput>
 
     <b-modal :active.sync="isModalOpen" :width="640" scroll="keep">
       <div class="card" style="padding: 25px;">
@@ -89,8 +89,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import SearchInput from '~/components/searchInput'
-import ModalPrescribedList from '~/components/modalPrescribedList'
+import SearchInput from '~/components/SearchInput'
+import ModalPrescribedList from '~/components/ModalPrescribedList'
 
 export default {
   name: 'Forming',
