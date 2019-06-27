@@ -238,15 +238,17 @@ export default {
     displayStatus() {
       return this.getStatus(this.studentData)
     },
+
     defenseDateStatus() {
-      if (
-        this.studentData.isGraduating === 1 ||
-        this.studentData.isForming === 1
-      ) {
+      const isGraduating = this.studentData.isGraduating === 1
+      const isForming = this.studentData.isForming
+
+      if (isGraduating || isForming === 1) {
         return 'Defendeu em'
       }
       return 'Data de Defesa'
     },
+
     cdCheck: {
       get() {
         return this.studentData.cd === 1
@@ -259,6 +261,7 @@ export default {
 
   created() {
     this.getStudentsDocument()
+
     this.defenseDate = this.studentData.defenseDate
       ? new Date(
           Date.parse(
@@ -269,8 +272,10 @@ export default {
           )
         )
       : null
+
+    const endpoint = `/api/students/${this.student.id}/pendencies`
     this.$axios
-      .get(`/api/students/${this.student.id}/pendencies`)
+      .get(endpoint)
       .then(response => {
         this.studentSubjects = response.data.map(pendency => pendency.subjectId)
       })
@@ -279,11 +284,10 @@ export default {
 
   methods: {
     getStudentsDocument() {
+      const endpoint = `/api/students/${this.studentData.id}/documents`
       this.$axios
-        .get(`/api/students/${this.studentData.id}/documents`)
-        .then(res => {
-          this.mapDocuments(res.data)
-        })
+        .$get(endpoint)
+        .then(this.mapDocuments)
         .catch(() => {
           this.$toast.open({
             message: 'Falha ao carregar os documentos do aluno',
@@ -291,22 +295,19 @@ export default {
           })
         })
     },
+
     putStudents() {
       this.isLoading = true
       const defenseDate =
-        this.defenseDate &&
-        this.defenseDate
-          .toISOString()
-          .slice(0, 10)
-          .split('-')
-          .reverse()
-          .join('/')
+        this.defenseDate && this.dateFormatter(this.defenseDate)
+
+      const endpoint = `/api/students/${this.studentData.id}`
       const payload = { ...this.studentData, defenseDate }
       this.$axios
-        .put(`/api/students/${this.studentData.id}`, payload)
-        .then(res => {
+        .$put(endpoint, payload)
+        .then(data => {
           this.isLoading = false
-          this.studentData = res.data
+          this.studentData = data
           this.defenseDate = this.studentData.defenseDate
             ? new Date(
                 Date.parse(
@@ -329,9 +330,11 @@ export default {
           this.openErrorNotification(error.response.data.code)
         })
     },
+
     toggleEdit() {
       this.canEdit = !this.canEdit
     },
+
     getPendencies() {
       this.$axios
         .get(`/api/subjects`, {
@@ -349,40 +352,55 @@ export default {
           this.openErrorNotification(e)
         })
     },
+
     updatePendencies() {
-      if (this.canEdit) {
-        this.$axios
-          .post(
-            `/api/students/${this.student.id}/pendencies/batch`,
-            this.studentSubjects
-          )
-          .then(response => {
-            this.$toast.open({
-              message: 'Pendências de aluno atualizadas com sucesso',
-              type: 'is-success'
-            })
-          })
-          .catch(e => this.openErrorNotification(e))
+      if (!this.canEdit) {
+        return
       }
+
+      const endpoint = `/api/students/${this.student.id}/pendencies/batch`
+      this.$axios
+        .post(endpoint, this.studentSubjects)
+        .then(() => {
+          this.$toast.open({
+            message: 'Pendências de aluno atualizadas com sucesso',
+            type: 'is-success'
+          })
+        })
+        .catch(e => this.openErrorNotification(e))
+
       this.showPendencies = false
     },
+
     mapDocuments(documents) {
       this.ataDocument = {}
       this.laudaDocument = {}
       this.presDocument = {}
-      documents.forEach(element => {
-        if (element.type === ATA) {
-          this.ataDocument = Object.assign({}, element)
-          this.ataCheck = true
-        } else if (element.type === LAUDA) {
-          this.laudaDocument = Object.assign({}, element)
-          this.laudaCheck = true
-        } else if (element.type === LISTA_PRESCRICAO) {
-          this.presDocument = Object.assign({}, element)
-          this.presCheck = true
+
+      for (const document of documents) {
+        switch (document.type) {
+          case ATA:
+            this.ataDocument = Object.assign({}, document)
+            this.ataCheck = true
+            break
+
+          case LAUDA:
+            this.laudaDocument = Object.assign({}, document)
+            this.laudaCheck = true
+            break
+
+          case LISTA_PRESCRICAO:
+            this.presDocument = Object.assign({}, document)
+            this.presCheck = true
+            break
+
+          default:
+            // TODO: Caso de erro?
+            break
         }
-      })
+      }
     },
+
     onUpdateFile(type, file) {
       this.isLoading = true
 
@@ -390,9 +408,10 @@ export default {
       body.append('file', file)
       body.append('documentType', type)
 
+      const endpoint = `/api/students/${this.studentData.id}/documents`
       this.$axios
-        .post(`/api/students/${this.studentData.id}/documents`, body)
-        .then(result => {
+        .post(endpoint, body)
+        .then(() => {
           this.isLoading = false
           this.$toast.open({
             message: 'Upload feito com sucesso',
@@ -408,9 +427,11 @@ export default {
     onDeleteDocument(document) {
       this.isLoading = true
 
+      const { id } = document
+      const endpoint = `/api/students/${this.studentData.id}/documents/${id}`
       this.$axios
-        .delete(`/api/students/${this.studentData.id}/documents/${document.id}`)
-        .then(result => {
+        .delete(endpoint)
+        .then(() => {
           this.isLoading = false
           this.$toast.open({
             message: 'Exclusão feita com sucesso',
@@ -423,6 +444,7 @@ export default {
           this.openErrorNotification(error.response.data.code)
         })
     },
+
     onCrgBlur(e) {
       let value = +e.target.value
 
@@ -436,6 +458,7 @@ export default {
 
       this.studentData.crg = Math.max(0, Math.min(10, value))
     },
+
     dateFormatter(date) {
       return date
         .toISOString()
