@@ -1,3 +1,5 @@
+import { recovery, persist } from '@/front/persistence'
+
 export const state = () => ({
   token: recovery('token'),
   user: recovery('user')
@@ -44,13 +46,4 @@ export const actions = {
     commit('setToken', false)
     commit('setUser', false)
   }
-}
-
-function persist(key, value) {
-  localStorage.setItem(key, JSON.stringify(value))
-}
-
-function recovery(key) {
-  const saved = localStorage.getItem(key)
-  return saved ? JSON.parse(saved) : false
 }

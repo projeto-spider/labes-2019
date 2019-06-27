@@ -19,6 +19,7 @@
     :day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
     :first-day-of-week="0"
     :disabled="disabled"
+    :max-date="maxDate"
     @input="onInput"
   />
 </template>
@@ -31,6 +32,11 @@ export default {
     value: {
       type: String,
       default: '01/01/1970'
+    },
+
+    maxDate: {
+      type: Date,
+      required: false
     },
 
     disabled: {

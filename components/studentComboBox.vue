@@ -7,46 +7,26 @@
     <div class="card-content">
       <div class="content">
         <div class="columns">
-          <div class="column is-half">
-            <strong>Nome:</strong>
-            <span>{{ studentData.name }}</span>
-            <br />
-            <strong>Matricula:</strong>
-            <span>{{ studentData.registrationNumber }}</span>
-            <br />
-            <strong>Orientador:</strong>
-            <span>{{ studentData.advisor }}</span>
-            <br />
-            <strong>Orientador:</strong> <span>{{ studentData.advisor }}</span>
-            <br />
-            <strong>Status:</strong> <span>{{ displayStatus }}</span> <br />
-            <strong>{{ defenseDateStatus }}</strong
+          <div class="column is-half" style="overflow-y: unset">
+            <BaseStudentDataRow title="Nome" :value="studentData.name" />
+            <BaseStudentDataRow
+              title="Matrícula"
+              :value="studentData.registrationNumber"
+            />
+            <BaseStudentDataRow
+              title="Orientador"
+              :value="studentData.advisor || '-'"
+            />
+            <BaseStudentDataRow title="Status" :value="displayStatus" />
+
+            <strong>{{ hasDefended ? 'Defendeu em' : 'Data da defesa' }}</strong
             ><br />
             <b-field>
-              <b-datepicker
-                v-model="defenseDate"
-                :max-date="
-                  defenseDateStatus === 'Defendeu em' ? new Date() : undefined
-                "
-                :date-formatter="dateFormatter"
+              <Datepicker
+                v-model="studentData.defenseDate"
+                :max-date="hasDefended ? new Date() : undefined"
                 :disabled="!canEdit"
-                :month-names="[
-                  'Janeiro',
-                  'Fevereiro',
-                  'Março',
-                  'Abril',
-                  'Maio',
-                  'Junho',
-                  'Julho',
-                  'Agosto',
-                  'Setembro',
-                  'Outubro',
-                  'Novembro',
-                  'Dezembro'
-                ]"
-                :day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
-                :first-day-of-week="0"
-              ></b-datepicker>
+              />
             </b-field>
             <strong>E-mail</strong>:
             <b-input v-model="studentData.email" :disabled="!canEdit"></b-input>
@@ -57,7 +37,7 @@
               type="number"
               :min="0"
               :max="10"
-              :disabled="!canEdit"
+              :disabled="!canEdit || !canEditCrg"
               @blur="onCrgBlur"
             ></b-input>
             <br />
@@ -107,101 +87,29 @@
               <div class="table-container">
                 <table class="table is-narrow table-documents">
                   <tbody>
-                    <tr>
-                      <td>
-                        <strong>Ata</strong>
-                      </td>
-                      <td>
-                        <b-checkbox
-                          v-model="ataCheck"
-                          :disabled="!canEdit"
-                        ></b-checkbox>
-                      </td>
-                      <td>
-                        <a
-                          v-if="hasDocument.ataFile"
-                          :href="`${ataDocument.url}?token=${token}`"
-                          target="_blank"
-                        >
-                          <b-icon
-                            icon="file-pdf"
-                            class="is-inline-block"
-                          ></b-icon>
-                        </a>
-                        <p v-else>Sem documento</p>
-                      </td>
-                      <td class="has-text-centered">
-                        <b-upload
-                          v-model="uploadFile"
-                          :disabled="disableUploadAta"
-                          @input="validateUpload(1)"
-                        >
-                          <a
-                            class="button is-primary"
-                            :disabled="disableUploadAta"
-                          >
-                            <b-icon icon="upload"></b-icon>
-                          </a>
-                        </b-upload>
+                    <DocumentRow
+                      v-model="ataDocument"
+                      title="Ata"
+                      :check.sync="ataCheck"
+                      :disable="!canEdit"
+                      @update:file="
+                        file => onUpdateFile($options.documents.ATA, file)
+                      "
+                      @update:check="value => (ataCheck = value)"
+                      @delete="onDeleteDocument"
+                    />
 
-                        <b-button
-                          v-if="hasDocument.ataFile"
-                          class="button is-primary"
-                          :disabled="disableUploadAta"
-                          @click="deleteDocument(ataDocument)"
-                        >
-                          <b-icon icon="trash"></b-icon>
-                        </b-button>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <strong>Lauda</strong>
-                      </td>
-                      <td>
-                        <b-checkbox
-                          v-model="laudaCheck"
-                          :disabled="!canEdit"
-                        ></b-checkbox>
-                      </td>
-                      <td>
-                        <a
-                          v-if="hasDocument.laudaFile"
-                          :href="`${laudaDocument.url}?token=${token}`"
-                          target="_blank"
-                        >
-                          <b-icon
-                            icon="file-pdf"
-                            class="is-inline-block"
-                          ></b-icon>
-                        </a>
-                        <p v-else>Sem documento</p>
-                      </td>
-                      <td class="has-text-centered">
-                        <b-upload
-                          v-model="uploadFile"
-                          :disabled="disableUploadLauda"
-                          @input="validateUpload(2)"
-                        >
-                          <a
-                            class="button is-primary"
-                            :disabled="disableUploadLauda"
-                          >
-                            <b-icon icon="upload"></b-icon>
-                          </a>
-                        </b-upload>
-
-                        <b-button
-                          v-if="hasDocument.laudaFile"
-                          class="button is-primary"
-                          :disabled="disableUploadLauda"
-                          @click="deleteDocument(laudaDocument)"
-                        >
-                          <b-icon icon="trash"></b-icon>
-                        </b-button>
-                      </td>
-                    </tr>
+                    <DocumentRow
+                      v-model="laudaDocument"
+                      title="Lauda"
+                      :check.sync="laudaCheck"
+                      :disable="!canEdit"
+                      @update:file="
+                        file => onUpdateFile($options.documents.LAUDA, file)
+                      "
+                      @update:check="value => (laudaCheck = value)"
+                      @delete="onDeleteDocument"
+                    />
 
                     <tr>
                       <td>
@@ -215,53 +123,23 @@
                       </td>
                       <td colspan="2"></td>
                     </tr>
-                    <tr v-if="canEdit || hasDocument.presFile">
-                      <td>
-                        <strong>Lista presc.</strong>
-                      </td>
-                      <td>
-                        <b-checkbox
-                          v-model="presCheck"
-                          :disabled="!canEdit"
-                        ></b-checkbox>
-                      </td>
-                      <td>
-                        <a
-                          v-if="hasDocument.presFile"
-                          :href="`${presDocument.url}?token=${token}`"
-                          target="_blank"
-                        >
-                          <b-icon
-                            icon="file-pdf"
-                            class="is-inline-block"
-                          ></b-icon>
-                        </a>
-                        <p v-else>Sem documento</p>
-                      </td>
-                      <td class="has-text-centered">
-                        <b-upload
-                          v-model="uploadFile"
-                          :disabled="disableUploadPres"
-                          @input="validateUpload(3)"
-                        >
-                          <a
-                            class="button is-primary"
-                            :disabled="disableUploadPres"
-                          >
-                            <b-icon icon="upload"></b-icon>
-                          </a>
-                        </b-upload>
 
-                        <b-button
-                          v-if="hasDocument.presFile"
-                          class="button is-primary"
-                          :disabled="disableUploadPres"
-                          @click="deleteDocument(presDocument)"
-                        >
-                          <b-icon icon="trash"></b-icon>
-                        </b-button>
-                      </td>
-                    </tr>
+                    <DocumentRow
+                      v-model="presDocument"
+                      title="Lista presc."
+                      :check.sync="presCheck"
+                      :disable="!canEdit"
+                      hide-when-cant-edit
+                      @update:file="
+                        file =>
+                          onUpdateFile(
+                            $options.documents.LISTA_PRESCRICAO,
+                            file
+                          )
+                      "
+                      @update:check="value => (presCheck = value)"
+                      @delete="onDeleteDocument"
+                    />
                   </tbody>
                 </table>
               </div>
@@ -273,31 +151,52 @@
         <div class="level-left">
           <div class="level-item">
             <b-field>
-              <b-button class="is-primary" @click="toggleEdit">Editar</b-button>
-            </b-field>
-          </div>
-        </div>
-        <div class="level-right">
-          <div class="level-item">
-            <b-field>
-              <b-button class="is-primary" @click="putStudents"
-                >Atualizar</b-button
+              <b-button
+                class="bg-transition"
+                :type="canEdit ? 'is-danger' : 'is-primary'"
+                :outlined="canEdit"
+                @click="toggleEdit"
               >
+                {{ canEdit ? 'Parar Edição' : 'Editar' }}
+              </b-button>
             </b-field>
           </div>
         </div>
+        <transition name="slide-fade-horizontal">
+          <div v-show="canEdit" class="level-right">
+            <div class="level-item">
+              <b-field>
+                <b-button class="is-success" @click="putStudents">
+                  Atualizar
+                </b-button>
+              </b-field>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import BaseStudentDataRow from '@/components/studentComboBox/BaseStudentDataRow'
+import DocumentRow from '@/components/studentComboBox/documentRow'
+import Datepicker from '@/components/datepicker'
 import { errorsHandler } from './mixins/errors'
 import { studentStatus } from './mixins/studentStatus'
+
+const { documents } = process.env.enums
+const { ATA, LAUDA, LISTA_PRESCRICAO } = documents
+
 export default {
   name: 'StudentComboBox',
+  components: {
+    DocumentRow,
+    Datepicker,
+    BaseStudentDataRow
+  },
   mixins: [errorsHandler, studentStatus],
+  documents,
   props: {
     student: {
       type: Object,
@@ -314,83 +213,47 @@ export default {
       ataDocument: {},
       laudaDocument: {},
       presDocument: {},
-      uploadFile: File,
-      crg: '',
       totalSubjects: [],
       studentSubjects: [],
       studentData: Object.assign({}, this.student),
-      isLoading: false,
-      defenseDate: new Date()
+      isLoading: false
     }
   },
   computed: {
-    ...mapState({
-      token: state => state.auth.token
-    }),
     displayStatus() {
       return this.getStatus(this.studentData)
     },
-    disableUploadAta() {
-      return !this.ataCheck || !this.canEdit
-    },
-    disableUploadLauda() {
-      return !this.laudaCheck || !this.canEdit
-    },
-    disableUploadPres() {
-      return !this.presCheck || !this.canEdit
-    },
-    hasDocument() {
-      function check(document) {
-        return (
-          Object.entries(document).length === 0 &&
-          typeof document === 'object' &&
-          document !== null
-        )
-      }
-      const documents = {
-        ataFile: false,
-        laudaFile: false,
-        presFile: false
-      }
-      documents.ataFile = !check(this.ataDocument)
-      documents.laudaFile = !check(this.laudaDocument)
-      documents.presFile = !check(this.presDocument)
 
-      return documents
+    hasDefended() {
+      const isGraduating = Boolean(this.studentData.isGraduating)
+      const isForming = Boolean(this.studentData.isForming)
+
+      return isGraduating || isForming
     },
-    defenseDateStatus() {
-      if (
-        this.studentData.isGraduating === 1 ||
-        this.studentData.isForming === 1
-      ) {
-        return 'Defendeu em'
-      }
-      return 'Data de Defesa'
-    },
+
     cdCheck: {
       get() {
-        return this.studentData.cd === 1
+        return Boolean(this.studentData.cd)
       },
       set(newValue) {
         this.studentData.cd = newValue ? '1' : '0'
       }
+    },
+
+    canEditCrg() {
+      return (
+        Boolean(this.studentData.isGraduating) &&
+        Boolean(this.studentData.isFit)
+      )
     }
   },
 
   created() {
     this.getStudentsDocument()
-    this.defenseDate = this.studentData.defenseDate
-      ? new Date(
-          Date.parse(
-            this.studentData.defenseDate
-              .split('/')
-              .reverse()
-              .join('/')
-          )
-        )
-      : null
+
+    const endpoint = `/api/students/${this.student.id}/pendencies`
     this.$axios
-      .get(`/api/students/${this.student.id}/pendencies`)
+      .get(endpoint)
       .then(response => {
         this.studentSubjects = response.data.map(pendency => pendency.subjectId)
       })
@@ -399,11 +262,10 @@ export default {
 
   methods: {
     getStudentsDocument() {
+      const endpoint = `/api/students/${this.studentData.id}/documents`
       this.$axios
-        .get(`/api/students/${this.studentData.id}/documents`)
-        .then(res => {
-          this.mapDocuments(res.data)
-        })
+        .$get(endpoint)
+        .then(this.mapDocuments)
         .catch(() => {
           this.$toast.open({
             message: 'Falha ao carregar os documentos do aluno',
@@ -411,32 +273,19 @@ export default {
           })
         })
     },
+
     putStudents() {
       this.isLoading = true
-      const defenseDate =
-        this.defenseDate &&
-        this.defenseDate
-          .toISOString()
-          .slice(0, 10)
-          .split('-')
-          .reverse()
-          .join('/')
-      const payload = { ...this.studentData, defenseDate }
+
+      const endpoint = `/api/students/${this.studentData.id}`
+      const { defenseDate, email, cd } = this.studentData
+      const crg = this.canEditCrg ? this.studentData.crg : undefined
+      const payload = { defenseDate, email, cd, crg }
       this.$axios
-        .put(`/api/students/${this.studentData.id}`, payload)
-        .then(res => {
+        .$put(endpoint, payload)
+        .then(data => {
           this.isLoading = false
-          this.studentData = res.data
-          this.defenseDate = this.studentData.defenseDate
-            ? new Date(
-                Date.parse(
-                  this.studentData.defenseDate
-                    .split('/')
-                    .reverse()
-                    .join('/')
-                )
-              )
-            : null
+          this.studentData = data
           this.canEdit = false
           this.$toast.open({
             message: 'Aluno atualizado com sucesso.',
@@ -449,19 +298,20 @@ export default {
           this.openErrorNotification(error.response.data.code)
         })
     },
+
     toggleEdit() {
       this.canEdit = !this.canEdit
     },
+
     getPendencies() {
       this.$axios
-        .get(`/api/subjects`, {
+        .$get(`/api/subjects`, {
           params: {
             paginate: 0
           }
         })
-        .then(response => {
-          this.totalSubjectsLength = response.headers['pagination-row-count']
-          this.totalSubjects = response.data
+        .then(data => {
+          this.totalSubjects = data
           this.showPendencies = true
         })
         .catch(e => {
@@ -469,48 +319,66 @@ export default {
           this.openErrorNotification(e)
         })
     },
+
     updatePendencies() {
-      if (this.canEdit) {
-        this.$axios
-          .post(
-            `/api/students/${this.student.id}/pendencies/batch`,
-            this.studentSubjects
-          )
-          .then(response => {
-            this.$toast.open({
-              message: 'Pendências de aluno atualizadas com sucesso',
-              type: 'is-success'
-            })
-          })
-          .catch(e => this.openErrorNotification(e))
+      if (!this.canEdit) {
+        return
       }
+
+      const endpoint = `/api/students/${this.student.id}/pendencies/batch`
+      this.$axios
+        .post(endpoint, this.studentSubjects)
+        .then(() => {
+          this.$toast.open({
+            message: 'Pendências de aluno atualizadas com sucesso',
+            type: 'is-success'
+          })
+        })
+        .catch(e => this.openErrorNotification(e))
+
       this.showPendencies = false
     },
+
     mapDocuments(documents) {
       this.ataDocument = {}
       this.laudaDocument = {}
       this.presDocument = {}
-      documents.forEach(element => {
-        if (element.type === 1) {
-          this.ataDocument = Object.assign({}, element)
-          this.ataCheck = true
-        } else if (element.type === 2) {
-          this.laudaDocument = Object.assign({}, element)
-          this.laudaCheck = true
-        } else if (element.type === 3) {
-          this.presDocument = Object.assign({}, element)
-          this.presCheck = true
+
+      for (const document of documents) {
+        switch (document.type) {
+          case ATA:
+            this.ataDocument = Object.assign({}, document)
+            this.ataCheck = true
+            break
+
+          case LAUDA:
+            this.laudaDocument = Object.assign({}, document)
+            this.laudaCheck = true
+            break
+
+          case LISTA_PRESCRICAO:
+            this.presDocument = Object.assign({}, document)
+            this.presCheck = true
+            break
+
+          default:
+            // TODO: Caso de erro?
+            break
         }
-      })
+      }
     },
-    documentUpload(type) {
+
+    onUpdateFile(type, file) {
       this.isLoading = true
+
       const body = new FormData()
-      body.append('file', this.uploadFile)
+      body.append('file', file)
       body.append('documentType', type)
+
+      const endpoint = `/api/students/${this.studentData.id}/documents`
       this.$axios
-        .post(`/api/students/${this.studentData.id}/documents`, body)
-        .then(result => {
+        .post(endpoint, body)
+        .then(() => {
           this.isLoading = false
           this.$toast.open({
             message: 'Upload feito com sucesso',
@@ -523,32 +391,14 @@ export default {
           this.openErrorNotification(error.response.data.code)
         })
     },
-    validateUpload(type) {
-      const { config } = process.env
-      if (!this.uploadFile) {
-        return
-      }
-      if (this.uploadFile.size >= config.MAX_FILE_SIZE) {
-        this.openErrorNotification(process.env.errors.MAX_FILE_SIZE_EXCEEDED)
-        this.uploadFile = new File([''], 'Nenhum arquivo selecionado')
-        this.hasErrors = true
-        return
-      }
-      const isPDF = this.uploadFile.name.split('.').pop() === 'pdf'
-      if (isPDF) {
-        return this.documentUpload(type)
-      }
-      this.$toast.open({
-        message: 'Por favor selecione um arquivo PDF',
-        type: 'is-danger'
-      })
-      this.file = File
-    },
-    deleteDocument(document) {
+    onDeleteDocument(document) {
       this.isLoading = true
+
+      const { id } = document
+      const endpoint = `/api/students/${this.studentData.id}/documents/${id}`
       this.$axios
-        .delete(`/api/students/${this.studentData.id}/documents/${document.id}`)
-        .then(result => {
+        .delete(endpoint)
+        .then(() => {
           this.isLoading = false
           this.$toast.open({
             message: 'Exclusão feita com sucesso',
@@ -561,6 +411,7 @@ export default {
           this.openErrorNotification(error.response.data.code)
         })
     },
+
     onCrgBlur(e) {
       let value = +e.target.value
 
@@ -573,14 +424,6 @@ export default {
       }
 
       this.studentData.crg = Math.max(0, Math.min(10, value))
-    },
-    dateFormatter(date) {
-      return date
-        .toISOString()
-        .slice(0, 10)
-        .split('-')
-        .reverse()
-        .join('/')
     }
   }
 }
@@ -599,6 +442,10 @@ export default {
   bottom: 0;
   position: sticky;
 }
+
+.bg-transition {
+  transition: background-color ease 0.1s;
+}
 </style>
 
 <style>
@@ -608,9 +455,5 @@ export default {
 
 .icon {
   margin-left: 1em;
-}
-
-.table-documents td {
-  vertical-align: middle;
 }
 </style>
