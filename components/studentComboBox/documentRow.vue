@@ -29,7 +29,7 @@
     >
       <b-upload v-model="file" :disabled="!canUpload" @input="validateUpload">
         <a
-          class="button is-success"
+          class="button is-success bg-transition"
           :class="{ 'is-outlined': !canUpload }"
           :disabled="!canUpload"
         >
@@ -39,7 +39,7 @@
 
       <b-button
         v-if="hasDocument"
-        class="button is-danger"
+        class="button is-danger bg-transition"
         :class="{ 'is-outlined': !canUpload }"
         :disabled="!canUpload"
         @click="onClickDelete"
@@ -152,5 +152,9 @@ export default {
 .is-paddingless-y {
   padding-top: 0;
   padding-bottom: 0;
+}
+
+.bg-transition {
+  transition: background-color ease 0.3s;
 }
 </style>

@@ -162,6 +162,7 @@
           <div class="level-item">
             <b-field>
               <b-button
+                class="bg-transition"
                 :type="canEdit ? 'is-danger' : 'is-primary'"
                 :outlined="canEdit"
                 @click="toggleEdit"
@@ -444,6 +445,10 @@ export default {
 .bottom-sticky {
   bottom: 0;
   position: sticky;
+}
+
+.bg-transition {
+  transition: background-color ease 0.1s;
 }
 </style>
 
