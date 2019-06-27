@@ -161,7 +161,13 @@
         <div class="level-left">
           <div class="level-item">
             <b-field>
-              <b-button class="is-primary" @click="toggleEdit">Editar</b-button>
+              <b-button
+                :type="canEdit ? 'is-danger' : 'is-primary'"
+                :outlined="canEdit"
+                @click="toggleEdit"
+              >
+                {{ canEdit ? 'Parar Edição' : 'Editar' }}
+              </b-button>
             </b-field>
           </div>
         </div>
