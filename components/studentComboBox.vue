@@ -112,7 +112,9 @@
                       title="Ata"
                       :check.sync="ataCheck"
                       :disable="!canEdit"
-                      @update:file="file => onUpdateFile(1, file)"
+                      @update:file="
+                        file => onUpdateFile($options.documents.ATA, file)
+                      "
                       @update:check="value => (ataCheck = value)"
                       @delete="onDeleteDocument"
                     />
@@ -122,7 +124,9 @@
                       title="Lauda"
                       :check.sync="laudaCheck"
                       :disable="!canEdit"
-                      @update:file="file => onUpdateFile(2, file)"
+                      @update:file="
+                        file => onUpdateFile($options.documents.LAUDA, file)
+                      "
                       @update:check="value => (laudaCheck = value)"
                       @delete="onDeleteDocument"
                     />
@@ -145,10 +149,16 @@
                       title="Lista presc."
                       :check.sync="presCheck"
                       :disable="!canEdit"
-                      @update:file="file => onUpdateFile(3, file)"
+                      hide-when-cant-edit
+                      @update:file="
+                        file =>
+                          onUpdateFile(
+                            $options.documents.LISTA_PRESCRICAO,
+                            file
+                          )
+                      "
                       @update:check="value => (presCheck = value)"
                       @delete="onDeleteDocument"
-                      hide-when-cant-edit
                     />
                   </tbody>
                 </table>
@@ -190,10 +200,15 @@
 import DocumentRow from '@/components/studentComboBox/documentRow'
 import { errorsHandler } from './mixins/errors'
 import { studentStatus } from './mixins/studentStatus'
+
+const { documents } = process.env.enums
+const { ATA, LAUDA, LISTA_PRESCRICAO } = documents
+
 export default {
   name: 'StudentComboBox',
   components: { DocumentRow },
   mixins: [errorsHandler, studentStatus],
+  documents,
   props: {
     student: {
       type: Object,
@@ -356,13 +371,13 @@ export default {
       this.laudaDocument = {}
       this.presDocument = {}
       documents.forEach(element => {
-        if (element.type === 1) {
+        if (element.type === ATA) {
           this.ataDocument = Object.assign({}, element)
           this.ataCheck = true
-        } else if (element.type === 2) {
+        } else if (element.type === LAUDA) {
           this.laudaDocument = Object.assign({}, element)
           this.laudaCheck = true
-        } else if (element.type === 3) {
+        } else if (element.type === LISTA_PRESCRICAO) {
           this.presDocument = Object.assign({}, element)
           this.presCheck = true
         }
