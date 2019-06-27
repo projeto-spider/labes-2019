@@ -421,15 +421,6 @@ export default {
       }
 
       this.studentData.crg = Math.max(0, Math.min(10, value))
-    },
-
-    dateFormatter(date) {
-      return date
-        .toISOString()
-        .slice(0, 10)
-        .split('-')
-        .reverse()
-        .join('/')
     }
   }
 }
