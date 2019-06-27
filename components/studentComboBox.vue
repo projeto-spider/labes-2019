@@ -162,15 +162,17 @@
             </b-field>
           </div>
         </div>
-        <div v-show="canEdit" class="level-right">
-          <div class="level-item">
-            <b-field>
-              <b-button class="is-success" @click="putStudents">
-                Atualizar
-              </b-button>
-            </b-field>
+        <transition name="slide-fade-horizontal">
+          <div v-show="canEdit" class="level-right">
+            <div class="level-item">
+              <b-field>
+                <b-button class="is-success" @click="putStudents">
+                  Atualizar
+                </b-button>
+              </b-field>
+            </div>
           </div>
-        </div>
+        </transition>
       </div>
     </div>
   </div>
