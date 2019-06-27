@@ -20,14 +20,12 @@
             <strong>Orientador:</strong> <span>{{ studentData.advisor }}</span>
             <br />
             <strong>Status:</strong> <span>{{ displayStatus }}</span> <br />
-            <strong>{{ defenseDateStatus }}</strong
+            <strong>{{ hasDefended ? 'Defendeu em' : 'Data da defesa' }}</strong
             ><br />
             <b-field>
               <Datepicker
                 v-model="studentData.defenseDate"
-                :max-date="
-                  defenseDateStatus === 'Defendeu em' ? new Date() : undefined
-                "
+                :max-date="hasDefended ? new Date() : undefined"
                 :disabled="!canEdit"
               />
             </b-field>
@@ -222,14 +220,11 @@ export default {
       return this.getStatus(this.studentData)
     },
 
-    defenseDateStatus() {
+    hasDefended() {
       const isGraduating = this.studentData.isGraduating === 1
-      const isForming = this.studentData.isForming
+      const isForming = this.studentData.isForming === 1
 
-      if (isGraduating || isForming === 1) {
-        return 'Defendeu em'
-      }
-      return 'Data de Defesa'
+      return isGraduating || isForming
     },
 
     cdCheck: {
