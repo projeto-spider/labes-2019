@@ -8,11 +8,8 @@
 # install dependencies (once)
 $ npm install
 
-# run the migrations (once)
-$ npm run knex migrate:latest
-
-# create the seeds (once)
-$ npm run knex seed:run
+# run the migrations and create the seeds (once)
+$ npm run makedb
 
 # serve with hot reload at localhost:3000
 $ npm run dev
