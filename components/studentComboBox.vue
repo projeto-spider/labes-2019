@@ -38,7 +38,7 @@
               type="number"
               :min="0"
               :max="10"
-              :disabled="!canEdit"
+              :disabled="!canEdit || !canEditCrg"
               @blur="onCrgBlur"
             ></b-input>
             <br />
@@ -234,6 +234,13 @@ export default {
       set(newValue) {
         this.studentData.cd = newValue ? '1' : '0'
       }
+    },
+
+    canEditCrg() {
+      return (
+        Boolean(this.studentData.isGraduating) &&
+        Boolean(this.studentData.isFit)
+      )
     }
   },
 
@@ -267,7 +274,9 @@ export default {
       this.isLoading = true
 
       const endpoint = `/api/students/${this.studentData.id}`
-      const payload = this.studentData
+      const { defenseDate, email, cd } = this.studentData
+      const crg = this.canEditCrg ? this.studentData.crg : undefined
+      const payload = { defenseDate, email, cd, crg }
       this.$axios
         .$put(endpoint, payload)
         .then(data => {
