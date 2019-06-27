@@ -8,18 +8,17 @@
       <div class="content">
         <div class="columns">
           <div class="column is-half" style="overflow-y: unset">
-            <strong>Nome:</strong>
-            <span>{{ studentData.name }}</span>
-            <br />
-            <strong>Matricula:</strong>
-            <span>{{ studentData.registrationNumber }}</span>
-            <br />
-            <strong>Orientador:</strong>
-            <span>{{ studentData.advisor }}</span>
-            <br />
-            <strong>Orientador:</strong> <span>{{ studentData.advisor }}</span>
-            <br />
-            <strong>Status:</strong> <span>{{ displayStatus }}</span> <br />
+            <BaseStudentDataRow title="Nome" :value="studentData.name" />
+            <BaseStudentDataRow
+              title="Matrícula"
+              :value="studentData.registrationNumber"
+            />
+            <BaseStudentDataRow
+              title="Orientador"
+              :value="studentData.advisor || '-'"
+            />
+            <BaseStudentDataRow title="Status" :value="displayStatus" />
+
             <strong>{{ hasDefended ? 'Defendeu em' : 'Data da defesa' }}</strong
             ><br />
             <b-field>
@@ -178,6 +177,7 @@
 </template>
 
 <script>
+import BaseStudentDataRow from '@/components/studentComboBox/BaseStudentDataRow'
 import DocumentRow from '@/components/studentComboBox/documentRow'
 import Datepicker from '@/components/datepicker'
 import { errorsHandler } from './mixins/errors'
@@ -188,7 +188,11 @@ const { ATA, LAUDA, LISTA_PRESCRICAO } = documents
 
 export default {
   name: 'StudentComboBox',
-  components: { DocumentRow, Datepicker },
+  components: {
+    DocumentRow,
+    Datepicker,
+    BaseStudentDataRow
+  },
   mixins: [errorsHandler, studentStatus],
   documents,
   props: {
