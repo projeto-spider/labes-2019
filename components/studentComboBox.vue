@@ -171,12 +171,12 @@
             </b-field>
           </div>
         </div>
-        <div class="level-right">
+        <div v-show="canEdit" class="level-right">
           <div class="level-item">
             <b-field>
-              <b-button class="is-primary" @click="putStudents"
-                >Atualizar</b-button
-              >
+              <b-button class="is-success" @click="putStudents">
+                Atualizar
+              </b-button>
             </b-field>
           </div>
         </div>
