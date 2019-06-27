@@ -182,8 +182,8 @@
 import BaseStudentDataRow from '@/components/studentComboBox/BaseStudentDataRow'
 import DocumentRow from '@/components/studentComboBox/DocumentRow'
 import DatePicker from '@/components/DatePicker'
-import { errorsHandler } from './mixins/errors'
-import { studentStatus } from './mixins/studentStatus'
+import { errorsHandler } from '@/components/mixins/errors'
+import { studentStatus } from '@/components/mixins/studentStatus'
 
 const { documents } = process.env.enums
 const { ATA, LAUDA, LISTA_PRESCRICAO } = documents

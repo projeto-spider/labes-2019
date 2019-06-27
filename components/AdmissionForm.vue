@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { errorsHandler } from './mixins/errors'
+import { errorsHandler } from '@/components/mixins/errors'
 
 export default {
   name: 'AdmissionForm',

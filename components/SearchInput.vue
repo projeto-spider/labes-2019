@@ -99,8 +99,8 @@
 <script>
 import { mapState } from 'vuex'
 import pDebounce from 'p-debounce'
-import StudentComboBox from '../components/StudentComboBox'
-import { studentStatus } from './mixins/studentStatus'
+import StudentComboBox from '@/components/StudentComboBox'
+import { studentStatus } from '@/components/mixins/studentStatus'
 export default {
   name: 'SearchInput',
   components: {

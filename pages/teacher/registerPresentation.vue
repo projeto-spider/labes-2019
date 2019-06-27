@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import { errorsHandler } from '../../components/mixins/errors'
-import DefenseForm from '../../components/DefenseForm'
+import { errorsHandler } from '@/components/mixins/errors'
+import DefenseForm from '@/components/DefenseForm'
 
 export default {
   name: 'RegisterPresentation',

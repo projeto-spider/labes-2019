@@ -137,7 +137,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-import ImportStudents from '../components/ImportStudents.vue'
+import ImportStudents from '@/components/ImportStudents.vue'
 export default {
   middleware: ['auth'],
   components: {

@@ -28,9 +28,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import EmailCompare from '../components/EmailListCompare'
-import SearchInput from '../components/SearchInput'
-import { errorsHandler } from '../components/mixins/errors'
+import EmailCompare from '@/components/EmailListCompare'
+import SearchInput from '@/components/SearchInput'
+import { errorsHandler } from '@/components/mixins/errors'
 
 export default {
   name: 'EmailComponent',

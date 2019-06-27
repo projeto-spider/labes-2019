@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import EmailComponent from '../components/EmailListComponent'
+import EmailComponent from '@/components/EmailListComponent'
 export default {
   name: 'EmailListActive',
   middleware: ['auth', 'course'],

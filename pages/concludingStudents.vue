@@ -49,7 +49,7 @@
 <script>
 import { mapState } from 'vuex'
 import SearchInput from '~/components/SearchInput'
-import { errorsHandler } from '../components/mixins/errors'
+import { errorsHandler } from '@/components/mixins/errors'
 
 export default {
   name: 'Concluding',

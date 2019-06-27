@@ -237,8 +237,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import DatePicker from './DatePicker'
-import TimePicker from './TimePicker'
+import DatePicker from '@/components/DatePicker'
+import TimePicker from '@/components/TimePicker'
 
 const defaultStudent = () => ({ name: '', registrationNumber: '' })
 const defaultModel = () => ({
