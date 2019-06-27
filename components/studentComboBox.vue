@@ -221,15 +221,15 @@ export default {
     },
 
     hasDefended() {
-      const isGraduating = this.studentData.isGraduating === 1
-      const isForming = this.studentData.isForming === 1
+      const isGraduating = Boolean(this.studentData.isGraduating)
+      const isForming = Boolean(this.studentData.isForming)
 
       return isGraduating || isForming
     },
 
     cdCheck: {
       get() {
-        return this.studentData.cd === 1
+        return Boolean(this.studentData.cd)
       },
       set(newValue) {
         this.studentData.cd = newValue ? '1' : '0'
