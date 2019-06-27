@@ -23,30 +23,13 @@
             <strong>{{ defenseDateStatus }}</strong
             ><br />
             <b-field>
-              <b-datepicker
-                v-model="defenseDate"
+              <Datepicker
+                v-model="studentData.defenseDate"
                 :max-date="
                   defenseDateStatus === 'Defendeu em' ? new Date() : undefined
                 "
-                :date-formatter="dateFormatter"
                 :disabled="!canEdit"
-                :month-names="[
-                  'Janeiro',
-                  'Fevereiro',
-                  'Março',
-                  'Abril',
-                  'Maio',
-                  'Junho',
-                  'Julho',
-                  'Agosto',
-                  'Setembro',
-                  'Outubro',
-                  'Novembro',
-                  'Dezembro'
-                ]"
-                :day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
-                :first-day-of-week="0"
-              ></b-datepicker>
+              />
             </b-field>
             <strong>E-mail</strong>:
             <b-input v-model="studentData.email" :disabled="!canEdit"></b-input>
@@ -198,6 +181,7 @@
 
 <script>
 import DocumentRow from '@/components/studentComboBox/documentRow'
+import Datepicker from '@/components/datepicker'
 import { errorsHandler } from './mixins/errors'
 import { studentStatus } from './mixins/studentStatus'
 
@@ -206,7 +190,7 @@ const { ATA, LAUDA, LISTA_PRESCRICAO } = documents
 
 export default {
   name: 'StudentComboBox',
-  components: { DocumentRow },
+  components: { DocumentRow, Datepicker },
   mixins: [errorsHandler, studentStatus],
   documents,
   props: {
@@ -230,8 +214,7 @@ export default {
       totalSubjects: [],
       studentSubjects: [],
       studentData: Object.assign({}, this.student),
-      isLoading: false,
-      defenseDate: new Date()
+      isLoading: false
     }
   },
   computed: {
@@ -262,17 +245,6 @@ export default {
   created() {
     this.getStudentsDocument()
 
-    this.defenseDate = this.studentData.defenseDate
-      ? new Date(
-          Date.parse(
-            this.studentData.defenseDate
-              .split('/')
-              .reverse()
-              .join('/')
-          )
-        )
-      : null
-
     const endpoint = `/api/students/${this.student.id}/pendencies`
     this.$axios
       .get(endpoint)
@@ -298,26 +270,14 @@ export default {
 
     putStudents() {
       this.isLoading = true
-      const defenseDate =
-        this.defenseDate && this.dateFormatter(this.defenseDate)
 
       const endpoint = `/api/students/${this.studentData.id}`
-      const payload = { ...this.studentData, defenseDate }
+      const payload = this.studentData
       this.$axios
         .$put(endpoint, payload)
         .then(data => {
           this.isLoading = false
           this.studentData = data
-          this.defenseDate = this.studentData.defenseDate
-            ? new Date(
-                Date.parse(
-                  this.studentData.defenseDate
-                    .split('/')
-                    .reverse()
-                    .join('/')
-                )
-              )
-            : null
           this.canEdit = false
           this.$toast.open({
             message: 'Aluno atualizado com sucesso.',
