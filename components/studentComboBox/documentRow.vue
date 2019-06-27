@@ -1,53 +1,61 @@
 <template>
-  <tr v-show="hideWhenCantEdit ? !(!hasDocument && disable) : true">
-    <td class="vertical-align-middle is-paddingless-y" style="min-width: 110px">
-      <strong>{{ title }}</strong>
-    </td>
-
-    <td class="vertical-align-middle is-paddingless-y">
-      <b-checkbox
-        v-model="check"
-        :disabled="disable"
-        @input="onCheckInput"
-      ></b-checkbox>
-    </td>
-
-    <td class="has-text-centered vertical-align-middle is-paddingless-y">
-      <a
-        v-if="hasDocument"
-        :href="`${value.url}?token=${token}`"
-        target="_blank"
+  <transition name="slide-fade-vertical">
+    <tr v-show="hideWhenCantEdit ? !(!hasDocument && disable) : true">
+      <td
+        class="vertical-align-middle is-paddingless-y"
+        style="min-width: 110px"
       >
-        <b-icon icon="file-pdf" class="is-inline-block"></b-icon>
-      </a>
-      <span v-else class="has-text-grey">Sem documento</span>
-    </td>
+        <strong>{{ title }}</strong>
+      </td>
 
-    <td
-      class="has-text-centered vertical-align-middle is-paddingless-y"
-      style="min-width: 100px"
-    >
-      <b-upload v-model="file" :disabled="!canUpload" @input="validateUpload">
+      <td class="vertical-align-middle is-paddingless-y">
+        <b-checkbox
+          v-model="check"
+          :disabled="disable"
+          @input="onCheckInput"
+        ></b-checkbox>
+      </td>
+
+      <td
+        class="has-text-centered vertical-align-middle is-paddingless-y"
+        style="min-width: 125px"
+      >
         <a
-          class="button is-success bg-transition"
+          v-if="hasDocument"
+          :href="`${value.url}?token=${token}`"
+          target="_blank"
+        >
+          <b-icon icon="file-pdf" class="is-inline-block"></b-icon>
+        </a>
+        <span v-else class="has-text-grey">Sem documento</span>
+      </td>
+
+      <td
+        class="has-text-centered vertical-align-middle is-paddingless-y"
+        style="min-width: 100px"
+      >
+        <b-upload v-model="file" :disabled="!canUpload" @input="validateUpload">
+          <a
+            class="button is-success bg-transition"
+            :class="{ 'is-outlined': !canUpload }"
+            :disabled="!canUpload"
+          >
+            <b-icon icon="upload"></b-icon>
+          </a>
+        </b-upload>
+
+        <b-button
+          v-if="hasDocument"
+          class="button is-danger bg-transition"
           :class="{ 'is-outlined': !canUpload }"
           :disabled="!canUpload"
+          @click="onClickDelete"
         >
-          <b-icon icon="upload"></b-icon>
-        </a>
-      </b-upload>
-
-      <b-button
-        v-if="hasDocument"
-        class="button is-danger bg-transition"
-        :class="{ 'is-outlined': !canUpload }"
-        :disabled="!canUpload"
-        @click="onClickDelete"
-      >
-        <b-icon icon="trash"></b-icon>
-      </b-button>
-    </td>
-  </tr>
+          <b-icon icon="trash"></b-icon>
+        </b-button>
+      </td>
+    </tr>
+  </transition>
 </template>
 
 <script>
