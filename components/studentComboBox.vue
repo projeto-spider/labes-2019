@@ -107,101 +107,25 @@
               <div class="table-container">
                 <table class="table is-narrow table-documents">
                   <tbody>
-                    <tr>
-                      <td>
-                        <strong>Ata</strong>
-                      </td>
-                      <td>
-                        <b-checkbox
-                          v-model="ataCheck"
-                          :disabled="!canEdit"
-                        ></b-checkbox>
-                      </td>
-                      <td>
-                        <a
-                          v-if="hasDocument.ataFile"
-                          :href="`${ataDocument.url}?token=${token}`"
-                          target="_blank"
-                        >
-                          <b-icon
-                            icon="file-pdf"
-                            class="is-inline-block"
-                          ></b-icon>
-                        </a>
-                        <p v-else>Sem documento</p>
-                      </td>
-                      <td class="has-text-centered">
-                        <b-upload
-                          v-model="uploadFile"
-                          :disabled="disableUploadAta"
-                          @input="validateUpload(1)"
-                        >
-                          <a
-                            class="button is-primary"
-                            :disabled="disableUploadAta"
-                          >
-                            <b-icon icon="upload"></b-icon>
-                          </a>
-                        </b-upload>
+                    <DocumentRow
+                      v-model="ataDocument"
+                      title="Ata"
+                      :check.sync="ataCheck"
+                      :disable="!canEdit"
+                      @update:file="file => onUpdateFile(1, file)"
+                      @update:check="value => (ataCheck = value)"
+                      @delete="onDeleteDocument"
+                    />
 
-                        <b-button
-                          v-if="hasDocument.ataFile"
-                          class="button is-primary"
-                          :disabled="disableUploadAta"
-                          @click="deleteDocument(ataDocument)"
-                        >
-                          <b-icon icon="trash"></b-icon>
-                        </b-button>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <strong>Lauda</strong>
-                      </td>
-                      <td>
-                        <b-checkbox
-                          v-model="laudaCheck"
-                          :disabled="!canEdit"
-                        ></b-checkbox>
-                      </td>
-                      <td>
-                        <a
-                          v-if="hasDocument.laudaFile"
-                          :href="`${laudaDocument.url}?token=${token}`"
-                          target="_blank"
-                        >
-                          <b-icon
-                            icon="file-pdf"
-                            class="is-inline-block"
-                          ></b-icon>
-                        </a>
-                        <p v-else>Sem documento</p>
-                      </td>
-                      <td class="has-text-centered">
-                        <b-upload
-                          v-model="uploadFile"
-                          :disabled="disableUploadLauda"
-                          @input="validateUpload(2)"
-                        >
-                          <a
-                            class="button is-primary"
-                            :disabled="disableUploadLauda"
-                          >
-                            <b-icon icon="upload"></b-icon>
-                          </a>
-                        </b-upload>
-
-                        <b-button
-                          v-if="hasDocument.laudaFile"
-                          class="button is-primary"
-                          :disabled="disableUploadLauda"
-                          @click="deleteDocument(laudaDocument)"
-                        >
-                          <b-icon icon="trash"></b-icon>
-                        </b-button>
-                      </td>
-                    </tr>
+                    <DocumentRow
+                      v-model="laudaDocument"
+                      title="Lauda"
+                      :check.sync="laudaCheck"
+                      :disable="!canEdit"
+                      @update:file="file => onUpdateFile(2, file)"
+                      @update:check="value => (laudaCheck = value)"
+                      @delete="onDeleteDocument"
+                    />
 
                     <tr>
                       <td>
@@ -215,53 +139,17 @@
                       </td>
                       <td colspan="2"></td>
                     </tr>
-                    <tr v-if="canEdit || hasDocument.presFile">
-                      <td>
-                        <strong>Lista presc.</strong>
-                      </td>
-                      <td>
-                        <b-checkbox
-                          v-model="presCheck"
-                          :disabled="!canEdit"
-                        ></b-checkbox>
-                      </td>
-                      <td>
-                        <a
-                          v-if="hasDocument.presFile"
-                          :href="`${presDocument.url}?token=${token}`"
-                          target="_blank"
-                        >
-                          <b-icon
-                            icon="file-pdf"
-                            class="is-inline-block"
-                          ></b-icon>
-                        </a>
-                        <p v-else>Sem documento</p>
-                      </td>
-                      <td class="has-text-centered">
-                        <b-upload
-                          v-model="uploadFile"
-                          :disabled="disableUploadPres"
-                          @input="validateUpload(3)"
-                        >
-                          <a
-                            class="button is-primary"
-                            :disabled="disableUploadPres"
-                          >
-                            <b-icon icon="upload"></b-icon>
-                          </a>
-                        </b-upload>
 
-                        <b-button
-                          v-if="hasDocument.presFile"
-                          class="button is-primary"
-                          :disabled="disableUploadPres"
-                          @click="deleteDocument(presDocument)"
-                        >
-                          <b-icon icon="trash"></b-icon>
-                        </b-button>
-                      </td>
-                    </tr>
+                    <DocumentRow
+                      v-model="presDocument"
+                      title="Lista presc."
+                      :check.sync="presCheck"
+                      :disable="!canEdit"
+                      @update:file="file => onUpdateFile(3, file)"
+                      @update:check="value => (presCheck = value)"
+                      @delete="onDeleteDocument"
+                      hide-when-cant-edit
+                    />
                   </tbody>
                 </table>
               </div>
@@ -292,11 +180,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import DocumentRow from '@/components/studentComboBox/documentRow'
 import { errorsHandler } from './mixins/errors'
 import { studentStatus } from './mixins/studentStatus'
 export default {
   name: 'StudentComboBox',
+  components: { DocumentRow },
   mixins: [errorsHandler, studentStatus],
   props: {
     student: {
@@ -324,39 +213,8 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      token: state => state.auth.token
-    }),
     displayStatus() {
       return this.getStatus(this.studentData)
-    },
-    disableUploadAta() {
-      return !this.ataCheck || !this.canEdit
-    },
-    disableUploadLauda() {
-      return !this.laudaCheck || !this.canEdit
-    },
-    disableUploadPres() {
-      return !this.presCheck || !this.canEdit
-    },
-    hasDocument() {
-      function check(document) {
-        return (
-          Object.entries(document).length === 0 &&
-          typeof document === 'object' &&
-          document !== null
-        )
-      }
-      const documents = {
-        ataFile: false,
-        laudaFile: false,
-        presFile: false
-      }
-      documents.ataFile = !check(this.ataDocument)
-      documents.laudaFile = !check(this.laudaDocument)
-      documents.presFile = !check(this.presDocument)
-
-      return documents
     },
     defenseDateStatus() {
       if (
@@ -503,11 +361,13 @@ export default {
         }
       })
     },
-    documentUpload(type) {
+    onUpdateFile(type, file) {
       this.isLoading = true
+
       const body = new FormData()
-      body.append('file', this.uploadFile)
+      body.append('file', file)
       body.append('documentType', type)
+
       this.$axios
         .post(`/api/students/${this.studentData.id}/documents`, body)
         .then(result => {
@@ -523,29 +383,9 @@ export default {
           this.openErrorNotification(error.response.data.code)
         })
     },
-    validateUpload(type) {
-      const { config } = process.env
-      if (!this.uploadFile) {
-        return
-      }
-      if (this.uploadFile.size >= config.MAX_FILE_SIZE) {
-        this.openErrorNotification(process.env.errors.MAX_FILE_SIZE_EXCEEDED)
-        this.uploadFile = new File([''], 'Nenhum arquivo selecionado')
-        this.hasErrors = true
-        return
-      }
-      const isPDF = this.uploadFile.name.split('.').pop() === 'pdf'
-      if (isPDF) {
-        return this.documentUpload(type)
-      }
-      this.$toast.open({
-        message: 'Por favor selecione um arquivo PDF',
-        type: 'is-danger'
-      })
-      this.file = File
-    },
-    deleteDocument(document) {
+    onDeleteDocument(document) {
       this.isLoading = true
+
       this.$axios
         .delete(`/api/students/${this.studentData.id}/documents/${document.id}`)
         .then(result => {
@@ -608,9 +448,5 @@ export default {
 
 .icon {
   margin-left: 1em;
-}
-
-.table-documents td {
-  vertical-align: middle;
 }
 </style>
