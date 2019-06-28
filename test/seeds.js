@@ -4,6 +4,7 @@ const Solicitation = require('../server/models/Solicitation')
 const Student = require('../server/models/Student')
 const Subject = require('../server/models/Subject')
 const User = require('../server/models/User')
+const { knex } = require('../server/db')
 
 // Use alphabetical order
 const data = {
@@ -40,7 +41,13 @@ function users() {
 }
 
 function makeSeed(model, data) {
-  return Promise.all(data.map((item, i) => model.forge(item).save()))
+  return knex.transaction(trx => {
+    return Promise.all(
+      data.map((item, i) =>
+        model.forge({}).save({ ...item, id: i + 1 }, { transacting: trx })
+      )
+    )
+  })
 }
 
 exports.documents = documents
