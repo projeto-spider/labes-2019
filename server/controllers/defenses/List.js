@@ -1,6 +1,5 @@
 const Defense = require('../../models/Defense')
 const utils = require('../../utils')
-const enums = require('../../../shared/enums')
 
 module.exports = async function listDefenses(ctx) {
   const { user } = ctx.state.user
