@@ -11,6 +11,7 @@ const useSeeds = require('../../use-seeds')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const Defense = require('../../../server/models/Defense')
+const User = require('../../../server/models/User')
 const errors = require('../../../shared/errors')
 
 jest.useFakeTimers()
@@ -311,12 +312,12 @@ describe('/api/defenses', () => {
   })
 
   test('GET /defenses get by role', async done => {
-    const [admin, teacher] = await Promise.all(
-      ['admin', 'teacher'].map(testUtils.user)
+    let [admin, teacher] = await Promise.all(
+      ['admin', 'teacher'].map(username => User.where({ username }).fetch())
     )
 
     const payload1 = {
-      userId: admin.user.id,
+      userId: admin.get('id'),
       course: 'cbcc',
       registrationNumbers: '201704940001, 201304940002',
       students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
@@ -339,7 +340,7 @@ describe('/api/defenses', () => {
     }
 
     const payload2 = {
-      userId: teacher.user.id,
+      userId: teacher.get('id'),
       course: 'cbcc',
       registrationNumbers: '200504940003, 201104940004',
       students: 'JOSE FERREIRA SILVA, ENZO FERREIRA ALVES',
@@ -365,6 +366,8 @@ describe('/api/defenses', () => {
       [payload1, payload2].map(payload => Defense.forge(payload).save())
     )
 
+    admin = await testUtils.user('admin')
+
     const resAdmin = await chai
       .request(server.listen())
       .get('/api/defenses/')
@@ -374,6 +377,8 @@ describe('/api/defenses', () => {
     expect(resAdmin.type).toEqual('application/json')
     expect(resAdmin.body).toBeDefined()
     expect(resAdmin.body.length).toEqual(2)
+
+    teacher = await testUtils.user('teacher')
 
     const resTeacher = await chai
       .request(server.listen())
