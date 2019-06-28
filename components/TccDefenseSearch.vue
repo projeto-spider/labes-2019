@@ -69,7 +69,7 @@
               </div>
             </div>
 
-            <div class="card-buttons">
+            <div v-if="readOnly === false" class="card-buttons">
               <div class="buttons">
                 <b-button @click.prevent="editDefense = !editDefense">
                   {{ editDefense ? 'Cancelar Edição' : 'Editar' }}
@@ -144,6 +144,10 @@ export default {
       type: String,
       required: false,
       default: undefined
+    },
+    readOnly: {
+      type: Boolean,
+      default: () => false
     }
   },
 
