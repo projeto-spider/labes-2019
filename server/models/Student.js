@@ -28,17 +28,23 @@ const Student = bookshelf.model('Student', {
     }
   },
 
-  parse() {
-    const attributes = { ...this.attributes }
-
-    for (const key of booleanFields) {
-      if (attributes[key] !== undefined) {
-        attributes[key] = Boolean(attributes[key])
-      }
-    }
-
-    return attributes
-  }
+  // When you receive from database
+  parse,
+  // When you're going to convert to JSON
+  serialize: parse
 })
 
 module.exports = Student
+
+function parse(received) {
+  const attributes = { ...this.attributes, ...received }
+
+  // SQLite have numbers as booleans
+  for (const key of booleanFields) {
+    if (attributes[key] !== undefined) {
+      attributes[key] = Boolean(attributes[key])
+    }
+  }
+
+  return attributes
+}
