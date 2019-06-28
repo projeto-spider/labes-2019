@@ -126,7 +126,7 @@
         </aside>
       </div>
       <b-modal :active.sync="activateModal" :width="640" scroll="keep">
-        <import-students />
+        <ImportStudents />
       </b-modal>
       <div class="column has-background-grey-lighter">
         <nuxt class="Fullscreen" />
@@ -137,7 +137,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-import ImportStudents from '../components/importStudents.vue'
+import ImportStudents from '@/components/ImportStudents.vue'
 export default {
   middleware: ['auth'],
   components: {

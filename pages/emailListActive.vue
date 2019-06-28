@@ -1,12 +1,12 @@
 <template>
-  <email-component
+  <EmailComponent
     :mailing-list="'active'"
     :title="'Lista de Email - Ativos'"
-  ></email-component>
+  ></EmailComponent>
 </template>
 
 <script>
-import EmailComponent from '../components/emailListComponent'
+import EmailComponent from '@/components/EmailListComponent'
 export default {
   name: 'EmailListActive',
   middleware: ['auth', 'course'],

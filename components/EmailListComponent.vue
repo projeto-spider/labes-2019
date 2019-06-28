@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div class="container">
-      <search-input
+      <SearchInput
         :key="courseTag"
         :default-course="courseTag"
         :title="title"
         :mailing-list="mailingList"
-      ></search-input>
+      ></SearchInput>
       <button
         v-if="hasEmailChanges"
         class="button is-primary"
@@ -15,12 +15,12 @@
         Alterações pendentes
       </button>
       <b-modal :active.sync="activate">
-        <email-compare
+        <EmailCompare
           :students-to-add="emailChanges.additions"
           :students-to-remove="emailChanges.deletions"
           :mailing-list="mailingList"
           @email-list-changed="getChanges"
-        ></email-compare>
+        ></EmailCompare>
       </b-modal>
     </div>
   </div>
@@ -28,9 +28,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import EmailCompare from '../components/emailListCompare'
-import SearchInput from '../components/searchInput'
-import { errorsHandler } from '../components/mixins/errors'
+import EmailCompare from '@/components/EmailListCompare'
+import SearchInput from '@/components/SearchInput'
+import { errorsHandler } from '@/components/mixins/errors'
 
 export default {
   name: 'EmailComponent',

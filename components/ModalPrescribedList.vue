@@ -47,8 +47,8 @@
 </template>
 
 <script>
-import { studentStatus } from './mixins/studentStatus'
-import { errorsHandler } from './mixins/errors'
+import { studentStatus } from '@/components/mixins/studentStatus'
+import { errorsHandler } from '@/components/mixins/errors'
 export default {
   name: 'ModalPrescribedList',
 

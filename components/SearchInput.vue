@@ -85,11 +85,11 @@
           </template>
         </b-table>
         <b-modal :active.sync="selectedStudent" has-modal-card>
-          <student-combo-box
+          <StudentComboBox
             v-if="comboBoxStudent"
             :student="comboBoxStudent"
             @student-put="getStudentsFilters"
-          ></student-combo-box>
+          ></StudentComboBox>
         </b-modal>
       </div>
     </div>
@@ -99,12 +99,12 @@
 <script>
 import { mapState } from 'vuex'
 import pDebounce from 'p-debounce'
-import studentComboBox from '../components/studentComboBox'
-import { studentStatus } from './mixins/studentStatus'
+import StudentComboBox from '@/components/StudentComboBox'
+import { studentStatus } from '@/components/mixins/studentStatus'
 export default {
   name: 'SearchInput',
   components: {
-    studentComboBox
+    StudentComboBox
   },
   mixins: [studentStatus],
   props: {

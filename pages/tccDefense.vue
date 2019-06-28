@@ -1,34 +1,34 @@
 <template>
   <div class="container">
-    <tcc-defense-search
+    <TccDefenseSearch
       ref="searchPending"
       title="Pendentes"
       status="pending"
       @move="handleMove"
-    ></tcc-defense-search>
+    ></TccDefenseSearch>
     <br />
     <br />
 
-    <tcc-defense-search
+    <TccDefenseSearch
       ref="searchAccepted"
       title="Aceitas"
       status="accepted"
       @move="handleMove"
-    ></tcc-defense-search>
+    ></TccDefenseSearch>
     <br />
     <br />
 
-    <tcc-defense-search
+    <TccDefenseSearch
       ref="searchDone"
       title="Realizadas"
       status="done"
       @move="handleMove"
-    ></tcc-defense-search>
+    ></TccDefenseSearch>
   </div>
 </template>
 
 <script>
-import TccDefenseSearch from '~/components/tccDefenseSearch'
+import TccDefenseSearch from '@/components/TccDefenseSearch'
 import { mapState } from 'vuex'
 
 export default {

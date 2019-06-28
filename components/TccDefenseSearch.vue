@@ -118,8 +118,8 @@
 <script>
 import { mapState } from 'vuex'
 import pDebounce from 'p-debounce'
-import { errorsHandler } from './mixins/errors'
-import DefenseForm from './defenseForm'
+import { errorsHandler } from '@/components/mixins/errors'
+import DefenseForm from '@/components/DefenseForm'
 
 export default {
   name: 'TccDefenseSearch',

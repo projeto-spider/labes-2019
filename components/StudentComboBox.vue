@@ -22,7 +22,7 @@
             <strong>{{ hasDefended ? 'Defendeu em' : 'Data da defesa' }}</strong
             ><br />
             <b-field>
-              <Datepicker
+              <DatePicker
                 v-model="studentData.defenseDate"
                 :max-date="hasDefended ? new Date() : undefined"
                 :disabled="!canEdit"
@@ -179,11 +179,11 @@
 </template>
 
 <script>
-import BaseStudentDataRow from '@/components/studentComboBox/BaseStudentDataRow'
-import DocumentRow from '@/components/studentComboBox/documentRow'
-import Datepicker from '@/components/datepicker'
-import { errorsHandler } from './mixins/errors'
-import { studentStatus } from './mixins/studentStatus'
+import BaseStudentDataRow from '@/components/StudentComboBox/BaseStudentDataRow'
+import DocumentRow from '@/components/StudentComboBox/DocumentRow'
+import DatePicker from '@/components/DatePicker'
+import { errorsHandler } from '@/components/mixins/errors'
+import { studentStatus } from '@/components/mixins/studentStatus'
 
 const { documents } = process.env.enums
 const { ATA, LAUDA, LISTA_PRESCRICAO } = documents
@@ -192,7 +192,7 @@ export default {
   name: 'StudentComboBox',
   components: {
     DocumentRow,
-    Datepicker,
+    DatePicker,
     BaseStudentDataRow
   },
   mixins: [errorsHandler, studentStatus],

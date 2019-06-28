@@ -1,18 +1,18 @@
 <template>
   <div class="container">
-    <search-input
+    <SearchInput
       :key="courseTag"
       :default-course="courseTag"
       :title="'Alunos Ativos'"
       :default-per-page="10"
       :is-active="1"
-    ></search-input>
+    ></SearchInput>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import SearchInput from '~/components/searchInput'
+import SearchInput from '@/components/SearchInput'
 
 export default {
   name: 'Active',

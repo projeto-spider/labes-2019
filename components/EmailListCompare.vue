@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { errorsHandler } from '../components/mixins/errors'
+import { errorsHandler } from '@/components/mixins/errors'
 export default {
   name: 'EmailCompare',
   mixins: [errorsHandler],

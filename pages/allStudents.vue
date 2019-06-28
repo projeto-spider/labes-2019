@@ -1,15 +1,15 @@
 <template>
   <div class="container">
-    <search-input
+    <SearchInput
       :title="'Alunos totais'"
       :is-active="'AllStudents'"
-    ></search-input>
+    ></SearchInput>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import SearchInput from '~/components/searchInput'
+import SearchInput from '@/components/SearchInput'
 export default {
   name: 'AllStudents',
   middleware: 'course',

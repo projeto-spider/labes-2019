@@ -14,11 +14,11 @@
         </b-button>
       </div>
     </div>
-    <search-input
+    <SearchInput
       :key="courseTag"
       :default-course="courseTag"
       :is-concluding="1"
-    ></search-input>
+    ></SearchInput>
     <b-modal :active.sync="activeModal">
       <div class="card">
         <header class="card-header">
@@ -48,8 +48,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import SearchInput from '~/components/searchInput'
-import { errorsHandler } from '../components/mixins/errors'
+import SearchInput from '@/components/SearchInput'
+import { errorsHandler } from '@/components/mixins/errors'
 
 export default {
   name: 'Concluding',
