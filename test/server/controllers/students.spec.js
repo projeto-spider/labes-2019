@@ -633,7 +633,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const resCbcc = await chai
       .request(server.listen())
-      .get('/api/students/?course=cbcc')
+      .get('/api/students/')
+      .query({ course: 'cbcc' })
       .set('Authorization', `Bearer ${token}`)
     expect(resCbcc.status).toEqual(200)
     expect(resCbcc.type).toEqual('application/json')
@@ -643,7 +644,8 @@ describe('/api/students', () => {
     ).toBeTruthy()
     const resCbsi = await chai
       .request(server.listen())
-      .get('/api/students/?course=cbsi')
+      .get('/api/students/')
+      .query({ course: 'cbsi' })
       .set('Authorization', `Bearer ${token}`)
     expect(resCbsi.status).toEqual(200)
     expect(resCbsi.type).toEqual('application/json')
@@ -658,7 +660,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .get('/api/students/?course=invalid')
+      .get('/api/students/')
+      .query({ course: 'invalid' })
       .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
@@ -672,7 +675,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const resStudent1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?name=FELIPE SOUZA FERREIRA'))
+      .get('/api/students/')
+      .query({ name: 'FELIPE SOUZA FERREIRA' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent1.status).toEqual(200)
     expect(resStudent1.type).toEqual('application/json')
@@ -684,7 +688,8 @@ describe('/api/students', () => {
     ).toBeTruthy()
     const resStudent2 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?name=%FERREIRA%'))
+      .get('/api/students/')
+      .query({ name: '%FERREIRA%' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent2.status).toEqual(200)
     expect(resStudent2.type).toEqual('application/json')
@@ -694,7 +699,8 @@ describe('/api/students', () => {
     ).toBeTruthy()
     const resStudent3 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?name=KAUAN%'))
+      .get('/api/students/')
+      .query({ name: 'KAUAN%' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent3.status).toEqual(200)
     expect(resStudent3.type).toEqual('application/json')
@@ -704,7 +710,8 @@ describe('/api/students', () => {
     ).toBeTruthy()
     const resStudent4 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?name=%SANTOS'))
+      .get('/api/students/')
+      .query({ name: '%SANTOS' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent4.status).toEqual(200)
     expect(resStudent4.type).toEqual('application/json')
@@ -719,7 +726,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const resTrue = await chai
       .request(server.listen())
-      .get('/api/students/?isActive=true')
+      .get('/api/students/')
+      .query({ isActive: true })
       .set('Authorization', `Bearer ${token}`)
     expect(resTrue.status).toEqual(200)
     expect(resTrue.type).toEqual('application/json')
@@ -727,7 +735,8 @@ describe('/api/students', () => {
     expect(resTrue.body.every(student => student.isActive)).toBeTruthy()
     const resFalse = await chai
       .request(server.listen())
-      .get('/api/students/?isActive=false')
+      .get('/api/students/')
+      .query({ isActive: false })
       .set('Authorization', `Bearer ${token}`)
     expect(resFalse.status).toEqual(200)
     expect(resFalse.type).toEqual('application/json')
@@ -740,7 +749,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?course=cbcc&name=%FERREIRA%'))
+      .get('/api/students/')
+      .query({ course: 'cbcc', name: '%FERREIRA%' })
       .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(200)
     expect(res.type).toEqual('application/json')
@@ -758,7 +768,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const resStudent1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?sort=name'))
+      .get('/api/students/')
+      .query({ sort: 'name' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent1.status).toEqual(200)
     expect(resStudent1.type).toEqual('application/json')
@@ -772,7 +783,8 @@ describe('/api/students', () => {
     expect(resStudent1.body[6].name).toEqual('LAURA CARDOSO CASTRO')
     const resStudent2 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?sort=registrationNumber'))
+      .get('/api/students/')
+      .query({ sort: 'registrationNumber' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent2.status).toEqual(200)
     expect(resStudent2.type).toEqual('application/json')
@@ -786,7 +798,8 @@ describe('/api/students', () => {
     expect(resStudent2.body[6].name).toEqual('EDUARDO ALVES LIMA')
     const resStudent3 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?sort=name&order=DESC'))
+      .get('/api/students/')
+      .query({ sort: 'name', order: 'DESC' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent3.status).toEqual(200)
     expect(resStudent3.type).toEqual('application/json')
@@ -800,7 +813,8 @@ describe('/api/students', () => {
     expect(resStudent3.body[6].name).toEqual('EDUARDO ALVES LIMA')
     const resStudent4 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?sort=registrationNumber&order=DESC'))
+      .get('/api/students/')
+      .query({ sort: 'registrationNumber', order: 'DESC' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent4.status).toEqual(200)
     expect(resStudent4.type).toEqual('application/json')
@@ -814,7 +828,8 @@ describe('/api/students', () => {
     expect(resStudent4.body[6].name).toEqual('JULIAN BARBOSA SANTOS')
     const resStudent5 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?sort=name&order=asc'))
+      .get('/api/students/')
+      .query({ sort: 'name', order: 'asc' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent5.status).toEqual(200)
     expect(resStudent5.type).toEqual('application/json')
@@ -833,7 +848,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const res1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?course=cbcc&sort=name'))
+      .get('/api/students/')
+      .query({ course: 'cbcc', sort: 'name' })
       .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
@@ -845,7 +861,8 @@ describe('/api/students', () => {
     expect(res1.body[4].name).toEqual('KAUAN CARVALHO SANTOS')
     const res2 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?course=cbsi&sort=registrationNumber'))
+      .get('/api/students/')
+      .query({ course: 'cbsi', sort: 'registrationNumber' })
       .set('Authorization', `Bearer ${token}`)
     expect(res2.status).toEqual(200)
     expect(res2.type).toEqual('application/json')
@@ -854,7 +871,12 @@ describe('/api/students', () => {
     expect(res2.body[1].name).toEqual('LAURA CARDOSO CASTRO')
     const res3 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?course=cbcc&sort=crg&order=desc'))
+      .get('/api/students/')
+      .query({
+        course: 'cbcc',
+        sort: 'crg',
+        order: 'desc'
+      })
       .set('Authorization', `Bearer ${token}`)
     expect(res3.status).toEqual(200)
     expect(res3.type).toEqual('application/json')
@@ -866,7 +888,8 @@ describe('/api/students', () => {
     expect(res3.body[4].name).toEqual('EDUARDO ALVES LIMA')
     const res4 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?course=cbsi&sort=crg'))
+      .get('/api/students/')
+      .query({ course: 'cbsi', sort: 'crg' })
       .set('Authorization', `Bearer ${token}`)
     expect(res4.status).toEqual(200)
     expect(res4.type).toEqual('application/json')
@@ -880,7 +903,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const res1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?course=cbcc&name=%SANTOS&sort=name'))
+      .get('/api/students/')
+      .query({ course: 'cbcc', name: '%SANTOS', sort: 'name' })
       .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
@@ -889,11 +913,12 @@ describe('/api/students', () => {
     expect(res1.body[1].name).toEqual('KAUAN CARVALHO SANTOS')
     const res2 = await chai
       .request(server.listen())
-      .get(
-        encodeURI(
-          '/api/students/?course=cbcc&name=%SANTOS&sort=registrationNumber'
-        )
-      )
+      .get('/api/students/')
+      .query({
+        course: 'cbcc',
+        name: '%SANTOS&',
+        sort: 'registrationNumber'
+      })
       .set('Authorization', `Bearer ${token}`)
     expect(res2.status).toEqual(200)
     expect(res2.type).toEqual('application/json')
@@ -907,11 +932,13 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const res1 = await chai
       .request(server.listen())
-      .get(
-        encodeURI(
-          '/api/students/?course=cbcc&name=%SANTOS&sort=name&order=DESC'
-        )
-      )
+      .get('/api/students/')
+      .query({
+        course: 'cbcc',
+        name: '%SANTOS',
+        sort: 'name',
+        order: 'DESC'
+      })
       .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
@@ -920,11 +947,13 @@ describe('/api/students', () => {
     expect(res1.body[1].name).toEqual('JULIAN BARBOSA SANTOS')
     const res2 = await chai
       .request(server.listen())
-      .get(
-        encodeURI(
-          '/api/students/?course=cbcc&name=%SANTOS&sort=registrationNumber&order=ASC'
-        )
-      )
+      .get('/api/students/')
+      .query({
+        course: 'cbcc',
+        name: '%SANTOS',
+        sort: 'registrationNumber',
+        order: 'ASC'
+      })
       .set('Authorization', `Bearer ${token}`)
     expect(res2.status).toEqual(200)
     expect(res2.type).toEqual('application/json')
@@ -938,7 +967,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .get('/api/students/?sort=invalid')
+      .get('/api/students/')
+      .query({ sort: 'invalid' })
       .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
@@ -952,7 +982,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .get('/api/students/?sort=name&order=invalid')
+      .get('/api/students/')
+      .query({ sort: 'name', order: 'invalid' })
       .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
@@ -972,13 +1003,14 @@ describe('/api/students', () => {
     done()
   })
 
-  test.only('GET /?gmail=true', async done => {
+  test('GET /?gmail=true', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .get('/api/students/?gmail=true')
+      .get('/api/students/')
+      .query({ gmail: true })
       .set('Authorization', `Bearer ${token}`)
-    debugger
+
     expect(res.body[0].email).toEqual('naosouativo@gmail.com')
 
     expect(res.body[1].email).toEqual('slug@gmail.com')
@@ -987,11 +1019,12 @@ describe('/api/students', () => {
     done()
   })
 
-  test('GET /?', async done => {
+  test('GET /?gmail=false', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .get('/api/students/?gmail=0')
+      .get('/api/students/')
+      .query({ gmail: false })
       .set('Authorization', `Bearer ${token}`)
     expect(res.body[0].email).toEqual('notgoo@gmiau.com')
 
@@ -1013,7 +1046,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const resStudent1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?email=naosouativo@gmail.com'))
+      .get('/api/students/')
+      .query({ email: 'naosouativo@gmail.com' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent1.status).toEqual(200)
     expect(resStudent1.type).toEqual('application/json')
@@ -1025,7 +1059,8 @@ describe('/api/students', () => {
     ).toBeTruthy()
     const resStudent2 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?email=%@gmail.com%'))
+      .get('/api/students/')
+      .query({ email: '%@gmail.com%' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent2.status).toEqual(200)
     expect(resStudent2.type).toEqual('application/json')
@@ -1035,7 +1070,8 @@ describe('/api/students', () => {
     ).toBeTruthy()
     const resStudent3 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?email=slug%'))
+      .get('/api/students/')
+      .query({ email: 'slug%' })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent3.status).toEqual(200)
     expect(resStudent3.type).toEqual('application/json')
@@ -1045,7 +1081,10 @@ describe('/api/students', () => {
     ).toBeTruthy()
     const resStudent4 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?email=%@gmail.com'))
+      .get('/api/students/')
+      .query({
+        email: '%@gmail.com'
+      })
       .set('Authorization', `Bearer ${token}`)
     expect(resStudent4.status).toEqual(200)
     expect(resStudent4.type).toEqual('application/json')
@@ -1060,7 +1099,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     const res1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?prescribed=true'))
+      .get('/api/students/')
+      .query({ prescribed: true })
       .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
@@ -1086,11 +1126,13 @@ describe('/api/students', () => {
     )
     const res1 = await chai
       .request(server.listen())
-      .get(
-        encodeURI(
-          '/api/students/?prescribed=true&registrationNumber=201304940002&sort=name&order=desc'
-        )
-      )
+      .get('/api/students/')
+      .query({
+        prescribed: true,
+        registrationNumber: 201304940002,
+        sort: 'name',
+        order: 'desc'
+      })
       .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
@@ -1117,7 +1159,12 @@ describe('/api/students', () => {
     )
     const res1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?prescribed=true&sort=name&order=desc'))
+      .get('/api/students/')
+      .query({
+        prescribed: true,
+        sort: 'name',
+        order: 'desc'
+      })
       .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
@@ -1139,7 +1186,11 @@ describe('/api/students', () => {
 
     const res1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?isConcluding=true&academicHighlight=true'))
+      .get('/api/students/')
+      .query({
+        isConcluding: true,
+        academicHighlight: true
+      })
       .set('Authorization', `Bearer ${token}`)
 
     expect(res1.status).toEqual(200)
