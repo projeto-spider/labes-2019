@@ -139,7 +139,7 @@ function checkRole(ctx, next, role) {
 
   const hasRole = Array.isArray(role)
     ? role.includes(user.role)
-    : user.role !== role
+    : user.role === role
 
   if (!hasRole) {
     ctx.status = 403
