@@ -82,7 +82,11 @@ export default {
   name: 'Subjects',
 
   middleware: 'auth',
-
+  head() {
+    return {
+      title: 'Labes - Componente curricular'
+    }
+  },
   data: () => ({
     loading: false,
 

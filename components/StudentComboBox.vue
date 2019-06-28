@@ -179,6 +179,7 @@
 </template>
 
 <script>
+// BEGIN REFACTOR
 import BaseStudentDataRow from '@/components/StudentComboBox/BaseStudentDataRow'
 import DocumentRow from '@/components/StudentComboBox/DocumentRow'
 import DatePicker from '@/components/DatePicker'

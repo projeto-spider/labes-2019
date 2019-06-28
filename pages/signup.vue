@@ -49,6 +49,11 @@ export default {
       role: ''
     }
   },
+  head() {
+    return {
+      title: 'Labes - Cadastro de usuario'
+    }
+  },
   methods: {
     async signUp() {
       try {

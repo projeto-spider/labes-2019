@@ -1,28 +1,26 @@
 <template>
   <div class="container">
-    <div class="container">
-      <SearchInput
-        :key="courseTag"
-        :default-course="courseTag"
-        :title="title"
+    <SearchInput
+      :key="courseTag"
+      :default-course="courseTag"
+      :title="title"
+      :mailing-list="mailingList"
+    ></SearchInput>
+    <button
+      v-if="hasEmailChanges"
+      class="button is-primary"
+      @click="activateModal"
+    >
+      Alterações pendentes
+    </button>
+    <b-modal :active.sync="activate">
+      <EmailCompare
+        :students-to-add="emailChanges.additions"
+        :students-to-remove="emailChanges.deletions"
         :mailing-list="mailingList"
-      ></SearchInput>
-      <button
-        v-if="hasEmailChanges"
-        class="button is-primary"
-        @click="activateModal"
-      >
-        Alterações pendentes
-      </button>
-      <b-modal :active.sync="activate">
-        <EmailCompare
-          :students-to-add="emailChanges.additions"
-          :students-to-remove="emailChanges.deletions"
-          :mailing-list="mailingList"
-          @email-list-changed="getChanges"
-        ></EmailCompare>
-      </b-modal>
-    </div>
+        @email-list-changed="getChanges"
+      ></EmailCompare>
+    </b-modal>
   </div>
 </template>
 

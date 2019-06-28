@@ -20,6 +20,11 @@ export default {
   components: {
     SearchInput
   },
+  head() {
+    return {
+      title: 'Labes - Ativos'
+    }
+  },
   data() {
     return {
       head: ['Matrícula', 'Nome', 'Email'],

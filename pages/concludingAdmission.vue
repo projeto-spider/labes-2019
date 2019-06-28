@@ -12,6 +12,11 @@ export default {
   layout: 'admissionLayout',
   components: {
     AdmissionForm
+  },
+  head() {
+    return {
+      title: 'Labes - Formulario newsletter'
+    }
   }
 }
 </script>

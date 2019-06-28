@@ -59,6 +59,11 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'Login',
   layout: 'empty',
+  head() {
+    return {
+      title: 'Labes - Login'
+    }
+  },
   data() {
     return {
       username: localStorage.getItem('lastLogin') || '',

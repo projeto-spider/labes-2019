@@ -12,6 +12,11 @@ export default {
   layout: 'admissionLayout',
   components: {
     admissionForm
+  },
+  head() {
+    return {
+      title: 'Labes - Formulario Calouros'
+    }
   }
 }
 </script>

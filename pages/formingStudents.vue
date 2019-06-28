@@ -1,15 +1,13 @@
 <template>
   <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-3 is-offset-1">
+    <div class="columns is-centered has-text-centered">
+      <h1 class="title"><strong>Alunos Formandos</strong></h1>
+    </div>
+    <div class="columns has-text-centered">
+      <div class="column is-half">
         <ModalPrescribedList></ModalPrescribedList>
       </div>
-
-      <div class="column is-4">
-        <h1 class="title"><strong>Alunos Formandos</strong></h1>
-      </div>
-
-      <div class="column is-3">
+      <div class="column is-half">
         <b-tooltip
           v-if="!allCrgsReady"
           label="Alguns alunos estão sem CRG"
@@ -98,6 +96,11 @@ export default {
   components: {
     SearchInput,
     ModalPrescribedList
+  },
+  head() {
+    return {
+      title: 'Labes - Formandos'
+    }
   },
   data: () => ({
     allCrgsReady: false,

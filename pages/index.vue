@@ -21,7 +21,12 @@
 
 <script>
 export default {
-  middleware: 'auth'
+  middleware: 'auth',
+  head() {
+    return {
+      title: 'Labes - Home'
+    }
+  }
 }
 </script>
 

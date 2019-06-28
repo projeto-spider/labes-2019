@@ -12,6 +12,11 @@ export default {
   middleware: ['auth', 'course'],
   components: {
     EmailComponent
+  },
+  head() {
+    return {
+      title: 'Lista de email calouros'
+    }
   }
 }
 </script>

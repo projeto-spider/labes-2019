@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="title" class="columns is-centered">
+    <div v-if="title" class="columns is-centered has-text-centered">
       <h1 class="title">
         <strong>{{ title }}</strong>
       </h1>

@@ -1,14 +1,10 @@
 <template>
   <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-5 is-offset-2">
-        <h1 class="title">
-          <strong>Alunos Concluintes</strong>
-        </h1>
-      </div>
+    <div class="columns is-centered has-text-centered">
+      <h1 class="title"><strong>Alunos Concluintes</strong></h1>
     </div>
-    <div class="columns">
-      <div class="column is-3 is-offset-8 to-left">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
         <b-button class="is-primary" @click="getAcademicHighlights">
           Gerar lista de destaques acadêmicos
         </b-button>
@@ -58,6 +54,11 @@ export default {
     SearchInput
   },
   mixins: [errorsHandler],
+  head() {
+    return {
+      title: 'Labes - Concluintes'
+    }
+  },
   data() {
     return {
       activeModal: false,

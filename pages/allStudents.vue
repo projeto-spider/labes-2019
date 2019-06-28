@@ -16,6 +16,11 @@ export default {
   components: {
     SearchInput
   },
+  head() {
+    return {
+      title: 'Labes - Todos os estudantes'
+    }
+  },
   data() {
     return {
       head: ['Matrícula', 'Nome', 'Email'],

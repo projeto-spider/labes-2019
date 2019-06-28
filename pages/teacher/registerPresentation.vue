@@ -1,8 +1,7 @@
 <template>
   <div class="container">
+    <h1 class="title has-text-centered">Formulario para defesa de TCC</h1>
     <section class="section">
-      <h1 class="title">Formulario para defesa de TCC</h1>
-
       <div class="box">
         <h2 class="subtitle">Dados da defesa:</h2>
 
