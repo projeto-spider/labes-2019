@@ -78,7 +78,7 @@ function filterStudents(filters) {
   if (noCrg) {
     query = query.where('crg', null)
   }
-  if (gmail !== undefined && +gmail === 1) {
+  if (gmail) {
     query = query.where('email', 'like', '%@gmail.com%')
   }
   const defaultFiltersNames = [
