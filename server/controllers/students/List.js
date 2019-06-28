@@ -49,12 +49,16 @@ function filterStudents(filters) {
   if (sort !== undefined) {
     query = query.forge().orderBy(sort, order.toUpperCase())
   }
-  const isPrescribed = prescribed !== undefined && prescribed === '1'
-  if (isPrescribed) {
+
+  const filterPrescribed = prescribed === 'true'
+
+  if (filterPrescribed) {
     query = query.query(qb => {
       qb.innerJoin('documents', 'documents.studentId', 'students.id')
         .where('documents.type', '=', '3')
-        .andWhere(qb => qb.where('isGraduating', '1').orWhere('isForming', '1'))
+        .andWhere(qb =>
+          qb.where('isGraduating', true).orWhere('isForming', true)
+        )
     })
   }
   if (name !== undefined) {
@@ -75,34 +79,38 @@ function filterStudents(filters) {
   if (eqCrg !== undefined) {
     query = query.where('crg', eqCrg)
   }
-  if (noCrg) {
+  if (noCrg === 'true') {
     query = query.where('crg', null)
   }
-  if (gmail) {
+  if (gmail === 'true') {
     query = query.where('email', 'like', '%@gmail.com%')
   }
   const defaultFiltersNames = [
-    'course',
-    'academicHighlight',
-    'cancelled',
-    'mailingList'
+    { name: 'course', type: 'string' },
+    { name: 'academicHighlight', type: 'boolean' },
+    { name: 'cancelled', type: 'boolean' },
+    { name: 'mailingList', type: 'string' }
   ]
   const flagsFiltersNames = [
-    'isFit',
-    'isConcluding',
-    'isActive',
-    'isForming',
-    'isGraduating'
+    { name: 'isFit', type: 'boolean' },
+    { name: 'isConcluding', type: 'boolean' },
+    { name: 'isActive', type: 'boolean' },
+    { name: 'isForming', type: 'boolean' },
+    { name: 'isGraduating', type: 'boolean' }
   ]
-  const filtersNames = isPrescribed
+  const filtersNames = filterPrescribed
     ? defaultFiltersNames
     : defaultFiltersNames.concat(flagsFiltersNames)
 
-  query = filtersNames.reduce((query, filterName) => {
-    if (filters[filterName] !== undefined) {
-      return query.where(filterName, filters[filterName])
+  query = filtersNames.reduce((query, { name, type }) => {
+    if (filters[name] !== undefined) {
+      const isBoolean = type === 'boolean'
+      const rawValue = filters[name]
+      const value = isBoolean ? rawValue === 'true' : rawValue
+      return query.where(name, value)
     }
     return query
   }, query)
+
   return query.fetchPage({ page })
 }

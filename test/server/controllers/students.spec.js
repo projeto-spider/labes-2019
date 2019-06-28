@@ -671,7 +671,7 @@ describe('/api/students', () => {
     done()
   })
 
-  test('GET /?name=[STUDENT%20NAME]', async done => {
+  test('GET /?name=[STUDENT NAME]', async done => {
     const { token } = await testUtils.user('admin')
     const resStudent1 = await chai
       .request(server.listen())
@@ -738,6 +738,7 @@ describe('/api/students', () => {
       .get('/api/students/')
       .query({ isActive: false })
       .set('Authorization', `Bearer ${token}`)
+    debugger
     expect(resFalse.status).toEqual(200)
     expect(resFalse.type).toEqual('application/json')
     expect(resFalse.body).toBeDefined()
@@ -899,7 +900,7 @@ describe('/api/students', () => {
     done()
   })
 
-  test('GET /?course=cb[cc|si]&name=[STUDENT%20NAME]&sort=parameter', async done => {
+  test('GET /?course=cb[cc|si]&name=[STUDENT NAME]&sort=parameter', async done => {
     const { token } = await testUtils.user('admin')
     const res1 = await chai
       .request(server.listen())
@@ -916,7 +917,7 @@ describe('/api/students', () => {
       .get('/api/students/')
       .query({
         course: 'cbcc',
-        name: '%SANTOS&',
+        name: '%SANTOS',
         sort: 'registrationNumber'
       })
       .set('Authorization', `Bearer ${token}`)
@@ -928,7 +929,7 @@ describe('/api/students', () => {
     done()
   })
 
-  test('GET /?course=cb[cc|si]&name=[STUDENT%20NAME]&sort=parameter&order=parameter', async done => {
+  test('GET /?course=cb[cc|si]&name=[STUDENT NAME]&sort=parameter&order=parameter', async done => {
     const { token } = await testUtils.user('admin')
     const res1 = await chai
       .request(server.listen())
@@ -1019,29 +1020,6 @@ describe('/api/students', () => {
     done()
   })
 
-  test('GET /?gmail=false', async done => {
-    const { token } = await testUtils.user('admin')
-    const res = await chai
-      .request(server.listen())
-      .get('/api/students/')
-      .query({ gmail: false })
-      .set('Authorization', `Bearer ${token}`)
-    expect(res.body[0].email).toEqual('notgoo@gmiau.com')
-
-    expect(res.body[1].email).toEqual('youngboy@yahoo.com')
-
-    expect(res.body[2].email).toEqual('naosouativo@gmail.com')
-
-    expect(res.body[3].email).toEqual('slug@gmail.com')
-
-    expect(res.body[4].email).toEqual('dofuturo@gmail.com.br')
-
-    expect(res.body[5].email).toEqual('oldfashioned33@hotmail.com')
-
-    expect(res.body[6].email).toEqual('uneccessary@ufpa.br')
-    done()
-  })
-
   test('GET /?email=[STUDENT-EMAIL]', async done => {
     const { token } = await testUtils.user('admin')
     const resStudent1 = await chai
@@ -1108,6 +1086,7 @@ describe('/api/students', () => {
     expect(res1.body[0].name).toEqual('LAURA CARDOSO CASTRO')
     done()
   })
+
   test('GET /?prescribed=true&registrationNumber=201304940002&sort=name&order=desc', async done => {
     const { token } = await testUtils.user('admin')
     await Promise.all(
@@ -1179,8 +1158,8 @@ describe('/api/students', () => {
     const { token } = await testUtils.user('admin')
     await Promise.all(
       [
-        { id: 1, isConcluding: 1, academicHighlight: 1 },
-        { id: 2, isConcluding: 1, academicHighlight: 1 }
+        { id: 1, isConcluding: true, academicHighlight: true },
+        { id: 2, isConcluding: true, academicHighlight: true }
       ].map(props => Student.forge(props).save())
     )
 
@@ -1198,11 +1177,11 @@ describe('/api/students', () => {
     expect(res1.body).toBeDefined()
     expect(res1.body.length).toEqual(2)
     expect(res1.body[0].name).toEqual('FELIPE SOUZA FERREIRA')
-    expect(res1.body[0].isConcluding).toEqual(1)
-    expect(res1.body[0].academicHighlight).toEqual(1)
+    expect(res1.body[0].isConcluding).toEqual(true)
+    expect(res1.body[0].academicHighlight).toEqual(true)
     expect(res1.body[1].name).toEqual('LAURA CARDOSO CASTRO')
-    expect(res1.body[1].isConcluding).toEqual(1)
-    expect(res1.body[1].academicHighlight).toEqual(1)
+    expect(res1.body[1].isConcluding).toEqual(true)
+    expect(res1.body[1].academicHighlight).toEqual(true)
     done()
   })
   test('GET /email-changes?mailingList=active', async done => {
