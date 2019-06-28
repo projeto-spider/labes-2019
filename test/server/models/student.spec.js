@@ -11,7 +11,7 @@ const Student = require('../../../server/models/Student')
 
 jest.useFakeTimers()
 
-describe('/api/users', () => {
+describe('Student', () => {
   beforeEach(async done => {
     await db.knex.migrate.rollback()
     await db.knex.migrate.latest()
