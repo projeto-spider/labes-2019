@@ -715,24 +715,24 @@ describe('/api/students', () => {
     done()
   })
 
-  test('GET /?isActive=[0|1]', async done => {
+  test('GET /?isActive=[false|true]', async done => {
     const { token } = await testUtils.user('admin')
     const resTrue = await chai
       .request(server.listen())
-      .get('/api/students/?isActive=1')
+      .get('/api/students/?isActive=true')
       .set('Authorization', `Bearer ${token}`)
     expect(resTrue.status).toEqual(200)
     expect(resTrue.type).toEqual('application/json')
     expect(resTrue.body).toBeDefined()
-    expect(resTrue.body.every(student => student.isActive === 1)).toBeTruthy()
+    expect(resTrue.body.every(student => student.isActive)).toBeTruthy()
     const resFalse = await chai
       .request(server.listen())
-      .get('/api/students/?isActive=0')
+      .get('/api/students/?isActive=false')
       .set('Authorization', `Bearer ${token}`)
     expect(resFalse.status).toEqual(200)
     expect(resFalse.type).toEqual('application/json')
     expect(resFalse.body).toBeDefined()
-    expect(resFalse.body.every(student => student.isActive === 0)).toBeTruthy()
+    expect(resFalse.body.every(student => !student.isActive)).toBeTruthy()
     done()
   })
 
@@ -972,12 +972,13 @@ describe('/api/students', () => {
     done()
   })
 
-  test('GET /?gmail=1', async done => {
+  test.only('GET /?gmail=true', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .get('/api/students/?gmail=1')
+      .get('/api/students/?gmail=true')
       .set('Authorization', `Bearer ${token}`)
+    debugger
     expect(res.body[0].email).toEqual('naosouativo@gmail.com')
 
     expect(res.body[1].email).toEqual('slug@gmail.com')
@@ -1055,11 +1056,11 @@ describe('/api/students', () => {
     done()
   })
 
-  test('GET /?prescribed=1', async done => {
+  test('GET /?prescribed=true', async done => {
     const { token } = await testUtils.user('admin')
     const res1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?prescribed=1'))
+      .get(encodeURI('/api/students/?prescribed=true'))
       .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
@@ -1067,7 +1068,7 @@ describe('/api/students', () => {
     expect(res1.body[0].name).toEqual('LAURA CARDOSO CASTRO')
     done()
   })
-  test('GET /?prescribed=1&registrationNumber=201304940002&sort=name&order=desc', async done => {
+  test('GET /?prescribed=true&registrationNumber=201304940002&sort=name&order=desc', async done => {
     const { token } = await testUtils.user('admin')
     await Promise.all(
       [
@@ -1087,7 +1088,7 @@ describe('/api/students', () => {
       .request(server.listen())
       .get(
         encodeURI(
-          '/api/students/?prescribed=1&registrationNumber=201304940002&sort=name&order=desc'
+          '/api/students/?prescribed=true&registrationNumber=201304940002&sort=name&order=desc'
         )
       )
       .set('Authorization', `Bearer ${token}`)
@@ -1098,7 +1099,7 @@ describe('/api/students', () => {
     done()
   })
 
-  test('GET /?prescribed=1&sort=name&order=desc', async done => {
+  test('GET /?prescribed=true&sort=name&order=desc', async done => {
     const { token } = await testUtils.user('admin')
     await Promise.all(
       [
@@ -1116,7 +1117,7 @@ describe('/api/students', () => {
     )
     const res1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?prescribed=1&sort=name&order=desc'))
+      .get(encodeURI('/api/students/?prescribed=true&sort=name&order=desc'))
       .set('Authorization', `Bearer ${token}`)
     expect(res1.status).toEqual(200)
     expect(res1.type).toEqual('application/json')
@@ -1127,7 +1128,7 @@ describe('/api/students', () => {
     done()
   })
 
-  test('GET /?isConcluding=1&academicHighlight=1', async done => {
+  test('GET /?isConcluding=true&academicHighlight=true', async done => {
     const { token } = await testUtils.user('admin')
     await Promise.all(
       [
@@ -1138,7 +1139,7 @@ describe('/api/students', () => {
 
     const res1 = await chai
       .request(server.listen())
-      .get(encodeURI('/api/students/?isConcluding=1&academicHighlight=1'))
+      .get(encodeURI('/api/students/?isConcluding=true&academicHighlight=true'))
       .set('Authorization', `Bearer ${token}`)
 
     expect(res1.status).toEqual(200)
