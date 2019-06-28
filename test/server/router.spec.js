@@ -7,6 +7,7 @@ const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
 const db = require('../../server/db')
+const useSeeds = require('../use-seeds')
 const server = require('../../server')
 const errors = require('../../shared/errors')
 const testUtils = require('./test-utils')
@@ -17,7 +18,7 @@ describe('/api', () => {
   beforeEach(async done => {
     await db.knex.migrate.rollback()
     await db.knex.migrate.latest()
-    await db.knex.seed.run()
+    await useSeeds(['users', 'students'])
     done()
   }, 100000)
   test('GET /', async done => {
