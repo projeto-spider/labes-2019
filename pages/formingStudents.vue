@@ -89,8 +89,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import SearchInput from '~/components/SearchInput'
-import ModalPrescribedList from '~/components/ModalPrescribedList'
+import SearchInput from '@/components/SearchInput'
+import ModalPrescribedList from '@/components/ModalPrescribedList'
 
 export default {
   name: 'Forming',

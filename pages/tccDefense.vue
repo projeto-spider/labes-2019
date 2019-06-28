@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import TccDefenseSearch from '~/components/TccDefenseSearch'
+import TccDefenseSearch from '@/components/TccDefenseSearch'
 import { mapState } from 'vuex'
 
 export default {

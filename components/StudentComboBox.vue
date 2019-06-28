@@ -179,8 +179,8 @@
 </template>
 
 <script>
-import BaseStudentDataRow from '@/components/studentComboBox/BaseStudentDataRow'
-import DocumentRow from '@/components/studentComboBox/DocumentRow'
+import BaseStudentDataRow from '@/components/StudentComboBox/BaseStudentDataRow'
+import DocumentRow from '@/components/StudentComboBox/DocumentRow'
 import DatePicker from '@/components/DatePicker'
 import { errorsHandler } from '@/components/mixins/errors'
 import { studentStatus } from '@/components/mixins/studentStatus'

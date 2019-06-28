@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import AdmissionForm from '~/components/AdmissionForm'
+import AdmissionForm from '@/components/AdmissionForm'
 
 export default {
   name: 'ConcludingAdmission',

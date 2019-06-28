@@ -9,7 +9,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import SearchInput from '~/components/SearchInput'
+import SearchInput from '@/components/SearchInput'
 export default {
   name: 'AllStudents',
   middleware: 'course',
