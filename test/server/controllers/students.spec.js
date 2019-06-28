@@ -8,6 +8,7 @@ const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
 const testUtils = require('../test-utils')
+const useSeeds = require('../../use-seeds')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const Student = require('../../../server/models/Student')
@@ -35,7 +36,7 @@ describe('/api/students', () => {
   beforeEach(async () => {
     await db.knex.migrate.rollback()
     await db.knex.migrate.latest()
-    await db.knex.seed.run()
+    await useSeeds(['users', 'students', 'documents', 'solicitations'])
   }, 100000)
 
   test('POST /from-csv', async done => {
@@ -738,7 +739,6 @@ describe('/api/students', () => {
       .get('/api/students/')
       .query({ isActive: false })
       .set('Authorization', `Bearer ${token}`)
-    debugger
     expect(resFalse.status).toEqual(200)
     expect(resFalse.type).toEqual('application/json')
     expect(resFalse.body).toBeDefined()
