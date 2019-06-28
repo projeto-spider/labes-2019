@@ -15,7 +15,7 @@
     "knex": "knex",
     "makedb": "knex migrate:latest && knex seed:run",
     "remakedb": "rm -f dev.sqlite test.sqlite && npm run makedb",
-    "test": "jest -i --forceExit",
+    "test": "jest --maxWorkers=4",
     "test:travis": "npm test && npm run lint"
   },
   "dependencies": {
