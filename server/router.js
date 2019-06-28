@@ -69,7 +69,7 @@ api.post('/subjects/', bodyJson, subjects.Create)
 api.put('/subjects/:id', bodyJson, subjects.Update)
 api.del('/subjects/:id', subjects.Destroy)
 // Defenses Routes
-api.get('/defenses/', isAdmin, defenses.List)
+api.get('/defenses/', isAdminOrTeacher, defenses.List)
 api.post('/defenses/', isTeacher, bodyJson, defenses.Create)
 api.put('/defenses/:id', isAdmin, bodyJson, defenses.Update)
 
@@ -130,10 +130,18 @@ function isTeacher(ctx, next) {
   return checkRole(ctx, next, 'teacher')
 }
 
+function isAdminOrTeacher(ctx, next) {
+  return checkRole(ctx, next, ['admin', 'teacher'])
+}
+
 function checkRole(ctx, next, role) {
   const { user } = ctx.state.user
 
-  if (user.role !== role) {
+  const hasRole = Array.isArray(role)
+    ? role.includes(user.role)
+    : user.role !== role
+
+  if (!hasRole) {
     ctx.status = 403
     ctx.body = { code: errors.FORBIDDEN }
     return
