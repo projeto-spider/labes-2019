@@ -7,21 +7,18 @@ const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
 const db = require('../../../server/db')
+const useSeeds = require('../../use-seeds')
 const Document = require('../../../server/models/Document')
 
 jest.useFakeTimers()
 
-describe('/api/documents', () => {
+describe('models/Document', () => {
   beforeEach(async done => {
     await db.knex.migrate.rollback()
     await db.knex.migrate.latest()
-    await db.knex.seed.run()
+    await useSeeds(['students', 'documents'])
     done()
   }, 100000)
-
-  afterEach(() => {
-    return db.knex.migrate.rollback()
-  })
 
   test('Create a Document', async done => {
     const document = await Document.forge({

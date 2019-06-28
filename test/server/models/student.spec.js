@@ -18,10 +18,6 @@ describe('Student', () => {
     done()
   }, 100000)
 
-  afterEach(() => {
-    return db.knex.migrate.rollback()
-  })
-
   test('Create a Student', async done => {
     const student = await Student.forge({
       name: 'Lorem Ipsum',

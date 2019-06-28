@@ -7,6 +7,7 @@ const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
 const db = require('../../../server/db')
+const useSeeds = require('../../use-seeds')
 const User = require('../../../server/models/User')
 
 jest.useFakeTimers()
@@ -15,7 +16,7 @@ describe('models/User', () => {
   beforeEach(async done => {
     await db.knex.migrate.rollback()
     await db.knex.migrate.latest()
-    await db.knex.seed.run()
+    await useSeeds(['users'])
     done()
   }, 100000)
 
