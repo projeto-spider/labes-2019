@@ -1,7 +1,7 @@
 <template>
   <section class="section">
     <div class="container">
-      <tcc-defense read-only="true"></tcc-defense>
+      <tcc-defense :read-only="true"></tcc-defense>
     </div>
   </section>
 </template>
