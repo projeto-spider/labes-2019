@@ -11,10 +11,6 @@ module.exports = function model(
     ano
   }
 ) {
-  doc.addPage({
-    layout: 'landscape',
-    size: [595, 841]
-  })
   doc
     .rect(0, 0, 697.14, 348.57)
     .dash(5, { space: 10 })

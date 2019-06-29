@@ -137,14 +137,22 @@ module.exports = async function generateAllDocs(ctx) {
     evaluator => evaluator.type === 'external'
   )
   let usedPage = false
+  const pageLayout = files === 'cd' ? 'landscape' : 'portrait'
   const doc = new PDFDocument({
     margin: 20,
+    layout: pageLayout,
     size: [595, 841]
   })
   const allFiles = files === undefined
   if (allFiles || files === 'ata') {
     Ata(doc, dados)
     usedPage = true
+  }
+  if (allFiles && usedPage) {
+    doc.addPage({
+      layout: 'landscape',
+      size: [595, 841]
+    })
   }
   if (allFiles || files === 'cd') {
     Cd(doc, dados)
