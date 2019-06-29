@@ -1,5 +1,5 @@
 export default function select(data, getList, defaults = {}) {
-  if (data && typeof data == 'object') {
+  if (data && typeof data === 'object') {
     const selected = {}
     for (const d in data) {
       if (getList.includes(d)) {
