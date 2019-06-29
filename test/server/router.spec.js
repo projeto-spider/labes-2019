@@ -15,12 +15,16 @@ const testUtils = require('./test-utils')
 jest.useFakeTimers()
 
 describe('/api', () => {
-  beforeEach(async done => {
-    await db.knex.migrate.rollback()
+  beforeAll(async () => {
     await db.knex.migrate.latest()
-    await useSeeds(['users', 'students'])
-    done()
   }, 100000)
+  beforeEach(async () => {
+    await useSeeds(['users', 'students'])
+  }, 100000)
+  afterEach(async () => {
+    await testUtils.wipe(db.knex)
+  }, 100000)
+
   test('GET /', async done => {
     const res = await chai.request(server.listen()).get('/api/')
     expect(res.status).toEqual(404)

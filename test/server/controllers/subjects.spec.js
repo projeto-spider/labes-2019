@@ -13,10 +13,14 @@ const db = require('../../../server/db')
 
 jest.useFakeTimers()
 describe('/api/subjects', () => {
-  beforeEach(async () => {
-    await db.knex.migrate.rollback()
+  beforeAll(async () => {
     await db.knex.migrate.latest()
+  }, 100000)
+  beforeEach(async () => {
     await useSeeds(['users', 'subjects'])
+  }, 100000)
+  afterEach(async () => {
+    await testUtils.wipe(db.knex)
   }, 100000)
 
   test('POST /subjects', async done => {

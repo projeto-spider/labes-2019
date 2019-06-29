@@ -15,11 +15,14 @@ const errors = require('../../../shared/errors')
 jest.useFakeTimers()
 
 describe('/api/auth', () => {
-  beforeEach(async done => {
-    await db.knex.migrate.rollback()
+  beforeAll(async () => {
     await db.knex.migrate.latest()
+  }, 100000)
+  beforeEach(async () => {
     await useSeeds(['users'])
-    done()
+  }, 100000)
+  afterEach(async () => {
+    await testUtils.wipe(db.knex)
   }, 100000)
 
   test('GET /', async done => {

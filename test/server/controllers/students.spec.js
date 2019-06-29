@@ -33,10 +33,14 @@ function sigaaCsvFixture(name) {
 }
 
 describe('/api/students', () => {
-  beforeEach(async () => {
-    await db.knex.migrate.rollback()
+  beforeAll(async () => {
     await db.knex.migrate.latest()
+  }, 100000)
+  beforeEach(async () => {
     await useSeeds(['users', 'students', 'documents', 'solicitations'])
+  }, 100000)
+  afterEach(async () => {
+    await testUtils.wipe(db.knex)
   }, 100000)
 
   test('POST /from-csv', async done => {
