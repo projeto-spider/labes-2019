@@ -28,7 +28,9 @@ module.exports = function model(
     conceito
   }
 ) {
-  doc.image('./server/models/tccdocs/img/logoFacomp.png', 50, 30, {
+  doc.image('./server/models/tccdocs/img/logoFacomp.png', 50, 35, {
+    width: 76,
+    height: 80,
     align: 'left',
     valign: 'top'
   })
@@ -38,13 +40,15 @@ module.exports = function model(
       INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
       FACULDADE DE COMPUTAÇÃO
       `,
-    60,
+    0,
     40,
     {
       align: 'center'
     }
   )
-  doc.image('./server/models/tccdocs/img/logoUFPA.png', 500, 35, {
+  doc.image('./server/models/tccdocs/img/logoUFPA.png', 480, 35, {
+    width: 70,
+    height: 80,
     align: 'right',
     valign: 'top'
   })
@@ -59,7 +63,7 @@ module.exports = function model(
   doc
     .font('Times-Bold')
     .fontSize(20)
-    .text(`C E R T I F I C A D O`, 80, 200, {
+    .text(`C E R T I F I C A D O`, 28, 200, {
       align: 'center'
     })
   doc
@@ -97,17 +101,12 @@ module.exports = function model(
   doc.fontSize(12).text(`Belém, ${dia} de ${mes} de ${ano}.`, 100, 560, {
     align: 'right'
   })
-  doc.fontSize(12).text(`____________________________________`, 100, 640, {
+  doc.fontSize(12).text(`____________________________________`, 22, 640, {
     align: 'center'
   })
   doc
     .fontSize(12)
-    .text(
-      `${diretor}\n\n      Diretor(a) da Faculdade de Computação`,
-      80,
-      670,
-      {
-        align: 'center'
-      }
-    )
+    .text(`${diretor}\n\nDiretor(a) da Faculdade de Computação`, 22, 670, {
+      align: 'center'
+    })
 }

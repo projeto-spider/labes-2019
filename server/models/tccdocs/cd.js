@@ -12,13 +12,16 @@ module.exports = function model(
   }
 ) {
   doc.addPage({
-    layout: 'landscape'
+    layout: 'landscape',
+    size: [841, 595]
   })
   doc
     .rect(0, 0, 697.14, 348.57)
     .dash(5, { space: 10 })
     .stroke()
   doc.image('./server/models/tccdocs/img/logoUFPA.png', 180, 30, {
+    width: 70,
+    height: 70,
     align: 'left',
     valign: 'top'
   })

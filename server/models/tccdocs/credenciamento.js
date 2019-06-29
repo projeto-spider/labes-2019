@@ -18,6 +18,7 @@ module.exports = function model(
     .font('Times-Bold')
     .fontSize(15)
     .text(`REQUERIMENTO DE CREDENCIAMENTO PARA PARTICIPAÇÃO DE BANCA`, 80, 50, {
+      width: 465,
       align: 'center'
     })
   doc
@@ -27,6 +28,7 @@ module.exports = function model(
       50,
       100,
       {
+        width: 495,
         align: 'justify'
       }
     )
@@ -37,6 +39,7 @@ module.exports = function model(
       50,
       140,
       {
+        width: 495,
         align: 'justify'
       }
     )
@@ -46,27 +49,20 @@ module.exports = function model(
   doc.fontSize(12).text(`Belém, ${dia} de ${mes} de ${ano}.`, 100, 240, {
     align: 'left'
   })
-  doc.fontSize(12).text(`____________________________________`, 80, 300, {
+  doc.fontSize(12).text(`____________________________________`, 0, 300, {
+    align: 'center'
+  })
+  doc.fontSize(12).text(`${membroConvidado}\n\n(Membro convidado)`, 0, 320, {
+    align: 'center'
+  })
+  doc.fontSize(12).text(`____________________________________`, 0, 400, {
     align: 'center'
   })
   doc
     .fontSize(12)
-    .text(`${membroConvidado}\n\n      (Membro convidado)`, 70, 320, {
+    .text(`${tituloOrientador}${orientador}\n\n(Orientador(a))`, 0, 420, {
       align: 'center'
     })
-  doc.fontSize(12).text(`____________________________________`, 80, 400, {
-    align: 'center'
-  })
-  doc
-    .fontSize(12)
-    .text(
-      `${tituloOrientador}${orientador}\n\n      (Orientador(a))`,
-      70,
-      420,
-      {
-        align: 'center'
-      }
-    )
   doc.fontSize(12).text(
     `Art. 94. O TCC será defendido em sessão pública, perante banca examinadora  constituída  de,  no  mínimo,  dois  membros,  sendo  um  deles,  obrigatoriamente,  o orientador, que presidirá a sessão.\n
         § 1° A  sessão  pública  será  organizada  pela  Faculdade  ou  Escola  e  realizada durante o período letivo.\n
@@ -75,6 +71,7 @@ module.exports = function model(
     50,
     520,
     {
+      width: 495,
       align: 'justify'
     }
   )
