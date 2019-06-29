@@ -2,17 +2,20 @@ const Defense = require('../../models/Defense')
 const utils = require('../../utils')
 
 module.exports = async function listDefenses(ctx) {
-  utils.paginateContext(ctx, await filter(ctx.request.query))
+  const { user } = ctx.state.user
+  utils.paginateContext(ctx, await filter(ctx.request.query, user))
 }
 /**
  * Filter defenses 👍
  * @param {object} query - Filter args
+ * @param {object} user - User
  * @return {Promise} Bookshelf
  */
-function filter(filters) {
+function filter(filters, user) {
   const { page = 1, status, course } = filters
+  const userId = user.id
 
-  let query = Defense
+  let query = user.role === 'admin' ? Defense : Defense.where({ userId })
 
   if (status !== undefined) {
     query = query.where('status', status)

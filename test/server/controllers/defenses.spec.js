@@ -15,7 +15,7 @@ const errors = require('../../../shared/errors')
 
 jest.useFakeTimers()
 
-describe('/api/documents', () => {
+describe('/api/defenses', () => {
   beforeAll(async () => {
     await db.knex.migrate.latest()
   }, 100000)
@@ -306,6 +306,89 @@ describe('/api/documents', () => {
 
     expect(res.status).toEqual(404)
     expect(res.type).toEqual('application/json')
+
+    done()
+  })
+
+  test('GET /defenses get by role', async done => {
+    const [admin, teacher] = await Promise.all(
+      ['admin', 'teacher'].map(username => testUtils.user(username))
+    )
+
+    const payload1 = {
+      userId: admin.user.get('id'),
+      course: 'cbcc',
+      registrationNumbers: '201704940001, 201304940002',
+      students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+      local: 'Auditório do ICEN',
+      title: 'Fundamentos da Comunicação Analógica',
+      keywords: 'Fundamental, comunicacional, analógico',
+      summary: 'Sumário fundamentacional',
+
+      advisorName: 'Jonathan Joestar',
+      advisorTitle: 'doctor',
+      advisorType: 'internal',
+
+      evaluator1Name: 'Robert E. O. Speedwagon',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+
+      evaluator2Name: 'Narciso Anasui',
+      evaluator2Title: 'master',
+      evaluator2Type: 'external'
+    }
+
+    const payload2 = {
+      userId: teacher.user.get('id'),
+      course: 'cbcc',
+      registrationNumbers: '200504940003, 201104940004',
+      students: 'JOSE FERREIRA SILVA, ENZO FERREIRA ALVES',
+      local: 'Auditório do ICEN',
+      title: 'Um título aqui',
+      keywords: 'Teste, Assunto',
+      summary: 'Sumário fundamentacional',
+
+      advisorName: 'Um Orientador',
+      advisorTitle: 'doctor',
+      advisorType: 'internal',
+
+      evaluator1Name: 'Robert E. O. Speedwagon',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+
+      evaluator2Name: 'Narciso Anasui',
+      evaluator2Title: 'master',
+      evaluator2Type: 'external'
+    }
+
+    const defenses = await Promise.all(
+      [payload1, payload2].map(payload => Defense.forge(payload).save())
+    )
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .get('/api/defenses/')
+        .set('Authorization', `Bearer ${admin.token}`)
+
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.length).toEqual(2)
+    }
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .get('/api/defenses/')
+        .set('Authorization', `Bearer ${teacher.token}`)
+
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.length).toEqual(1)
+      expect(res.body[0].id).toEqual(defenses[1].get('id'))
+    }
 
     done()
   })
