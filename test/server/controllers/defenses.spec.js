@@ -11,7 +11,6 @@ const useSeeds = require('../../use-seeds')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const Defense = require('../../../server/models/Defense')
-const User = require('../../../server/models/User')
 const errors = require('../../../shared/errors')
 
 jest.useFakeTimers()
@@ -312,12 +311,12 @@ describe('/api/defenses', () => {
   })
 
   test('GET /defenses get by role', async done => {
-    let [admin, teacher] = await Promise.all(
-      ['admin', 'teacher'].map(username => User.where({ username }).fetch())
+    const [admin, teacher] = await Promise.all(
+      ['admin', 'teacher'].map(username => testUtils.user(username))
     )
 
     const payload1 = {
-      userId: admin.get('id'),
+      userId: admin.user.get('id'),
       course: 'cbcc',
       registrationNumbers: '201704940001, 201304940002',
       students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
@@ -340,7 +339,7 @@ describe('/api/defenses', () => {
     }
 
     const payload2 = {
-      userId: teacher.get('id'),
+      userId: teacher.user.get('id'),
       course: 'cbcc',
       registrationNumbers: '200504940003, 201104940004',
       students: 'JOSE FERREIRA SILVA, ENZO FERREIRA ALVES',
@@ -362,34 +361,34 @@ describe('/api/defenses', () => {
       evaluator2Type: 'external'
     }
 
-    const defense = await Promise.all(
+    const defenses = await Promise.all(
       [payload1, payload2].map(payload => Defense.forge(payload).save())
     )
 
-    admin = await testUtils.user('admin')
+    {
+      const res = await chai
+        .request(server.listen())
+        .get('/api/defenses/')
+        .set('Authorization', `Bearer ${admin.token}`)
 
-    const resAdmin = await chai
-      .request(server.listen())
-      .get('/api/defenses/')
-      .set('Authorization', `Bearer ${admin.token}`)
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.length).toEqual(2)
+    }
 
-    expect(resAdmin.status).toEqual(200)
-    expect(resAdmin.type).toEqual('application/json')
-    expect(resAdmin.body).toBeDefined()
-    expect(resAdmin.body.length).toEqual(2)
+    {
+      const res = await chai
+        .request(server.listen())
+        .get('/api/defenses/')
+        .set('Authorization', `Bearer ${teacher.token}`)
 
-    teacher = await testUtils.user('teacher')
-
-    const resTeacher = await chai
-      .request(server.listen())
-      .get('/api/defenses/')
-      .set('Authorization', `Bearer ${teacher.token}`)
-
-    expect(resTeacher.status).toEqual(200)
-    expect(resTeacher.type).toEqual('application/json')
-    expect(resTeacher.body).toBeDefined()
-    expect(resTeacher.body.length).toEqual(1)
-    expect(resTeacher.body[0].id).toEqual(defense[1].get('id'))
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.length).toEqual(1)
+      expect(res.body[0].id).toEqual(defenses[1].get('id'))
+    }
 
     done()
   })
