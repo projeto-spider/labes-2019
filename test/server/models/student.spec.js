@@ -65,7 +65,6 @@ describe('Student', () => {
       isGraduating: 1,
       academicHighlight: 0,
       cancelled: 1,
-      prescribed: 0,
       recordSigned: 1,
       termPaper: 0
     }).save()
@@ -78,7 +77,6 @@ describe('Student', () => {
       'isGraduating',
       'academicHighlight',
       'cancelled',
-      'prescribed',
       'recordSigned',
       'termPaper'
     ]
