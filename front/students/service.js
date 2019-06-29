@@ -1,44 +1,45 @@
-export default function studentServices(axios) {
+import select from '../selector'
+
+export default function makeStudentServices(axios) {
   return {
-    fetch: id => {
+    fetch(id) {
       return axios.get(`/api/students/${id}`)
     },
 
-    fetchPage: ({
-      name,
-      course,
-      email,
-      registrationNumber,
-      isActive,
-      isGraduating,
-      isConcluding,
-      order = 'asc',
-      page = 1,
-      isForming,
-      isFit,
-      isAcademicHighlight,
-      prescribed,
-      cancelled,
-      mailingList,
-      noCrg,
-      sort
-    }) => {
-      const payload = {}
-      const params = arguments[0]
-      Object.keys(params).forEach(key => {
-        if (params[key]) {
-          payload[key] = params[key]
-        }
+    fetchPage(
+      {
+        name,
+        course,
+        email,
+        registrationNumber,
+        isActive,
+        isGraduating,
+        isConcluding,
+        order,
+        page,
+        isForming,
+        isFit,
+        isAcademicHighlight,
+        prescribed,
+        cancelled,
+        mailingList,
+        noCrg,
+        sort
+      },
+      paramList
+    ) {
+      const payload = select(arguments[0], paramList, {
+        page: 1,
+        order: 'asc'
       })
-
-      return axios.get('/api/students', params)
+      return axios.get('/api/students', payload)
     },
 
-    update: (studentId, payload) => {
+    update(studentId, payload) {
       return axios.put(`/api/students/${studentId}`, payload)
     },
 
-    importFromCsv: body => {
+    importFromCsv(body) {
       return axios.post('/api/students/from-csv', body)
     }
   }
