@@ -35,46 +35,47 @@ module.exports = async function generateAllDocs(ctx) {
     '12': 'Dezembro'
   }
   const date = new Date()
-  const dados = {}
-  dados.curso = translations[defenseFind.get('course')]
-  dados.tituloTCC = defenseFind.get('title')
-  dados.nomeDosAlunos = defenseFind.get('students').replace(/, /g, '\n')
-  dados.tituloOrientador = translations[defenseFind.get('advisorTitle')]
-  dados.orientador = defenseFind.get('advisorName')
-  dados.tituloCoOrientador = translations[defenseFind.get('coAdvisorTitle')]
-  dados.coOrientador = defenseFind.get('coAdvisorName')
-  dados.tituloAvaliador1 = translations[defenseFind.get('evaluator1Title')]
-  dados.avaliador1 = defenseFind.get('evaluator1Name')
-  dados.tituloAvaliador2 = translations[defenseFind.get('evaluator2Title')]
-  dados.avaliador2 = defenseFind.get('evaluator2Name')
-  dados.tituloAvaliador3 = translations[defenseFind.get('evaluator3Title')]
-  dados.avaliador3 = defenseFind.get('evaluator3Name')
-  dados.diaDefesa = defenseFind.get('date').split('/')[0]
-  dados.mesDefesa = translations[Number(defenseFind.get('date').split('/')[1])]
-  dados.anoDefesa = defenseFind.get('date').split('/')[2]
-  dados.dia = date.getUTCDate()
-  dados.mes = translations[date.getUTCMonth()]
-  dados.ano = date.getUTCFullYear()
-  dados.tituloDiretor = translations.doctor
-  dados.diretor = 'Josivaldo de Souza Araújo'
-  dados.matricula = defenseFind.get('registrationNumbers').split(', ')[0]
-  dados.discente = defenseFind.get('students').split(', ')[0]
-  dados.palavrasChave = defenseFind.get('keywords')
-  dados.horarioDefesa = defenseFind.get('time').slice(0, -3)
-  dados.salaDefesa = defenseFind.get('local')
-  dados.resumo = defenseFind.get('summary')
-  dados.trechoAv3 = ''
-  dados.trechoCoorientador = ''
-  dados.isDiscente = false
+  const dados = {
+    curso: translations[defenseFind.get('course')],
+    tituloTCC: defenseFind.get('title'),
+    nomeDosAlunos: defenseFind.get('students').replace(/, /g, '\n'),
+    tituloOrientador: translations[defenseFind.get('advisorTitle')],
+    orientador: defenseFind.get('advisorName'),
+    tituloCoOrientador: translations[defenseFind.get('coAdvisorTitle')],
+    coOrientador: defenseFind.get('coAdvisorName'),
+    tituloAvaliador1: translations[defenseFind.get('evaluator1Title')],
+    avaliador1: defenseFind.get('evaluator1Name'),
+    tituloAvaliador2: translations[defenseFind.get('evaluator2Title')],
+    avaliador2: defenseFind.get('evaluator2Name'),
+    tituloAvaliador3: translations[defenseFind.get('evaluator3Title')],
+    avaliador3: defenseFind.get('evaluator3Name'),
+    diaDefesa: defenseFind.get('date').split('/')[0],
+    mesDefesa: translations[Number(defenseFind.get('date').split('/')[1])],
+    anoDefesa: defenseFind.get('date').split('/')[2],
+    dia: date.getUTCDate(),
+    mes: translations[date.getUTCMonth()],
+    ano: date.getUTCFullYear(),
+    tituloDiretor: translations.doctor,
+    diretor: 'Josivaldo de Souza Araújo',
+    matricula: defenseFind.get('registrationNumbers').split(', ')[0],
+    discente: defenseFind.get('students').split(', ')[0],
+    palavrasChave: defenseFind.get('keywords'),
+    horarioDefesa: defenseFind.get('time').slice(0, -3),
+    salaDefesa: defenseFind.get('local'),
+    resumo: defenseFind.get('summary'),
+    trechoAv3: '',
+    trechoCoorientador: '',
+    isDiscente: false
+  }
   if (dados.avaliador3) {
     dados.trechoAv3 = `, ${dados.tituloAvaliador3}${
       dados.avaliador3
     } (AVALIADOR(A))`
   }
   if (dados.coOrientador) {
-    dados.trechoCoorientador = `${dados.tituloCoOrientador}${
+    dados.trechoCoorientador = `, ${dados.tituloCoOrientador}${
       dados.coOrientador
-    } (ORIENTADOR(A))`
+    } (COORIENTADOR(A))`
   }
   const people = [
     {
@@ -137,7 +138,8 @@ module.exports = async function generateAllDocs(ctx) {
   )
   let usedPage = false
   const doc = new PDFDocument({
-    // size: [210, 297]
+    margin: 20,
+    size: [595, 841]
   })
   const allFiles = files === undefined
   if (allFiles || files === 'ata') {
@@ -180,9 +182,15 @@ module.exports = async function generateAllDocs(ctx) {
   if (allFiles || files === 'divulgacao') {
     Divulgacao(doc, dados)
   }
+  const filename = files
+    ? `${dados.discente.toLowerCase()}-${files}`
+    : `${dados.discente.toLowerCase()}`
   doc.end()
   ctx.status = 200
   ctx.type = 'application/pdf'
-  ctx.set('Content-Disposition', `attachment; filename=${dados.discente}.pdf`)
+  ctx.set(
+    'Content-Disposition',
+    `inline; filename=${filename.replace(/ /g, '-')}.pdf`
+  )
   ctx.body = doc
 }
