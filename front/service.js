@@ -1,11 +1,12 @@
-import studentServices from './students/service'
-import documentsServices from './documents/service'
+import makeStudentServices from './students/service'
+import makeDocumentsServices from './documents/service'
+import makeSubjectsServices from './subjects/service'
 
 export default function makeServices(axios) {
   return {
-    students: studentServices(axios),
-    documents: documentsServices(axios),
-    subjects: null,
+    students: makeStudentServices(axios),
+    documents: makeDocumentsServices(axios),
+    subjects: makeSubjectsServices(axios),
     pendencies: null
   }
 }

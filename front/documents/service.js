@@ -1,15 +1,22 @@
 export default function makeDocumentsServices(axios) {
   return {
-    fetch(studentId) {
+    fetch(studentId, documentId) {
+      return axios.get(`/api/students/${studentId}/documents/${documentId}`)
+    },
+
+    fetchAll(studentId) {
       return axios.get(`/api/students/${studentId}/documents`)
     },
 
-    update(studentId, payload) {
-      return axios.post(`/api/students/${studentId}/documents`, payload)
+    update(studentId, documentId, payload) {
+      return axios.put(
+        `/api/students/${studentId}/documents/${documentId}`,
+        payload
+      )
     },
 
-    destroy(studentId) {
-      return axios.delete(`/api/students/${studentId}/documents`)
+    destroy(studentId, documentId) {
+      return axios.delete(`/api/students/${studentId}/documents/${documentId}`)
     }
   }
 }

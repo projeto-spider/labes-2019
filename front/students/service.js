@@ -1,4 +1,4 @@
-import select from '../selector'
+import selector from '../selector'
 
 export default function makeStudentServices(axios) {
   return {
@@ -6,29 +6,27 @@ export default function makeStudentServices(axios) {
       return axios.get(`/api/students/${id}`)
     },
 
-    fetchPage(
-      {
-        name,
-        course,
-        email,
-        registrationNumber,
-        isActive,
-        isGraduating,
-        isConcluding,
-        order,
-        page,
-        isForming,
-        isFit,
-        isAcademicHighlight,
-        prescribed,
-        cancelled,
-        mailingList,
-        noCrg,
-        sort
-      },
-      paramList
-    ) {
-      const payload = select(arguments[0], paramList, {
+    fetchPage(params) {
+      const paramList = [
+        'name',
+        'course',
+        'email',
+        'registrationNumber',
+        'isActive',
+        'isGraduating',
+        'isConcluding',
+        'order',
+        'page',
+        'isForming',
+        'isFit',
+        'isAcademicHighlight',
+        'prescribed',
+        'cancelled',
+        'mailingList',
+        'noCrg',
+        'sort'
+      ]
+      const payload = selector(params, paramList, {
         page: 1,
         order: 'asc'
       })
@@ -39,8 +37,8 @@ export default function makeStudentServices(axios) {
       return axios.put(`/api/students/${studentId}`, payload)
     },
 
-    importFromCsv(body) {
-      return axios.post('/api/students/from-csv', body)
+    importFromCsv(payload) {
+      return axios.post('/api/students/from-csv', payload)
     }
   }
 }

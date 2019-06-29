@@ -1,11 +1,9 @@
-export default function select(data, getList, defaults = {}) {
+export default function selector(data, getList, defaults = {}) {
   if (data && typeof data === 'object') {
-    const selected = {}
+    const selected = { ...defaults }
     for (const d in data) {
-      if (getList.includes(d)) {
+      if (data.hasOwnProperty(d) && getList.includes(d)) {
         selected[d] = data[d]
-      } else if (defaults[d]) {
-        selected[d] = defaults[d]
       }
     }
     return selected
