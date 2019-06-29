@@ -12,3 +12,24 @@ export async function user(username, exp) {
 
   return { user, token }
 }
+
+/**
+ * Wipe a knex SQLite database
+ * @param  {Knex} knex
+ * @return {Promise}
+ */
+export function wipe(knex) {
+  return knex('sqlite_master')
+    .where('type', 'table')
+    .then(tables =>
+      knex.transaction(trx =>
+        Promise.all(
+          tables.map(({ name }) =>
+            knex(name)
+              .transacting(trx)
+              .truncate()
+          )
+        )
+      )
+    )
+}

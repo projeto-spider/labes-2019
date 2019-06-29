@@ -6,6 +6,8 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
+const testUtils = require('../test-utils')
+const useSeeds = require('../../use-seeds')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const errors = require('../../../shared/errors')
@@ -13,11 +15,14 @@ const errors = require('../../../shared/errors')
 jest.useFakeTimers()
 
 describe('/api/solicitations', () => {
-  beforeEach(async done => {
-    await db.knex.migrate.rollback()
+  beforeAll(async () => {
     await db.knex.migrate.latest()
-    await db.knex.seed.run()
-    done()
+  }, 100000)
+  beforeEach(async () => {
+    await useSeeds(['solicitations'])
+  }, 100000)
+  afterEach(async () => {
+    await testUtils.wipe(db.knex)
   }, 100000)
 
   test('POST /', async done => {

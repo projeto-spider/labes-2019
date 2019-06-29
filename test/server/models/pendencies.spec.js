@@ -6,22 +6,23 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
+const testUtils = require('../test-utils')
 const db = require('../../../server/db')
+const useSeeds = require('../../use-seeds')
 const Pendency = require('../../../server/models/Pendency')
 
 jest.useFakeTimers()
 
-describe('/api/students/:idStudent/pendencies', () => {
-  beforeEach(async done => {
-    await db.knex.migrate.rollback()
+describe('models/Pendency', () => {
+  beforeAll(async () => {
     await db.knex.migrate.latest()
-    await db.knex.seed.run()
-    done()
   }, 100000)
-
-  afterEach(() => {
-    return db.knex.migrate.rollback()
-  })
+  beforeEach(async () => {
+    await useSeeds(['students', 'subjects', 'pendencies'])
+  }, 100000)
+  afterEach(async () => {
+    await testUtils.wipe(db.knex)
+  }, 100000)
 
   test('Create a Pendency', async done => {
     const pendency = await Pendency.forge({
