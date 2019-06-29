@@ -2,11 +2,12 @@ const Koa = require('koa')
 const consola = require('consola')
 const router = require('./router')
 const errorHandler = require('./error-handler')
+const config = require('./config')
 
 const app = new Koa()
 
-const host = process.env.HOST || '127.0.0.1'
-const port = process.env.PORT || 3000
+const host = config.HOST
+const port = config.PORT
 
 app.use(errorHandler)
 

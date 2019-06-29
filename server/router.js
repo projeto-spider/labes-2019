@@ -3,6 +3,7 @@ const KoaBody = require('koa-body')
 const KoaJwt = require('koa-jwt')
 
 const errors = require('../shared/errors')
+const config = require('./config')
 const documents = require('./controllers/documents')
 const frontend = require('./controllers/frontend')
 const users = require('./controllers/users')
@@ -16,7 +17,7 @@ const defenses = require('./controllers/defenses')
 const router = new Router()
 const api = new Router({ prefix: '/api' })
 
-api.use(KoaJwt({ getToken, secret: 'my-secret', passthrough: true }))
+api.use(KoaJwt({ getToken, secret: config.JWT_SECRET, passthrough: true }))
 
 // Middlewares
 const bodyJson = KoaBody()
