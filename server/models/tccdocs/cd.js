@@ -13,26 +13,22 @@ module.exports = function model(
 ) {
   doc.addPage({
     layout: 'landscape',
-    size: [841, 595]
+    size: [595, 841]
   })
   doc
     .rect(0, 0, 697.14, 348.57)
     .dash(5, { space: 10 })
     .stroke()
-  doc.image('./server/models/tccdocs/img/logoUFPA.png', 180, 30, {
+  doc.image('./server/models/tccdocs/img/logoUFPA.png', 150, 30, {
     width: 70,
     height: 70,
     align: 'left',
     valign: 'top'
   })
   doc.fontSize(10).text(
-    `
-        UNIVERSIDADE FEDERAL DO PARÁ
-        INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
-        FACULDADE DE COMPUTAÇÃO
-        CURSO DE BACHARELADO EM ${curso.toUpperCase()}
+    `\nUNIVERSIDADE FEDERAL DO PARÁ\nINSTITUTO DE CIÊNCIAS EXATAS E NATURAIS\nFACULDADE DE COMPUTAÇÃO\nCURSO DE BACHARELADO EM ${curso.toUpperCase()}
         `,
-    -300,
+    -390,
     100,
     {
       align: 'center'
@@ -41,13 +37,13 @@ module.exports = function model(
   doc
     .font('Times-Bold')
     .fontSize(10)
-    .text(`${tituloTCC}`, -300, 180, {
+    .text(`${tituloTCC}`, -390, 180, {
       align: 'center'
     })
   doc
     .font('Times-Bold')
     .fontSize(10)
-    .text(`${nomeDosAlunos}`, -300, 205, {
+    .text(`${nomeDosAlunos}`, -390, 205, {
       align: 'center'
     })
   doc
@@ -62,30 +58,33 @@ module.exports = function model(
         align: 'left'
       })
   }
-  doc.fontSize(10).text(`Belém, ${ano}`, -300, 330, {
+  doc.fontSize(10).text(`Belém, ${ano}`, -390, 330, {
     align: 'center'
   })
   doc
     .font('Times-Bold')
     .fontSize(12)
-    .text(`${tituloTCC}`, 330, 40, {
+    .text(`${tituloTCC}`, 260, 40, {
       align: 'center'
     })
   doc
     .font('Times-Bold')
     .fontSize(10)
-    .text(`${nomeDosAlunos}`, 330, 80, {
+    .text(`${nomeDosAlunos}`, 260, 80, {
       align: 'center'
     })
   doc
     .fontSize(9)
     .text(
       `Declaro que este CD-ROM contém o trabalho de conclusão corrigido e finalizado conforme minha orientação.`,
-      420,
-      150
+      400,
+      150,
+      {
+        width: 290
+      }
     )
-  doc.fontSize(10).text(`____________________________________`, 450, 250)
-  doc.fontSize(10).text(`${tituloOrientador}${orientador}`, 470, 270)
+  doc.fontSize(10).text(`____________________________________`, 430, 250)
+  doc.fontSize(10).text(`${tituloOrientador}${orientador}`, 450, 270)
   doc
     .fontSize(12)
     .text(
