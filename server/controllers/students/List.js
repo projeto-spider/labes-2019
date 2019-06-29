@@ -1,6 +1,7 @@
 const Student = require('../../models/Student')
 const errors = require('../../../shared/errors')
 const utils = require('../../utils')
+const enums = require('../../../shared/enums')
 
 module.exports = async function listStudents(ctx) {
   const { course, sort, order = 'ASC' } = ctx.request.query
@@ -54,11 +55,11 @@ function filterStudents(filters) {
 
   if (filterPrescribed) {
     query = query.query(qb => {
-      qb.innerJoin('documents', 'documents.studentId', 'students.id')
-        .where('documents.type', '=', '3')
-        .andWhere(qb =>
-          qb.where('isGraduating', true).orWhere('isForming', true)
-        )
+      qb.innerJoin('documents', 'documents.studentId', 'students.id').where(
+        'documents.type',
+        '=',
+        enums.documents.LISTA_PRESCRICAO
+      )
     })
   }
   if (name !== undefined) {
