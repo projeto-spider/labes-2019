@@ -380,7 +380,7 @@ describe('/api/documents', () => {
       .get('/api/students/1/tccdocuments/')
       .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(200)
-    expect(res.type).toEqual('application/octet-stream')
+    expect(res.type).toEqual('application/pdf')
     expect(res.body).toBeDefined()
     done()
   })
