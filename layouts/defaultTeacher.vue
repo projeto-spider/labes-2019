@@ -86,6 +86,7 @@
           </div>
           <ul class="menu-list">
             <li>
+              <nuxt-link to="/teacher/home">Página inicial</nuxt-link>
               <nuxt-link to="/teacher/registerPresentation"
                 >Cadastrar defesa de TCC</nuxt-link
               >
