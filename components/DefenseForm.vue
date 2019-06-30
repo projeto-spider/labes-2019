@@ -231,6 +231,9 @@
       <b-button type="is-primary is-large" native-type="submit">
         Enviar
       </b-button>
+      <nuxt-link to="/teacher/home"
+        ><b-button type="is-danger is-large">Cancelar</b-button>
+      </nuxt-link>
     </div>
   </form>
 </template>
