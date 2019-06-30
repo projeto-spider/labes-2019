@@ -44,7 +44,7 @@ ${bankTitle(selectedDefense.evaluator2Title)} ${
           : ''
       }
 
-Data e local: ${selectedDefense.date} as ${selectedDefense.time} - ${
+Data e local: ${selectedDefense.date} às ${selectedDefense.time} - ${
         selectedDefense.local
       }
 
