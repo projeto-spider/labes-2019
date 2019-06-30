@@ -1,6 +1,15 @@
 export const disclosureModel = {
   methods: {
     disclosureModel(selectedDefense) {
+      function bankTitle(title) {
+        if (title === 'doctor') {
+          return 'Doutor(a)'
+        } else if (title === 'master') {
+          return 'Mestre(a)'
+        } else {
+          return ''
+        }
+      }
       return `
 DEFESA PÚBLICA DO TRABALHO DE
 CONCLUSÃO DO CURSO DE ${
@@ -9,25 +18,31 @@ CONCLUSÃO DO CURSO DE ${
           : 'SISTEMAS DE INFORMAÇÃO'
       }
 
-Discente: ${selectedDefense.students}
+Discente(s): ${selectedDefense.students}
 
 Título: ${selectedDefense.title}
 
 Banca:
 
-${selectedDefense.advisorName} (ORIENTADOR(A))
-${
-  selectedDefense.coAdvisorName !== ''
-    ? `${selectedDefense.coAdvisorName} (COORIENTADOR(A))`
-    : ''
-}
-${selectedDefense.evaluator1Name} (AVALIADOR(A))
-${selectedDefense.evaluator2Name} (AVALIADOR(A))
-${
-  selectedDefense.evaluator3Name !== ''
-    ? `${selectedDefense.evaluator3Name} (AVALIADOR(A))`
-    : ''
-}
+${bankTitle(selectedDefense.advisorTitle)} ${
+        selectedDefense.advisorName
+      } (ORIENTADOR(A))
+${bankTitle(selectedDefense.coAdvisorTitle)} ${
+        selectedDefense.coAdvisorName !== ''
+          ? `${selectedDefense.coAdvisorName} (COORIENTADOR(A))`
+          : ''
+      }
+${bankTitle(selectedDefense.evaluator1Title)} ${
+        selectedDefense.evaluator1Name
+      } (AVALIADOR(A))
+${bankTitle(selectedDefense.evaluator2Title)} ${
+        selectedDefense.evaluator2Name
+      } (AVALIADOR(A))
+${bankTitle(selectedDefense.evaluator2Title)} ${
+        selectedDefense.evaluator3Name !== ''
+          ? `${selectedDefense.evaluator3Name} (AVALIADOR(A))`
+          : ''
+      }
 
 Data e local: ${selectedDefense.date} as ${selectedDefense.time} - ${
         selectedDefense.local
