@@ -129,7 +129,11 @@
               ></button>
             </header>
             <section class="modal-card-body">
-              <textarea v-model="disclosure" class="textarea"></textarea>
+              <textarea
+                v-model="disclosure"
+                class="textarea"
+                rows="15"
+              ></textarea>
             </section>
             <footer class="modal-card-foot">
               <button class="button is-primary" @click="doCopy">
