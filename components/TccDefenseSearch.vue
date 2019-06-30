@@ -150,6 +150,7 @@
 import { mapState } from 'vuex'
 import pDebounce from 'p-debounce'
 import { errorsHandler } from '@/components/mixins/errors'
+import { disclosureModel } from '@/components/mixins/disclosure'
 import DefenseForm from '@/components/DefenseForm'
 
 export default {
@@ -158,7 +159,7 @@ export default {
   components: {
     DefenseForm
   },
-  mixins: [errorsHandler],
+  mixins: [errorsHandler, disclosureModel],
 
   props: {
     publish: {
@@ -229,48 +230,7 @@ export default {
       courseTag: state => state.courseTag
     }),
     disclosure() {
-      return `
-DEFESA PÚBLICA DO TRABALHO DE
-CONCLUSÃO DO CURSO DE CIÊNCIA DA
-
-COMPUTAÇÃO
-
-Discente: ITALO RAMON DA COSTA CAMPOS
-
-Título: APLICAÇÃO DE SISTEMAS MULTIAGENTES AO PROBLEMA
-DE AUTORRECUPERAÇÃO EM SISTEMAS ELÉTRICOS DE
-DISTRIBUIÇÃO DO TIPO SMART GRID
-
-Banca:
-
-Prof. Dr. Filipe de Oliveira Saraiva (ORIENTADOR)
-Prof. Dr. Josivaldo de Souza Araujo (AVALIADOR)
-Prof. Dr. Nelson Cruz Sampaio Neto (AVALIADOR)
-
-Data e Local: 20 de dezembro de 2018 às 10:00 h - FC-02
-RESUMO
-
-Um dos setores mais importantes na vida da sociedade moderna é sem dúvida o setor de
-energias e os seus sistemas de geração, transmissão, armazenamento e consumo. Esses
-sistemas elétricos são complexos e difíceis de se gerenciar, requerendo aplicações de técnicas
-sofisticadas para tornar o fornecimento de energia estável e minimamente confiável. Uma
-área que muito vem sendo desenvolvida ao longo dos últimos anos é a de smart grids, que
-incorpora à rede elétrica funcionalidades que melhoram a qualidade do serviço prestado,
-como controle em tempo real dos dados gerados, comunicação digital entre as diferentes
-partes do sistema, autorrecuperação frente à falhas, etc. Existem muitos trabalhos
-desenvolvidos que se propõem a estudar o problema da autorrecuperação se utilizando de
-diferentes técnicas. Esse se mostra um desafio que pode trazer à rede elétrica um grande
-avanço no sentido de fornecer um serviço contínuo e de qualidade. No âmbito das redes
-elétricas de distribuição, este trabalho propõe um modelo de sistema multiagente para lidar
-com o problema da autorrecuperação das redes elétricas do tipo smart grids. Foi desenvolvido
-um sistema multiagente para simular e gerenciar as operações, as falhas e a autorrecuperação
-de redes elétricas. A autorrecuperação segue um algoritmo de quatro passos e realiza as
-decisões com base num algoritmo de fluxo de potência. Para avaliar o sistema proposto,
-foram utilizados dois modelos de rede elétrica: um primeiro concebido para esta pesquisa,
-com 8 nós, e outro proposto no trabalho de Baran e Wu (1989), com 33 nós. Os resultados
-foram obtidos através de simulação computacional e tabulados para análise. Tais resultados
-mostram que o sistema multiagente é capaz de realizar a autorrecuperação da rede através da
-      `
+      return this.disclosureModel(this.selectedDefense)
     }
   },
 
