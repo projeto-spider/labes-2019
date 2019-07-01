@@ -2,7 +2,7 @@ import makeStudentServices from './students/service'
 import makeDocumentsServices from './documents/service'
 import makeSubjectsServices from './subjects/service'
 import makePendenciesServices from './pendencies/service'
-import makeDefensesServices from './pendencies/service'
+import makeDefensesServices from './defenses/service'
 
 export default function makeServices(axios) {
   return {
@@ -12,7 +12,6 @@ export default function makeServices(axios) {
     pendencies: makePendenciesServices(axios),
     defenses: makeDefensesServices(axios),
     solicitations: null,
-    users: null,
-    defenses: null
+    users: null
   }
 }
