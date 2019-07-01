@@ -2,7 +2,7 @@ const utils = require('../../../server/utils')
 const errors = require('../../../shared/errors')
 
 module.exports = function showAuth(ctx) {
-  const queryValid = utils.keysValid(ctx.request.query, [])
+  const queryValid = utils.keysValid(ctx.request.query, ['token'])
 
   if (!queryValid) {
     ctx.status = 400
