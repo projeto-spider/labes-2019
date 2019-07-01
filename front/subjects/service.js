@@ -11,7 +11,7 @@ export default function makeSubjectsServices(axios) {
     },
 
     fetchAll() {
-      return axios.get('/api/subjects/?paginate=0')
+      return axios.get('/api/subjects/?paginate=false')
     },
 
     create(params) {
@@ -19,7 +19,8 @@ export default function makeSubjectsServices(axios) {
       return axios.post('/api/subjects', payload)
     },
 
-    update(subjectId, payload) {
+    update(subjectId, params) {
+      const payload = selector(params, ['name'])
       return axios.put(`/api/subjects/${subjectId}`, payload)
     },
 
