@@ -60,7 +60,6 @@ exports.parseCsv = function parseCsv(str) {
  *     //   isGraduating: false,
  *     //   academicHighlight: false,
  *     //   cancelled: false,
- *     //   prescribed: false,
  *     //   mailingListToAdd: 'active'
  *     // }]
  */
@@ -86,7 +85,6 @@ exports.digestSigaaData = function digestSigaaData(data) {
       isGraduating: false,
       academicHighlight: false,
       cancelled: false,
-      prescribed: false,
       mailingListToAdd: 'none'
     }
 

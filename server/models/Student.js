@@ -8,7 +8,6 @@ const booleanFields = [
   'isGraduating',
   'academicHighlight',
   'cancelled',
-  'prescribed',
   'recordSigned',
   'termPaper'
 ]

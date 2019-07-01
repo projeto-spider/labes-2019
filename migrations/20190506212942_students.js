@@ -39,10 +39,6 @@ exports.up = function(knex, Promise) {
       .boolean('cancelled')
       .notNullable()
       .defaultTo(false)
-    table
-      .boolean('prescribed')
-      .notNullable()
-      .defaultTo(false)
     table.enum('mailingList', mailingList).defaultTo('none')
     table.enum('mailingListToAdd', mailingList).defaultTo('none')
     table.enum('mailingListToRemove', mailingList).defaultTo('none')

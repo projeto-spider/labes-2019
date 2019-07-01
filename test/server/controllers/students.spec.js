@@ -390,7 +390,6 @@ describe('/api/students', () => {
         isGraduating: false,
         academicHighlight: false,
         cancelled: false,
-        prescribed: false,
         mailingList: 'none',
         entryDate: '05-28-2019',
         advisor: 'Novo Orientador',
@@ -459,7 +458,6 @@ describe('/api/students', () => {
         isGraduating: false,
         academicHighlight: false,
         cancelled: false,
-        prescribed: false,
         mailingList: 'none'
       })
     expect(res.status).toEqual(404)
@@ -486,8 +484,7 @@ describe('/api/students', () => {
           isConcluding: false,
           isGraduating: true,
           academicHighlight: false,
-          cancelled: false,
-          prescribed: false
+          cancelled: false
         },
         {
           name: 'BBBBB',
@@ -501,8 +498,7 @@ describe('/api/students', () => {
           isConcluding: false,
           isGraduating: true,
           academicHighlight: true,
-          cancelled: false,
-          prescribed: false
+          cancelled: false
         },
         {
           name: 'CCCCC',
@@ -516,8 +512,7 @@ describe('/api/students', () => {
           isConcluding: false,
           isGraduating: true,
           academicHighlight: true,
-          cancelled: false,
-          prescribed: false
+          cancelled: false
         }
       ].map(props => Student.forge(props).save())
     )
@@ -563,8 +558,7 @@ describe('/api/students', () => {
           isConcluding: false,
           isGraduating: true,
           academicHighlight: false,
-          cancelled: false,
-          prescribed: false
+          cancelled: false
         },
         {
           name: 'BBBBB',
@@ -578,8 +572,7 @@ describe('/api/students', () => {
           isConcluding: false,
           isGraduating: true,
           academicHighlight: true,
-          cancelled: false,
-          prescribed: false
+          cancelled: false
         },
         {
           name: 'CCCCC',
@@ -593,8 +586,7 @@ describe('/api/students', () => {
           isConcluding: false,
           isGraduating: true,
           academicHighlight: true,
-          cancelled: false,
-          prescribed: false
+          cancelled: false
         }
       ].map(props => Student.forge(props).save())
     )
