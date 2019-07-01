@@ -21,25 +21,28 @@ module.exports = function model(
     align: 'left',
     valign: 'top'
   })
-  doc.fontSize(10).text(
-    `\nUNIVERSIDADE FEDERAL DO PARÁ\nINSTITUTO DE CIÊNCIAS EXATAS E NATURAIS\nFACULDADE DE COMPUTAÇÃO\nCURSO DE BACHARELADO EM ${curso.toUpperCase()}
+  doc
+    .font('Times-Roman')
+    .fontSize(10)
+    .text(
+      `\nUNIVERSIDADE FEDERAL DO PARÁ\nINSTITUTO DE CIÊNCIAS EXATAS E NATURAIS\nFACULDADE DE COMPUTAÇÃO\nCURSO DE BACHARELADO EM ${curso.toUpperCase()}
         `,
-    -390,
-    100,
-    {
-      align: 'center'
-    }
-  )
+      -440,
+      100,
+      {
+        align: 'center'
+      }
+    )
   doc
     .font('Times-Bold')
     .fontSize(10)
-    .text(`${tituloTCC}`, -390, 180, {
+    .text(`${tituloTCC}`, -440, 180, {
       align: 'center'
     })
   doc
     .font('Times-Bold')
     .fontSize(10)
-    .text(`${nomeDosAlunos}`, -390, 205, {
+    .text(`${nomeDosAlunos}`, -440, 205, {
       align: 'center'
     })
   doc
@@ -54,26 +57,26 @@ module.exports = function model(
         align: 'left'
       })
   }
-  doc.fontSize(10).text(`Belém, ${ano}`, -390, 330, {
+  doc.fontSize(10).text(`Belém, ${ano}`, -440, 330, {
     align: 'center'
   })
   doc
     .font('Times-Bold')
     .fontSize(12)
-    .text(`${tituloTCC}`, 260, 40, {
+    .text(`${tituloTCC}`, 200, 40, {
       align: 'center'
     })
   doc
     .font('Times-Bold')
     .fontSize(10)
-    .text(`${nomeDosAlunos}`, 260, 80, {
+    .text(`${nomeDosAlunos}`, 200, 80, {
       align: 'center'
     })
   doc
     .fontSize(9)
     .text(
       `Declaro que este CD-ROM contém o trabalho de conclusão corrigido e finalizado conforme minha orientação.`,
-      400,
+      370,
       150,
       {
         width: 290

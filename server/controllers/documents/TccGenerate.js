@@ -150,6 +150,7 @@ module.exports = async function generateAllDocs(ctx) {
   }
   if (allFiles && usedPage) {
     doc.addPage({
+      margin: 20,
       layout: 'landscape',
       size: [595, 841]
     })
