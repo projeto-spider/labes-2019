@@ -29,18 +29,21 @@ module.exports = function model(
     align: 'left',
     valign: 'top'
   })
-  doc.fontSize(12).text(
-    `
+  doc
+    .font('Times-Bold')
+    .fontSize(12)
+    .text(
+      `
       UNIVERSIDADE FEDERAL DO PARÁ
       INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
       FACULDADE DE COMPUTAÇÃO
       `,
-    0,
-    40,
-    {
-      align: 'center'
-    }
-  )
+      0,
+      40,
+      {
+        align: 'center'
+      }
+    )
   doc.image('./server/models/tccdocs/img/logoUFPA.png', 480, 35, {
     width: 70,
     height: 80,
@@ -59,6 +62,7 @@ module.exports = function model(
       }
     )
   doc
+    .font('Times-Roman')
     .fontSize(12)
     .text(
       `Realizou-se na ${salaDefesa}, do Campus Básico da Universidade Federal do Pará, situado no Bairro do Guamá, nesta cidade de Belém do Pará, a sessão de Defesa Pública do Trabalho de Conclusão de Curso intitulado '${tituloTCC}', apresentado pelo(a) discente ${discente.toUpperCase()}. A sessão foi instalada às ${horarioDefesa} h pelo(a) ${tituloOrientador}${orientador}. A referida banca foi constituída pelos seguintes membros: ${tituloOrientador}${orientador} (ORIENTADOR(A))${trechoCoorientador}, ${tituloAvaliador1}${avaliador1} (AVALIADOR(A)), ${tituloAvaliador2}${avaliador2} (AVALIADOR(A))${trechoAv3}. A Banca Examinadora, após a exposição do mencionado Trabalho pelo discente, passou a arguí-lo. E nada mais havendo a tratar, o presidente deu por encerrada a Defesa do Trabalho, agradecendo a presença de todos, e para constar a legitimidade do que foi deliberado, lavrou-se a presente ata que após lida, será assinada pelos membros presentes na reunião. Belém, ${diaDefesa} de ${mesDefesa} de ${anoDefesa}.`,
@@ -77,6 +81,7 @@ module.exports = function model(
     align: 'right',
     valign: 'top'
   })
+  doc.font('Times-Bold')
   doc.fontSize(10).text(`____________________________________`, 30, 600)
   doc
     .fontSize(10)

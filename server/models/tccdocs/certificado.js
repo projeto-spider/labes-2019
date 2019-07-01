@@ -34,18 +34,21 @@ module.exports = function model(
     align: 'left',
     valign: 'top'
   })
-  doc.fontSize(12).text(
-    `
+  doc
+    .font('Times-Bold')
+    .fontSize(12)
+    .text(
+      `
       UNIVERSIDADE FEDERAL DO PARÁ
       INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
       FACULDADE DE COMPUTAÇÃO
       `,
-    0,
-    40,
-    {
-      align: 'center'
-    }
-  )
+      0,
+      40,
+      {
+        align: 'center'
+      }
+    )
   doc.image('./server/models/tccdocs/img/logoUFPA.png', 480, 35, {
     width: 70,
     height: 80,
@@ -67,6 +70,7 @@ module.exports = function model(
       align: 'center'
     })
   doc
+    .font('Times-Roman')
     .fontSize(12)
     .text(
       `Certificamos para os devidos fins que o(a) ${trecho1} Defesa Pública do Trabalho de Conclusão de Curso intitulado '${tituloTCC}' ${trecho2}, no dia ${diaDefesa} de ${mesDefesa} de ${anoDefesa} ${trecho3}`,

@@ -29,18 +29,21 @@ module.exports = function model(
     align: 'left',
     valign: 'top'
   })
-  doc.fontSize(12).text(
-    `
+  doc
+    .font('Times-Roman')
+    .fontSize(12)
+    .text(
+      `
      UNIVERSIDADE FEDERAL DO PARÁ
      INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
      FACULDADE DE COMPUTAÇÃO
      `,
-    0,
-    40,
-    {
-      align: 'center'
-    }
-  )
+      0,
+      40,
+      {
+        align: 'center'
+      }
+    )
   doc.image('./server/models/tccdocs/img/logoUFPA.png', 480, 35, {
     width: 70,
     height: 80,
