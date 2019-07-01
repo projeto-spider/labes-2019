@@ -300,4 +300,73 @@ describe('/api/users', () => {
     expect(res.body.code).toBe(errors.FORBIDDEN)
     done()
   })
+
+  test('GET /?invalid=invalid invalid param', async done => {
+    const { token } = await testUtils.user('admin')
+    const res1 = await chai
+      .request(server.listen())
+      .get('/api/users?page=1&invalid=invalid')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res1.status).toEqual(400)
+    expect(res1.type).toEqual('application/json')
+    expect(res1.body).toBeDefined()
+    expect(res1.body.code).toEqual(errors.INVALID_PARAM)
+
+    const res2 = await chai
+      .request(server.listen())
+      .get('/api/users/1?invalid=invalid')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res2.status).toEqual(400)
+    expect(res2.type).toEqual('application/json')
+    expect(res2.body).toBeDefined()
+    expect(res2.body.code).toEqual(errors.INVALID_PARAM)
+
+    const res3 = await chai
+      .request(server.listen())
+      .get('/api/users?page=1')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res3.status).toEqual(200)
+    expect(res3.type).toEqual('application/json')
+    expect(res3.body).toBeDefined()
+    done()
+  })
+
+  test('POST /?invalid=invalid invalid param/body ', async done => {
+    const { token } = await testUtils.user('admin')
+    const payload1 = {
+      username: 'person',
+      password: 'person',
+      email: 'person@example.com',
+      role: 'admin'
+    }
+    const res1 = await chai
+      .request(server.listen())
+      .post('/api/users?invalid=invalid')
+      .set('Authorization', `Bearer ${token}`)
+      .send(payload1)
+
+    expect(res1.status).toBe(400)
+    expect(res1.type).toBe('application/json')
+    expect(res1.body).toBeDefined()
+    expect(res1.body.code).toEqual(errors.INVALID_PARAM)
+
+    const payload2 = {
+      username: 'person',
+      password: 'person',
+      email: 'person@example.com',
+      role: 'admin',
+      invalid: 'invalid'
+    }
+    const res2 = await chai
+      .request(server.listen())
+      .post('/api/users')
+      .set('Authorization', `Bearer ${token}`)
+      .send(payload2)
+
+    expect(res2.status).toBe(400)
+    expect(res2.type).toBe('application/json')
+    expect(res2.body).toBeDefined()
+    expect(res2.body.code).toEqual(errors.INVALID_BODY)
+    done()
+  })
 })

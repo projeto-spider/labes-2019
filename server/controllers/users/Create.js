@@ -1,7 +1,29 @@
 const User = require('../../models/User')
 const errors = require('../../../shared/errors')
+const utils = require('../../utils')
 
 module.exports = async function createUser(ctx) {
+  const bodyValid = utils.keysValid(ctx.request.body, [
+    'email',
+    'username',
+    'password',
+    'role'
+  ])
+
+  if (!bodyValid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_BODY }
+    return
+  }
+
+  const queryValid = utils.keysValid(ctx.request.query, [])
+
+  if (!queryValid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_PARAM }
+    return
+  }
+
   const { email, username, password, role } = ctx.request.body
 
   const validRequest = [email, username, password, role].every(
