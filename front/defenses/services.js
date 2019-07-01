@@ -1,13 +1,11 @@
 import selector from '../selector'
 
-export default function makeSubjectsServices(axios) {
+export default function makeDefensesServices(axios) {
   return {
-    fetch(subjectId) {
-      return axios.get(`/api/subjects/${subjectId}`)
-    },
-
-    fetchPage(page) {
-      return axios.get(`/api/subjects/?page=${page}`)
+    fetchPage(params) {
+      const paramList = ['page', 'query', 'course', 'status']
+      const payload = selector(params, paramList, { page: 1 })
+      return axios.get('/api/defenses', payload)
     },
 
     fetchAll() {
@@ -19,7 +17,8 @@ export default function makeSubjectsServices(axios) {
       return axios.post('/api/subjects', payload)
     },
 
-    update(subjectId, payload) {
+    update(subjectId, params) {
+      const payload = selector(params, ['name'])
       return axios.put(`/api/subjects/${subjectId}`, payload)
     },
 
