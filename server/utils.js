@@ -297,3 +297,16 @@ exports.fileName = function filename(dirStudents, studentFind, documentType) {
     }.pdf`
   )
 }
+
+/**
+ * @param {Object} object - Target object
+ * @param {Array} keysModel - Expected keys list
+ * @returns {Boolean} false|true
+ */
+exports.keysValid = function keysValid(object, keysModel) {
+  if (object === undefined) {
+    return keysModel.length === 0
+  }
+  const keysObject = Object.keys(object)
+  return keysObject.reduce((acc, key) => acc && keysModel.includes(key), true)
+}
