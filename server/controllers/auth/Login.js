@@ -3,6 +3,21 @@ const errors = require('../../../shared/errors')
 const utils = require('../../utils')
 
 module.exports = async function login(ctx) {
+  const bodyValid = utils.keysValid(ctx.request.body, ['username', 'password'])
+
+  if (!bodyValid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_BODY }
+    return
+  }
+
+  const queryValid = utils.keysValid(ctx.request.query, [])
+  if (!queryValid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_PARAM }
+    return
+  }
+
   const { username, password } = ctx.request.body
 
   if (username === undefined || password === undefined) {

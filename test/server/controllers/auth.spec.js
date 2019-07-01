@@ -134,4 +134,34 @@ describe('/api/auth', () => {
     expect(res.body.code).toEqual(errors.INVALID_CREDENTIALS)
     done()
   })
+
+  test('GET /?invalid=1 invalid param', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/auth?invalid=1')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_PARAM)
+    done()
+  })
+
+  test('POST / invalid body', async done => {
+    const payload = {
+      username: 'admin',
+      password: 'admin',
+      invalid: '1'
+    }
+    const res = await chai
+      .request(server.listen())
+      .post('/api/auth')
+      .send(payload)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_BODY)
+    done()
+  })
 })
