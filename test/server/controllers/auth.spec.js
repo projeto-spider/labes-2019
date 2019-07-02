@@ -148,7 +148,7 @@ describe('/api/auth', () => {
     expect(res.body.code).toEqual(errors.INVALID_QUERY)
     expect(res.body.invalidParams).toBeDefined()
     expect(res.body.invalidParams.length).toEqual(1)
-    expect(res.body.invalidParams[0]).toEqual('invalid')
+    expect(res.body.invalidParams).toContainEqual('invalid')
     done()
   })
 
@@ -169,7 +169,8 @@ describe('/api/auth', () => {
     expect(res.body.code).toEqual(errors.INVALID_BODY)
     expect(res.body.invalidParams).toBeDefined()
     expect(res.body.invalidParams.length).toEqual(2)
-    expect(res.body.invalidParams[1]).toEqual('invalid2')
+    expect(res.body.invalidParams).toContainEqual('invalid1')
+    expect(res.body.invalidParams).toContainEqual('invalid2')
     done()
   })
 })

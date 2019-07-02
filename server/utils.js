@@ -309,7 +309,7 @@ exports.validatePayload = function validatePayload(payload, knownProperties) {
   const invalidParams = keysObject.filter(key => !knownProperties.includes(key))
   const valid = invalidParams.length === 0
 
-  return { valid, invalidParams, payload }
+  return { valid, invalidParams }
 }
 
 exports.validateQuery = function validateQuery(payload, knownProperties) {
