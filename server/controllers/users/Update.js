@@ -3,6 +3,14 @@ const errors = require('../../../shared/errors')
 
 module.exports = async function createUser(ctx) {
   const { id } = ctx.params
+  {
+    const { user } = ctx.state.user
+    if (user === null || (user.role !== 'admin' && id !== user.id.toString())) {
+      ctx.status = 403
+      ctx.body = { code: errors.FORBIDDEN }
+      return
+    }
+  }
   const payload = ctx.request.body
 
   const validRequest = [payload.password, id].every(item => item !== undefined)
