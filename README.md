@@ -15,6 +15,16 @@ $ npm run makedb
 $ npm run dev
 
 # build for production and launch server
-$ npm run build
-$ npm start
+$ npm run production
 ```
+
+## Setup environment variables
+
+You can make a file named `.env` at root level to define
+variables for both development or production.
+
+It's highly advisable that you at least generate an application
+secret on it.
+
+For an example with all available settings refer to
+[.env.example](.env.example).
