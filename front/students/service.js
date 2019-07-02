@@ -33,8 +33,43 @@ export default function makeStudentServices(axios) {
       return axios.get('/api/students', payload)
     },
 
-    update(studentId, payload) {
+    fetchEmailChanges(mailingList) {
+      return axios.get('/api/students/email-changes', {
+        params: {
+          mailingList
+        }
+      })
+    },
+
+    update(studentId, params) {
+      const paramList = [
+        'name',
+        'course',
+        'email',
+        'registrationNumber',
+        'isActive',
+        'isGraduating',
+        'isConcluding',
+        'isForming',
+        'isFit',
+        'isAcademicHighlight',
+        'prescribed',
+        'cancelled',
+        'mailingList',
+        'mailingListToRemove',
+        'mailingListToAdd',
+        'crg'
+      ]
+      const payload = selector(params, paramList)
       return axios.put(`/api/students/${studentId}`, payload)
+    },
+
+    updateEmailChanges(mailingList) {
+      return axios.post('/api/students/update-mailing-list', {
+        params: {
+          mailingList
+        }
+      })
     },
 
     importFromCsv(payload) {
