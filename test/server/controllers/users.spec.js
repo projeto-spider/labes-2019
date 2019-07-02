@@ -318,51 +318,50 @@ describe('/api/users', () => {
     done()
   })
 
-  test('POST /?invalid=1 invalid param ', async done => {
+  test('POST /?invalid=1 invalid param/body ', async done => {
     const { token } = await testUtils.user('admin')
-    const payload = {
-      username: 'person',
-      password: 'person',
-      email: 'person@example.com',
-      role: 'admin'
+    {
+      const payload = {
+        username: 'person',
+        password: 'person',
+        email: 'person@example.com',
+        role: 'admin'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/users')
+        .query({ invalid: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .send(payload)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_QUERY)
+      expect(res.body.invalidParams).toBeDefined()
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
     }
-    const res = await chai
-      .request(server.listen())
-      .post('/api/users')
-      .query({ invalid: 1 })
-      .set('Authorization', `Bearer ${token}`)
-      .send(payload)
-    expect(res.status).toBe(400)
-    expect(res.type).toBe('application/json')
-    expect(res.body).toBeDefined()
-    expect(res.body.code).toEqual(errors.INVALID_QUERY)
-    expect(res.body.invalidParams).toBeDefined()
-    expect(res.body.invalidParams.length).toEqual(1)
-    expect(res.body.invalidParams).toContainEqual('invalid')
-    done()
-  })
-
-  test('POST / invalid body', async done => {
-    const { token } = await testUtils.user('admin')
-    const payload = {
-      username: 'person',
-      password: 'person',
-      email: 'person@example.com',
-      role: 'admin',
-      invalid: 'invalid'
+    {
+      const payload = {
+        username: 'person',
+        password: 'person',
+        email: 'person@example.com',
+        role: 'admin',
+        invalid: 'invalid'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/users')
+        .set('Authorization', `Bearer ${token}`)
+        .send(payload)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_BODY)
+      expect(res.body.invalidParams).toBeDefined()
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
     }
-    const res = await chai
-      .request(server.listen())
-      .post('/api/users')
-      .set('Authorization', `Bearer ${token}`)
-      .send(payload)
-    expect(res.status).toBe(400)
-    expect(res.type).toBe('application/json')
-    expect(res.body).toBeDefined()
-    expect(res.body.code).toEqual(errors.INVALID_BODY)
-    expect(res.body.invalidParams).toBeDefined()
-    expect(res.body.invalidParams.length).toEqual(1)
-    expect(res.body.invalidParams).toContainEqual('invalid')
     done()
   })
 })
