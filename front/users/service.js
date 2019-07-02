@@ -1,4 +1,4 @@
-import selector from '@/components/front/selector'
+import selector from '@/front/selector'
 
 export default function makeUsersServices(axios) {
   return {

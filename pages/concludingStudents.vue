@@ -13,7 +13,7 @@
     <SearchInput
       :key="courseTag"
       :default-course="courseTag"
-      :is-concluding="1"
+      :is-concluding="true"
     ></SearchInput>
     <b-modal :active.sync="activeModal">
       <div class="card">
@@ -72,12 +72,9 @@ export default {
   },
   methods: {
     getAcademicHighlights() {
-      this.$axios
-        .get('/api/students/', {
-          params: {
-            isHighlighted: 1
-          }
-        })
+      const params = { isHighlighted: true }
+      this.$services.students
+        .fetchPage(params)
         .then(response => {
           this.highlighted = response.data
           this.activeModal = true

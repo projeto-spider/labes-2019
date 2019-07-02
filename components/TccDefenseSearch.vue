@@ -223,11 +223,10 @@ export default {
 
       const query = searchStudentName ? `%${searchStudentName}%` : undefined
 
-      const config = {
-        params: { page, course: courseTag, status, query }
-      }
-      return this.$axios
-        .get('/api/defenses', config)
+      const config = { page, course: courseTag, status, query }
+
+      return this.$services.defenses
+        .fetchPage(config)
         .then(res => {
           this.defenses = res.data
           this.total = +res.headers['pagination-row-count']

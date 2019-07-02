@@ -1,4 +1,4 @@
-import selector from '@/components/front/selector'
+import selector from '@/front/selector'
 
 export default function makeStudentServices(axios) {
   return {
@@ -26,10 +26,13 @@ export default function makeStudentServices(axios) {
         'noCrg',
         'sort'
       ]
-      const payload = selector(params, paramList, {
-        page: 1,
-        order: 'asc'
-      })
+
+      const payload = {
+        params: selector(params, paramList, {
+          page: 1,
+          order: 'asc'
+        })
+      }
       return axios.get('/api/students', payload)
     },
 
@@ -63,7 +66,11 @@ export default function makeStudentServices(axios) {
       const payload = selector(params, paramList)
       return axios.put(`/api/students/${studentId}`, payload)
     },
-
+    updateAcademicHighlight(studentId) {
+      return axios.put('/api/students/update-academic-highlight', {
+        id: studentId
+      })
+    },
     updateEmailChanges(mailingList) {
       return axios.post('/api/students/update-mailing-list', {
         params: {

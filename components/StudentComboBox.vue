@@ -71,8 +71,11 @@
                       </tbody>
                     </table>
                     <div class="modal-card-foot bottom-sticky">
-                      <b-button @click="updatePendencies">
+                      <b-button v-if="canEdit" @click="updatePendencies">
                         Confirmar
+                      </b-button>
+                      <b-button v-if="!canEdit" @click="showPendencies = false">
+                        Fechar
                       </b-button>
                     </div>
                   </div>
@@ -251,10 +254,8 @@ export default {
 
   created() {
     this.getStudentsDocument()
-
-    const endpoint = `/api/students/${this.student.id}/pendencies`
-    this.$axios
-      .get(endpoint)
+    this.$services.pendencies
+      .fetchAll(this.student.id)
       .then(response => {
         this.studentSubjects = response.data.map(pendency => pendency.subjectId)
       })
@@ -263,10 +264,9 @@ export default {
 
   methods: {
     getStudentsDocument() {
-      const endpoint = `/api/students/${this.studentData.id}/documents`
-      this.$axios
-        .$get(endpoint)
-        .then(this.mapDocuments)
+      this.$services.documents
+        .fetchAll(this.studentData.id)
+        .then(res => this.mapDocuments(res.data))
         .catch(() => {
           this.$toast.open({
             message: 'Falha ao carregar os documentos do aluno',
@@ -277,16 +277,14 @@ export default {
 
     putStudents() {
       this.isLoading = true
-
-      const endpoint = `/api/students/${this.studentData.id}`
       const { defenseDate, email, cd } = this.studentData
       const crg = this.canEditCrg ? this.studentData.crg : undefined
       const payload = { defenseDate, email, cd, crg }
-      this.$axios
-        .$put(endpoint, payload)
-        .then(data => {
+      this.$services.students
+        .update(this.studentData.id, payload)
+        .then(student => {
           this.isLoading = false
-          this.studentData = data
+          this.studentData = student.data
           this.canEdit = false
           this.$toast.open({
             message: 'Aluno atualizado com sucesso.',
@@ -308,14 +306,10 @@ export default {
     },
 
     getPendencies() {
-      this.$axios
-        .$get(`/api/subjects`, {
-          params: {
-            paginate: 0
-          }
-        })
-        .then(data => {
-          this.totalSubjects = data
+      this.$services.subjects
+        .fetchAll()
+        .then(subjects => {
+          this.totalSubjects = subjects.data
           this.showPendencies = true
         })
         .catch(e => {
@@ -328,10 +322,8 @@ export default {
       if (!this.canEdit) {
         return
       }
-
-      const endpoint = `/api/students/${this.student.id}/pendencies/batch`
-      this.$axios
-        .post(endpoint, this.studentSubjects)
+      this.$services.pendencies
+        .update(this.studentData.id, this.studentSubjects)
         .then(() => {
           this.$toast.open({
             message: 'Pendências de aluno atualizadas com sucesso',
@@ -374,13 +366,8 @@ export default {
 
     onUpdateFile(type, file) {
       this.isLoading = true
-
-      const body = new FormData()
-      body.append('file', file)
-      body.append('documentType', type)
-      const endpoint = `/api/students/${this.studentData.id}/documents`
-      this.$axios
-        .post(endpoint, body)
+      this.$services.documents
+        .create(this.studentData.id, { type, file })
         .then(() => {
           this.isLoading = false
           this.$toast.open({
@@ -398,9 +385,8 @@ export default {
       this.isLoading = true
 
       const { id } = document
-      const endpoint = `/api/students/${this.studentData.id}/documents/${id}`
-      this.$axios
-        .delete(endpoint)
+      this.$services.documents
+        .destroy(this.studentData.id, id)
         .then(() => {
           this.isLoading = false
           this.$toast.open({

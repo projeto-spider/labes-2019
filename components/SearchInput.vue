@@ -110,51 +110,51 @@ export default {
   props: {
     title: {
       type: String,
-      default: () => ''
+      default: ''
     },
     defaultCourse: {
       type: String,
-      default: () => 'cbcc'
+      default: 'cbcc'
     },
     isActive: {
-      type: Number,
-      default: () => NaN
+      type: Boolean,
+      default: false
     },
     isConcluding: {
-      type: Number,
-      default: () => NaN
+      type: Boolean,
+      default: false
     },
     isGraduating: {
-      type: Number,
-      default: () => NaN
+      type: Boolean,
+      default: false
     },
     showDefenseDate: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     isFit: {
-      type: Number,
-      default: () => NaN
+      type: Boolean,
+      default: false
     },
     isForming: {
-      type: Number,
-      default: () => NaN
+      type: Boolean,
+      default: false
     },
     defaultSortField: {
       type: String,
-      default: () => 'name'
+      default: 'name'
     },
     defaultSortOrder: {
       type: String,
-      default: () => 'asc'
+      default: 'asc'
     },
     defaultPage: {
       type: Number,
-      default: () => 1
+      default: 1
     },
     defaultPerPage: {
       type: Number,
-      default: () => 10
+      default: 10
     },
     students: {
       type: Array,
@@ -162,7 +162,7 @@ export default {
     },
     mailingList: {
       type: String,
-      default: () => ''
+      default: ''
     },
     showCrgFilter: {
       type: Boolean,
@@ -312,25 +312,24 @@ export default {
       function maybeParam(key, value) {
         return value && { [key]: `%${value}%` }
       }
-      this.$axios
-        .get('/api/students/', {
-          params: {
-            course: this.courseTag,
-            page: this.page,
-            sort: this.sortField,
-            order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
-            isActive: !isNaN(this.isActive) ? this.isActive : null,
-            mailingList: this.mailingList !== '' ? this.mailingList : null,
-            isConcluding: !isNaN(this.isConcluding) ? this.isConcluding : null,
-            isForming: !isNaN(this.isForming) ? this.isForming : null,
-            isFit: this.isGraduating && !isNaN(this.isFit) ? this.isFit : null,
-            isGraduating: !isNaN(this.isGraduating) ? this.isGraduating : null,
-            ...maybeParam('name', this.searchName),
-            ...maybeParam('registrationNumber', this.searchRegistration),
-            ...maybeParam('email', this.searchEmail),
-            ...(this.blankCrgFilter && { noCrg: true })
-          }
-        })
+      const params = {
+        course: this.courseTag,
+        page: this.page,
+        sort: this.sortField,
+        order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
+        isActive: this.isActive ? this.isActive : null,
+        mailingList: this.mailingList !== '' ? this.mailingList : null,
+        isConcluding: this.isConcluding ? this.isConcluding : null,
+        isForming: this.isForming ? this.isForming : null,
+        isFit: !this.isFit && this.isGraduating ? this.isFit : null,
+        isGraduating: this.isGraduating ? this.isGraduating : null,
+        ...maybeParam('name', this.searchName),
+        ...maybeParam('registrationNumber', this.searchRegistration),
+        ...maybeParam('email', this.searchEmail),
+        ...(this.blankCrgFilter && { noCrg: true })
+      }
+      this.$services.students
+        .fetchPage(params)
         .then(res => {
           this.studentsData = res.data
           this.total = res.headers['pagination-row-count']

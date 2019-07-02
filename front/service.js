@@ -1,10 +1,10 @@
-import makeStudentServices from '@/components/front/students/service'
-import makeDocumentsServices from '@/components/front/documents/service'
-import makeSubjectsServices from '@/components/front/subjects/service'
-import makePendenciesServices from '@/components/front/pendencies/service'
-import makeDefensesServices from '@/components/front/defenses/service'
-import makeSolicitationsServices from '@/components/front/solicitations/service'
-import makeUsersServices from '@/components/front/users/service'
+import makeStudentServices from '@/front/students/service'
+import makeDocumentsServices from '@/front/documents/service'
+import makeSubjectsServices from '@/front/subjects/service'
+import makePendenciesServices from '@/front/pendencies/service'
+import makeDefensesServices from '@/front/defenses/service'
+import makeSolicitationsServices from '@/front/solicitations/service'
+import makeUsersServices from '@/front/users/service'
 
 export default function makeServices(axios) {
   return {

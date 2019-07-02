@@ -1,4 +1,4 @@
-import selector from '.@/components/front/selector'
+import selector from '@/front/selector'
 
 export default function makeSubjectsServices(axios) {
   return {
@@ -29,6 +29,7 @@ export default function makeSubjectsServices(axios) {
 
     update(subjectId, params) {
       const payload = selector(params, ['name'])
+      debugger
       return axios.put(`/api/subjects/${subjectId}`, payload)
     },
 

@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <SearchInput
-      :title="'Alunos totais'"
-      :is-active="'AllStudents'"
-    ></SearchInput>
+    <SearchInput :title="'Alunos totais'" :is-active="false"></SearchInput>
   </div>
 </template>
 

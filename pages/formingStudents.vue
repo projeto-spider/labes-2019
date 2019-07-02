@@ -29,10 +29,10 @@
       ref="fitGraduatingSearchInput"
       :default-course="courseTag"
       :title="'Graduandos Aptos'"
-      :is-graduating="1"
-      :is-active="1"
+      :is-graduating="true"
+      :is-active="true"
       :show-defense-date="true"
-      :is-fit="1"
+      :is-fit="true"
       :default-sort-field="'crg'"
       :default-sort-order="'desc'"
       :show-crg-filter="true"
@@ -42,17 +42,17 @@
     <SearchInput
       :default-course="courseTag"
       :title="'Graduandos Não-Aptos'"
-      :is-graduating="1"
-      :is-active="1"
+      :is-graduating="true"
+      :is-active="true"
       :show-defense-date="true"
-      :is-fit="0"
+      :is-fit="false"
     ></SearchInput>
     <br />
     <SearchInput
       :default-course="courseTag"
       :title="'Formandos'"
-      :is-active="1"
-      :is-forming="1"
+      :is-active="true"
+      :is-forming="true"
     ></SearchInput>
 
     <b-modal :active.sync="isModalOpen" :width="640" scroll="keep">
@@ -74,7 +74,7 @@
           <div class="media-right">
             <button
               class="button is-success"
-              @click="selectAcademicHighlight(student)"
+              @click="selectAcademicHighlight(student.id)"
             >
               Confirmar
             </button>
@@ -119,15 +119,15 @@ export default {
   methods: {
     checkCrgsReady() {
       const params = {
-        isActive: 1,
-        isGraduating: 1,
-        isFit: 1,
+        isActive: true,
+        isGraduating: true,
+        isFit: true,
         noCrg: true
       }
-      return this.$axios
-        .$get('/api/students', { params })
-        .then(body => {
-          this.allCrgsReady = body.length === 0
+      return this.$services.students
+        .fetchPage(params)
+        .then(students => {
+          this.allCrgsReady = students.data.length === 0
         })
         .catch(() => {
           this.allCrgsReady = false
@@ -139,16 +139,16 @@ export default {
 
       const params = {
         course: this.courseTag,
-        isActive: 1,
-        isGraduating: 1,
-        isFit: 1,
+        isActive: true,
+        isGraduating: true,
+        isFit: true,
         sort: 'crg',
         order: 'DESC'
       }
-      this.$axios
-        .$get('/api/students', { params })
+      this.$services.students
+        .fetchPage(params)
         .then(students => {
-          if (!students.length) {
+          if (!students.data.length) {
             this.$toast.open({
               message: 'Falha ao carregar candidatos a destaque acadêmico.',
               type: 'is-danger'
@@ -157,9 +157,9 @@ export default {
             return
           }
 
-          const highestCrg = students[0].crg
+          const highestCrg = students.data[0].crg
 
-          this.academicHighlightCandidates = students.filter(
+          this.academicHighlightCandidates = students.data.filter(
             student => student.crg === highestCrg
           )
         })
@@ -172,12 +172,11 @@ export default {
         })
     },
 
-    selectAcademicHighlight(student) {
+    selectAcademicHighlight(studentId) {
       this.isModalOpen = false
-
-      this.$axios
-        .$put('/api/students/update-academic-highlight', { id: student.id })
-        .then(() => {
+      this.$services.students
+        .updateAcademicHighlight(studentId)
+        .then(response => {
           this.$toast.open({
             message: 'Destaque acadêmico selecionado!',
             type: 'is-success'

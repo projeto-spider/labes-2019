@@ -1,15 +1,15 @@
-import selector from '@/components/front/selector'
+import selector from '@/front/selector'
 
 export default function makeDefensesServices(axios) {
   return {
     fetchPage(params) {
       const paramList = ['page', 'query', 'course', 'status']
-      const payload = selector(params, paramList, { page: 1 })
+      const payload = { params: selector(params, paramList, { page: 1 }) }
       return axios.get('/api/defenses', payload)
     },
 
     fetchAll() {
-      return axios.get('/api/subjects/', {
+      return axios.get('/api/defenses', {
         params: {
           paginate: false
         }
@@ -21,9 +21,10 @@ export default function makeDefensesServices(axios) {
       return axios.post('/api/subjects', payload)
     },
 
-    update(subjectId, params) {
-      const payload = selector(params, ['name'])
-      return axios.put(`/api/subjects/${subjectId}`, payload)
+    update(defenseId, params) {
+      const paramList = ['page', 'query', 'course', 'status']
+      const payload = selector(params, paramList)
+      return axios.put(`/api/defense/${defenseId}`, payload)
     },
 
     destroy(subjectId) {
