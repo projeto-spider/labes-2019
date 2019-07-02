@@ -217,7 +217,7 @@ describe('/api/documents', () => {
     expect(resInsertDocument.body).toBeDefined()
     const resView1 = await chai
       .request(server.listen())
-      .get('/api/students/2/documents/5/view')
+      .get(`/api/students/2/documents/${enums.documents.LAUDA}/view`)
       .set('Authorization', `Bearer ${token}`)
     expect(resView1.status).toEqual(200)
     expect(resView1.type).toEqual('application/pdf')
