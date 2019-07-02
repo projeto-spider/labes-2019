@@ -392,4 +392,87 @@ describe('/api/defenses', () => {
 
     done()
   })
+
+  test('POST /defenses?invalid=1 invalid param/body', async done => {
+    const { token } = await testUtils.user('teacher')
+    {
+      const payload = {
+        course: 'cbcc',
+        registrationNumbers: '201704940001, 201304940002',
+        students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+        local: 'Auditório do ICEN',
+        title: 'Fundamentos da Comunicação Analógica',
+        keywords: 'Fundamental, comunicacional, analógico',
+        summary: 'Sumário fundamentacional',
+
+        advisorName: 'Jonathan Joestar',
+        advisorTitle: 'doctor',
+        advisorType: 'internal',
+
+        evaluator1Name: 'Robert E. O. Speedwagon',
+        evaluator1Title: 'doctor',
+        evaluator1Type: 'internal',
+
+        evaluator2Name: 'Narciso Anasui',
+        evaluator2Title: 'master',
+        evaluator2Type: 'external'
+      }
+
+      const res = await chai
+        .request(server.listen())
+        .post('/api/defenses')
+        .query({ invalid: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .send(payload)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_QUERY)
+      expect(res.body.invalidParams).toBeDefined()
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    {
+      const payload = {
+        course: 'cbcc',
+        registrationNumbers: '201704940001, 201304940002',
+        students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+        local: 'Auditório do ICEN',
+        title: 'Fundamentos da Comunicação Analógica',
+        keywords: 'Fundamental, comunicacional, analógico',
+        summary: 'Sumário fundamentacional',
+
+        advisorName: 'Jonathan Joestar',
+        advisorTitle: 'doctor',
+        advisorType: 'internal',
+
+        evaluator1Name: 'Robert E. O. Speedwagon',
+        evaluator1Title: 'doctor',
+        evaluator1Type: 'internal',
+
+        evaluator2Name: 'Narciso Anasui',
+        evaluator2Title: 'master',
+        evaluator2Type: 'external',
+
+        invalid1: 1,
+        invalid2: 2
+      }
+
+      const res = await chai
+        .request(server.listen())
+        .post('/api/defenses')
+        .set('Authorization', `Bearer ${token}`)
+        .send(payload)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_BODY)
+      expect(res.body.invalidParams).toBeDefined()
+      expect(res.body.invalidParams.length).toEqual(2)
+      expect(res.body.invalidParams).toContainEqual('invalid1')
+      expect(res.body.invalidParams).toContainEqual('invalid2')
+    }
+
+    done()
+  })
 })

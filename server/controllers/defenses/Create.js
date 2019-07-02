@@ -1,5 +1,6 @@
 const Defense = require('../../models/Defense.js')
 const errors = require('../../../shared/errors')
+const utils = require('../../utils')
 
 const requiredFields = [
   'course',
@@ -40,6 +41,25 @@ const allFields = requiredFields.concat(optionalFields)
 
 module.exports = async function createDefense(ctx) {
   const payload = ctx.request.body
+
+  {
+    const { valid, invalidParams } = utils.validatePayload(payload, allFields)
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_BODY, invalidParams }
+      return
+    }
+  }
+
+  {
+    const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+      return
+    }
+  }
+
   const { user } = ctx.state.user
 
   const validRequest = requiredFields.every(item => payload[item] !== undefined)
