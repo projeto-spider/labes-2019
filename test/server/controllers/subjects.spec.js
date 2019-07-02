@@ -219,4 +219,46 @@ describe('/api/subjects', () => {
     }
     done()
   })
+
+  test('PUT /subjects/1?invalid=1 invalid query/body', async done => {
+    const { token } = await testUtils.user('admin')
+    {
+      const res = await chai
+        .request(server.listen())
+        .put('/api/subjects/1')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'SEIZE THE MEANS OF PRODUCTION',
+          invalid1: 1,
+          invalid2: 2
+        })
+      expect(res.body).toBeDefined()
+      expect(res.type).toEqual('application/json')
+      expect(res.status).toEqual(400)
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_BODY)
+      expect(res.body.invalidParams.length).toEqual(2)
+      expect(res.body.invalidParams).toContainEqual('invalid2')
+      expect(res.body.invalidParams).toContainEqual('invalid1')
+    }
+    {
+      const res = await chai
+        .request(server.listen())
+        .put('/api/subjects/1')
+        .query({ invalid1: 1, invalid2: 2 })
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'SEIZE THE MEANS OF PRODUCTION'
+        })
+      expect(res.body).toBeDefined()
+      expect(res.type).toEqual('application/json')
+      expect(res.status).toEqual(400)
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_QUERY)
+      expect(res.body.invalidParams.length).toEqual(2)
+      expect(res.body.invalidParams).toContainEqual('invalid2')
+      expect(res.body.invalidParams).toContainEqual('invalid1')
+    }
+    done()
+  })
 })
