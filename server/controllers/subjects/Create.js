@@ -1,7 +1,26 @@
 const Subject = require('../../models/Subject')
 const errors = require('../../../shared/errors')
+const utils = require('../../utils')
 
 module.exports = async function createSubject(ctx) {
+  {
+    const { valid, invalidParams } = utils.validatePayload(ctx.request.body, [
+      'name'
+    ])
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_BODY, invalidParams }
+      return
+    }
+  }
+  {
+    const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+      return
+    }
+  }
   const { name } = ctx.request.body
 
   const validRequest = [name].every(item => item !== undefined)

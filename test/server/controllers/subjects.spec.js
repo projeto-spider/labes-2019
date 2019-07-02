@@ -181,4 +181,42 @@ describe('/api/subjects', () => {
     expect(res.body.invalidParams).toContainEqual('invalid')
     done()
   })
+  test('POST /subjects?invalid=1 invalid query/body', async done => {
+    const { token } = await testUtils.user('admin')
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/subjects/')
+        .query({ invalid2: 2, invalid1: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'UNDERWATER PROGRAMMING'
+        })
+      expect(res.body).toBeDefined()
+      expect(res.type).toEqual('application/json')
+      expect(res.status).toEqual(400)
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_QUERY)
+      expect(res.body.invalidParams.length).toBe(2)
+      expect(res.body.invalidParams).toContainEqual('invalid1')
+    }
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/subjects/')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'UNDERWATER PROGRAMMING',
+          invalid1: 1
+        })
+      expect(res.body).toBeDefined()
+      expect(res.type).toEqual('application/json')
+      expect(res.status).toEqual(400)
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_BODY)
+      expect(res.body.invalidParams.length).toBe(1)
+      expect(res.body.invalidParams).toContainEqual('invalid1')
+    }
+    done()
+  })
 })
