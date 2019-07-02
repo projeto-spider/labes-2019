@@ -48,6 +48,7 @@ module.exports = async function generateAllDocs(ctx) {
     '11': 'Novembro',
     '12': 'Dezembro'
   }
+  const defenseDate = defenseFind.get('date')
   const date = new Date()
   const dados = {
     curso: translations[defenseFind.get('course')],
@@ -63,9 +64,9 @@ module.exports = async function generateAllDocs(ctx) {
     avaliador2: defenseFind.get('evaluator2Name'),
     tituloAvaliador3: translations[defenseFind.get('evaluator3Title')],
     avaliador3: defenseFind.get('evaluator3Name'),
-    diaDefesa: defenseFind.get('date').split('/')[0],
-    mesDefesa: translations[Number(defenseFind.get('date').split('/')[1])],
-    anoDefesa: defenseFind.get('date').split('/')[2],
+    diaDefesa: defenseDate.split('/')[0],
+    mesDefesa: translations[Number(defenseDate.split('/')[1])],
+    anoDefesa: defenseDate.split('/')[2],
     dia: date.getUTCDate(),
     mes: translations[date.getUTCMonth()],
     ano: date.getUTCFullYear(),
