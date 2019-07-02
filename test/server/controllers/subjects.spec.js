@@ -134,7 +134,7 @@ describe('/api/subjects', () => {
     const res = await chai
       .request(server.listen())
       .get('/api/subjects')
-      .query({ paginate: 'false' })
+      .query({ paginate: false })
       .set('Authorization', `Bearer ${token}`)
     expect(res.body).toBeDefined()
     expect(res.type).toEqual('application/json')
@@ -169,8 +169,7 @@ describe('/api/subjects', () => {
     const res = await chai
       .request(server.listen())
       .get('/api/subjects/')
-      .query({ page: 1 })
-      .query({ invalid: 1 })
+      .query({ page: 1, invalid: 1 })
       .set('Authorization', `Bearer ${token}`)
     expect(res.body).toBeDefined()
     expect(res.type).toEqual('application/json')
