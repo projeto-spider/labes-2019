@@ -1,7 +1,31 @@
 const Solicitation = require('../../models/Solicitation.js')
 const errors = require('../../../shared/errors')
+const utils = require('../../utils')
 
 module.exports = async function createSolicitation(ctx) {
+  {
+    const { valid, invalidParams } = utils.validatePayload(ctx.request.body, [
+      'name',
+      'email',
+      'registrationNumber',
+      'type'
+    ])
+
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_BODY, invalidParams }
+      return
+    }
+  }
+  {
+    const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+      return
+    }
+  }
+
   const { name, email, registrationNumber, type } = ctx.request.body
 
   const validRequest = [name, email, type].every(item => item !== undefined)

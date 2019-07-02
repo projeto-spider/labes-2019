@@ -151,4 +151,47 @@ describe('/api/solicitations', () => {
     expect(res.body.code).toBe(errors.INVALID_REQUEST)
     done()
   })
+
+  test('POST /?invalid=1 invalid param/body', async done => {
+    {
+      const payload = {
+        name: 'Person',
+        email: 'person.ufpa@example.com',
+        registrationNumber: '201904940001',
+        type: 'concluding'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/solicitations')
+        .query({ invalid: 1 })
+        .send(payload)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_QUERY)
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    {
+      const payload = {
+        invalid: 1,
+        name: 'Person',
+        email: 'person.ufpa@example.com',
+        registrationNumber: '201904940001',
+        type: 'concluding'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/solicitations')
+        .send(payload)
+
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_BODY)
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    done()
+  })
 })
