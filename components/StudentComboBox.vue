@@ -374,7 +374,6 @@ export default {
       const body = new FormData()
       body.append('file', file)
       body.append('documentType', type)
-
       const endpoint = `/api/students/${this.studentData.id}/documents`
       this.$axios
         .post(endpoint, body)
