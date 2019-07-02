@@ -1,8 +1,8 @@
 <template>
-  <div class="container has-text-centered">
+  <div class="hero has-background-grey has-text-centered is-fullheight">
     <div class="column is-4 is-offset-4">
       <figure class="avatar">
-        <img src="../assets/images/UFPA.png" width="250" height="200" />
+        <img src="../assets/images/UFPA.png" width="90" height="70" />
       </figure>
       <h3 class="title has-text-white">Cadastro de Usuário</h3>
       <div class="box">
@@ -41,6 +41,7 @@
 <script>
 export default {
   name: 'Signup',
+  layout: 'empty',
   data() {
     return {
       username: '',
