@@ -7,7 +7,11 @@ export default function makeUsersServices(axios) {
     },
 
     fetchPage(page) {
-      return axios.get(`/api/users/?page=${page}`)
+      return axios.get(`/api/users/`, {
+        params: {
+          page
+        }
+      })
     },
 
     create(params) {

@@ -9,7 +9,11 @@ export default function makeDefensesServices(axios) {
     },
 
     fetchAll() {
-      return axios.get('/api/subjects/?paginate=0')
+      return axios.get('/api/subjects/', {
+        params: {
+          paginate: false
+        }
+      })
     },
 
     create(params) {

@@ -7,11 +7,19 @@ export default function makeSubjectsServices(axios) {
     },
 
     fetchPage(page) {
-      return axios.get(`/api/subjects/?page=${page}`)
+      return axios.get(`/api/subjects/`, {
+        params: {
+          page
+        }
+      })
     },
 
     fetchAll() {
-      return axios.get('/api/subjects/?paginate=false')
+      return axios.get('/api/subjects/', {
+        params: {
+          paginate: false
+        }
+      })
     },
 
     create(params) {
