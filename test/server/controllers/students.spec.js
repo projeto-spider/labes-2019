@@ -838,27 +838,24 @@ describe('/api/students', () => {
     expect(resStudent5.body[4].name).toEqual('JULIAN BARBOSA SANTOS')
     expect(resStudent5.body[5].name).toEqual('KAUAN CARVALHO SANTOS')
     expect(resStudent5.body[6].name).toEqual('LAURA CARDOSO CASTRO')
-    const resStudent6 = await chai
-      .request(server.listen())
-      .get(encodeURI('/api/students/?sort=period'))
-      .set('Authorization', `Bearer ${token}`)
-    expect(resStudent6.status).toEqual(200)
-    expect(resStudent6.type).toEqual('application/json')
-    expect(resStudent6.body).toBeDefined()
-    expect(resStudent6.body[0].name).toEqual('JULIAN BARBOSA SANTOS')
-    expect(resStudent6.body[0].period).toEqual('2006.2')
-    expect(resStudent6.body[1].name).toEqual('LAURA CARDOSO CASTRO')
-    expect(resStudent6.body[1].period).toEqual('2017.1')
-    expect(resStudent6.body[2].name).toEqual('JOSE FERREIRA SILVA')
-    expect(resStudent6.body[2].period).toEqual('2018.3')
-    expect(resStudent6.body[3].name).toEqual('ENZO FERREIRA ALVES')
-    expect(resStudent6.body[3].period).toEqual('2018.4')
-    expect(resStudent6.body[4].name).toEqual('KAUAN CARVALHO SANTOS')
-    expect(resStudent6.body[4].period).toEqual('2018.4')
-    expect(resStudent6.body[5].name).toEqual('EDUARDO ALVES LIMA')
-    expect(resStudent6.body[5].period).toEqual('2018.4')
-    expect(resStudent6.body[6].name).toEqual('FELIPE SOUZA FERREIRA')
-    expect(resStudent6.body[6].period).toEqual('2019.2')
+    {
+      const res = await chai
+        .request(server.listen())
+        .get(encodeURI('/api/students/?sort=period'))
+        .set('Authorization', `Bearer ${token}`)
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+
+      expect(
+        res.body
+          .map(student => Number(student.period))
+          .every((period, i, others) =>
+            others.slice(i + 1).every(other => period <= other)
+          )
+      )
+    }
+
     done()
   })
 
