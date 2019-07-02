@@ -116,8 +116,8 @@ export default {
 
   methods: {
     sendSolicitation() {
-      this.$axios
-        .post('/api/solicitations', {
+      this.$services.solicitations
+        .create({
           name: this.name,
           email: this.email,
           ...(this.registration && { registrationNumber: this.registration }),

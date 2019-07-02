@@ -61,7 +61,7 @@ export default {
   layout: 'empty',
   head() {
     return {
-      title: 'Labes - Login'
+      title: 'Login'
     }
   },
   data() {

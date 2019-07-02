@@ -4,8 +4,8 @@ export default function makeDefensesServices(axios) {
   return {
     fetchPage(params) {
       const paramList = ['page', 'query', 'course', 'status']
-      const payload = { params: selector(params, paramList, { page: 1 }) }
-      return axios.get('/api/defenses', payload)
+      const options = { params: selector(params, paramList, { page: 1 }) }
+      return axios.get('/api/defenses', options)
     },
 
     fetchAll() {
@@ -16,19 +16,16 @@ export default function makeDefensesServices(axios) {
       })
     },
 
-    create(params) {
-      const payload = selector(params, ['name'])
-      return axios.post('/api/subjects', payload)
+    create(payload) {
+      return axios.post('/api/defenses', payload)
     },
 
-    update(defenseId, params) {
-      const paramList = ['page', 'query', 'course', 'status']
-      const payload = selector(params, paramList)
-      return axios.put(`/api/defense/${defenseId}`, payload)
+    update(defenseId, payload) {
+      return axios.put(`/api/defenses/${defenseId}`, payload)
     },
 
     destroy(subjectId) {
-      return axios.delete(`/api/subjects/${subjectId}`)
+      return axios.delete(`/api/defense/${subjectId}`)
     }
   }
 }

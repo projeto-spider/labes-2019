@@ -84,7 +84,7 @@ export default {
   middleware: 'auth',
   head() {
     return {
-      title: 'Labes - Componente curricular'
+      title: 'Componente curricular'
     }
   },
   data: () => ({
@@ -163,7 +163,7 @@ export default {
 
           return this.$services.subjects
             .create(payload)
-            .then(subject => {
+            .then(res => {
               this.page = Math.ceil((this.total + 1) / this.perPage)
               return this.loadSubjects()
             })
@@ -180,7 +180,7 @@ export default {
       this.loading = true
       return this.$services.subjects
         .update(subject.id, subject)
-        .then(subject => {
+        .then(res => {
           const localSubject = this.subjects.find(
             localSubject => localSubject.id === subject.id
           )

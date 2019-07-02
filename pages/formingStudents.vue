@@ -28,7 +28,7 @@
     <SearchInput
       ref="fitGraduatingSearchInput"
       :default-course="courseTag"
-      :title="'Graduandos Aptos'"
+      title="Graduandos Aptos"
       :is-graduating="true"
       :is-active="true"
       :show-defense-date="true"
@@ -41,7 +41,7 @@
     <br />
     <SearchInput
       :default-course="courseTag"
-      :title="'Graduandos Não-Aptos'"
+      title="Graduandos Não-Aptos"
       :is-graduating="true"
       :is-active="true"
       :show-defense-date="true"
@@ -50,7 +50,7 @@
     <br />
     <SearchInput
       :default-course="courseTag"
-      :title="'Formandos'"
+      title="Formandos"
       :is-active="true"
       :is-forming="true"
     ></SearchInput>
@@ -99,7 +99,7 @@ export default {
   },
   head() {
     return {
-      title: 'Labes - Formandos'
+      title: 'Formandos'
     }
   },
   data: () => ({
@@ -147,19 +147,26 @@ export default {
       }
       this.$services.students
         .fetchPage(params)
-        .then(students => {
-          if (!students.data.length) {
+        .then(res => {
+          if (!res.data.length) {
             this.$toast.open({
               message: 'Falha ao carregar candidatos a destaque acadêmico.',
               type: 'is-danger'
             })
             this.isModalOpen = true
             return
+          } else if (res.data.lenght === 0) {
+            this.$toast.open({
+              message: 'Não há canditados a destaque acadêmico',
+              type: 'is-danger'
+            })
+            this.isModalOpen = true
+            return
           }
 
-          const highestCrg = students.data[0].crg
+          const highestCrg = res.data[0].crg
 
-          this.academicHighlightCandidates = students.data.filter(
+          this.academicHighlightCandidates = res.data.filter(
             student => student.crg === highestCrg
           )
         })
@@ -176,7 +183,7 @@ export default {
       this.isModalOpen = false
       this.$services.students
         .updateAcademicHighlight(studentId)
-        .then(response => {
+        .then(res => {
           this.$toast.open({
             message: 'Destaque acadêmico selecionado!',
             type: 'is-success'

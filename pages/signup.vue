@@ -51,7 +51,7 @@ export default {
   },
   head() {
     return {
-      title: 'Labes - Cadastro de usuario'
+      title: 'Cadastro de usuario'
     }
   },
   methods: {

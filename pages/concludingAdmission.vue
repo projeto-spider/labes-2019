@@ -15,7 +15,7 @@ export default {
   },
   head() {
     return {
-      title: 'Labes - Formulario newsletter'
+      title: 'Formulario newsletter'
     }
   }
 }

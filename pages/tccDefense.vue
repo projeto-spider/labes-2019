@@ -39,7 +39,7 @@ export default {
   },
   head() {
     return {
-      title: 'Labes - Defesa de TCC'
+      title: 'Defesa de TCC'
     }
   },
   computed: {

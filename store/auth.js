@@ -29,8 +29,8 @@ export const getters = {
 
 export const actions = {
   login({ commit }, { username, password }) {
-    return this.$axios
-      .$post('/api/auth', { username, password })
+    return this.$services.users
+      .login(username, password)
       .then(({ token, user }) => {
         this.$axios.setToken(token, 'Bearer')
         commit('setToken', token)
@@ -39,7 +39,7 @@ export const actions = {
   },
 
   register({ commit, dispatch }, { email, username, password, role }) {
-    return this.$axios.$post('/api/users', { email, username, password, role })
+    return this.$services.users.create({ email, username, password, role })
   },
 
   logout({ commit }) {

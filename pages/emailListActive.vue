@@ -1,7 +1,7 @@
 <template>
   <EmailComponent
     :mailing-list="'active'"
-    :title="'Lista de Email - Ativos'"
+    title="Lista de Email - Ativos"
   ></EmailComponent>
 </template>
 

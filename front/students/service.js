@@ -27,13 +27,13 @@ export default function makeStudentServices(axios) {
         'sort'
       ]
 
-      const payload = {
+      const options = {
         params: selector(params, paramList, {
           page: 1,
           order: 'asc'
         })
       }
-      return axios.get('/api/students', payload)
+      return axios.get('/api/students', options)
     },
 
     fetchEmailChanges(mailingList) {

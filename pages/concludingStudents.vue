@@ -56,7 +56,7 @@ export default {
   mixins: [errorsHandler],
   head() {
     return {
-      title: 'Labes - Concluintes'
+      title: 'Concluintes'
     }
   },
   data() {

@@ -182,7 +182,6 @@
 </template>
 
 <script>
-// BEGIN REFACTOR
 import BaseStudentDataRow from '@/components/StudentComboBox/BaseStudentDataRow'
 import DocumentRow from '@/components/StudentComboBox/DocumentRow'
 import DatePicker from '@/components/DatePicker'
@@ -256,8 +255,8 @@ export default {
     this.getStudentsDocument()
     this.$services.pendencies
       .fetchAll(this.student.id)
-      .then(response => {
-        this.studentSubjects = response.data.map(pendency => pendency.subjectId)
+      .then(res => {
+        this.studentSubjects = res.data.map(pendency => pendency.subjectId)
       })
       .catch(e => this.openErrorNotification(e))
   },
@@ -282,9 +281,9 @@ export default {
       const payload = { defenseDate, email, cd, crg }
       this.$services.students
         .update(this.studentData.id, payload)
-        .then(student => {
+        .then(res => {
           this.isLoading = false
-          this.studentData = student.data
+          this.studentData = res.data
           this.canEdit = false
           this.$toast.open({
             message: 'Aluno atualizado com sucesso.',
@@ -308,8 +307,8 @@ export default {
     getPendencies() {
       this.$services.subjects
         .fetchAll()
-        .then(subjects => {
-          this.totalSubjects = subjects.data
+        .then(res => {
+          this.totalSubjects = res.data
           this.showPendencies = true
         })
         .catch(e => {

@@ -15,7 +15,7 @@ export default {
   },
   head() {
     return {
-      title: 'Labes - Formulario Calouros'
+      title: 'Formulário Calouros'
     }
   }
 }

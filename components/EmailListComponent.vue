@@ -69,12 +69,8 @@ export default {
       this.activate = !this.activate
     },
     getChanges() {
-      this.$axios
-        .get('/api/students/email-changes', {
-          params: {
-            mailingList: this.mailingList
-          }
-        })
+      this.$services.students
+        .fetchEmailChanges(this.mailingList)
         .then(res => {
           if (
             res.data.additions.length !== 0 ||

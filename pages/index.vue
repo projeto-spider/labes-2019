@@ -24,7 +24,7 @@ export default {
   middleware: 'auth',
   head() {
     return {
-      title: 'Labes - Home'
+      title: 'Home'
     }
   }
 }

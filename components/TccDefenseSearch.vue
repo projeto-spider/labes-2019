@@ -223,10 +223,10 @@ export default {
 
       const query = searchStudentName ? `%${searchStudentName}%` : undefined
 
-      const config = { page, course: courseTag, status, query }
+      const params = { page, course: courseTag, status, query }
 
       return this.$services.defenses
-        .fetchPage(config)
+        .fetchPage(params)
         .then(res => {
           this.defenses = res.data
           this.total = +res.headers['pagination-row-count']
@@ -280,12 +280,12 @@ export default {
       if (!payload) {
         payload = defense
       }
-
-      const endpoint = `/api/defenses/${defense.id}`
-      return this.$axios.$put(endpoint, payload).catch(error => {
-        this.openErrorNotification(error.response.data.code)
-        throw error
-      })
+      return this.$services.defenses
+        .update(defense.id, payload)
+        .catch(error => {
+          this.openErrorNotification(error.response.data.code)
+          throw error
+        })
     }
   }
 }

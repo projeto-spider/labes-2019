@@ -3,7 +3,7 @@
     <SearchInput
       :key="courseTag"
       :default-course="courseTag"
-      :title="'Alunos Ativos'"
+      title="Alunos Ativos"
       :default-per-page="10"
       :is-active="true"
     ></SearchInput>
@@ -22,7 +22,7 @@ export default {
   },
   head() {
     return {
-      title: 'Labes - Ativos'
+      title: 'Ativos'
     }
   },
   data() {

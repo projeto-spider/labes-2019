@@ -145,8 +145,8 @@ export default {
       this.isLoading = true
       const body = new FormData()
       body.append('csv', this.studentsCsv)
-      this.$axios
-        .post('/api/students/from-csv', body)
+      this.$services.students
+        .importFromCsv(body)
         .then(result => {
           this.isLoading = false
           this.$toast.open({

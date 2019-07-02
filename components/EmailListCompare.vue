@@ -53,10 +53,8 @@ export default {
         message:
           'Este processo é irreversivel, tem certeza que já foram realizadas todas as alterações?',
         onConfirm: () => {
-          this.$axios
-            .post('/api/students/update-mailing-list', {
-              mailingList: this.mailingList
-            })
+          this.$services.studentds
+            .updateEmailChanges(this.mailingList)
             .then(res => {
               this.$toast.open('Alterações realizadas com sucesso')
               this.$emit('email-list-changed')

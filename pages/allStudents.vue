@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <SearchInput :title="'Alunos totais'" :is-active="false"></SearchInput>
+    <SearchInput title="Alunos totais" :is-active="false"></SearchInput>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ export default {
   },
   head() {
     return {
-      title: 'Labes - Todos os estudantes'
+      title: 'Todos os estudantes'
     }
   },
   data() {

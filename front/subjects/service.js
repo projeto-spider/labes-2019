@@ -29,7 +29,6 @@ export default function makeSubjectsServices(axios) {
 
     update(subjectId, params) {
       const payload = selector(params, ['name'])
-      debugger
       return axios.put(`/api/subjects/${subjectId}`, payload)
     },
 
