@@ -475,4 +475,113 @@ describe('/api/defenses', () => {
 
     done()
   })
+
+  test('PUT /defenses?invalid=1 invalid param/body', async done => {
+    const { token } = await testUtils.user('admin')
+    {
+      const payload = {
+        userId: 1,
+        course: 'cbcc',
+        registrationNumbers: '201704940001, 201304940002',
+        students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+        local: 'Auditório do ICEN',
+        title: 'Fundamentos da Comunicação Analógica',
+        keywords: 'Fundamental, comunicacional, analógico',
+        summary: 'Sumário fundamentacional',
+        advisorName: 'Jonathan Joestar',
+        advisorTitle: 'doctor',
+        advisorType: 'internal',
+        evaluator1Name: 'Robert E. O. Speedwagon',
+        evaluator1Title: 'doctor',
+        evaluator1Type: 'internal',
+        evaluator2Name: 'Narciso Anasui',
+        evaluator2Title: 'master',
+        evaluator2Type: 'external'
+      }
+
+      const defense = await Defense.forge(payload).save()
+
+      const update = { status: 'done' }
+
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/defenses/${defense.get('id')}`)
+        .query({ invalid: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_QUERY)
+      expect(res.body.invalidParams).toBeDefined()
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    {
+      const payload = {
+        userId: 1,
+        course: 'cbcc',
+        registrationNumbers: '201704940001, 201304940002',
+        students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+        local: 'Auditório do ICEN',
+        title: 'Fundamentos da Comunicação Analógica',
+        keywords: 'Fundamental, comunicacional, analógico',
+        summary: 'Sumário fundamentacional',
+        advisorName: 'Jonathan Joestar',
+        advisorTitle: 'doctor',
+        advisorType: 'internal',
+        evaluator1Name: 'Robert E. O. Speedwagon',
+        evaluator1Title: 'doctor',
+        evaluator1Type: 'internal',
+        evaluator2Name: 'Narciso Anasui',
+        evaluator2Title: 'master',
+        evaluator2Type: 'external'
+      }
+
+      const defense = await Defense.forge(payload).save()
+
+      const update = {
+        status: 'done',
+        invalid1: 1,
+        invalid2: 2
+      }
+
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/defenses/${defense.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_BODY)
+      expect(res.body.invalidParams).toBeDefined()
+      expect(res.body.invalidParams.length).toEqual(2)
+      expect(res.body.invalidParams).toContainEqual('invalid1')
+      expect(res.body.invalidParams).toContainEqual('invalid2')
+    }
+    done()
+  })
+
+  test('GET /defenses invalid params', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const res = await chai
+      .request(server.listen())
+      .get('/api/defenses/')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(400)
+    expect(res.type).toBe('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    expect(res.body.invalidParams).toBeDefined()
+    expect(res.body.invalidParams.length).toEqual(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+
+    done()
+  })
 })

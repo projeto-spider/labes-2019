@@ -1,7 +1,20 @@
 const Defense = require('../../models/Defense')
 const utils = require('../../utils')
+const errors = require('../../../shared/errors')
 
 module.exports = async function listDefenses(ctx) {
+  const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [
+    'page',
+    'status',
+    'course',
+    'query'
+  ])
+  if (!valid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+    return
+  }
+
   const { user } = ctx.state.user
   utils.paginateContext(ctx, await filter(ctx.request.query, user))
 }
