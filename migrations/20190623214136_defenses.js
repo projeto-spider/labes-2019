@@ -46,6 +46,8 @@ exports.up = function(knex, Promise) {
         [nullability]()
         .defaultTo('internal')
     }
+    table.boolean('passed')
+    table.float('grade')
   })
 }
 

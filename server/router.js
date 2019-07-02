@@ -87,10 +87,6 @@ api.post('/solicitations/', bodyJson, solicitations.Create)
 // PDF routes
 api.get('/pdf/:id', documents.TccGenerate)
 api.get('/pdf/:id/:files', documents.TccGenerate)
-api.get('/pdf/:id/:files', documents.TccGenerate)
-api.get('/pdf/:id/:files', documents.TccGenerate)
-api.get('/pdf/:id/:files', documents.TccGenerate)
-api.get('/pdf/:id/:files', documents.TccGenerate)
 
 // Not Found Routes
 api.all('/*', ctx => {
