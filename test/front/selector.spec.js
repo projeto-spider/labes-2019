@@ -1,4 +1,4 @@
-import selector from '~/front/selector'
+import selector from '@/front/selector'
 
 describe('selector', () => {
   test('selector takes only few from data', done => {
