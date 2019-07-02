@@ -11,6 +11,7 @@ const useSeeds = require('../../use-seeds')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const errors = require('../../../shared/errors')
+const User = require('../../../server/models/User')
 
 jest.useFakeTimers()
 
@@ -144,6 +145,82 @@ describe('/api/users', () => {
     expect(res2.type).toBe('application/json')
     expect(res2.body).toBeDefined()
     expect(res2.body.code).toBe(errors.UNPROCESSABLE_ENTITY)
+    done()
+  })
+
+  test('PUT /users/:id', async done => {
+    const { token } = await testUtils.user('admin')
+    const payload = {
+      username: 'person',
+      password: 'person',
+      email: 'person@example.com',
+      role: 'admin'
+    }
+    const user = await User.forge().save(payload)
+    const update = { password: 'newpassword' }
+    {
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/users/${user.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+      expect(res.status).toBe(200)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.username).toBe(payload.username)
+    }
+    {
+      const res = await chai
+        .request(server.listen())
+        .post(`/api/auth`)
+        .send({
+          username: 'person',
+          password: 'newpassword'
+        })
+      expect(res.status).toBe(200)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.token).toBeDefined()
+      expect(res.body.user.username).toBe(payload.username)
+      expect(res.body.user.email).toBe(payload.email)
+      expect(res.body.user.role).toBe(payload.role)
+    }
+    done()
+  })
+
+  test('PUT /users/:id invalid', async done => {
+    const { token } = await testUtils.user('admin')
+    const payload = {
+      username: 'person',
+      password: 'person',
+      email: 'person@example.com',
+      role: 'admin'
+    }
+    const user = await User.forge().save(payload)
+    {
+      const update = { username: 'person' }
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/users/${user.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_REQUEST)
+    }
+    {
+      const update = { password: 'newpassword' }
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/users/1231231231231213`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+      expect(res.status).toBe(404)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.NOT_FOUND)
+    }
     done()
   })
 })

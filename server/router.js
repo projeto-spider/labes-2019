@@ -30,6 +30,7 @@ api.use(['/defenses'], isLoggedIn)
 api.get('/users/', users.List)
 api.get('/users/:id', users.Show)
 api.post('/users/', bodyJson, users.Create)
+api.put('/users/:id', bodyJson, users.Update)
 
 // Student Routes
 api.get('/students/email-changes', students.EmailChanges)
