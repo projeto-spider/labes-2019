@@ -118,7 +118,7 @@ export default {
     },
     isActive: {
       type: Number,
-      default: () => 'AllStudents'
+      default: () => NaN
     },
     isConcluding: {
       type: Number,
@@ -319,7 +319,7 @@ export default {
             page: this.page,
             sort: this.sortField,
             order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
-            isActive: this.isActive !== 'AllStudents' ? this.isActive : null,
+            isActive: !isNaN(this.isActive) ? this.isActive : null,
             mailingList: this.mailingList !== '' ? this.mailingList : null,
             isConcluding: !isNaN(this.isConcluding) ? this.isConcluding : null,
             isForming: !isNaN(this.isForming) ? this.isForming : null,
@@ -365,12 +365,6 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.container {
-  margin: 50px auto 50px auto;
-}
-</style>
 
 <style>
 .searchInputTable div.table-wrapper table tbody tr td:nth-child(2) span {

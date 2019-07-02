@@ -302,6 +302,9 @@ export default {
 
     toggleEdit() {
       this.canEdit = !this.canEdit
+      if (!this.canEdit) {
+        this.studentData = Object.assign({}, this.student)
+      }
     },
 
     getPendencies() {
