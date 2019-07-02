@@ -299,14 +299,20 @@ exports.fileName = function filename(dirStudents, studentFind, documentType) {
 }
 
 /**
- * @param {Object} object - Target object
- * @param {Array} keysModel - Expected keys list
- * @returns {Boolean} false|true
+ * @param {Object} payload - Target object
+ * @param {Array} knownProperties - Known keys list
+ * @returns {valid:Boolean,invalidParams:Array,payload:Object}
  */
-exports.keysValid = function keysValid(object, keysModel) {
-  if (object === undefined) {
-    return keysModel.length === 0
-  }
-  const keysObject = Object.keys(object)
-  return keysObject.reduce((acc, key) => acc && keysModel.includes(key), true)
+exports.validatePayload = function validatePayload(payload, knownProperties) {
+  const keysObject = Object.keys(payload)
+
+  const invalidParams = keysObject.filter(key => !knownProperties.includes(key))
+  const valid = invalidParams.length === 0
+
+  return { valid, invalidParams, payload }
+}
+
+exports.validateQuery = function validateQuery(payload, knownProperties) {
+  knownProperties.push('token')
+  return this.validatePayload(payload, knownProperties)
 }

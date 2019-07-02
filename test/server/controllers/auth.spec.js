@@ -139,12 +139,16 @@ describe('/api/auth', () => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .get('/api/auth?invalid=1')
-      .set('Authorization', `Bearer ${token}`)
+      .get('/api/auth')
+      .query({ invalid: 1 })
+      .query({ token })
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
-    expect(res.body.code).toEqual(errors.INVALID_PARAM)
+    expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    expect(res.body.invalidParams).toBeDefined()
+    expect(res.body.invalidParams.length).toEqual(1)
+    expect(res.body.invalidParams[0]).toEqual('invalid')
     done()
   })
 
@@ -152,7 +156,8 @@ describe('/api/auth', () => {
     const payload = {
       username: 'admin',
       password: 'admin',
-      invalid: '1'
+      invalid1: '1',
+      invalid2: '2'
     }
     const res = await chai
       .request(server.listen())
@@ -162,6 +167,9 @@ describe('/api/auth', () => {
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.code).toEqual(errors.INVALID_BODY)
+    expect(res.body.invalidParams).toBeDefined()
+    expect(res.body.invalidParams.length).toEqual(2)
+    expect(res.body.invalidParams[1]).toEqual('invalid2')
     done()
   })
 })
