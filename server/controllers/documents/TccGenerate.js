@@ -9,6 +9,20 @@ const Divulgacao = require('../../models/tccdocs/divulgacao')
 
 module.exports = async function generateAllDocs(ctx) {
   const { id, files } = ctx.params
+  if (
+    ![
+      'ata',
+      'cd',
+      'certificado',
+      'credenciamento',
+      'divulgacao',
+      undefined
+    ].includes(files)
+  ) {
+    ctx.status = 400
+    ctx.body = { param: files, code: errors.INVALID_PARAMS }
+    return
+  }
   const defenseFind = await Defense.where('id', id).fetch()
   if (defenseFind === null) {
     ctx.status = 404
@@ -63,10 +77,36 @@ module.exports = async function generateAllDocs(ctx) {
     horarioDefesa: defenseFind.get('time').slice(0, -3),
     salaDefesa: defenseFind.get('local'),
     resumo: defenseFind.get('summary'),
-    trechoAv3: '',
-    trechoCoorientador: '',
-    isDiscente: false
+    trechoAv3: 'placeholder',
+    trechoCoorientador: 'placeholder',
+    isDiscente: false,
+    aprovado: !defenseFind.get('passed') ? 'reprovado' : 'aprovado',
+    conceito: 'insuficiente'
   }
+  if (
+    dados.curso === '' ||
+    dados.tituloTCC === '' ||
+    dados.nomeDosAlunos === '' ||
+    dados.orientador === '' ||
+    dados.avaliador1 === '' ||
+    dados.avaliador2 === '' ||
+    dados.diaDefesa === '' ||
+    dados.mesDefesa === '' ||
+    dados.anoDefesa === '' ||
+    dados.diretor === '' ||
+    dados.matricula === '' ||
+    dados.discente === '' ||
+    dados.horarioDefesa === '' ||
+    dados.salaDefesa === ''
+  ) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_ARGUMENT }
+    return
+  }
+  const grade = defenseFind.get('grade')
+  if (grade >= 5) dados.conceito = 'regular'
+  if (grade >= 7) dados.conceito = 'bom'
+  if (grade >= 9) dados.conceito = 'excelente'
   if (dados.avaliador3) {
     dados.trechoAv3 = `, ${dados.tituloAvaliador3}${
       dados.avaliador3
@@ -191,15 +231,11 @@ module.exports = async function generateAllDocs(ctx) {
   if (allFiles || files === 'divulgacao') {
     Divulgacao(doc, dados)
   }
-  const filename = files
-    ? `${dados.discente.toLowerCase()}-${files}`
-    : `${dados.discente.toLowerCase()}`
-  doc.end()
+  doc.info.Title = `${dados.discente.toLowerCase()}${
+    files ? `-${files}` : ''
+  }.pdf`.replace(/ /g, '-')
+  await doc.end()
   ctx.status = 200
   ctx.type = 'application/pdf'
-  ctx.set(
-    'Content-Disposition',
-    `inline; filename=${filename.replace(/ /g, '-')}.pdf`
-  )
   ctx.body = doc
 }
