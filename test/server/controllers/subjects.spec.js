@@ -260,4 +260,24 @@ describe('/api/subjects', () => {
     }
     done()
   })
+
+  test('DELETE /subjects?invalid=1 invvalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    {
+      const res = await chai
+        .request(server.listen())
+        .del('/api/subjects/1')
+        .query({ invalid1: 1, invalid2: 2 })
+        .set('Authorization', `Bearer ${token}`)
+      expect(res.body).toBeDefined()
+      expect(res.type).toEqual('application/json')
+      expect(res.status).toEqual(400)
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_QUERY)
+      expect(res.body.invalidParams.length).toBe(2)
+      expect(res.body.invalidParams).toContainEqual('invalid1')
+      expect(res.body.invalidParams).toContainEqual('invalid2')
+    }
+    done()
+  })
 })
