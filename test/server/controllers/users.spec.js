@@ -306,8 +306,7 @@ describe('/api/users', () => {
     const res = await chai
       .request(server.listen())
       .get('/api/users')
-      .query({ page: 1 })
-      .query({ invalid: 1 })
+      .query({ page: 1, invalid: 1 })
       .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')

@@ -140,8 +140,7 @@ describe('/api/auth', () => {
     const res = await chai
       .request(server.listen())
       .get('/api/auth')
-      .query({ invalid: 1 })
-      .query({ token })
+      .query({ invalid: 1, token })
     expect(res.status).toEqual(400)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
