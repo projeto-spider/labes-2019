@@ -8,7 +8,11 @@ export default function makeDocumentsServices(axios) {
       return axios.get(`/api/students/${studentId}/documents`)
     },
 
-    update(studentId, documentId, payload) {
+    update(studentId, documentId, params) {
+      const { file, type } = params
+      const payload = new FormData()
+      payload.append('file', file)
+      payload.append('documentType', type)
       return axios.put(
         `/api/students/${studentId}/documents/${documentId}`,
         payload
