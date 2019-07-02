@@ -10,6 +10,7 @@ const testUtils = require('../test-utils')
 const useSeeds = require('../../use-seeds')
 const server = require('../../../server')
 const db = require('../../../server/db')
+const errors = require('../../../shared/errors')
 
 jest.useFakeTimers()
 describe('/api/subjects', () => {
@@ -72,7 +73,8 @@ describe('/api/subjects', () => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .get('/api/subjects/?page=1')
+      .get('/api/subjects/')
+      .query({ page: 1 })
       .set('Authorization', `Bearer ${token}`)
     expect(res.body).toBeDefined()
     expect(res.type).toEqual('application/json')
@@ -127,11 +129,12 @@ describe('/api/subjects', () => {
     done()
   })
 
-  test('GET /subjects?paginate=0 ALL SUBJECTS', async done => {
+  test('GET /subjects?paginate=false ALL SUBJECTS', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
-      .get('/api/subjects?paginate=0')
+      .get('/api/subjects')
+      .query({ paginate: 'false' })
       .set('Authorization', `Bearer ${token}`)
     expect(res.body).toBeDefined()
     expect(res.type).toEqual('application/json')
@@ -141,6 +144,41 @@ describe('/api/subjects', () => {
     expect(res.body[95].name).toEqual(
       '(ELETIVA) DISCIPLINA ELETIVA - SISTEMAS DE INFORMACAO'
     )
+    done()
+  })
+
+  test('GET /subjects/1?invalid=1 invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/subjects/1')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(400)
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toEqual(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('GET /subjects?invalid=1 invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/subjects/')
+      .query({ page: 1 })
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.body).toBeDefined()
+    expect(res.type).toEqual('application/json')
+    expect(res.status).toEqual(400)
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toEqual(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
     done()
   })
 })
