@@ -1423,4 +1423,36 @@ describe('/api/students', () => {
     expect(res.body.length).toEqual(1)
     done()
   })
+
+  test('GET /:id invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/1')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toBe(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('GET / invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toBe(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
 })

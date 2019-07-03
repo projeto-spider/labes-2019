@@ -4,6 +4,28 @@ const utils = require('../../utils')
 const enums = require('../../../shared/enums')
 
 module.exports = async function listStudents(ctx) {
+  const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [
+    'page',
+    'name',
+    'registrationNumber',
+    'minCrg',
+    'maxCrg',
+    'eqCrg',
+    'noCrg',
+    'sort',
+    'order',
+    'gmail',
+    'email',
+    'prescribed',
+    'period',
+    'course'
+  ])
+  if (!valid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+    return
+  }
+
   const { course, sort, order = 'ASC' } = ctx.request.query
   if (course !== undefined && !['cbcc', 'cbsi'].includes(course)) {
     ctx.status = 400
