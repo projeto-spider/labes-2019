@@ -1659,7 +1659,7 @@ describe('/api/students', () => {
     }
   })
 
-  test.only('PUT /[studentId] update fitness', async done => {
+  test('PUT /[studentId] update fitness', async done => {
     const { token } = await testUtils.user('admin')
 
     const dirUploads = path.join(__dirname, '../../../storage/')
