@@ -24,7 +24,7 @@ const bodyJson = KoaBody()
 const bodyMultipart = KoaBody({ multipart: true })
 
 // Authorization
-api.use(['/students', '/pdf'], isLoggedIn, isAdmin)
+api.use(['/students'], isLoggedIn, isAdmin)
 api.use(['/defenses'], isLoggedIn)
 
 // User Routes
@@ -74,6 +74,7 @@ api.del('/subjects/:id', subjects.Destroy)
 
 // Defenses Routes
 api.get('/defenses/', isAdminOrTeacher, defenses.List)
+api.get('/defenses/:id/pdf/:files', isAdmin, defenses.TccGenerate)
 api.post('/defenses/', isTeacher, bodyJson, defenses.Create)
 api.put('/defenses/:id', isAdmin, bodyJson, defenses.Update)
 
@@ -83,10 +84,6 @@ api.post('/auth', bodyJson, auth.Login)
 
 // Solicitation routes
 api.post('/solicitations/', bodyJson, solicitations.Create)
-
-// PDF routes
-api.get('/pdf/:id', documents.TccGenerate)
-api.get('/pdf/:id/:files', documents.TccGenerate)
 
 // Not Found Routes
 api.all('/*', ctx => {
