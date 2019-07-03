@@ -2,14 +2,13 @@
   <div class="hero has-background-grey has-text-centered is-fullheight">
     <div class="column is-4 is-offset-4">
       <figure class="avatar">
-        <img src="../assets/images/UFPA.png" width="90" height="70" />
+        <img src="../assets/images/UFPA.png" width="100" height="90" />
       </figure>
       <h3 class="title has-text-white">Cadastro de Usuário</h3>
       <div class="box">
         <form>
           <input-validation
             ref="emailIpt"
-            :input-label="'Email'"
             :valid-message="'Ok'"
             :invalid-message="'Email é obrigatório'"
             :default-message="'Campo obrigatório'"
@@ -18,13 +17,13 @@
             <b-input
               v-model="email"
               type="text"
+              placeholder="Email"
               @blur="onBlur('emailIpt')"
             ></b-input>
           </input-validation>
 
           <input-validation
             ref="usernameIpt"
-            :input-label="'Nome de usuário'"
             :valid-message="'Ok'"
             :invalid-message="usernameError"
             :default-message="'Campo obrigatório'"
@@ -34,13 +33,13 @@
               v-model="username"
               type="text"
               maxlength="30"
+              placeholder="Nome de usuário"
               @blur="onBlur('usernameIpt')"
             ></b-input>
           </input-validation>
 
           <input-validation
             ref="passwdIpt"
-            :input-label="'Senha'"
             :valid-message="'Ok'"
             :invalid-message="passwdError"
             :default-message="'Campo obrigatório'"
@@ -50,18 +49,19 @@
               v-model="password"
               type="password"
               minlength="6"
+              placeholder="Senha"
               password-reveal
               @blur="onBlur('passwdIpt')"
             >
             </b-input>
           </input-validation>
 
-          <b-field label="Tipo usuário">
+          <b-field>
             <b-select
               v-model="role"
               placeholder="Selecione um tipo de usuário"
               required
-              expaned
+              expanded
             >
               <option value="admin">Administrador</option>
               <option value="teacher">Professor</option>
@@ -95,7 +95,7 @@ export default {
       username: '',
       password: '',
       email: '',
-      role: '',
+      role: null,
       usernameError: `Nome de usuário obrigatório e tamanho mínimo de 3 caracteres.
       Não pode conter espaços em branco`,
       passwdError: `Senha obrigatória e tamanho mínimo de 6 caracteres.
