@@ -16,12 +16,12 @@ export default {
   props: {
     inputLabel: {
       type: String,
-      default: () => ''
+      default: ''
     },
 
     defaultMessage: {
       type: String,
-      default: () => ''
+      default: ''
     },
 
     validMessage: {
@@ -30,13 +30,13 @@ export default {
     },
 
     invalidMessage: {
-      type: String,
-      default: () => ''
+      type: Array,
+      default: [] // eslint-disable-line
     },
 
     valid: {
       type: Boolean,
-      default: () => false
+      default: false
     }
   },
 
@@ -56,8 +56,12 @@ export default {
       if (this.dirty) {
         if (this.updateValid) {
           obj[this.validMessage] = this.dirty
-        } else {
+        } else if (typeof this.invalidMessage === 'string') {
           obj[this.invalidMessage] = this.dirty
+        } else if (Array.isArray(this.invalidMessage)) {
+          for (const msg of this.invalidMessage) {
+            obj[msg] = this.dirty
+          }
         }
       } else {
         obj[this.defaultMessage] = !this.dirty

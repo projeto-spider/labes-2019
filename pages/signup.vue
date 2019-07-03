@@ -9,10 +9,10 @@
         <form>
           <input-validation
             ref="emailIpt"
-            :valid-message="'Ok'"
-            :invalid-message="'Email é obrigatório'"
-            :default-message="'Campo obrigatório'"
-            :valid="validEmail()"
+            valid-message="Ok"
+            invalid-message="Email é obrigatório"
+            default-message="Campo obrigatório"
+            :valid="validEmail"
           >
             <b-input
               v-model="email"
@@ -24,10 +24,10 @@
 
           <input-validation
             ref="usernameIpt"
-            :valid-message="'Ok'"
+            valid-message="Ok"
             :invalid-message="usernameError"
-            :default-message="'Campo obrigatório'"
-            :valid="validUserName()"
+            default-message="Campo obrigatório"
+            :valid="validUserName"
           >
             <b-input
               v-model="username"
@@ -40,10 +40,10 @@
 
           <input-validation
             ref="passwdIpt"
-            :valid-message="'Ok'"
+            valid-message="Ok"
             :invalid-message="passwdError"
-            :default-message="'Campo obrigatório'"
-            :valid="validPassword()"
+            default-message="Campo obrigatório"
+            :valid="validPassword"
           >
             <b-input
               v-model="password"
@@ -86,7 +86,6 @@ import InputValidation from '@/components/InputValidation'
 
 export default {
   name: 'Signup',
-  layout: 'empty',
   components: {
     InputValidation
   },
@@ -96,10 +95,14 @@ export default {
       password: '',
       email: '',
       role: null,
-      usernameError: `Nome de usuário obrigatório e tamanho mínimo de 3 caracteres.
-      Não pode conter espaços em branco`,
-      passwdError: `Senha obrigatória e tamanho mínimo de 6 caracteres.
-      Não pode conter espaços em branco`
+      usernameError: [
+        'Nome de usuário obrigatório e tamanho mínimo de 3 caracteres.',
+        'Não pode conter espaços em branco.'
+      ],
+      passwdError: [
+        'Senha obrigatória e tamanho mínimo de 6 caracteres.',
+        'Não pode conter espaços em branco.'
+      ]
     }
   },
   head() {
@@ -111,17 +114,11 @@ export default {
   computed: {
     disabled() {
       return !(
-        this.validUserName() &&
-        this.validEmail() &&
-        this.validPassword() &&
+        this.validUserName &&
+        this.validEmail &&
+        this.validPassword &&
         this.role
       )
-    }
-  },
-
-  methods: {
-    onBlur(refName) {
-      this.$refs[refName].dirty = true
     },
 
     validEmail() {
@@ -139,6 +136,12 @@ export default {
 
     validPassword() {
       return !this.password.includes(' ') && this.password.length > 5
+    }
+  },
+
+  methods: {
+    onBlur(refName) {
+      this.$refs[refName].dirty = true
     },
 
     async signUp() {
