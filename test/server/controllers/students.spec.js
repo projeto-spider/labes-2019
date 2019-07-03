@@ -1460,7 +1460,7 @@ describe('/api/students', () => {
       .put('/api/students/1')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        id: 1,
+        invalid: 1,
         name: 'ATUALIZA NOME',
         registrationNumber: '201704940001',
         crg: 9,
@@ -1488,7 +1488,7 @@ describe('/api/students', () => {
     expect(resComplete.body).toBeDefined()
     expect(resComplete.body.code).toBe(errors.INVALID_BODY)
     expect(resComplete.body.invalidParams.length).toBe(1)
-    expect(resComplete.body.invalidParams).toContainEqual('id')
+    expect(resComplete.body.invalidParams).toContainEqual('invalid')
 
     const resNome = await chai
       .request(server.listen())

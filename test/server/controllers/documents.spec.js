@@ -234,7 +234,6 @@ describe('/api/documents', () => {
       .put('/api/students/2')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        id: 2,
         name: 'ATUALIZA NOME DO ESTUDANTE',
         crg: 5
       })
