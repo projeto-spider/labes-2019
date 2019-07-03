@@ -18,7 +18,15 @@ module.exports = async function listStudents(ctx) {
     'email',
     'prescribed',
     'period',
-    'course'
+    'course',
+    'isActive',
+    'isFit',
+    'isConcluding',
+    'isForming',
+    'isGraduating',
+    'academicHighlight',
+    'cancelled',
+    'mailingList'
   ])
   if (!valid) {
     ctx.status = 400
