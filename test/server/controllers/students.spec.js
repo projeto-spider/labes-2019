@@ -1635,14 +1635,10 @@ describe('/api/students', () => {
       mailingList: 'none',
       mailingListToRemove: 'none',
       mailingListToAdd: 'active',
-      entryDate: '04-20-2019',
       advisor: null,
       defenseDate: null,
       term: null,
-      recordSigned: false,
-      termPaper: false,
       cd: false, // important
-      isUndergraduate: false,
       period: null
     }).save()
 
