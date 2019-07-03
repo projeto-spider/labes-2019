@@ -1,8 +1,17 @@
 const Student = require('../../models/Student')
 const Solicitation = require('../../models/Solicitation')
 const errors = require('../../../shared/errors')
+const utils = require('../../utils')
 
 module.exports = async function emailChanges(ctx) {
+  const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [
+    'mailingList'
+  ])
+  if (!valid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+    return
+  }
   const { mailingList } = ctx.request.query
   if (
     mailingList === undefined ||
