@@ -13,6 +13,7 @@
           label="Alguns alunos estão sem CRG"
           position="is-bottom"
           animated
+          multilined
         >
           <button class="button is-danger" disabled>
             Eleger Destaque Acadêmico
@@ -143,21 +144,14 @@ export default {
         isGraduating: true,
         isFit: true,
         sort: 'crg',
-        order: 'DESC'
+        order: 'desc'
       }
       this.$services.students
         .fetchPage(params)
         .then(res => {
           if (!res.data.length) {
             this.$toast.open({
-              message: 'Falha ao carregar candidatos a destaque acadêmico.',
-              type: 'is-danger'
-            })
-            this.isModalOpen = true
-            return
-          } else if (res.data.lenght === 0) {
-            this.$toast.open({
-              message: 'Não há canditados a destaque acadêmico',
+              message: 'Não há candidatos a destaque acadêmico.',
               type: 'is-danger'
             })
             this.isModalOpen = true

@@ -118,27 +118,27 @@ export default {
     },
     isActive: {
       type: Boolean,
-      default: false
+      default: undefined
     },
     isConcluding: {
       type: Boolean,
-      default: false
+      default: undefined
     },
     isGraduating: {
       type: Boolean,
-      default: false
+      default: undefined
     },
     showDefenseDate: {
       type: Boolean,
-      default: false
+      default: undefined
     },
     isFit: {
       type: Boolean,
-      default: false
+      default: undefined
     },
     isForming: {
       type: Boolean,
-      default: false
+      default: undefined
     },
     defaultSortField: {
       type: String,
@@ -162,7 +162,7 @@ export default {
     },
     mailingList: {
       type: String,
-      default: ''
+      default: undefined
     },
     showCrgFilter: {
       type: Boolean,
