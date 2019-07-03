@@ -24,13 +24,14 @@ const bodyJson = KoaBody()
 const bodyMultipart = KoaBody({ multipart: true })
 
 // Authorization
-api.use(['/users', '/students'], isLoggedIn, isAdmin)
+api.use(['/students'], isLoggedIn, isAdmin)
 api.use(['/defenses'], isLoggedIn)
 
 // User Routes
-api.get('/users/', users.List)
-api.get('/users/:id', users.Show)
-api.post('/users/', bodyJson, users.Create)
+api.get('/users/', isLoggedIn, isAdmin, users.List)
+api.get('/users/:id', isLoggedIn, isAdmin, users.Show)
+api.post('/users/', isLoggedIn, isAdmin, bodyJson, users.Create)
+api.put('/users/:id', isLoggedIn, bodyJson, users.Update)
 
 // Student Routes
 api.get('/students/email-changes', students.EmailChanges)
