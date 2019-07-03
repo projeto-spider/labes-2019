@@ -13,8 +13,12 @@ module.exports = async function generateAllDocs(ctx) {
     ![
       'ata',
       'cd',
-      'certificado',
-      'credenciamento',
+      'certificado1',
+      'certificado2',
+      'certificado3',
+      'credenciamento1',
+      'credenciamento2',
+      'credenciamento3',
       'divulgacao',
       undefined
     ].includes(files)
