@@ -1432,14 +1432,10 @@ describe('/api/students', () => {
         academicHighlight: false,
         cancelled: false,
         mailingList: 'none',
-        entryDate: '05-28-2019',
         advisor: 'Novo Orientador',
         defenseDate: '06-30-2019',
         term: null,
-        recordSigned: false,
-        termPaper: false,
-        cd: true,
-        isUndergraduate: false
+        cd: true
       })
     expect(resComplete.status).toEqual(400)
     expect(resComplete.type).toEqual('application/json')
