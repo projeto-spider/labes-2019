@@ -1,9 +1,16 @@
 const errors = require('../../../shared/errors')
+const utils = require('../../utils')
 
 const Documents = require('../../models/Document')
 const Students = require('../../models/Student')
 
 module.exports = async function showDocument(ctx) {
+  const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
+  if (!valid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+    return
+  }
   const { studentId, id } = ctx.params
 
   if ((await Students.where('id', studentId).count()) === 0) {

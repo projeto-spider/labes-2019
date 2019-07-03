@@ -2,11 +2,18 @@ const fs = require('fs')
 const path = require('path')
 const errors = require('../../../shared/errors')
 const enums = require('../../../shared/enums')
+const utils = require('../../utils')
 
 const Documents = require('../../models/Document')
 const Students = require('../../models/Student')
 
 module.exports = async function viewDocument(ctx) {
+  const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
+  if (!valid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+    return
+  }
   const { studentId, id } = ctx.params
 
   const studentFind = await Students.where('id', studentId).fetch()
