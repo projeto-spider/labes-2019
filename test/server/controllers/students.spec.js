@@ -1657,6 +1657,8 @@ describe('/api/students', () => {
       expect(res.body.invalidParams.length).toBe(1)
       expect(res.body.invalidParams).toContainEqual('invalid')
     }
+
+    done()
   })
 
   test('PUT /[studentId] update fitness', async done => {
