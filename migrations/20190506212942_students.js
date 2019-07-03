@@ -42,24 +42,11 @@ exports.up = function(knex, Promise) {
     table.enum('mailingList', mailingList).defaultTo('none')
     table.enum('mailingListToAdd', mailingList).defaultTo('none')
     table.enum('mailingListToRemove', mailingList).defaultTo('none')
-    table.date('entryDate').nullable()
     table.string('advisor').nullable()
     table.date('defenseDate').nullable()
     table.string('term').nullable()
     table
-      .boolean('recordSigned')
-      .notNullable()
-      .defaultTo(false)
-    table
-      .boolean('termPaper')
-      .notNullable()
-      .defaultTo(false)
-    table
       .boolean('cd')
-      .notNullable()
-      .defaultTo(false)
-    table
-      .boolean('isUndergraduate')
       .notNullable()
       .defaultTo(false)
     table
