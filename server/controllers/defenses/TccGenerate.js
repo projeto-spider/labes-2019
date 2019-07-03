@@ -7,6 +7,26 @@ const Certificado = require('../../models/tccdocs/certificado')
 const Credenciamento = require('../../models/tccdocs/credenciamento')
 const Divulgacao = require('../../models/tccdocs/divulgacao')
 
+const translations = {
+  cbcc: 'Ciência da Computação',
+  cbsi: 'Sistemas de Informação',
+  doctor: 'Dr(a). ',
+  master: 'Me(a). ',
+  other: '',
+  '1': 'Janeiro',
+  '2': 'Fevereiro',
+  '3': 'Março',
+  '4': 'Abril',
+  '5': 'Maio',
+  '6': 'Junho',
+  '7': 'Julho',
+  '8': 'Agosto',
+  '9': 'Setembro',
+  '10': 'Outubro',
+  '11': 'Novembro',
+  '12': 'Dezembro'
+}
+
 module.exports = async function generateAllDocs(ctx) {
   const { id, files } = ctx.params
   if (
@@ -68,23 +88,25 @@ module.exports = async function generateAllDocs(ctx) {
     conceito: 'insuficiente'
   }
   if (
-    dados.curso === '' ||
-    dados.tituloTCC === '' ||
-    dados.nomeDosAlunos === '' ||
-    dados.orientador === '' ||
-    dados.avaliador1 === '' ||
-    dados.avaliador2 === '' ||
-    dados.diaDefesa === '' ||
-    dados.mesDefesa === '' ||
-    dados.anoDefesa === '' ||
-    dados.diretor === '' ||
-    dados.matricula === '' ||
-    dados.discente === '' ||
-    dados.horarioDefesa === '' ||
-    dados.salaDefesa === ''
+    [
+      'curso',
+      'tituloTCC',
+      'nomeDosAlunos',
+      'orientador',
+      'avaliador1',
+      'avaliador2',
+      'diaDefesa',
+      'mesDefesa',
+      'anoDefesa',
+      'diretor',
+      'matricula',
+      'discente',
+      'horarioDefesa',
+      'salaDefesa'
+    ].every(item => dados[item] !== '')
   ) {
     ctx.status = 400
-    ctx.body = { code: errors.INVALID_ARGUMENT }
+    ctx.body = { code: errors.INVALID_REQUEST }
     return
   }
   const grade = defenseFind.get('grade')
@@ -212,24 +234,4 @@ module.exports = async function generateAllDocs(ctx) {
   ctx.status = 200
   ctx.type = 'application/pdf'
   ctx.body = doc
-}
-
-const translations = {
-  cbcc: 'Ciência da Computação',
-  cbsi: 'Sistemas de Informação',
-  doctor: 'Dr(a). ',
-  master: 'Me(a). ',
-  other: '',
-  '1': 'Janeiro',
-  '2': 'Fevereiro',
-  '3': 'Março',
-  '4': 'Abril',
-  '5': 'Maio',
-  '6': 'Junho',
-  '7': 'Julho',
-  '8': 'Agosto',
-  '9': 'Setembro',
-  '10': 'Outubro',
-  '11': 'Novembro',
-  '12': 'Dezembro'
 }
