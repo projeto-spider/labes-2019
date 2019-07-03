@@ -147,8 +147,8 @@ export default {
     defaultSortOrder: {
       type: String,
       default: 'asc',
-      validator: function(value) {
-        return ['asc', 'desc'].indexOf(value) !== -1
+      validator(value) {
+        return ['asc', 'desc'].includes(value)
       }
     },
     defaultPage: {
