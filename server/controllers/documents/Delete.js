@@ -52,7 +52,7 @@ module.exports = async function removeDocument(ctx) {
   // First destroy the row
   await document.destroy()
   // If it works, delete the file
-  await del(file)
+  await Promise.all([del(file), utils.updateStudentFitness(student)])
 
   ctx.status = 204
   ctx.body = undefined
