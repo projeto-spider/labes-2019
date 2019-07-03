@@ -3,11 +3,14 @@
  */
 
 const path = require('path')
+const fs = require('fs')
+const rimraf = require('rimraf')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
 const testUtils = require('../test-utils')
+const enums = require('../../../shared/enums')
 const useSeeds = require('../../use-seeds')
 const server = require('../../../server')
 const db = require('../../../server/db')
@@ -1654,6 +1657,121 @@ describe('/api/students', () => {
       expect(res.body.invalidParams.length).toBe(1)
       expect(res.body.invalidParams).toContainEqual('invalid')
     }
+
+    done()
+  })
+
+  test('PUT /[studentId] update fitness', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const dirUploads = path.join(__dirname, '../../../storage/')
+    if (fs.existsSync(dirUploads)) {
+      rimraf.sync(dirUploads)
+    }
+
+    const student = await Student.forge({
+      name: 'GRADUANDO FERREIRA ALVES',
+      registrationNumber: '221104940004',
+      crg: 7.89,
+      course: 'cbcc',
+      email: 'slug@gmail.com',
+      isFit: true,
+      isConcluding: false,
+      isActive: true,
+      isForming: false,
+      isGraduating: true, // important
+      academicHighlight: false,
+      cancelled: false,
+      mailingList: 'none',
+      mailingListToRemove: 'none',
+      mailingListToAdd: 'active',
+      entryDate: '04-20-2019',
+      advisor: null,
+      defenseDate: null,
+      term: null,
+      recordSigned: false,
+      termPaper: false,
+      cd: false, // important
+      isUndergraduate: false,
+      period: null
+    }).save()
+
+    await updateCd({ value: true, expectedFitness: false })
+    await createDocument({
+      type: enums.documents.ATA,
+      expectedFitness: false
+    })
+    await createDocument({
+      type: enums.documents.LAUDA,
+      expectedFitness: true
+    })
+    await updateCd({ value: false, expectedFitness: false })
+    await updateCd({ value: true, expectedFitness: true })
+    await deleteDocument({
+      type: enums.documents.ATA,
+      expectedFitness: false
+    })
+    await deleteDocument({
+      type: enums.documents.LAUDA,
+      expectedFitness: false
+    })
+    await updateCd({ value: false, expectedFitness: false })
+
+    async function updateCd({ value, expectedFitness }) {
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/students/${student.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          cd: value
+        })
+
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.cd).toBe(value)
+      expect(res.body.isFit).toBe(expectedFitness)
+
+      const updated = await Student.forge({ id: student.get('id') }).fetch()
+      expect(updated.get('isFit')).toBe(expectedFitness)
+    }
+
+    async function createDocument({ type, expectedFitness }) {
+      const res = await chai
+        .request(server.listen())
+        .post(`/api/students/${student.id}/documents`)
+        .set('Authorization', `Bearer ${token}`)
+        .field('documentType', type)
+        .attach('file', pdfFixture('test.pdf'), 'test.pdf')
+        .type('form')
+      expect(res.status).toEqual(201)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+
+      const updated = await Student.forge({ id: student.get('id') }).fetch()
+      expect(updated.get('isFit')).toBe(expectedFitness)
+    }
+
+    async function deleteDocument({ type, expectedFitness }) {
+      const doc = await document
+        .where('type', type)
+        .where('studentId', student.get('id'))
+        .fetch()
+
+      const res = await chai
+        .request(server.listen())
+        .delete(`/api/students/${student.id}/documents/${doc.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+      expect(res.status).toEqual(204)
+
+      const updated = await Student.forge({ id: student.get('id') }).fetch()
+      expect(updated.get('isFit')).toBe(expectedFitness)
+    }
+
     done()
   })
 })
+
+function pdfFixture(name) {
+  return path.join(__dirname, '../fixtures/pdf', name)
+}

@@ -83,7 +83,7 @@ module.exports = [
     crg: 7.89,
     course: 'cbcc',
     email: 'slug@gmail.com',
-    isFit: true,
+    isFit: false,
     isConcluding: false,
     isActive: true,
     isForming: false,

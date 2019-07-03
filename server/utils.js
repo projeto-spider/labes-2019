@@ -280,12 +280,19 @@ exports.updateStudentFitness = async function updateStudentFitness(student) {
   const docTypes = (await Documents.where({ studentId: student.id }).fetchAll())
     .toJSON()
     .map(entry => entry.type)
-  const studentIsFit =
-    !!student.get('cd') && docTypes.includes(1) && docTypes.includes(2)
-  if (!!student.get('isFit') !== studentIsFit) {
-    const newValue = studentIsFit ? 1 : 0
-    await student.save({ isFit: newValue })
+  const hasCd = +student.get('cd') === 1 || student.get('cd') === true
+  const hasAta = docTypes.includes(enums.documents.ATA)
+  const hasLauda = docTypes.includes(enums.documents.LAUDA)
+  const isFit = hasCd && hasAta && hasLauda
+
+  const currentValue =
+    +student.get('isFit') === 1 || student.get('isFit') === true
+  const changed = currentValue !== isFit
+
+  if (changed) {
+    await student.save({ isFit })
   }
+
   return student
 }
 
