@@ -1,6 +1,7 @@
 const path = require('path')
 const jwt = require('jsonwebtoken')
 const enums = require('../shared/enums')
+const config = require('./config')
 const { knex } = require('./db')
 const Student = require('./models/Student')
 const Documents = require('./models/Document')
@@ -247,7 +248,7 @@ exports.signToken = function signToken(
       user,
       exp
     },
-    'my-secret'
+    config.JWT_SECRET
   )
 }
 

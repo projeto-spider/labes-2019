@@ -8,12 +8,12 @@ const {
 } = require('./seeds')
 
 const seeds = new Map([
-  ['documents', documents],
-  ['pendencies', pendencies],
-  ['solicitations', solicitations],
+  ['users', users],
   ['students', students],
   ['subjects', subjects],
-  ['users', users]
+  ['solicitations', solicitations],
+  ['pendencies', pendencies],
+  ['documents', documents]
 ])
 
 const allNames = Array.from(seeds.keys())

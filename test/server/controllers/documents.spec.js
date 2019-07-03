@@ -15,6 +15,7 @@ const server = require('../../../server')
 const db = require('../../../server/db')
 const errors = require('../../../shared/errors')
 const enums = require('../../../shared/enums')
+const Document = require('../../../server/models/Document')
 
 jest.useFakeTimers()
 
@@ -215,9 +216,15 @@ describe('/api/documents', () => {
     expect(resInsertDocument.status).toEqual(201)
     expect(resInsertDocument.type).toEqual('application/json')
     expect(resInsertDocument.body).toBeDefined()
+
+    const doc = await Document.forge({
+      studentId: 2,
+      type: enums.documents.LAUDA
+    }).fetch()
+
     const resView1 = await chai
       .request(server.listen())
-      .get('/api/students/2/documents/5/view')
+      .get(`/api/students/2/documents/${doc.get('id')}/view`)
       .set('Authorization', `Bearer ${token}`)
     expect(resView1.status).toEqual(200)
     expect(resView1.type).toEqual('application/pdf')
@@ -239,7 +246,7 @@ describe('/api/documents', () => {
     expect(resUpdateStudent.body.crg).toEqual(5)
     const resView2 = await chai
       .request(server.listen())
-      .get('/api/students/2/documents/5/view')
+      .get(`/api/students/2/documents/${doc.get('id')}/view`)
       .set('Authorization', `Bearer ${token}`)
     expect(resView2.status).toEqual(200)
     expect(resView2.type).toEqual('application/pdf')

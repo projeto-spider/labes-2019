@@ -13,10 +13,5 @@ module.exports = [
     studentId: 2,
     type: 3,
     url: 'url/file3'
-  },
-  {
-    studentId: 20,
-    type: 1,
-    url: 'url/file4'
   }
 ]

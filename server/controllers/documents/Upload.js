@@ -56,12 +56,12 @@ module.exports = async function uploadDocument(ctx) {
       type: documentType,
       url: urlApi
     })
-    documentCreated.save({
+    await documentCreated.save({
       id: documentCreated.get('id'),
       url: urlApi + documentCreated.get('id') + '/view'
     })
   } else {
-    documentFind.save({
+    await documentFind.save({
       id: documentFind.get('id'),
       url: urlApi + documentFind.get('id') + '/view'
     })
