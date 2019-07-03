@@ -29,25 +29,6 @@ module.exports = async function generateAllDocs(ctx) {
     ctx.body = { code: errors.NOT_FOUND }
     return
   }
-  const translations = {
-    cbcc: 'Ciência da Computação',
-    cbsi: 'Sistemas de Informação',
-    doctor: 'Dr(a). ',
-    master: 'Me(a). ',
-    other: '',
-    '1': 'Janeiro',
-    '2': 'Fevereiro',
-    '3': 'Março',
-    '4': 'Abril',
-    '5': 'Maio',
-    '6': 'Junho',
-    '7': 'Julho',
-    '8': 'Agosto',
-    '9': 'Setembro',
-    '10': 'Outubro',
-    '11': 'Novembro',
-    '12': 'Dezembro'
-  }
   const defenseDate = defenseFind.get('date')
   const date = new Date()
   const dados = {
@@ -78,8 +59,6 @@ module.exports = async function generateAllDocs(ctx) {
     horarioDefesa: defenseFind.get('time').slice(0, -3),
     salaDefesa: defenseFind.get('local'),
     resumo: defenseFind.get('summary'),
-    trechoAv3: 'placeholder',
-    trechoCoorientador: 'placeholder',
     isDiscente: false,
     aprovado: !defenseFind.get('passed') ? 'reprovado' : 'aprovado',
     conceito: 'insuficiente'
@@ -108,16 +87,6 @@ module.exports = async function generateAllDocs(ctx) {
   if (grade >= 5) dados.conceito = 'regular'
   if (grade >= 7) dados.conceito = 'bom'
   if (grade >= 9) dados.conceito = 'excelente'
-  if (dados.avaliador3) {
-    dados.trechoAv3 = `, ${dados.tituloAvaliador3}${
-      dados.avaliador3
-    } (AVALIADOR(A))`
-  }
-  if (dados.coOrientador) {
-    dados.trechoCoorientador = `, ${dados.tituloCoOrientador}${
-      dados.coOrientador
-    } (COORIENTADOR(A))`
-  }
   const people = [
     {
       name: dados.orientador,
@@ -239,4 +208,24 @@ module.exports = async function generateAllDocs(ctx) {
   ctx.status = 200
   ctx.type = 'application/pdf'
   ctx.body = doc
+}
+
+const translations = {
+  cbcc: 'Ciência da Computação',
+  cbsi: 'Sistemas de Informação',
+  doctor: 'Dr(a). ',
+  master: 'Me(a). ',
+  other: '',
+  '1': 'Janeiro',
+  '2': 'Fevereiro',
+  '3': 'Março',
+  '4': 'Abril',
+  '5': 'Maio',
+  '6': 'Junho',
+  '7': 'Julho',
+  '8': 'Agosto',
+  '9': 'Setembro',
+  '10': 'Outubro',
+  '11': 'Novembro',
+  '12': 'Dezembro'
 }
