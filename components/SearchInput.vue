@@ -146,7 +146,10 @@ export default {
     },
     defaultSortOrder: {
       type: String,
-      default: 'asc'
+      default: 'asc',
+      validator: function(value) {
+        return ['asc', 'desc'].indexOf(value) !== -1
+      }
     },
     defaultPage: {
       type: Number,
@@ -316,7 +319,7 @@ export default {
         course: this.courseTag,
         page: this.page,
         sort: this.sortField,
-        order: this.sortOrder === 'asc' ? 'asc' : 'desc',
+        order: this.sortOrder,
         isActive: this.isActive ? this.isActive : undefined,
         mailingList: this.mailingList !== '' ? this.mailingList : undefined,
         isConcluding: this.isConcluding ? this.isConcluding : undefined,
