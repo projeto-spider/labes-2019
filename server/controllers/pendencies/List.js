@@ -5,7 +5,7 @@ const Students = require('../../models/Student')
 const Pendencies = require('../../models/Pendency')
 
 module.exports = async function listPendencies(ctx) {
-  const { valid, invalidParams } = utils.validateQuery(ctx.request.querys, [])
+  const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
   if (!valid) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_QUERY, invalidParams }
