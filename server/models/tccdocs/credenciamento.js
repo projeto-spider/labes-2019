@@ -75,6 +75,4 @@ module.exports = function model(
       align: 'justify'
     }
   )
-
-  return doc
 }

@@ -24,7 +24,7 @@ const bodyJson = KoaBody()
 const bodyMultipart = KoaBody({ multipart: true })
 
 // Authorization
-api.use(['/students'], isLoggedIn, isAdmin)
+api.use(['/students', '/pdf'], isLoggedIn, isAdmin)
 api.use(['/defenses'], isLoggedIn)
 
 // User Routes
@@ -53,7 +53,7 @@ api.get('/students/:studentId/documents', documents.List)
 api.get('/students/:studentId/documents/:id', documents.Show)
 api.del('/students/:studentId/documents/:id', documents.Delete)
 api.get('/students/:studentId/documents/:id/view', documents.View)
-api.get('/students/:studentId/tccdocuments', documents.TccGenerate)
+api.post('/students/update-mailing-list', bodyJson, students.UpdateMailingList)
 api.post('/students/:studentId/documents', bodyMultipart, documents.Upload)
 
 // Pendencies Routes
