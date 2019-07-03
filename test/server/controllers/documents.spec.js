@@ -447,7 +447,7 @@ describe('/api/documents', () => {
 
     const resCertification = await chai
       .request(server.listen())
-      .get('/api/pdf/1/certificado')
+      .get('/api/pdf/1/certificado1')
       .set('Authorization', `Bearer ${admin.token}`)
     expect(resCertification.type).toEqual('application/pdf')
     expect(resCertification.body).toBeDefined()
@@ -455,7 +455,7 @@ describe('/api/documents', () => {
 
     const resCrendentials = await chai
       .request(server.listen())
-      .get('/api/pdf/1/credenciamento')
+      .get('/api/pdf/1/credenciamento1')
       .set('Authorization', `Bearer ${admin.token}`)
     expect(resCrendentials.type).toEqual('application/pdf')
     expect(resCrendentials.body).toBeDefined()
