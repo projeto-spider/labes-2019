@@ -9,7 +9,7 @@
           <h3 class="title has-text-white">Login</h3>
           <p class="subtitle has-text-white">Por favor faça o login</p>
           <div class="box">
-            <form @submit.prevent="fn">
+            <form @submit.prevent="login">
               <div class="field">
                 <div class="control">
                   <input
@@ -40,8 +40,7 @@
               </div>
               <button
                 class="button is-block is-info is-large is-fullwidth"
-                @click="login"
-                @click.prevent
+                type="submit"
               >
                 Login
               </button>
