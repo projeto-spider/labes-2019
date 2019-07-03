@@ -1,7 +1,7 @@
 <template>
   <EmailComponent
     :mailing-list="'concluding'"
-    :title="'Lista de Email - Newsletter'"
+    title="Lista de Email - Newsletter"
   ></EmailComponent>
 </template>
 
@@ -12,6 +12,11 @@ export default {
   middleware: ['auth', 'course'],
   components: {
     EmailComponent
+  },
+  head() {
+    return {
+      title: 'Lista de email newsletter'
+    }
   }
 }
 </script>

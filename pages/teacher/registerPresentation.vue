@@ -1,8 +1,7 @@
 <template>
   <div class="container">
+    <h1 class="title has-text-centered">Formulário para Defesa de TCC</h1>
     <section class="section">
-      <h1 class="title">Formulario para defesa de TCC</h1>
-
       <div class="box">
         <h2 class="subtitle">Dados da defesa:</h2>
 
@@ -33,9 +32,8 @@ export default {
 
   methods: {
     onSubmit(payload) {
-      const endpoint = '/api/defenses'
-      return this.$axios
-        .$post(endpoint, payload)
+      return this.$services.defenses
+        .create(payload)
         .then(() => {
           this.$toast.open({
             message: 'Solicitação realizada com sucesso!',

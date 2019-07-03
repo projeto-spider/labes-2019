@@ -246,6 +246,7 @@ export default {
 .container.Fullscreen {
   height: unset;
   min-height: 100vh;
+  max-width: 75vw;
 }
 .container {
   margin: 4rem auto 4rem auto;

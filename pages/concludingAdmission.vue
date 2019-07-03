@@ -12,6 +12,11 @@ export default {
   layout: 'admissionLayout',
   components: {
     AdmissionForm
+  },
+  head() {
+    return {
+      title: 'Formulario newsletter'
+    }
   }
 }
 </script>

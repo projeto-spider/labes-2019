@@ -1,4 +1,4 @@
-import selector from '@/components/front/selector'
+import selector from '@/front/selector'
 
 export default function makeUsersServices(axios) {
   return {
@@ -13,9 +13,12 @@ export default function makeUsersServices(axios) {
         }
       })
     },
+    login(username, password) {
+      return axios.$post('/api/auth', { username, password })
+    },
 
     create(params) {
-      const paramList = ['username', 'email', 'role']
+      const paramList = ['username', 'email', 'role', 'password']
       const payload = selector(params, paramList)
       return axios.post('/api/users', payload)
     }

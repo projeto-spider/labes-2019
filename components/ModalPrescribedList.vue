@@ -75,8 +75,8 @@ export default {
   methods: {
     openModal() {
       this.isActive = !this.isActive
-      this.$axios
-        .get('/api/students/?prescribed=1')
+      this.$services.students
+        .fetchPage({ prescribed: true })
         .then(res => {
           this.studentsData = res.data
         })

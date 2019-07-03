@@ -37,6 +37,11 @@ export default {
   components: {
     TccDefenseSearch
   },
+  head() {
+    return {
+      title: 'Defesa de TCC'
+    }
+  },
   computed: {
     ...mapState({
       courseTag: state => state.courseTag

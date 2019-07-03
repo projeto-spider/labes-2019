@@ -49,6 +49,11 @@ export default {
       role: ''
     }
   },
+  head() {
+    return {
+      title: 'Cadastro de usuário'
+    }
+  },
   methods: {
     async signUp() {
       try {

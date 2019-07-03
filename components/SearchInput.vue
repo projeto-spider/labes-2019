@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="title" class="columns is-centered">
+    <div v-if="title" class="columns is-centered has-text-centered">
       <h1 class="title">
         <strong>{{ title }}</strong>
       </h1>
@@ -110,51 +110,54 @@ export default {
   props: {
     title: {
       type: String,
-      default: () => ''
+      default: ''
     },
     defaultCourse: {
       type: String,
-      default: () => 'cbcc'
+      default: 'cbcc'
     },
     isActive: {
-      type: Number,
-      default: () => 'AllStudents'
+      type: Boolean,
+      default: undefined
     },
     isConcluding: {
-      type: Number,
-      default: () => NaN
+      type: Boolean,
+      default: undefined
     },
     isGraduating: {
-      type: Number,
-      default: () => NaN
+      type: Boolean,
+      default: undefined
     },
     showDefenseDate: {
       type: Boolean,
-      default: () => false
+      default: undefined
     },
     isFit: {
-      type: Number,
-      default: () => NaN
+      type: Boolean,
+      default: undefined
     },
     isForming: {
-      type: Number,
-      default: () => NaN
+      type: Boolean,
+      default: undefined
     },
     defaultSortField: {
       type: String,
-      default: () => 'name'
+      default: 'name'
     },
     defaultSortOrder: {
       type: String,
-      default: () => 'asc'
+      default: 'asc',
+      validator(value) {
+        return ['asc', 'desc'].includes(value)
+      }
     },
     defaultPage: {
       type: Number,
-      default: () => 1
+      default: 1
     },
     defaultPerPage: {
       type: Number,
-      default: () => 10
+      default: 10
     },
     students: {
       type: Array,
@@ -162,7 +165,7 @@ export default {
     },
     mailingList: {
       type: String,
-      default: () => ''
+      default: undefined
     },
     showCrgFilter: {
       type: Boolean,
@@ -312,25 +315,24 @@ export default {
       function maybeParam(key, value) {
         return value && { [key]: `%${value}%` }
       }
-      this.$axios
-        .get('/api/students/', {
-          params: {
-            course: this.courseTag,
-            page: this.page,
-            sort: this.sortField,
-            order: this.sortOrder === 'asc' ? 'ASC' : 'DESC',
-            isActive: this.isActive !== 'AllStudents' ? this.isActive : null,
-            mailingList: this.mailingList !== '' ? this.mailingList : null,
-            isConcluding: !isNaN(this.isConcluding) ? this.isConcluding : null,
-            isForming: !isNaN(this.isForming) ? this.isForming : null,
-            isFit: this.isGraduating && !isNaN(this.isFit) ? this.isFit : null,
-            isGraduating: !isNaN(this.isGraduating) ? this.isGraduating : null,
-            ...maybeParam('name', this.searchName),
-            ...maybeParam('registrationNumber', this.searchRegistration),
-            ...maybeParam('email', this.searchEmail),
-            ...(this.blankCrgFilter && { noCrg: true })
-          }
-        })
+      const params = {
+        course: this.courseTag,
+        page: this.page,
+        sort: this.sortField,
+        order: this.sortOrder,
+        isActive: this.isActive ? this.isActive : undefined,
+        mailingList: this.mailingList !== '' ? this.mailingList : undefined,
+        isConcluding: this.isConcluding ? this.isConcluding : undefined,
+        isForming: this.isForming ? this.isForming : undefined,
+        isFit: !this.isFit && this.isGraduating ? this.isFit : undefined,
+        isGraduating: this.isGraduating ? this.isGraduating : undefined,
+        ...maybeParam('name', this.searchName),
+        ...maybeParam('registrationNumber', this.searchRegistration),
+        ...maybeParam('email', this.searchEmail),
+        ...(this.blankCrgFilter && { noCrg: true })
+      }
+      this.$services.students
+        .fetchPage(params)
         .then(res => {
           this.studentsData = res.data
           this.total = res.headers['pagination-row-count']
@@ -365,12 +367,6 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.container {
-  margin: 50px auto 50px auto;
-}
-</style>
 
 <style>
 .searchInputTable div.table-wrapper table tbody tr td:nth-child(2) span {

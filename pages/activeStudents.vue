@@ -3,9 +3,9 @@
     <SearchInput
       :key="courseTag"
       :default-course="courseTag"
-      :title="'Alunos Ativos'"
+      title="Alunos Ativos"
       :default-per-page="10"
-      :is-active="1"
+      :is-active="true"
     ></SearchInput>
   </div>
 </template>
@@ -19,6 +19,11 @@ export default {
   middleware: 'course',
   components: {
     SearchInput
+  },
+  head() {
+    return {
+      title: 'Ativos'
+    }
   },
   data() {
     return {

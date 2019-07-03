@@ -82,7 +82,11 @@ export default {
   name: 'Subjects',
 
   middleware: 'auth',
-
+  head() {
+    return {
+      title: 'Componente curricular'
+    }
+  },
   data: () => ({
     loading: false,
 
@@ -123,13 +127,8 @@ export default {
   methods: {
     loadSubjects() {
       this.loading = true
-
-      this.$axios
-        .get('/api/subjects/', {
-          params: {
-            page: this.page
-          }
-        })
+      this.$services.subjects
+        .fetchPage(this.page)
         .then(res => {
           this.subjects = res.data
           this.total = +res.headers['pagination-row-count']
@@ -162,9 +161,9 @@ export default {
           this.loading = true
           const payload = { name }
 
-          return this.$axios
-            .$post('/api/subjects', payload)
-            .then(subject => {
+          return this.$services.subjects
+            .create(payload)
+            .then(res => {
               this.page = Math.ceil((this.total + 1) / this.perPage)
               return this.loadSubjects()
             })
@@ -179,9 +178,9 @@ export default {
 
     updateSubject(subject) {
       this.loading = true
-      return this.$axios
-        .$put(`/api/subjects/${subject.id}`, subject)
-        .then(subject => {
+      return this.$services.subjects
+        .update(subject.id, subject)
+        .then(res => {
           const localSubject = this.subjects.find(
             localSubject => localSubject.id === subject.id
           )
@@ -226,8 +225,8 @@ export default {
         type: 'is-danger',
         hasIcon: true,
         onConfirm: () => {
-          this.$axios
-            .$delete(`/api/subjects/${this.editingSubject.id}`)
+          this.$services.subjects
+            .destroy(this.editingSubject.id)
             .then(() => {
               const index = this.subjects.findIndex(
                 localSubject => localSubject.id === this.editingSubject.id

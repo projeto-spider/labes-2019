@@ -1,7 +1,7 @@
 <template>
   <EmailComponent
     :mailing-list="'freshman'"
-    :title="'Lista de Email - Calouros'"
+    title="Lista de Email - Calouros"
   ></EmailComponent>
 </template>
 
@@ -12,6 +12,11 @@ export default {
   middleware: ['auth', 'course'],
   components: {
     EmailComponent
+  },
+  head() {
+    return {
+      title: 'Lista de email calouros'
+    }
   }
 }
 </script>
