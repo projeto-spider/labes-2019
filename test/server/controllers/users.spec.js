@@ -364,4 +364,50 @@ describe('/api/users', () => {
     }
     done()
   })
+
+  test('PUT /users/:id invalid query/body', async done => {
+    const { token } = await testUtils.user('admin')
+    const payload = {
+      username: 'person',
+      password: 'person',
+      email: 'person@example.com',
+      role: 'admin'
+    }
+    const user = await User.forge().save(payload)
+    {
+      const update = {
+        password: 'newpassword'
+      }
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/users/${user.get('id')}`)
+        .query({ invalid: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_QUERY)
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    {
+      const update = {
+        password: 'newpassword',
+        invalid2: 2
+      }
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/users/${user.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_BODY)
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid2')
+    }
+    done()
+  })
 })
