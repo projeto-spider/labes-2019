@@ -11,34 +11,70 @@
             ref="emailIpt"
             :input-label="'Email'"
             :valid-message="'Ok'"
-            :invalid-message="'email é obrigatório'"
-            :default-message="'campo obrigatório'"
+            :invalid-message="'Email é obrigatório'"
+            :default-message="'Campo obrigatório'"
             :valid="validEmail()"
           >
-            <b-input v-model="email" type="text" @blur="onEmailBlur"></b-input>
+            <b-input
+              v-model="email"
+              type="text"
+              @blur="onBlur('emailIpt')"
+            ></b-input>
           </input-validation>
 
-          <b-field label="Nome de usuário">
-            <b-input v-model="username" maxlength="30"></b-input>
-          </b-field>
+          <input-validation
+            ref="usernameIpt"
+            :input-label="'Nome de usuário'"
+            :valid-message="'Ok'"
+            :invalid-message="usernameError"
+            :default-message="'Campo obrigatório'"
+            :valid="validUserName()"
+          >
+            <b-input
+              v-model="username"
+              type="text"
+              maxlength="30"
+              @blur="onBlur('usernameIpt')"
+            ></b-input>
+          </input-validation>
 
-          <b-field label="Senha">
-            <b-input v-model="password" type="password" password-reveal>
+          <input-validation
+            ref="passwdIpt"
+            :input-label="'Senha'"
+            :valid-message="'Ok'"
+            :invalid-message="passwdError"
+            :default-message="'Campo obrigatório'"
+            :valid="validPassword()"
+          >
+            <b-input
+              v-model="password"
+              type="password"
+              minlength="6"
+              password-reveal
+              @blur="onBlur('passwdIpt')"
+            >
             </b-input>
-          </b-field>
+          </input-validation>
+
           <b-field label="Tipo usuário">
-            <b-select placeholder="Selecione um tipo usuário" required expaned>
+            <b-select
+              v-model="role"
+              placeholder="Selecione um tipo de usuário"
+              required
+              expaned
+            >
               <option value="admin">Administrador</option>
               <option value="teacher">Professor</option>
             </b-select>
           </b-field>
-          <button
+          <b-button
             class="button is-block is-info is-large is-fullwidth"
+            :disabled="disabled"
             @click="signUp"
             @click.prevent
           >
             Cadastrar
-          </button>
+          </b-button>
         </form>
       </div>
     </div>
@@ -59,7 +95,11 @@ export default {
       username: '',
       password: '',
       email: '',
-      role: ''
+      role: '',
+      usernameError: `Nome de usuário obrigatório e tamanho mínimo de 3 caracteres.
+      Não pode conter espaços em branco`,
+      passwdError: `Senha obrigatória e tamanho mínimo de 6 caracteres.
+      Não pode conter espaços em branco`
     }
   },
   head() {
@@ -67,14 +107,38 @@ export default {
       title: 'Cadastro de usuário'
     }
   },
+
+  computed: {
+    disabled() {
+      return !(
+        this.validUserName() &&
+        this.validEmail() &&
+        this.validPassword() &&
+        this.role
+      )
+    }
+  },
+
   methods: {
-    onEmailBlur() {
-      this.$refs.emailIpt.dirty = true
+    onBlur(refName) {
+      this.$refs[refName].dirty = true
     },
 
     validEmail() {
       const re = /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       return re.test(this.email)
+    },
+
+    validUserName() {
+      return (
+        this.username.length <= 30 &&
+        !this.username.includes(' ') &&
+        this.username.length > 3
+      )
+    },
+
+    validPassword() {
+      return !this.password.includes(' ') && this.password.length > 5
     },
 
     async signUp() {
