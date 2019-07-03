@@ -22,7 +22,8 @@ module.exports = [
     recordSigned: false,
     termPaper: false,
     cd: false,
-    isUndergraduate: false
+    isUndergraduate: false,
+    period: null
   },
   {
     name: 'LAURA CARDOSO CASTRO',
@@ -47,7 +48,8 @@ module.exports = [
     recordSigned: false,
     termPaper: false,
     cd: false,
-    isUndergraduate: false
+    isUndergraduate: false,
+    period: '2018.3'
   },
   {
     name: 'JOSE FERREIRA SILVA',
@@ -72,7 +74,8 @@ module.exports = [
     recordSigned: false,
     termPaper: false,
     cd: false,
-    isUndergraduate: false
+    isUndergraduate: false,
+    period: null
   },
   {
     name: 'ENZO FERREIRA ALVES',
@@ -97,7 +100,8 @@ module.exports = [
     recordSigned: false,
     termPaper: false,
     cd: false,
-    isUndergraduate: false
+    isUndergraduate: false,
+    period: '2018.4'
   },
   {
     name: 'KAUAN CARVALHO SANTOS',
@@ -122,7 +126,8 @@ module.exports = [
     recordSigned: false,
     termPaper: false,
     cd: false,
-    isUndergraduate: false
+    isUndergraduate: false,
+    period: null
   },
   {
     name: 'EDUARDO ALVES LIMA',
@@ -147,7 +152,8 @@ module.exports = [
     recordSigned: false,
     termPaper: false,
     cd: false,
-    isUndergraduate: false
+    isUndergraduate: false,
+    period: null
   },
   {
     name: 'JULIAN BARBOSA SANTOS',
@@ -172,6 +178,7 @@ module.exports = [
     recordSigned: false,
     termPaper: false,
     cd: false,
-    isUndergraduate: false
+    isUndergraduate: false,
+    period: null
   }
 ]

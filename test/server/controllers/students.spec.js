@@ -838,6 +838,24 @@ describe('/api/students', () => {
     expect(resStudent5.body[4].name).toEqual('JULIAN BARBOSA SANTOS')
     expect(resStudent5.body[5].name).toEqual('KAUAN CARVALHO SANTOS')
     expect(resStudent5.body[6].name).toEqual('LAURA CARDOSO CASTRO')
+    {
+      const res = await chai
+        .request(server.listen())
+        .get(encodeURI('/api/students/?sort=period'))
+        .set('Authorization', `Bearer ${token}`)
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+
+      expect(
+        res.body
+          .map(student => Number(student.period))
+          .every((period, i, others) =>
+            others.slice(i + 1).every(other => period <= other)
+          )
+      )
+    }
+
     done()
   })
 
@@ -1389,6 +1407,20 @@ describe('/api/students', () => {
 
     expect(await Solicitation.where({ type: 'freshman' }).count()).toEqual(0)
 
+    done()
+  })
+
+  test('GET /?period', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/')
+      .query({ period: '2018.3' })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.length).toEqual(1)
     done()
   })
 })

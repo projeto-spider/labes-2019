@@ -62,6 +62,10 @@ exports.up = function(knex, Promise) {
       .boolean('isUndergraduate')
       .notNullable()
       .defaultTo(false)
+    table
+      .string('period')
+      .nullable()
+      .defaultTo(null)
   })
 }
 
