@@ -10,7 +10,7 @@
           <input-validation
             ref="emailIpt"
             valid-message="Ok"
-            invalid-message="Email é obrigatório"
+            :invalid-message="['Email é obrigatório']"
             default-message="Campo obrigatório"
             :valid="validEmail"
           >
@@ -144,6 +144,16 @@ export default {
       this.$refs[refName].dirty = true
     },
 
+    clearInputs() {
+      this.username = ''
+      this.password = ''
+      this.email = ''
+      this.role = null
+      this.$refs.emailIpt.dirty = false
+      this.$refs.usernameIpt.dirty = false
+      this.$refs.passwdIpt.dirty = false
+    },
+
     async signUp() {
       try {
         await this.$store.dispatch('auth/register', {
@@ -152,6 +162,7 @@ export default {
           password: this.password,
           role: this.role
         })
+        this.clearInputs()
         this.$toast.open({
           message: 'Usuario cadastrado com sucesso',
           type: 'is-success'

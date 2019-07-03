@@ -56,9 +56,7 @@ export default {
       if (this.dirty) {
         if (this.updateValid) {
           obj[this.validMessage] = this.dirty
-        } else if (typeof this.invalidMessage === 'string') {
-          obj[this.invalidMessage] = this.dirty
-        } else if (Array.isArray(this.invalidMessage)) {
+        } else {
           for (const msg of this.invalidMessage) {
             obj[msg] = this.dirty
           }
