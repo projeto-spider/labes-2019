@@ -191,7 +191,7 @@ exports.batchUpdateStudents = function batchUpdateStudents(data) {
   })
 }
 /**
- * Injects the pagination headers from Bookshelft to a Koa context
+ * Injects the pagination headers from Bookshelf to a Koa context
  *
  * @param   {Context} ctx - Koa context
  * @param   {CollectionBase} collectionBase - Result from Bookshelf query
