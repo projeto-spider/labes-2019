@@ -313,8 +313,8 @@ exports.validatePayload = function validatePayload(payload, knownProperties) {
 }
 
 exports.validateQuery = function validateQuery(payload, knownProperties) {
-  const newknownProperties = ['token', ...knownProperties]
-  return this.validatePayload(payload, newknownProperties)
+  const newKnownProperties = ['token', ...knownProperties]
+  return this.validatePayload(payload, newKnownProperties)
 }
 
 /**
