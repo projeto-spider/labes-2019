@@ -5,7 +5,7 @@ module.exports = async function updateUser(ctx) {
   const { id } = ctx.params
   {
     const { user } = ctx.state.user
-    if (user === null || (user.role !== 'admin' && id !== user.id.toString())) {
+    if (user === null || (user.role !== 'admin' && Number(id) !== user.id)) {
       ctx.status = 403
       ctx.body = { code: errors.FORBIDDEN }
       return
