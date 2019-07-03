@@ -1,6 +1,9 @@
 const fs = require('fs')
+const { promisify } = require('util')
 const utils = require('../../utils')
 const errors = require('../../../shared/errors')
+
+const readFile = promisify(fs.readFile)
 
 module.exports = async function studentsFromCsv(ctx) {
   const filePath =
@@ -12,7 +15,7 @@ module.exports = async function studentsFromCsv(ctx) {
     return
   }
 
-  const csv = fs.readFileSync(filePath, 'utf8')
+  const csv = await readFile(filePath, 'utf8')
 
   if (!csv) {
     ctx.status = 400
