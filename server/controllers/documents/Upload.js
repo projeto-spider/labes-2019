@@ -1,10 +1,15 @@
 const fs = require('fs')
 const path = require('path')
+const { promisify } = require('util')
 const errors = require('../../../shared/errors')
 const utils = require('../../utils')
 
 const Students = require('../../models/Student')
 const Documents = require('../../models/Document')
+
+const readFile = promisify(fs.readFile)
+const access = promisify(fs.access)
+const mk = promisify(fs.mkdir)
 
 module.exports = async function uploadDocument(ctx) {
   {
@@ -42,8 +47,7 @@ module.exports = async function uploadDocument(ctx) {
     ctx.body = { code: errors.UPLOAD_FILE_FIELD_MISSING }
     return
   }
-
-  const pdf = fs.readFileSync(filePath)
+  const pdf = await readFile(filePath)
   if (!pdf) {
     ctx.status = 400
     ctx.body = { code: errors.IMPORT_FILE_FAILED_TO_UPLOAD }
@@ -87,8 +91,10 @@ module.exports = async function uploadDocument(ctx) {
 
   const dirUploads = path.join(__dirname, '../../../storage/')
 
-  if (!fs.existsSync(dirUploads)) {
-    fs.mkdirSync(dirUploads)
+  try {
+    await access(dirUploads)
+  } catch (e) {
+    await mk(dirUploads)
   }
 
   const dirStudents = path.join(
@@ -96,8 +102,10 @@ module.exports = async function uploadDocument(ctx) {
     studentFind.get('registrationNumber')
   )
 
-  if (!fs.existsSync(dirStudents)) {
-    fs.mkdirSync(dirStudents)
+  try {
+    await access(dirUploads)
+  } catch (e) {
+    await mk(dirUploads)
   }
 
   const file = ctx.request.files.file
