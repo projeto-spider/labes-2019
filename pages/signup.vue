@@ -7,9 +7,16 @@
       <h3 class="title has-text-white">Cadastro de Usuário</h3>
       <div class="box">
         <form>
-          <b-field label="Email">
-            <b-input v-model="email" type="email"> </b-input>
-          </b-field>
+          <input-validation
+            ref="emailIpt"
+            :input-label="'Email'"
+            :valid-message="'Ok'"
+            :invalid-message="'email é obrigatório'"
+            :default-message="'campo obrigatório'"
+            :valid="validEmail()"
+          >
+            <b-input v-model="email" type="text" @blur="onEmailBlur"></b-input>
+          </input-validation>
 
           <b-field label="Nome de usuário">
             <b-input v-model="username" maxlength="30"></b-input>
@@ -39,9 +46,14 @@
 </template>
 
 <script>
+import InputValidation from '@/components/InputValidation'
+
 export default {
   name: 'Signup',
   layout: 'empty',
+  components: {
+    InputValidation
+  },
   data() {
     return {
       username: '',
@@ -56,6 +68,15 @@ export default {
     }
   },
   methods: {
+    onEmailBlur() {
+      this.$refs.emailIpt.dirty = true
+    },
+
+    validEmail() {
+      const re = /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return re.test(this.email)
+    },
+
     async signUp() {
       try {
         await this.$store.dispatch('auth/register', {
