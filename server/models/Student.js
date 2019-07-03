@@ -9,7 +9,8 @@ const booleanFields = [
   'academicHighlight',
   'cancelled',
   'recordSigned',
-  'termPaper'
+  'termPaper',
+  'cd'
 ]
 
 const Student = bookshelf.model('Student', {
