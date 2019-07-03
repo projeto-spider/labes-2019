@@ -18,11 +18,17 @@ module.exports = function model(
     tituloAvaliador3,
     avaliador3,
     curso,
-    discente,
-    trechoCoorientador,
-    trechoAv3
+    discente
   }
 ) {
+  let trechoAv3 = ''
+  let trechoCoorientador = ''
+  if (avaliador3) {
+    trechoAv3 = `, ${tituloAvaliador3}${avaliador3} (AVALIADOR(A))`
+  }
+  if (coOrientador) {
+    trechoCoorientador = `, ${tituloCoOrientador}${coOrientador} (COORIENTADOR(A))`
+  }
   doc.image('./server/models/tccdocs/img/logoFacomp.png', 50, 35, {
     width: 76,
     height: 80,
