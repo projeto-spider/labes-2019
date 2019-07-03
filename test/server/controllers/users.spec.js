@@ -254,7 +254,7 @@ describe('/api/users', () => {
     }
     const user = await User.forge().save(payload)
     {
-      const update = { username: 'person' }
+      const update = {}
       const res = await chai
         .request(server.listen())
         .put(`/api/users/${user.get('id')}`)
