@@ -301,7 +301,7 @@ exports.fileName = function filename(dirStudents, studentFind, documentType) {
 /**
  * @param {Object} payload - Target object
  * @param {Array} knownProperties - Known keys list
- * @returns {valid:Boolean,invalidParams:Array,payload:Object}
+ * @returns {valid:Boolean,invalidParams:Array}
  */
 exports.validatePayload = function validatePayload(payload, knownProperties) {
   const keysObject = Object.keys(payload)
@@ -315,4 +315,17 @@ exports.validatePayload = function validatePayload(payload, knownProperties) {
 exports.validateQuery = function validateQuery(payload, knownProperties) {
   const newknownProperties = ['token', ...knownProperties]
   return this.validatePayload(payload, newknownProperties)
+}
+
+/**
+ * @param {Array} payload - Target list
+ * @param {Array} knownTypes - Known types list
+ * @returns { valid:Boolean, invalidParams:Array }
+ */
+exports.validateType = function validateType(payload, knownTypes) {
+  const invalidParams = payload.filter(
+    value => !knownTypes.includes(typeof value)
+  )
+  const valid = invalidParams.length === 0
+  return { valid, invalidParams }
 }

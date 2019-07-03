@@ -45,15 +45,15 @@ api.put(
   students.UpdateAcademicHighlight
 )
 api.put('/students/:id', bodyJson, students.Update)
+api.post('/students/update-mailing-list', bodyJson, students.UpdateMailingList)
+api.post('/students/from-csv', bodyMultipart, students.FromCsv)
 
 // Documents Routes
 api.get('/students/:studentId/documents', documents.List)
 api.get('/students/:studentId/documents/:id', documents.Show)
 api.del('/students/:studentId/documents/:id', documents.Delete)
 api.get('/students/:studentId/documents/:id/view', documents.View)
-api.post('/students/update-mailing-list', bodyJson, students.UpdateMailingList)
 api.post('/students/:studentId/documents', bodyMultipart, documents.Upload)
-api.post('/students/from-csv', bodyMultipart, students.FromCsv)
 
 // Pendencies Routes
 api.get('/students/:studentId/pendencies/:id', pendencies.Show)
@@ -70,6 +70,7 @@ api.get('/subjects/:id', subjects.Show)
 api.post('/subjects/', bodyJson, subjects.Create)
 api.put('/subjects/:id', bodyJson, subjects.Update)
 api.del('/subjects/:id', subjects.Destroy)
+
 // Defenses Routes
 api.get('/defenses/', isAdminOrTeacher, defenses.List)
 api.post('/defenses/', isTeacher, bodyJson, defenses.Create)
