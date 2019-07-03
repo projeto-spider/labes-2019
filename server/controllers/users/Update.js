@@ -1,7 +1,7 @@
 const User = require('../../models/User')
 const errors = require('../../../shared/errors')
 
-module.exports = async function createUser(ctx) {
+module.exports = async function updateUser(ctx) {
   const { id } = ctx.params
   {
     const { user } = ctx.state.user
