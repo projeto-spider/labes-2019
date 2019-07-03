@@ -234,7 +234,6 @@ describe('/api/documents', () => {
       .put('/api/students/2')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        id: 2,
         name: 'ATUALIZA NOME DO ESTUDANTE',
         crg: 5
       })
@@ -251,6 +250,127 @@ describe('/api/documents', () => {
     expect(resView2.status).toEqual(200)
     expect(resView2.type).toEqual('application/pdf')
     expect(resView2.body).toBeDefined()
+    done()
+  })
+
+  test('GET /students/:studentId/documents/:documentId?invalid=1 invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/1/documents/2')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toBe(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('GET /students/:studentId/documents?invalid=1 invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/1/documents')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toBe(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('POST /:studentId/documents?invalid=1 invalid query/body', async done => {
+    const { token } = await testUtils.user('admin')
+    const dirUploads = path.join(__dirname, '../../../storage/')
+    if (fs.existsSync(dirUploads)) {
+      rimraf.sync(dirUploads)
+    }
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/1/documents')
+        .query({ invalidQuery: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .field('documentType', enums.documents.ATA)
+        .attach('file', pdfFixture('test.pdf'), 'test.pdf')
+        .type('form')
+      expect(res.status).toEqual(400)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_QUERY)
+      expect(res.body.invalidParams.length).toBe(1)
+      expect(res.body.invalidParams).toContainEqual('invalidQuery')
+    }
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/1/documents')
+        .set('Authorization', `Bearer ${token}`)
+        .field('invalidBody', enums.documents.ATA)
+        .attach('file', pdfFixture('test.pdf'), 'test.pdf')
+        .type('form')
+      expect(res.status).toEqual(400)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_BODY)
+      expect(res.body.invalidParams.length).toBe(1)
+      expect(res.body.invalidParams).toContainEqual('invalidBody')
+    }
+    done()
+  })
+
+  test('POST /:studentId/documents invalid query on view', async done => {
+    const { token } = await testUtils.user('admin')
+    const dirUploads = path.join(__dirname, '../../../storage/')
+    if (fs.existsSync(dirUploads)) {
+      rimraf.sync(dirUploads)
+    }
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/1/documents')
+      .set('Authorization', `Bearer ${token}`)
+      .field('documentType', enums.documents.ATA)
+      .attach('file', pdfFixture('test.pdf'), 'test.pdf')
+      .type('form')
+    expect(res.status).toEqual(201)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    const resView = await chai
+      .request(server.listen())
+      .get('/api/students/1/documents/1/view')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(resView.status).toEqual(400)
+    expect(resView.type).toEqual('application/json')
+    expect(resView.body).toBeDefined()
+    expect(resView.body.code).toBe(errors.INVALID_QUERY)
+    expect(resView.body.invalidParams.length).toBe(1)
+    expect(resView.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('DELETE /students/:studentId/documents/:documentId?invalid=1 invalid query', async done => {
+    const dir = path.join(__dirname, '../../../storage/201704940001')
+    const file = path.join(dir, '201704940001-ATA.pdf')
+    fs.mkdirSync(dir, { recursive: true })
+    fs.writeFileSync(file)
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .del('/api/students/1/documents/1')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(400)
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toBe(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
     done()
   })
 })

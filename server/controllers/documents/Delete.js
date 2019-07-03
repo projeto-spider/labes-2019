@@ -13,6 +13,12 @@ const del = promisify(fs.unlink)
 const dirUploads = path.join(__dirname, '../../../storage/')
 
 module.exports = async function removeDocument(ctx) {
+  const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
+  if (!valid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+    return
+  }
   const { studentId, id } = ctx.params
 
   const [student, document] = await Promise.all([

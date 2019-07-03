@@ -297,3 +297,35 @@ exports.fileName = function filename(dirStudents, studentFind, documentType) {
     }.pdf`
   )
 }
+
+/**
+ * @param {Object} payload - Target object
+ * @param {Array} knownProperties - Known keys list
+ * @returns {valid:Boolean,invalidParams:Array}
+ */
+exports.validatePayload = function validatePayload(payload, knownProperties) {
+  const keysObject = Object.keys(payload)
+
+  const invalidParams = keysObject.filter(key => !knownProperties.includes(key))
+  const valid = invalidParams.length === 0
+
+  return { valid, invalidParams }
+}
+
+exports.validateQuery = function validateQuery(payload, knownProperties) {
+  const newKnownProperties = ['token', ...knownProperties]
+  return this.validatePayload(payload, newKnownProperties)
+}
+
+/**
+ * @param {Array} payload - Target list
+ * @param {Array} knownTypes - Known types list
+ * @returns { valid:Boolean, invalidParams:Array }
+ */
+exports.validateType = function validateType(payload, knownTypes) {
+  const invalidParams = payload.filter(
+    value => !knownTypes.includes(typeof value)
+  )
+  const valid = invalidParams.length === 0
+  return { valid, invalidParams }
+}

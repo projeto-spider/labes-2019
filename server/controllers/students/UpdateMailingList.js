@@ -2,8 +2,27 @@ const Student = require('../../models/Student')
 const Solicitation = require('../../models/Solicitation')
 const { knex } = require('../../db')
 const errors = require('../../../shared/errors')
+const utils = require('../../utils')
 
 module.exports = async function updateMailingList(ctx) {
+  {
+    const { valid, invalidParams } = utils.validatePayload(ctx.request.body, [
+      'mailingList'
+    ])
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_BODY, invalidParams }
+      return
+    }
+  }
+  {
+    const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+      return
+    }
+  }
   const { mailingList } = ctx.request.body
   if (
     mailingList === undefined ||

@@ -1,7 +1,26 @@
 const Student = require('../../models/Student')
 const errors = require('../../../shared/errors')
+const utils = require('../../utils')
 
 module.exports = async function updateAcademicHighlight(ctx) {
+  {
+    const { valid, invalidParams } = utils.validatePayload(ctx.request.body, [
+      'id'
+    ])
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_BODY, invalidParams }
+      return
+    }
+  }
+  {
+    const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+      return
+    }
+  }
   const { id } = ctx.request.body
 
   if (!id) {

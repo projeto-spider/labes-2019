@@ -377,7 +377,6 @@ describe('/api/students', () => {
       .put('/api/students/1')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        id: 1,
         name: 'ATUALIZA NOME',
         registrationNumber: '201704940001',
         crg: 9,
@@ -415,7 +414,6 @@ describe('/api/students', () => {
       .put('/api/students/1')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        id: 1,
         name: 'ATUALIZA SOMENTE O NOME'
       })
     expect(resNome.status).toEqual(200)
@@ -445,7 +443,6 @@ describe('/api/students', () => {
       .put('/api/students/1000')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        id: 1000,
         name: 'FELIPE SOUZA FERREIRA',
         registrationNumber: '201704940001',
         crg: 'null',
@@ -1198,6 +1195,7 @@ describe('/api/students', () => {
     expect(res1.body[1].academicHighlight).toEqual(true)
     done()
   })
+
   test('GET /email-changes?mailingList=active', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai
@@ -1421,6 +1419,241 @@ describe('/api/students', () => {
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.length).toEqual(1)
+    done()
+  })
+
+  test('GET /:id invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/1')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toBe(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('GET / invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toBe(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('PUT /[studentId]?invalid?1 invalid query/body', async done => {
+    const { token } = await testUtils.user('admin')
+    const resComplete = await chai
+      .request(server.listen())
+      .put('/api/students/1')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        invalid: 1,
+        name: 'ATUALIZA NOME',
+        registrationNumber: '201704940001',
+        crg: 9,
+        course: 'cbcc',
+        email: 'null',
+        isFit: false,
+        isConcluding: false,
+        isActive: true,
+        isForming: true,
+        isGraduating: false,
+        academicHighlight: false,
+        cancelled: false,
+        mailingList: 'none',
+        entryDate: '05-28-2019',
+        advisor: 'Novo Orientador',
+        defenseDate: '06-30-2019',
+        term: null,
+        recordSigned: false,
+        termPaper: false,
+        cd: true,
+        isUndergraduate: false
+      })
+    expect(resComplete.status).toEqual(400)
+    expect(resComplete.type).toEqual('application/json')
+    expect(resComplete.body).toBeDefined()
+    expect(resComplete.body.code).toBe(errors.INVALID_BODY)
+    expect(resComplete.body.invalidParams.length).toBe(1)
+    expect(resComplete.body.invalidParams).toContainEqual('invalid')
+
+    const resNome = await chai
+      .request(server.listen())
+      .put('/api/students/1')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: 'ATUALIZA SOMENTE O NOME'
+      })
+    expect(resNome.status).toEqual(400)
+    expect(resNome.type).toEqual('application/json')
+    expect(resNome.body).toBeDefined()
+    expect(resNome.body.code).toEqual(errors.INVALID_QUERY)
+    expect(resNome.body.invalidParams.length).toBe(1)
+    expect(resNome.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('POST /from-csv?invalid=2 invalid query/body', async done => {
+    const { token } = await testUtils.user('admin')
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/from-csv')
+        .set('Authorization', `Bearer ${token}`)
+        .query({ invalid: 1 })
+        .type('form')
+      expect(res.status).toEqual(400)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    }
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/from-csv')
+        .send({ invalid: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .type('form')
+
+      expect(res.status).toEqual(400)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_BODY)
+      expect(res.body.invalidParams.length).toBe(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    done()
+  })
+
+  test('GET /actives-mailing-list?invalid=1 invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/actives-mailing-list')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toBe(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('PUT /update-academic-highlight', async done => {
+    const { token } = await testUtils.user('admin')
+    const [a] = await Promise.all(
+      [
+        {
+          name: 'AAAAA',
+          registrationNumber: '222004940001',
+          crg: 5,
+          course: 'cbcc', // important
+          email: null,
+          isFit: true, // important
+          isActive: true, // important
+          isForming: true, // important
+          isConcluding: false,
+          isGraduating: true,
+          academicHighlight: false,
+          cancelled: false
+        }
+      ].map(props => Student.forge(props).save())
+    )
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .put('/api/students/update-academic-highlight')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ id: a.id, invalid: 1 })
+      expect(res.status).toEqual(400)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_BODY)
+      expect(res.body.invalidParams.length).toBe(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    {
+      const res = await chai
+        .request(server.listen())
+        .put('/api/students/update-academic-highlight')
+        .query({ invalid: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .send({ id: a.id })
+      expect(res.status).toEqual(400)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_QUERY)
+      expect(res.body.invalidParams.length).toBe(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    done()
+  })
+
+  test('GET /email-changes?mailingList=active&invalid=1 invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/email-changes')
+      .query({ mailingList: 'active', invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    expect(res.body.invalidParams.length).toBe(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+
+    done()
+  })
+
+  test('POST /update-mailing-list for actives then concluding', async done => {
+    const { token } = await testUtils.user('admin')
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/update-mailing-list')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ mailingList: 'active', invalid: 1 })
+      expect(res.status).toEqual(400)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_BODY)
+      expect(res.body.invalidParams.length).toBe(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/update-mailing-list')
+        .query({ invalid: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .send({ mailingList: 'active' })
+      expect(res.status).toEqual(400)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_QUERY)
+      expect(res.body.invalidParams.length).toBe(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
     done()
   })
 })

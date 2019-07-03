@@ -134,4 +134,42 @@ describe('/api/auth', () => {
     expect(res.body.code).toEqual(errors.INVALID_CREDENTIALS)
     done()
   })
+
+  test('GET /?invalid=1 invalid param', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/auth')
+      .query({ invalid: 1, token })
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    expect(res.body.invalidParams).toBeDefined()
+    expect(res.body.invalidParams.length).toEqual(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('POST / invalid body', async done => {
+    const payload = {
+      username: 'admin',
+      password: 'admin',
+      invalid1: '1',
+      invalid2: '2'
+    }
+    const res = await chai
+      .request(server.listen())
+      .post('/api/auth')
+      .send(payload)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_BODY)
+    expect(res.body.invalidParams).toBeDefined()
+    expect(res.body.invalidParams.length).toEqual(2)
+    expect(res.body.invalidParams).toContainEqual('invalid1')
+    expect(res.body.invalidParams).toContainEqual('invalid2')
+    done()
+  })
 })

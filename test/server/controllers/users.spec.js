@@ -254,7 +254,7 @@ describe('/api/users', () => {
     }
     const user = await User.forge().save(payload)
     {
-      const update = { username: 'person' }
+      const update = {}
       const res = await chai
         .request(server.listen())
         .put(`/api/users/${user.get('id')}`)
@@ -298,6 +298,116 @@ describe('/api/users', () => {
     expect(res.type).toBe('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.code).toBe(errors.FORBIDDEN)
+    done()
+  })
+
+  test('GET /?invalid=1 invalid param', async done => {
+    const { token } = await testUtils.user('admin')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/users')
+      .query({ page: 1, invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    expect(res.body.invalidParams).toBeDefined()
+    expect(res.body.invalidParams.length).toEqual(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
+  })
+
+  test('POST /?invalid=1 invalid param/body ', async done => {
+    const { token } = await testUtils.user('admin')
+    {
+      const payload = {
+        username: 'person',
+        password: 'person',
+        email: 'person@example.com',
+        role: 'admin'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/users')
+        .query({ invalid: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .send(payload)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_QUERY)
+      expect(res.body.invalidParams).toBeDefined()
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    {
+      const payload = {
+        username: 'person',
+        password: 'person',
+        email: 'person@example.com',
+        role: 'admin',
+        invalid: 'invalid'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/users')
+        .set('Authorization', `Bearer ${token}`)
+        .send(payload)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_BODY)
+      expect(res.body.invalidParams).toBeDefined()
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    done()
+  })
+
+  test('PUT /users/:id invalid query/body', async done => {
+    const { token } = await testUtils.user('admin')
+    const payload = {
+      username: 'person',
+      password: 'person',
+      email: 'person@example.com',
+      role: 'admin'
+    }
+    const user = await User.forge().save(payload)
+    {
+      const update = {
+        password: 'newpassword'
+      }
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/users/${user.get('id')}`)
+        .query({ invalid: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_QUERY)
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    {
+      const update = {
+        password: 'newpassword',
+        invalid2: 2
+      }
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/users/${user.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_BODY)
+      expect(res.body.invalidParams.length).toEqual(1)
+      expect(res.body.invalidParams).toContainEqual('invalid2')
+    }
     done()
   })
 })
