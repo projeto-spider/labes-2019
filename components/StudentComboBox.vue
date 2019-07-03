@@ -41,7 +41,11 @@
               @blur="onCrgBlur"
             ></b-input>
             <br />
-            <b-button class="is-primary" @click="getPendencies">
+            <b-button
+              v-if="student.isForming"
+              class="is-primary"
+              @click="getPendencies"
+            >
               {{ !canEdit ? 'Verificar Pendências' : 'Editar Pendências' }}
             </b-button>
             <b-modal :active.sync="showPendencies">

@@ -5,6 +5,7 @@ const config = require('./config')
 const { knex } = require('./db')
 const Student = require('./models/Student')
 const Documents = require('./models/Document')
+const Pendency = require('./models/Pendency')
 
 /**
  * Given a CSV file with header make an Array of objects
@@ -159,7 +160,7 @@ exports.batchUpdateStudents = function batchUpdateStudents(data) {
       existingStudents.map(({ registrationNumber }) => registrationNumber)
     )
 
-    return Promise.all(
+    const result = await Promise.all(
       data.map(student => {
         // New student
         if (!existingRegistrationNumbers.has(student.registrationNumber)) {
@@ -187,10 +188,28 @@ exports.batchUpdateStudents = function batchUpdateStudents(data) {
         })
       })
     )
+
+    await Promise.all(
+      result
+        .filter(student => student.get('isGraduating'))
+        .map(student =>
+          Pendency.where('studentId', student.get('id'))
+            .destroy({
+              transacting: trx
+            })
+            .catch(err => {
+              if (err.message !== 'No Rows Deleted') {
+                throw err
+              }
+            })
+        )
+    )
+
+    return result
   })
 }
 /**
- * Injects the pagination headers from Bookshelft to a Koa context
+ * Injects the pagination headers from Bookshelf to a Koa context
  *
  * @param   {Context} ctx - Koa context
  * @param   {CollectionBase} collectionBase - Result from Bookshelf query
