@@ -8,6 +8,9 @@ const utils = require('../../server/utils')
 const db = require('../../server/db')
 const Student = require('../../server/models/Student')
 const Document = require('../../server/models/Document')
+const Pendency = require('../../server/models/Pendency')
+const useSeeds = require('../use-seeds')
+const testUtils = require('./test-utils')
 
 const exampleSigaaCsv = `Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status
 201704940001,2017,FELIPE SOUZA FERREIRA,111.111.111-11,1/29/1995,VITORIA DIAS ROCHA,Belém,CIENCIA DA COMPUTACAO,ATIVO
@@ -26,15 +29,12 @@ const exampleSigaaCsvNext = `Matrícula,AnoIngresso,Nome,CPF,DataNascimento,Nome
 199604940007,1996,JULIAN BARBOSA SANTOS,777-777-777-77,11/9/1977,GABRIELA CARVALHO CARSOSO,Belém,CIENCIA DA COMPUTACAO,CONCLUÍDO`
 
 describe('utils', () => {
-  beforeEach(async done => {
-    await db.knex.migrate.rollback()
+  beforeAll(async () => {
     await db.knex.migrate.latest()
-    done()
   }, 100000)
-
-  afterEach(() => {
-    return db.knex.migrate.rollback()
-  })
+  afterEach(async () => {
+    await testUtils.wipe(db.knex)
+  }, 100000)
 
   test('parseCsv', () => {
     const example = `a,b,c
@@ -531,5 +531,66 @@ describe('utils', () => {
     }
 
     done()
+  })
+
+  test('Remove pendencies when reaching isGraduating', async () => {
+    await useSeeds(['subjects'])
+
+    const beforeCsv = `Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status
+201304940001,2013,FIRST,222.222.222-22,4/14/1992,BIANCA RIBEIRO ROCHA,Belém,SISTEMAS DE INFORMAÇÃO,FORMANDO
+201304940002,2013,SECOND,222.222.222-22,4/14/1992,BIANCA RIBEIRO ROCHA,Belém,SISTEMAS DE INFORMAÇÃO,FORMANDO`
+
+    const afterCsv = `Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status
+201304940001,2013,FIRST,222.222.222-22,4/14/1992,BIANCA RIBEIRO ROCHA,Belém,SISTEMAS DE INFORMAÇÃO,GRADUANDO
+201304940002,2013,SECOND,222.222.222-22,4/14/1992,BIANCA RIBEIRO ROCHA,Belém,SISTEMAS DE INFORMAÇÃO,FORMANDO`
+
+    {
+      const data = utils.parseCsv(beforeCsv)
+      const digested = utils.digestSigaaData(data)
+      await utils.batchUpdateStudents(digested)
+    }
+
+    const [first, second] = await Promise.all([
+      Student.forge({ name: 'FIRST' }).fetch(),
+      Student.forge({ name: 'SECOND' }).fetch()
+    ])
+
+    expect(first).toBeDefined()
+    expect(second).toBeDefined()
+
+    await Promise.all([
+      Pendency.forge({
+        studentId: first.get('id'),
+        subjectId: 1
+      }).save(),
+      Pendency.forge({
+        studentId: first.get('id'),
+        subjectId: 2
+      }).save(),
+      Pendency.forge({
+        studentId: second.get('id'),
+        subjectId: 1
+      }).save(),
+      Pendency.forge({
+        studentId: second.get('id'),
+        subjectId: 2
+      }).save()
+    ])
+
+    expect(await Pendency.where({ studentId: first.get('id') }).count()).toBe(2)
+    expect(await Pendency.where({ studentId: second.get('id') }).count()).toBe(
+      2
+    )
+
+    {
+      const data = utils.parseCsv(afterCsv)
+      const digested = utils.digestSigaaData(data)
+      await utils.batchUpdateStudents(digested)
+    }
+
+    expect(await Pendency.where({ studentId: first.get('id') }).count()).toBe(0)
+    expect(await Pendency.where({ studentId: second.get('id') }).count()).toBe(
+      2
+    )
   })
 })
