@@ -1506,4 +1506,36 @@ describe('/api/students', () => {
     expect(resNome.body.invalidParams).toContainEqual('invalid')
     done()
   })
+
+  test('POST /from-csv?invalid=2 invalid query/body', async done => {
+    const { token } = await testUtils.user('admin')
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/from-csv')
+        .set('Authorization', `Bearer ${token}`)
+        .query({ invalid: 1 })
+        .type('form')
+      expect(res.status).toEqual(400)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    }
+    {
+      const res = await chai
+        .request(server.listen())
+        .post('/api/students/from-csv')
+        .send({ invalid: 1 })
+        .set('Authorization', `Bearer ${token}`)
+        .type('form')
+
+      expect(res.status).toEqual(400)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.INVALID_BODY)
+      expect(res.body.invalidParams.length).toBe(1)
+      expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    done()
+  })
 })

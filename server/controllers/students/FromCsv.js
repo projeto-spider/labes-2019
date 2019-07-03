@@ -6,6 +6,22 @@ const errors = require('../../../shared/errors')
 const readFile = promisify(fs.readFile)
 
 module.exports = async function studentsFromCsv(ctx) {
+  {
+    const { valid, invalidParams } = utils.validatePayload(ctx.request.body, [])
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_BODY, invalidParams }
+      return
+    }
+  }
+  {
+    const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
+    if (!valid) {
+      ctx.status = 400
+      ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+      return
+    }
+  }
   const filePath =
     ctx.request.files && ctx.request.files.csv && ctx.request.files.csv.path
 
