@@ -216,6 +216,7 @@ export default {
       ataCheck: false,
       laudaCheck: false,
       presCheck: false,
+      cdCheck: this.student.cd,
       showPendencies: false,
       ataDocument: {},
       laudaDocument: {},
@@ -236,15 +237,6 @@ export default {
       const isForming = Boolean(this.studentData.isForming)
 
       return isGraduating || isForming
-    },
-
-    cdCheck: {
-      get() {
-        return Boolean(this.studentData.cd)
-      },
-      set(newValue) {
-        this.studentData.cd = newValue ? '1' : '0'
-      }
     },
 
     canEditCrg() {
@@ -280,7 +272,8 @@ export default {
 
     putStudents() {
       this.isLoading = true
-      const { defenseDate, email, cd } = this.studentData
+      const cd = this.cdCheck
+      const { defenseDate, email } = this.studentData
       const crg = this.canEditCrg ? this.studentData.crg : undefined
       const payload = { defenseDate, email, cd, crg }
       this.$services.students

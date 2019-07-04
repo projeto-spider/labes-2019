@@ -1,34 +1,34 @@
 import selector from '@/front/selector'
 
 export default function makeStudentServices(axios) {
+  const studentParams = [
+    'name',
+    'course',
+    'email',
+    'registrationNumber',
+    'isActive',
+    'isGraduating',
+    'isConcluding',
+    'order',
+    'page',
+    'isForming',
+    'isFit',
+    'isAcademicHighlight',
+    'prescribed',
+    'cancelled',
+    'mailingList',
+    'noCrg',
+    'sort',
+    'cd'
+  ]
   return {
     fetch(id) {
       return axios.get(`/api/students/${id}`)
     },
 
     fetchPage(params) {
-      const paramList = [
-        'name',
-        'course',
-        'email',
-        'registrationNumber',
-        'isActive',
-        'isGraduating',
-        'isConcluding',
-        'order',
-        'page',
-        'isForming',
-        'isFit',
-        'isAcademicHighlight',
-        'prescribed',
-        'cancelled',
-        'mailingList',
-        'noCrg',
-        'sort'
-      ]
-
       const options = {
-        params: selector(params, paramList, {
+        params: selector(params, studentParams, {
           page: 1,
           order: 'asc'
         })
@@ -45,25 +45,7 @@ export default function makeStudentServices(axios) {
     },
 
     update(studentId, params) {
-      const paramList = [
-        'name',
-        'course',
-        'email',
-        'registrationNumber',
-        'isActive',
-        'isGraduating',
-        'isConcluding',
-        'isForming',
-        'isFit',
-        'isAcademicHighlight',
-        'prescribed',
-        'cancelled',
-        'mailingList',
-        'mailingListToRemove',
-        'mailingListToAdd',
-        'crg'
-      ]
-      const payload = selector(params, paramList)
+      const payload = selector(params, studentParams)
       return axios.put(`/api/students/${studentId}`, payload)
     },
     updateAcademicHighlight(studentId) {
