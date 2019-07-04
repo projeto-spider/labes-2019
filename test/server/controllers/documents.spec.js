@@ -3,6 +3,8 @@
  */
 const path = require('path')
 const fs = require('fs')
+const { promisify } = require('util')
+const fse = require('fs-extra')
 const rimraf = require('rimraf')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
@@ -16,6 +18,11 @@ const db = require('../../../server/db')
 const errors = require('../../../shared/errors')
 const enums = require('../../../shared/enums')
 const Document = require('../../../server/models/Document')
+
+const mk = promisify(fs.mkdir)
+const write = promisify(fs.writeFile)
+const access = promisify(fs.access)
+const rimrafSync = promisify(rimraf)
 
 jest.useFakeTimers()
 
@@ -60,8 +67,8 @@ describe('/api/documents', () => {
   test('DELETE /students/:studentId/documents/:documentId', async done => {
     const dir = path.join(__dirname, '../../../storage/201704940001')
     const file = path.join(dir, '201704940001-ATA.pdf')
-    fs.mkdirSync(dir, { recursive: true })
-    fs.writeFileSync(file)
+    await mk(dir, { recursive: true })
+    await write(file, '')
     const { token } = await testUtils.user('admin')
     const res = await chai
       .request(server.listen())
@@ -69,7 +76,7 @@ describe('/api/documents', () => {
       .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(204)
     expect(res.body).toEqual({})
-    expect(fs.existsSync(file)).toEqual(false)
+    expect(await fse.pathExists(file)).toBe(false)
     done()
   })
 
@@ -117,9 +124,10 @@ describe('/api/documents', () => {
   test('POST /:studentId/documents', async done => {
     const { token } = await testUtils.user('admin')
     const dirUploads = path.join(__dirname, '../../../storage/')
-    if (fs.existsSync(dirUploads)) {
-      rimraf.sync(dirUploads)
-    }
+    try {
+      await access(dirUploads)
+      await rimrafSync(dirUploads)
+    } catch (e) {}
     const res = await chai
       .request(server.listen())
       .post('/api/students/1/documents')
@@ -143,9 +151,10 @@ describe('/api/documents', () => {
   test('POST /:studentId/documents invalid documentType', async done => {
     const { token } = await testUtils.user('admin')
     const dirUploads = path.join(__dirname, '../../../storage/')
-    if (fs.existsSync(dirUploads)) {
-      rimraf.sync(dirUploads)
-    }
+    try {
+      await access(dirUploads)
+      await rimrafSync(dirUploads)
+    } catch (e) {}
     const res = await chai
       .request(server.listen())
       .post('/api/students/1/documents')
@@ -163,9 +172,10 @@ describe('/api/documents', () => {
   test('POST /:studentId/documents studentId invalid', async done => {
     const { token } = await testUtils.user('admin')
     const dirUploads = path.join(__dirname, '../../../storage/')
-    if (fs.existsSync(dirUploads)) {
-      rimraf.sync(dirUploads)
-    }
+    try {
+      await access(dirUploads)
+      await rimrafSync(dirUploads)
+    } catch (e) {}
     const res = await chai
       .request(server.listen())
       .post('/api/students/10000/documents')
@@ -183,9 +193,10 @@ describe('/api/documents', () => {
   test('POST /:studentId/documents file type invalid', async done => {
     const { token } = await testUtils.user('admin')
     const dirUploads = path.join(__dirname, '../../../storage/')
-    if (fs.existsSync(dirUploads)) {
-      rimraf.sync(dirUploads)
-    }
+    try {
+      await access(dirUploads)
+      await rimrafSync(dirUploads)
+    } catch (e) {}
     const res = await chai
       .request(server.listen())
       .post('/api/students/1/documents')
@@ -203,9 +214,10 @@ describe('/api/documents', () => {
   test('POST /:studentId/documents (update student)', async done => {
     const { token } = await testUtils.user('admin')
     const dirUploads = path.join(__dirname, '../../../storage/')
-    if (fs.existsSync(dirUploads)) {
-      rimraf.sync(dirUploads)
-    }
+    try {
+      await access(dirUploads)
+      await rimrafSync(dirUploads)
+    } catch (e) {}
     const resInsertDocument = await chai
       .request(server.listen())
       .post('/api/students/2/documents')

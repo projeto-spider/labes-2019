@@ -1,10 +1,15 @@
 const fs = require('fs')
 const path = require('path')
+const { promisify } = require('util')
 const errors = require('../../../shared/errors')
 const utils = require('../../utils')
 
 const Students = require('../../models/Student')
 const Documents = require('../../models/Document')
+
+const readFile = promisify(fs.readFile)
+const access = promisify(fs.access)
+const mk = promisify(fs.mkdir)
 
 module.exports = async function uploadDocument(ctx) {
   {
@@ -43,7 +48,19 @@ module.exports = async function uploadDocument(ctx) {
     return
   }
 
-  const pdf = fs.readFileSync(filePath)
+  let pdf
+  try {
+    pdf = await readFile(filePath)
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      throw err
+    }
+
+    ctx.status = 404
+    ctx.body = { code: errors.NOT_FOUND }
+    return
+  }
+
   if (!pdf) {
     ctx.status = 400
     ctx.body = { code: errors.IMPORT_FILE_FAILED_TO_UPLOAD }
@@ -87,8 +104,10 @@ module.exports = async function uploadDocument(ctx) {
 
   const dirUploads = path.join(__dirname, '../../../storage/')
 
-  if (!fs.existsSync(dirUploads)) {
-    fs.mkdirSync(dirUploads)
+  try {
+    await access(dirUploads)
+  } catch (e) {
+    await mk(dirUploads)
   }
 
   const dirStudents = path.join(
@@ -96,8 +115,10 @@ module.exports = async function uploadDocument(ctx) {
     studentFind.get('registrationNumber')
   )
 
-  if (!fs.existsSync(dirStudents)) {
-    fs.mkdirSync(dirStudents)
+  try {
+    await access(dirStudents)
+  } catch (e) {
+    await mk(dirStudents)
   }
 
   const file = ctx.request.files.file
