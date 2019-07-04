@@ -573,24 +573,30 @@ function dateInFull(defenseDate) {
     'Novembro',
     'Dezembro'
   ]
-  if (typeof defenseDate === 'string') {
-    const date = defenseDate.split('/')
-    return date.length() === 3
-      ? `${date[0]} de ${month[date[1] - 1]} de ${date[2]}`
-      : ''
+  if (typeof defenseDate !== 'string') {
+    return ''
   }
-  return ''
+
+  const date = defenseDate.split('/')
+  return date.length === 3
+    ? `${date[0]} de ${month[date[1] - 1]} de ${date[2]}`
+    : ''
 }
 
 function hourFormatted(defenseHour) {
-  if (typeof defenseHour === 'string') {
-    const hour = defenseHour
-      .split(':')
-      .join('h')
-      .slice(0, 5)
-    return hour
+  if (typeof defenseHour !== 'string') {
+    return ''
   }
-  return ''
+  // '00:00:00'
+  const hour = defenseHour
+    // ['00', '00', '00']
+    .split(':')
+    // '00h00h00'
+    .join('h')
+    // '00h00'
+    .slice(0, 5)
+
+  return hour
 }
 </script>
 
