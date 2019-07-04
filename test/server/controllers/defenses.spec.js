@@ -584,4 +584,125 @@ describe('/api/defenses', () => {
 
     done()
   })
+
+  test('GET /defenses/:id/pdf/:files', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const payload = {
+      userId: 2,
+      course: 'cbcc',
+      registrationNumbers: '201704940001, 201304940002',
+      students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+      local: 'Auditório do ICEN',
+      date: '05/05/2010',
+      time: '03:40:00',
+      title: 'Fundamentos da Comunicação Analógica',
+      keywords: 'Fundamental, comunicacional, analógico',
+      summary: 'Sumário fundamentacional',
+
+      advisorName: 'Jonathan Joestar',
+      advisorTitle: 'doctor',
+      advisorType: 'internal',
+
+      evaluator1Name: 'Robert E. O. Speedwagon',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+
+      evaluator2Name: 'Narciso Anasui',
+      evaluator2Title: 'master',
+      evaluator2Type: 'external',
+
+      passed: true,
+      grade: 10.0
+    }
+
+    await Defense.forge(payload).save()
+
+    const resAll = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resAll.status).toEqual(200)
+    expect(resAll.type).toEqual('application/pdf')
+    expect(resAll.body).toBeDefined()
+
+    const resAta = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf/ata')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resAta.status).toEqual(200)
+    expect(resAta.type).toEqual('application/pdf')
+    expect(resAta.body).toBeDefined()
+
+    const resCd = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf/cd')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resCd.status).toEqual(200)
+    expect(resCd.type).toEqual('application/pdf')
+    expect(resCd.body).toBeDefined()
+
+    const resCertification = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf/certificado1')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resCertification.status).toEqual(200)
+    expect(resCertification.type).toEqual('application/pdf')
+    expect(resCertification.body).toBeDefined()
+
+    const resCrendentials = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf/credenciamento1')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resCrendentials.status).toEqual(200)
+    expect(resCrendentials.type).toEqual('application/pdf')
+    expect(resCrendentials.body).toBeDefined()
+
+    const resPublishing = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf/divulgacao')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resPublishing.status).toEqual(200)
+    expect(resPublishing.type).toEqual('application/pdf')
+    expect(resPublishing.body).toBeDefined()
+
+    const resInvalid1 = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf/lalilulelo')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resInvalid1.status).toEqual(400)
+    expect(resInvalid1.body).toBeDefined()
+    expect(resInvalid1.body.param).toEqual('lalilulelo')
+    expect(resInvalid1.body.code).toEqual(errors.INVALID_REQUEST)
+
+    const resInvalid2 = await chai
+      .request(server.listen())
+      .get('/api/defenses/lalilulelo')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resInvalid2.status).toEqual(404)
+    expect(resInvalid2.body).toBeDefined()
+    expect(resInvalid2.body.code).toEqual(errors.NOT_FOUND)
+
+    done()
+  })
+
+  test('GET /defenses/:id/pdf invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const res = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(400)
+    expect(res.type).toBe('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    expect(res.body.invalidParams).toBeDefined()
+    expect(res.body.invalidParams.length).toEqual(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+
+    done()
+  })
 })
