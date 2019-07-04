@@ -39,7 +39,7 @@
     <div class="menu-label">Importar</div>
     <ul class="menu-list">
       <li>
-        <a href="#" @click="activateModal = true">Importar Alunos</a>
+        <a href="#" @click.prevent="$emit('activateModal')">Importar Alunos</a>
       </li>
     </ul>
   </aside>

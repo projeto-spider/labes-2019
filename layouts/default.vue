@@ -76,7 +76,7 @@
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
               </a>
-              <AsideBar />
+              <AsideBar @activateModal="activateModal = true" />
             </b-collapse>
           </div>
         </div>
@@ -89,7 +89,7 @@
         class="column is-2"
         :class="{ 'is-hidden-mobile': !isActive }"
       >
-        <AsideBar />
+        <AsideBar @activateModal="activateModal = true" />
       </div>
       <b-modal :active.sync="activateModal" :width="640" scroll="keep">
         <ImportStudents />
