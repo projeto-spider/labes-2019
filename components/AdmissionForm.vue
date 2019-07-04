@@ -55,16 +55,43 @@
           ></b-input>
         </b-field>
 
-        <div class="level-right">
-          <div class="level-item">
-            reCaptcha!
+        <b-field
+          label="Curso"
+          :message="{
+            'Campo Obrigatório': !dirty.registration
+          }"
+        >
+        </b-field>
+        <div v-for="c in $options.courses" :key="c.id">
+          <div class="field">
+            <b-radio v-model="course" :native-value="c.name">
+              {{ c.name }}
+            </b-radio>
           </div>
+        </div>
+        <br />
+        <b-field
+          label="Forma de Ingresso"
+          :message="{
+            'Campo Obrigatório': !dirty.registration
+          }"
+        >
+        </b-field>
+        <div v-for="at in $options.admissionTypes" :key="at.id">
+          <div class="field">
+            <b-radio v-model="admissionType" :native-value="at.name">
+              {{ at.name }}
+            </b-radio>
+          </div>
+        </div>
+        <div class="level-right">
           <b-button
             class="is-primary level-item"
             :disabled="!enabledButton"
             @click="sendSolicitation"
-            >Enviar</b-button
           >
+            Enviar
+          </b-button>
         </div>
       </div>
     </div>
@@ -84,10 +111,21 @@ export default {
     }
   },
 
+  courses: [
+    { id: 1, name: 'Ciência da Computação' },
+    { id: 2, name: 'Sistemas de Informação' }
+  ],
+  admissionTypes: [
+    { id: 1, name: 'Processo Seletivo UFPa' },
+    { id: 2, name: 'SiSU' }
+  ],
+
   data: () => ({
     name: '',
     email: '',
     registration: '',
+    course: 1,
+    admissionType: 1,
     dirty: {
       name: false,
       email: false,
@@ -121,7 +159,9 @@ export default {
           name: this.name,
           email: this.email,
           ...(this.registration && { registrationNumber: this.registration }),
-          type: this.mailingList
+          type: this.mailingList,
+          course: this.course,
+          admissionType: this.admissionType
         })
         .then(response => {
           this.$toast.open({
@@ -131,6 +171,8 @@ export default {
           this.name = ''
           this.email = ''
           this.registration = ''
+          this.course = 1
+          this.admissionType = 1
           this.dirty.name = ''
           this.dirty.email = ''
           this.dirty.registration = ''

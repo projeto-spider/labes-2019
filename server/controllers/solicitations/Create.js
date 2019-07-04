@@ -8,7 +8,9 @@ module.exports = async function createSolicitation(ctx) {
       'name',
       'email',
       'registrationNumber',
-      'type'
+      'type',
+      'course',
+      'admissionType'
     ])
 
     if (!valid) {
@@ -26,7 +28,14 @@ module.exports = async function createSolicitation(ctx) {
     }
   }
 
-  const { name, email, registrationNumber, type } = ctx.request.body
+  const {
+    name,
+    email,
+    registrationNumber,
+    type,
+    course,
+    admissionType
+  } = ctx.request.body
 
   const validRequest = [name, email, type].every(item => item !== undefined)
   if (!validRequest) {
@@ -51,6 +60,8 @@ module.exports = async function createSolicitation(ctx) {
     name,
     email,
     registrationNumber,
-    type
+    type,
+    course,
+    admissionType
   }).save()
 }

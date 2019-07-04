@@ -12,7 +12,6 @@
 <style>
 .main {
   height: 100vh;
-  overflow: hidden;
   width: 100vw;
 }
 
