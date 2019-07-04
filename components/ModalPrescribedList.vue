@@ -26,6 +26,7 @@
             >
               <div class="level">
                 <div class="level-left">{{ student.name }}</div>
+                <div class="level-left">{{ student.registrationNumber }}</div>
                 <div class="level-right">
                   <span class="tag is-white">{{ displayStatus[index] }}</span>
                 </div>
