@@ -19,7 +19,8 @@ export default function makeStudentServices(axios) {
     'mailingList',
     'noCrg',
     'sort',
-    'cd'
+    'cd',
+    'crg'
   ]
   return {
     fetch(id) {

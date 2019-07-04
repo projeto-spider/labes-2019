@@ -35,6 +35,11 @@
           <div v-else>
             <strong> Não há alunos na lista de prescrição </strong>
           </div>
+          <ul>
+            <li v-for="(page, index) in total" :key="index" class="link ">
+              <a class="has-text-primary" @click="nextPage(page)">{{ page }}</a>
+            </li>
+          </ul>
         </section>
         <footer class="modal-card-foot">
           <button class="button" @click.stop.prevent="openModal">
@@ -57,7 +62,10 @@ export default {
   data() {
     return {
       isActive: false,
-      studentsData: []
+      studentsData: [],
+      currentPage: 1,
+      total: 2,
+      perPage: 0
     }
   },
 
@@ -79,6 +87,20 @@ export default {
         .fetchPage({ prescribed: true })
         .then(res => {
           this.studentsData = res.data
+          // this.total = res.headers['pagination-row-count']
+          this.perPage = res.headers['pagination-page-size']
+        })
+        .catch(e => {
+          this.openErrorNotification(e)
+        })
+    },
+    nextPage(page) {
+      this.$services.students
+        .fetchPage({ prescribed: true, page: page })
+        .then(res => {
+          this.studentsData = res.data
+          // this.total = res.headers['pagination-row-count']
+          this.perPage = res.headers['pagination-page-size']
         })
         .catch(e => {
           this.openErrorNotification(e)
@@ -91,5 +113,8 @@ export default {
 <style scoped>
 a {
   color: #363b47;
+}
+.link {
+  display: inline-block;
 }
 </style>

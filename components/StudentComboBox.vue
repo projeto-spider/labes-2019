@@ -34,7 +34,6 @@
             <strong>CRG</strong>:
             <b-input
               v-model="studentData.crg"
-              type="number"
               :min="0"
               :max="10"
               :disabled="!canEdit || !canEditCrg"
@@ -173,7 +172,7 @@
           <div v-show="canEdit" class="level-right">
             <div class="level-item">
               <b-field>
-                <b-button class="is-success" @click="putStudents">
+                <b-button class="is-success" @click="confirmCrg">
                   Atualizar
                 </b-button>
               </b-field>
@@ -269,7 +268,18 @@ export default {
           })
         })
     },
-
+    confirmCrg() {
+      if (this.studentData.crg !== this.student.crg) {
+        this.$dialog.confirm({
+          message: `Você confirma o CRG: ${this.studentData.crg}`,
+          onConfirm: () => {
+            this.putStudents()
+          }
+        })
+      } else {
+        this.putStudents()
+      }
+    },
     putStudents() {
       this.isLoading = true
       const cd = this.cdCheck
