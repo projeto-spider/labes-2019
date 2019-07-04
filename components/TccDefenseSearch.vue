@@ -577,7 +577,7 @@ function dateInFull(defenseDate) {
     const date = defenseDate.split('/')
     return `${date[0]} de ${month[date[1] - 1]} de ${date[2]}`
   }
-  return null
+  return ''
 }
 
 function hourFormatted(defenseHour) {
@@ -588,7 +588,7 @@ function hourFormatted(defenseHour) {
       .slice(0, 5)
     return hour
   }
-  return null
+  return ''
 }
 </script>
 
