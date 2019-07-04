@@ -43,6 +43,9 @@ module.exports = async function generateAllDocs(ctx) {
       'certificado1',
       'certificado2',
       'certificado3',
+      'certificado4',
+      'certificado5',
+      'certificado6',
       'credenciamento1',
       'credenciamento2',
       'credenciamento3',
@@ -206,8 +209,21 @@ module.exports = async function generateAllDocs(ctx) {
     doc.addPage()
     usedPage = false
   }
+  if (files !== undefined && files.startsWith('certificado')) {
+    const index = +files.slice(-1)
+    if (people[index - 1].name === null) {
+      ctx.status = 404
+      ctx.body = { code: errors.NOT_FOUND }
+      return
+    }
+    dados.tituloPessoa = people[index - 1].title
+    dados.pessoa = people[index - 1].name
+    dados.condicao = people[index - 1].condition
+    dados.isDiscente = people[index - 1].isDiscente
+    Certificado(doc, dados)
+  }
   for (let i = 1; i <= validPeople.length; i++) {
-    if (allFiles || files === `certificado${i}`) {
+    if (allFiles) {
       dados.tituloPessoa = validPeople[i - 1].title
       dados.pessoa = validPeople[i - 1].name
       dados.condicao = validPeople[i - 1].condition
@@ -220,8 +236,18 @@ module.exports = async function generateAllDocs(ctx) {
       usedPage = false
     }
   }
+  if (files !== undefined && files.startsWith('credenciamento')) {
+    const index = +files.slice(-1)
+    if (evaluators[index - 1].type !== 'external') {
+      ctx.status = 404
+      ctx.body = { code: errors.NOT_FOUND }
+      return
+    }
+    dados.membroConvidado = evaluators[index - 1].name
+    Credenciamento(doc, dados)
+  }
   for (let i = 1; i <= externalEvaluators.length; i++) {
-    if (allFiles || files === `credenciamento${i}`) {
+    if (allFiles) {
       dados.membroConvidado = externalEvaluators[i - 1].name
       Credenciamento(doc, dados)
       usedPage = true
@@ -234,11 +260,13 @@ module.exports = async function generateAllDocs(ctx) {
   if (allFiles || files === 'divulgacao') {
     Divulgacao(doc, dados)
   }
-  doc.info.Title = `${dados.discente.toLowerCase()}${
+  const title = `${dados.discente.toLowerCase()}${
     files ? `-${files}` : ''
   }.pdf`.replace(/ /g, '-')
+  doc.info.Title = title
   await doc.end()
   ctx.status = 200
-  ctx.type = 'application/pdf'
+  ctx.set('Content-Type', 'application/pdf')
+  ctx.set('Content-Disposition', `filename=${title}`)
   ctx.body = doc
 }
