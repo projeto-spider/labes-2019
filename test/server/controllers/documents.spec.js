@@ -4,6 +4,7 @@
 const path = require('path')
 const fs = require('fs')
 const { promisify } = require('util')
+const fse = require('fs-extra')
 const rimraf = require('rimraf')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
@@ -75,7 +76,7 @@ describe('/api/documents', () => {
       .set('Authorization', `Bearer ${token}`)
     expect(res.status).toEqual(204)
     expect(res.body).toEqual({})
-    expect(await access(file)).toThrowError()
+    expect(await fse.pathExists(file)).toBe(false)
     done()
   })
 
