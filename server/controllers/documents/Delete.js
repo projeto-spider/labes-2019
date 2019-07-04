@@ -1,14 +1,10 @@
-const fs = require('fs')
 const path = require('path')
-const { promisify } = require('util')
+const fse = require('fs-extra')
 const errors = require('../../../shared/errors')
 const utils = require('../../utils')
 
 const Documents = require('../../models/Document')
 const Students = require('../../models/Student')
-
-const access = promisify(fs.access)
-const del = promisify(fs.unlink)
 
 const dirUploads = path.join(__dirname, '../../../storage/')
 
@@ -35,24 +31,28 @@ module.exports = async function removeDocument(ctx) {
   }
 
   const documentType = document.get('type')
-  const diretory = path.join(dirUploads, student.get('registrationNumber'))
-  const file = utils.fileName(diretory, student, documentType)
+  const directory = path.join(dirUploads, student.get('registrationNumber'))
+  const file = utils.fileName(directory, student, documentType)
+
+  const processes = document
+    .destroy()
+    .then(() => utils.updateStudentFitness(student))
 
   try {
-    await access(file)
-  } catch (e) {
-    // File doesn't exist but the document does
-    await document.destroy()
+    await fse.remove(file)
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      throw err
+    }
+
+    await processes
 
     ctx.status = 404
     ctx.body = { code: errors.NOT_FOUND }
     return
   }
 
-  // First destroy the row
-  await document.destroy()
-  // If it works, delete the file
-  await Promise.all([del(file), utils.updateStudentFitness(student)])
+  await processes
 
   ctx.status = 204
   ctx.body = undefined
