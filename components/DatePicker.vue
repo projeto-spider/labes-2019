@@ -20,6 +20,7 @@
     :first-day-of-week="0"
     :disabled="disabled"
     :max-date="maxDate"
+    :min-date="minDate"
     @input="onInput"
   />
 </template>
@@ -32,6 +33,12 @@ export default {
     value: {
       type: String,
       default: '01/01/1970'
+    },
+
+    minDate: {
+      type: Date,
+      required: false,
+      default: undefined
     },
 
     maxDate: {
