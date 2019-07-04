@@ -586,10 +586,10 @@ describe('/api/defenses', () => {
   })
 
   test('GET /defenses/:id/pdf/:files', async done => {
-    const teacher = await testUtils.user('teacher')
-    const admin = await testUtils.user('admin')
+    const { token } = await testUtils.user('admin')
 
     const payload = {
+      userId: 2,
       course: 'cbcc',
       registrationNumbers: '201704940001, 201304940002',
       students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
@@ -616,75 +616,71 @@ describe('/api/defenses', () => {
       grade: 10.0
     }
 
-    await chai
-      .request(server.listen())
-      .post('/api/defenses')
-      .set('Authorization', `Bearer ${teacher.token}`)
-      .send(payload)
+    await Defense.forge(payload).save()
 
     const resAll = await chai
       .request(server.listen())
       .get('/api/defenses/1/pdf')
-      .set('Authorization', `Bearer ${admin.token}`)
+      .set('Authorization', `Bearer ${token}`)
+    expect(resAll.status).toEqual(200)
     expect(resAll.type).toEqual('application/pdf')
     expect(resAll.body).toBeDefined()
-    expect(resAll.status).toEqual(200)
 
     const resAta = await chai
       .request(server.listen())
       .get('/api/defenses/1/pdf/ata')
-      .set('Authorization', `Bearer ${admin.token}`)
+      .set('Authorization', `Bearer ${token}`)
+    expect(resAta.status).toEqual(200)
     expect(resAta.type).toEqual('application/pdf')
     expect(resAta.body).toBeDefined()
-    expect(resAta.status).toEqual(200)
 
     const resCd = await chai
       .request(server.listen())
       .get('/api/defenses/1/pdf/cd')
-      .set('Authorization', `Bearer ${admin.token}`)
+      .set('Authorization', `Bearer ${token}`)
+    expect(resCd.status).toEqual(200)
     expect(resCd.type).toEqual('application/pdf')
     expect(resCd.body).toBeDefined()
-    expect(resCd.status).toEqual(200)
 
     const resCertification = await chai
       .request(server.listen())
       .get('/api/defenses/1/pdf/certificado1')
-      .set('Authorization', `Bearer ${admin.token}`)
+      .set('Authorization', `Bearer ${token}`)
+    expect(resCertification.status).toEqual(200)
     expect(resCertification.type).toEqual('application/pdf')
     expect(resCertification.body).toBeDefined()
-    expect(resCertification.status).toEqual(200)
 
     const resCrendentials = await chai
       .request(server.listen())
       .get('/api/defenses/1/pdf/credenciamento1')
-      .set('Authorization', `Bearer ${admin.token}`)
+      .set('Authorization', `Bearer ${token}`)
+    expect(resCrendentials.status).toEqual(200)
     expect(resCrendentials.type).toEqual('application/pdf')
     expect(resCrendentials.body).toBeDefined()
-    expect(resCrendentials.status).toEqual(200)
 
     const resPublishing = await chai
       .request(server.listen())
       .get('/api/defenses/1/pdf/divulgacao')
-      .set('Authorization', `Bearer ${admin.token}`)
+      .set('Authorization', `Bearer ${token}`)
+    expect(resPublishing.status).toEqual(200)
     expect(resPublishing.type).toEqual('application/pdf')
     expect(resPublishing.body).toBeDefined()
-    expect(resPublishing.status).toEqual(200)
 
     const resInvalid1 = await chai
       .request(server.listen())
       .get('/api/defenses/1/pdf/lalilulelo')
-      .set('Authorization', `Bearer ${admin.token}`)
-    expect(resInvalid1.body).toBeDefined()
+      .set('Authorization', `Bearer ${token}`)
     expect(resInvalid1.status).toEqual(400)
+    expect(resInvalid1.body).toBeDefined()
     expect(resInvalid1.body.param).toEqual('lalilulelo')
     expect(resInvalid1.body.code).toEqual(errors.INVALID_REQUEST)
 
     const resInvalid2 = await chai
       .request(server.listen())
       .get('/api/defenses/lalilulelo')
-      .set('Authorization', `Bearer ${admin.token}`)
-    expect(resInvalid2.body).toBeDefined()
+      .set('Authorization', `Bearer ${token}`)
     expect(resInvalid2.status).toEqual(404)
+    expect(resInvalid2.body).toBeDefined()
     expect(resInvalid2.body.code).toEqual(errors.NOT_FOUND)
 
     done()

@@ -371,5 +371,6 @@ describe('/api/documents', () => {
     expect(res.body.code).toBe(errors.INVALID_QUERY)
     expect(res.body.invalidParams.length).toBe(1)
     expect(res.body.invalidParams).toContainEqual('invalid')
+    done()
   })
 })

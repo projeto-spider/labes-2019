@@ -44,7 +44,7 @@ module.exports = async function generateAllDocs(ctx) {
     ].includes(files)
   ) {
     ctx.status = 400
-    ctx.body = { param: files, code: errors.INVALID_PARAMS }
+    ctx.body = { param: files, code: errors.INVALID_REQUEST }
     return
   }
   const defenseFind = await Defense.where('id', id).fetch()
@@ -88,7 +88,7 @@ module.exports = async function generateAllDocs(ctx) {
     conceito: 'insuficiente'
   }
   if (
-    [
+    ![
       'curso',
       'tituloTCC',
       'nomeDosAlunos',
