@@ -529,9 +529,9 @@ ${formalTitle(selectedDefense.evaluator2Title)}${
       : ''
   }
 
-Data e local: ${selectedDefense.date} às ${selectedDefense.time} - ${
-    selectedDefense.local
-  }
+Data e local: ${dateInFull(selectedDefense.date)} às ${
+    selectedDefense.time
+  } - ${selectedDefense.local}
 
 RESUMO
 
@@ -556,6 +556,29 @@ function validPerson({ name }) {
 
 function validExternalEvaluator(evaluator) {
   return validPerson(evaluator) && evaluator.type === 'external'
+}
+
+// 4/7/2019 => 4 de Julho de 2019
+function dateInFull(defenseDate) {
+  const month = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro'
+  ]
+  if (typeof defenseDate === typeof '') {
+    const date = defenseDate.split('/')
+    return `${date[0]} de ${month[date[1] - 1]} de ${date[2]}`
+  }
+  return null
 }
 </script>
 
