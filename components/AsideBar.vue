@@ -56,12 +56,6 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'AsideBar',
-  props: {
-    courseTag: {
-      type: String,
-      default: ''
-    }
-  },
   computed: {
     ...mapState({
       courseTag: state => state.courseTag
