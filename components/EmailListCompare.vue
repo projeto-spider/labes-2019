@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <header v-if="displayChanges" class="card-header">
-      <b-icon pack="fas" :icon="icon()" size="is-small"></b-icon>
+      <b-icon pack="fas" :icon="icon" size="is-small"></b-icon>
       <p class="card-header-title">
         Estudantes a {{ isAddition ? 'adicionar' : 'remover' }} da lista
       </p>
@@ -13,7 +13,9 @@
         :checked-rows.sync="checkedStudents"
         checkable
       ></b-table>
-      <div class="level">
+      <div class="leicon() {
+      return this.isAddition ? 'plus-circle' : 'minus-circle'
+    }vel">
         <div class="level-left"></div>
         <div class="level-right">
           <div class="level-item btn-margin">
@@ -65,6 +67,13 @@ export default {
       checkedStudents: []
     }
   },
+
+  computed: {
+    icon() {
+      return this.isAddition ? 'plus-circle' : 'minus-circle'
+    }
+  },
+
   methods: {
     confirmChange() {
       this.$dialog.confirm({
@@ -86,10 +95,6 @@ export default {
             })
         }
       })
-    },
-
-    icon() {
-      return this.isAddition ? 'plus-circle' : 'minus-circle'
     }
   }
 }
