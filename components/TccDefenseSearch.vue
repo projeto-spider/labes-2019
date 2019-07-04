@@ -69,7 +69,7 @@
               </div>
             </div>
 
-            <div class="card-buttons">
+            <div v-if="!readOnly" class="card-buttons">
               <div class="buttons">
                 <b-button @click.prevent="editDefense = !editDefense">
                   {{ editDefense ? 'Cancelar Edição' : 'Editar' }}
@@ -132,7 +132,7 @@ export default {
   props: {
     publish: {
       type: Boolean,
-      default: () => false
+      default: false
     },
 
     title: {
@@ -144,6 +144,10 @@ export default {
       type: String,
       required: false,
       default: undefined
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
 

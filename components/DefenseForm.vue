@@ -57,6 +57,7 @@
     <b-field label="Data">
       <DatePicker
         v-model="model.date"
+        :min-date="minDate"
         placeholder="Selecionar data"
         :disabled="forceDisable"
       />
@@ -231,6 +232,9 @@
       <b-button type="is-primary is-large" native-type="submit">
         Enviar
       </b-button>
+      <nuxt-link to="/teacher/home"
+        ><b-button type="is-danger is-large">Cancelar</b-button>
+      </nuxt-link>
     </div>
   </form>
 </template>
@@ -241,35 +245,38 @@ import DatePicker from '@/components/DatePicker'
 import TimePicker from '@/components/TimePicker'
 
 const defaultStudent = () => ({ name: '', registrationNumber: '' })
-const defaultModel = () => ({
-  students: [defaultStudent()],
-  local: '',
-  title: '',
-  keywords: '',
-  summary: '',
-  date: '01/01/2020',
-  time: '00:00:00',
+const defaultModel = () => {
+  const today = new Date()
+  return {
+    students: [defaultStudent()],
+    local: '',
+    title: '',
+    keywords: '',
+    summary: '',
+    date: `${today.getDay()}/${today.getMonth() + 1}/${today.getFullYear()}`,
+    time: '00:00:00',
 
-  advisorName: '',
-  advisorTitle: 'other',
-  advisorType: 'internal',
+    advisorName: '',
+    advisorTitle: 'other',
+    advisorType: 'internal',
 
-  coAdvisorName: '',
-  coAdvisorTitle: 'other',
-  coAdvisorType: 'internal',
+    coAdvisorName: '',
+    coAdvisorTitle: 'other',
+    coAdvisorType: 'internal',
 
-  evaluator1Name: '',
-  evaluator1Title: 'other',
-  evaluator1Type: 'internal',
+    evaluator1Name: '',
+    evaluator1Title: 'other',
+    evaluator1Type: 'internal',
 
-  evaluator2Name: '',
-  evaluator2Title: 'other',
-  evaluator2Type: 'internal',
+    evaluator2Name: '',
+    evaluator2Title: 'other',
+    evaluator2Type: 'internal',
 
-  evaluator3Name: '',
-  evaluator3Title: 'other',
-  evaluator3Type: 'internal'
-})
+    evaluator3Name: '',
+    evaluator3Title: 'other',
+    evaluator3Type: 'internal'
+  }
+}
 
 export default {
   name: 'DefenseForm',
@@ -296,9 +303,13 @@ export default {
     }
   },
 
-  data: () => ({
-    model: defaultModel()
-  }),
+  data() {
+    const today = new Date()
+    return {
+      model: defaultModel(),
+      minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    }
+  },
 
   computed: {
     ...mapState({

@@ -4,6 +4,7 @@
       ref="searchPending"
       title="Pendentes"
       status="pending"
+      :read-only="readOnly"
       @move="handleMove"
     ></TccDefenseSearch>
     <br />
@@ -13,6 +14,7 @@
       ref="searchAccepted"
       title="Aceitas"
       status="accepted"
+      :read-only="readOnly"
       @move="handleMove"
     ></TccDefenseSearch>
     <br />
@@ -22,6 +24,7 @@
       ref="searchDone"
       title="Realizadas"
       status="done"
+      :read-only="readOnly"
       @move="handleMove"
     ></TccDefenseSearch>
   </div>
@@ -40,6 +43,12 @@ export default {
   head() {
     return {
       title: 'Defesa de TCC'
+    }
+  },
+  props: {
+    readOnly: {
+      type: Boolean,
+      default: () => false
     }
   },
   computed: {
