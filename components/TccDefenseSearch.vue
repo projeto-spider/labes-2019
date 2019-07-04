@@ -575,7 +575,9 @@ function dateInFull(defenseDate) {
   ]
   if (typeof defenseDate === 'string') {
     const date = defenseDate.split('/')
-    return `${date[0]} de ${month[date[1] - 1]} de ${date[2]}`
+    return date.length() === 3
+      ? `${date[0]} de ${month[date[1] - 1]} de ${date[2]}`
+      : ''
   }
   return ''
 }
