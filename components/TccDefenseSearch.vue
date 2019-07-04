@@ -86,7 +86,7 @@
                 <template v-if="status === 'accepted'">
                   <b-button
                     class="button is-normal is-primary is-modal"
-                    @click="modalOpen2"
+                    @click="toggleDisclosureModal"
                   >
                     Divulgação
                   </b-button>
@@ -117,7 +117,7 @@
           </div>
         </b-modal>
 
-        <div class="modal" :class="{ 'is-active': isActive }">
+        <div class="modal" :class="{ 'is-active': isDisclosureModalActive }">
           <div class="modal-background"></div>
           <div class="modal-card">
             <header class="modal-card-head">
@@ -125,7 +125,7 @@
               <button
                 class="delete"
                 aria-label="close"
-                @click.stop.prevent="modalOpen2"
+                @click.stop.prevent="toggleDisclosureModal"
               ></button>
             </header>
             <section class="modal-card-body">
@@ -139,7 +139,10 @@
               <button class="button is-primary" @click="doCopy">
                 Copiar
               </button>
-              <button class="button" @click.stop.prevent="modalOpen2">
+              <button
+                class="button"
+                @click.stop.prevent="toggleDisclosureModal"
+              >
                 Cancelar
               </button>
             </footer>
@@ -198,7 +201,7 @@ export default {
       selectedDefense: false,
       editDefense: false,
       searchStudentName: '',
-      isActive: false,
+      isDisclosureModalActive: false,
       columns: [
         {
           field: 'advisorName',
@@ -233,7 +236,7 @@ export default {
       courseTag: state => state.courseTag
     }),
     disclosure() {
-      return this.disclosureModel(this.selectedDefense)
+      return disclosureModel(this.selectedDefense)
     }
   },
 
@@ -331,8 +334,8 @@ export default {
         })
     },
 
-    modalOpen2() {
-      this.isActive = !this.isActive
+    toggleDisclosureModal() {
+      this.isDisclosureModalActive = !this.isDisclosureModalActive
     },
 
     doCopy() {
@@ -349,24 +352,17 @@ export default {
       } catch (e) {
         this.$toast.open({ message: 'Erro ao copiar!', type: 'is-danger' })
       }
-    },
-    disclosureModel(selectedDefense) {
-      function bankTitle(title) {
-        if (title === 'doctor') {
-          return 'Doutor(a)'
-        } else if (title === 'master') {
-          return 'Mestre(a)'
-        } else {
-          return ''
-        }
-      }
-      return `
-DEFESA PÚBLICA DO TRABALHO DE
+    }
+  }
+}
+
+function disclosureModel(selectedDefense) {
+  return `DEFESA PÚBLICA DO TRABALHO DE
 CONCLUSÃO DO CURSO DE ${
-        selectedDefense.course === 'cbcc'
-          ? 'CIÊNCIA DA COMPUTAÇÃO'
-          : 'SISTEMAS DE INFORMAÇÃO'
-      }
+    selectedDefense.course === 'cbcc'
+      ? 'CIÊNCIA DA COMPUTAÇÃO'
+      : 'SISTEMAS DE INFORMAÇÃO'
+  }
 
 Discente(s): ${selectedDefense.students}
 
@@ -374,36 +370,45 @@ Título: ${selectedDefense.title}
 
 Banca:
 
-${bankTitle(selectedDefense.advisorTitle)} ${
-        selectedDefense.advisorName
-      } (ORIENTADOR(A))
-${bankTitle(selectedDefense.coAdvisorTitle)} ${
-        selectedDefense.coAdvisorName !== ''
-          ? `${selectedDefense.coAdvisorName} (COORIENTADOR(A))`
-          : ''
-      }
-${bankTitle(selectedDefense.evaluator1Title)} ${
-        selectedDefense.evaluator1Name
-      } (AVALIADOR(A))
-${bankTitle(selectedDefense.evaluator2Title)} ${
-        selectedDefense.evaluator2Name
-      } (AVALIADOR(A))
-${bankTitle(selectedDefense.evaluator2Title)} ${
-        selectedDefense.evaluator3Name !== ''
-          ? `${selectedDefense.evaluator3Name} (AVALIADOR(A))`
-          : ''
-      }
+${formalTitle(selectedDefense.advisorTitle)}${
+    selectedDefense.advisorName
+  } (ORIENTADOR(A))
+${formalTitle(selectedDefense.coAdvisorTitle)}${
+    selectedDefense.coAdvisorName !== ''
+      ? `${selectedDefense.coAdvisorName} (COORIENTADOR(A))`
+      : ''
+  }
+${formalTitle(selectedDefense.evaluator1Title)}${
+    selectedDefense.evaluator1Name
+  } (AVALIADOR(A))
+${formalTitle(selectedDefense.evaluator2Title)}${
+    selectedDefense.evaluator2Name
+  } (AVALIADOR(A))
+${formalTitle(selectedDefense.evaluator2Title)}${
+    selectedDefense.evaluator3Name !== ''
+      ? `${selectedDefense.evaluator3Name} (AVALIADOR(A))`
+      : ''
+  }
 
 Data e local: ${selectedDefense.date} às ${selectedDefense.time} - ${
-        selectedDefense.local
-      }
+    selectedDefense.local
+  }
 
 RESUMO
 
-${selectedDefense.summary}
-              `
-    }
+${selectedDefense.summary}`
+}
+
+function formalTitle(title) {
+  if (title === 'doctor') {
+    return 'Doutor(a) '
   }
+
+  if (title === 'master') {
+    return 'Mestre(a) '
+  }
+
+  return ''
 }
 </script>
 
