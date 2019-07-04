@@ -34,7 +34,6 @@
             <strong>CRG</strong>:
             <b-input
               v-model="studentData.crg"
-              type="number"
               :min="0"
               :max="10"
               :disabled="!canEdit || !canEditCrg"
@@ -46,13 +45,18 @@
               class="is-primary"
               @click="getPendencies"
             >
-              {{ !canEdit ? 'Verificar Pendências' : 'Editar Pendências' }}
+              {{
+                !canEdit
+                  ? 'Verificar Disciplinas pendentes'
+                  : 'Editar Disciplinas pendentes'
+              }}:
+              {{ totalPendencies }}
             </b-button>
             <b-modal :active.sync="showPendencies">
               <div class="card">
                 <header class="card-header">
                   <b-icon pack="fas" icon="check" size="is-medium"></b-icon>
-                  <p class="card-header-title">Pendências</p>
+                  <p class="card-header-title">Disciplinas pendentes</p>
                 </header>
                 <div class="card-content">
                   <div class="content">
@@ -173,7 +177,7 @@
           <div v-show="canEdit" class="level-right">
             <div class="level-item">
               <b-field>
-                <b-button class="is-success" @click="putStudents">
+                <b-button class="is-success" @click="confirmCrg">
                   Atualizar
                 </b-button>
               </b-field>
@@ -224,7 +228,8 @@ export default {
       totalSubjects: [],
       studentSubjects: [],
       studentData: Object.assign({}, this.student),
-      isLoading: false
+      isLoading: false,
+      totalPendencies: 0
     }
   },
   computed: {
@@ -253,6 +258,7 @@ export default {
       .fetchAll(this.student.id)
       .then(res => {
         this.studentSubjects = res.data.map(pendency => pendency.subjectId)
+        this.totalPendencies = res.data.length
       })
       .catch(e => this.openErrorNotification(e))
   },
@@ -269,7 +275,18 @@ export default {
           })
         })
     },
-
+    confirmCrg() {
+      if (this.studentData.crg !== this.student.crg) {
+        this.$dialog.confirm({
+          message: `Você confirma o CRG: ${this.studentData.crg}`,
+          onConfirm: () => {
+            this.putStudents()
+          }
+        })
+      } else {
+        this.putStudents()
+      }
+    },
     putStudents() {
       this.isLoading = true
       const cd = this.cdCheck

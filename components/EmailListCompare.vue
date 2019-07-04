@@ -53,7 +53,7 @@ export default {
         message:
           'Este processo é irreversivel, tem certeza que já foram realizadas todas as alterações?',
         onConfirm: () => {
-          this.$services.studentds
+          this.$services.students
             .updateEmailChanges(this.mailingList)
             .then(res => {
               this.$toast.open('Alterações realizadas com sucesso')

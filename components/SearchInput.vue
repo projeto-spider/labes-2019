@@ -84,7 +84,12 @@
             </b-table-column>
           </template>
         </b-table>
-        <b-modal :active.sync="selectedStudent" has-modal-card>
+        <b-modal
+          :active.sync="activateModal"
+          has-modal-card
+          animation
+          :on-cancel="emptySelected"
+        >
           <StudentComboBox
             v-if="comboBoxStudent"
             :student="comboBoxStudent"
@@ -201,6 +206,7 @@ export default {
           label: 'Status'
         }
       ],
+      previousTotal: 0,
       total: 0,
       totalPages: 0,
       page: 1,
@@ -212,7 +218,8 @@ export default {
       registrationFilter: false,
       emailFilter: false,
       blankCrgFilter: false,
-      forceAcademicHighlightTooltip: false
+      forceAcademicHighlightTooltip: false,
+      activateModal: false
     }
   },
 
@@ -300,7 +307,10 @@ export default {
       this.studentsData = [...this.students]
     },
     selectedStudent() {
-      this.$emit('toggleComboBox')
+      if (this.selectedStudent !== null) {
+        this.$emit('toggleComboBox')
+        this.activateModal = true
+      }
     },
     total() {
       if (+this.total === 0) {
@@ -309,11 +319,27 @@ export default {
           type: 'is-warning'
         })
       }
+      if (this.total <= this.previousTotal) {
+        this.activateModal = false
+      }
     }
   },
 
   created() {
-    this.getStudents()
+    this.$services.students
+      .fetchPage(this.getParams)
+      .then(res => {
+        this.studentsData = res.data
+        this.previousTotal = res.headers['pagination-row-count']
+        this.perPage = res.headers['pagination-page-size']
+        this.total = this.previousTotal
+      })
+      .catch(() => {
+        this.$toast.open({
+          message: `${this.title}: Falha ao carregar a lista de alunos.`,
+          type: 'is-danger'
+        })
+      })
   },
 
   mounted() {
@@ -325,6 +351,9 @@ export default {
   },
 
   methods: {
+    emptySelected() {
+      this.selectedStudent = null
+    },
     getStudentsFilters: pDebounce(function getStudentsFilters() {
       this.getStudents()
       this.$emit('move')
@@ -335,6 +364,7 @@ export default {
         .fetchPage(this.getParams)
         .then(res => {
           this.studentsData = res.data
+          this.previousTotal = this.total
           this.total = res.headers['pagination-row-count']
           this.perPage = res.headers['pagination-page-size']
         })
