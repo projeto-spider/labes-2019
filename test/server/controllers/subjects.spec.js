@@ -13,6 +13,8 @@ const db = require('../../../server/db')
 const errors = require('../../../shared/errors')
 
 jest.useFakeTimers()
+jest.setTimeout(10000)
+
 describe('/api/subjects', () => {
   beforeAll(async () => {
     await db.knex.migrate.latest()

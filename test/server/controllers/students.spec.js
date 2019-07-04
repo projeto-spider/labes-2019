@@ -20,6 +20,7 @@ const errors = require('../../../shared/errors')
 const document = require('../../../server/models/Document')
 
 jest.useFakeTimers()
+jest.setTimeout(10000)
 
 /**
  * Helper function to get fixtures path

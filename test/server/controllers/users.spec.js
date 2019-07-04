@@ -14,6 +14,7 @@ const errors = require('../../../shared/errors')
 const User = require('../../../server/models/User')
 
 jest.useFakeTimers()
+jest.setTimeout(10000)
 
 describe('/api/users', () => {
   beforeAll(async () => {
