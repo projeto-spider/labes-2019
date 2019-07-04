@@ -529,9 +529,9 @@ ${formalTitle(selectedDefense.evaluator2Title)}${
       : ''
   }
 
-Data e local: ${dateInFull(selectedDefense.date)} às ${
+Data e local: ${dateInFull(selectedDefense.date)} às ${hourFormmated(
     selectedDefense.time
-  } - ${selectedDefense.local}
+  )} - ${selectedDefense.local}
 
 RESUMO
 
@@ -576,6 +576,17 @@ function dateInFull(defenseDate) {
   if (typeof defenseDate === typeof '') {
     const date = defenseDate.split('/')
     return `${date[0]} de ${month[date[1] - 1]} de ${date[2]}`
+  }
+  return null
+}
+
+function hourFormmated(defenseHour) {
+  if (typeof defenseHour === typeof '') {
+    const hour = defenseHour
+      .split(':')
+      .join('h')
+      .slice(0, 5)
+    return hour
   }
   return null
 }
