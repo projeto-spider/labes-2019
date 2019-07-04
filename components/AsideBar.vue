@@ -42,6 +42,12 @@
         <a href="#" @click.prevent="$emit('activateModal')">Importar Alunos</a>
       </li>
     </ul>
+    <div class="menu-label">Usuários</div>
+    <ul class="menu-list">
+      <li>
+        <nuxt-link to="/signup">Criar novo usuário</nuxt-link>
+      </li>
+    </ul>
   </aside>
 </template>
 
