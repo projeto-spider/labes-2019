@@ -704,5 +704,5 @@ describe('/api/defenses', () => {
     expect(res.body.invalidParams).toContainEqual('invalid')
 
     done()
-  })
+  }, 10000)
 })
