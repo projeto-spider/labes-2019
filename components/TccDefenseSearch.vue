@@ -529,7 +529,7 @@ ${formalTitle(selectedDefense.evaluator2Title)}${
       : ''
   }
 
-Data e local: ${dateInFull(selectedDefense.date)} às ${hourFormmated(
+Data e local: ${dateInFull(selectedDefense.date)} às ${hourFormatted(
     selectedDefense.time
   )} - ${selectedDefense.local}
 
@@ -580,7 +580,7 @@ function dateInFull(defenseDate) {
   return null
 }
 
-function hourFormmated(defenseHour) {
+function hourFormatted(defenseHour) {
   if (typeof defenseHour === 'string') {
     const hour = defenseHour
       .split(':')
