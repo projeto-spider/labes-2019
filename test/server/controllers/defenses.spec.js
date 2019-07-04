@@ -651,13 +651,37 @@ describe('/api/defenses', () => {
     expect(resCertification.type).toEqual('application/pdf')
     expect(resCertification.body).toBeDefined()
 
-    const resCrendentials = await chai
+    const resInvalidCert1 = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf/certificado2')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resInvalidCert1.status).toEqual(404)
+    expect(resInvalidCert1.type).toEqual('application/json')
+    expect(resInvalidCert1.body.code).toEqual(errors.NOT_FOUND)
+
+    const resInvalidCert2 = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf/certificado5')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resInvalidCert2.status).toEqual(404)
+    expect(resInvalidCert2.type).toEqual('application/json')
+    expect(resInvalidCert2.body.code).toEqual(errors.NOT_FOUND)
+
+    const resCredentials = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf/credenciamento2')
+      .set('Authorization', `Bearer ${token}`)
+    expect(resCredentials.status).toEqual(200)
+    expect(resCredentials.type).toEqual('application/pdf')
+    expect(resCredentials.body).toBeDefined()
+
+    const resInvalidCred = await chai
       .request(server.listen())
       .get('/api/defenses/1/pdf/credenciamento1')
       .set('Authorization', `Bearer ${token}`)
-    expect(resCrendentials.status).toEqual(200)
-    expect(resCrendentials.type).toEqual('application/pdf')
-    expect(resCrendentials.body).toBeDefined()
+    expect(resInvalidCred.status).toEqual(404)
+    expect(resInvalidCred.type).toEqual('application/json')
+    expect(resInvalidCred.body.code).toEqual(errors.NOT_FOUND)
 
     const resPublishing = await chai
       .request(server.listen())
