@@ -69,7 +69,10 @@
                         :key="pdf.key"
                         class="list-item"
                         :href="
-                          `/api/defenses/${selectedDefense.id}/pdf/${pdf.key}?token=${token}`
+                          `/api/defenses/` +
+                            selectedDefense.id +
+                            '/pdf/${pdf.key}?token=' +
+                            token
                         "
                         target="_blank"
                       >
@@ -91,7 +94,10 @@
                       <a
                         class="list-item"
                         :href="
-                          `/api/defenses/${selectedDefense.id}/pdf?token=${token}`
+                          '/api/defenses/' +
+                            selectedDefense.id +
+                            '/pdf?token=' +
+                            token
                         "
                         target="_blank"
                       >
