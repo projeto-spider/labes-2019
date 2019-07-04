@@ -5,21 +5,6 @@
   >
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <!-- <a
-          v-if="showSideNavBurger"
-          href="#"
-          role="button"
-          class="navbar-burger burger is-marginless is-pulled-left"
-          :class="{ 'is-active': active }"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarBasicExample"
-          @click="active = !active"
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a> -->
         <a
           href="#"
           role="button"
@@ -27,7 +12,7 @@
           :class="{ 'is-active': showNavBurger }"
           aria-label="menu"
           aria-expanded="false"
-          data-targetf="navbarBasicExample"
+          data-target="navbarItems"
           @click="showNavBurger = !showNavBurger"
         >
           <span aria-hidden="true"></span>
@@ -37,7 +22,7 @@
       </div>
 
       <div
-        id="navbarBasicExample"
+        id="navbarItems"
         class="navbar-menu"
         :class="{ 'is-active': showNavBurger }"
       >
@@ -91,7 +76,7 @@
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
               </a>
-              <AsideBar :course-tag="courseTag" />
+              <AsideBar />
             </b-collapse>
           </div>
         </div>
@@ -104,7 +89,7 @@
         class="column is-2"
         :class="{ 'is-hidden-mobile': !isActive() }"
       >
-        <AsideBar :course-tag="courseTag" />
+        <AsideBar />
       </div>
       <b-modal :active.sync="activateModal" :width="640" scroll="keep">
         <ImportStudents />
@@ -201,7 +186,7 @@ export default {
 }
 
 .navbar-brand,
-#navbarBasicExample {
+#navbarItems {
   color: #000;
   font-weight: 600;
 }

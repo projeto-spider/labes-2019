@@ -1,7 +1,7 @@
 <template>
   <aside id="asideBar" class="menu is-sidebar-menu asideBackground">
     <div class="menu-label text-uppercase">
-      {{ tag ? tag : 'selecionar curso' }}
+      {{ courseTag ? courseTag : 'selecionar curso' }}
     </div>
     <ul class="menu-list">
       <li>
@@ -55,9 +55,9 @@ export default {
     }
   },
   computed: {
-    tag() {
-      return this.courseTag
-    }
+    ...mapState({
+      courseTag: state => state.courseTag
+    })
   }
 }
 </script>
