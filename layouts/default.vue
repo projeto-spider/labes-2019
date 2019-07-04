@@ -13,7 +13,7 @@
           aria-label="menu"
           aria-expanded="false"
           data-target="navbarItems"
-          @click="showNavBurger = !showNavBurger"
+          @click.prevent="showNavBurger = !showNavBurger"
         >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -70,7 +70,7 @@
                 aria-label="menu"
                 aria-expanded="false"
                 aria-controls="asideCollapse"
-                @click="toggleOpen"
+                @click.prevent="toggleOpen"
               >
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -85,9 +85,9 @@
 
     <div id="asideContainer" class="columns is-fullheight asideBackground">
       <div
-        v-if="!isActive()"
+        v-if="!isActive"
         class="column is-2"
-        :class="{ 'is-hidden-mobile': !isActive() }"
+        :class="{ 'is-hidden-mobile': !isActive }"
       >
         <AsideBar />
       </div>
@@ -113,10 +113,10 @@ export default {
   },
   data() {
     return {
-      active: this.isActive(),
+      active: this.isActive,
       activateModal: false,
       open: false,
-      showNavBurger: this.showSideNavBurger()
+      showNavBurger: this.showSideNavBurger
     }
   },
 
@@ -139,17 +139,17 @@ export default {
     },
     username() {
       return this.currrentUser.username
-    }
-  },
-  methods: {
-    toggleOpen() {
-      this.open = !this.open
     },
     isActive() {
       return !window.innerWidth > 768
     },
     showSideNavBurger() {
       return window.innerWidth < 768
+    }
+  },
+  methods: {
+    toggleOpen() {
+      this.open = !this.open
     },
     setCourseTag(tag) {
       this.$store.dispatch('courseTag', { tag })
