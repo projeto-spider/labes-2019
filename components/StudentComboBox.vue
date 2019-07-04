@@ -45,13 +45,18 @@
               class="is-primary"
               @click="getPendencies"
             >
-              {{ !canEdit ? 'Verificar Pendências' : 'Editar Pendências' }}
+              {{
+                !canEdit
+                  ? 'Verificar Disciplinas pendentes'
+                  : 'Editar Disciplinas pendentes'
+              }}:
+              {{ totalPendencies }}
             </b-button>
             <b-modal :active.sync="showPendencies">
               <div class="card">
                 <header class="card-header">
                   <b-icon pack="fas" icon="check" size="is-medium"></b-icon>
-                  <p class="card-header-title">Pendências</p>
+                  <p class="card-header-title">Disciplinas pendentes</p>
                 </header>
                 <div class="card-content">
                   <div class="content">
@@ -223,7 +228,8 @@ export default {
       totalSubjects: [],
       studentSubjects: [],
       studentData: Object.assign({}, this.student),
-      isLoading: false
+      isLoading: false,
+      totalPendencies: 0
     }
   },
   computed: {
@@ -252,6 +258,7 @@ export default {
       .fetchAll(this.student.id)
       .then(res => {
         this.studentSubjects = res.data.map(pendency => pendency.subjectId)
+        this.totalPendencies = res.data.length
       })
       .catch(e => this.openErrorNotification(e))
   },
