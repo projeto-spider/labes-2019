@@ -49,15 +49,19 @@ export default function makeStudentServices(axios) {
       const payload = selector(params, studentParams)
       return axios.put(`/api/students/${studentId}`, payload)
     },
+
     updateAcademicHighlight(studentId) {
       return axios.put('/api/students/update-academic-highlight', {
         id: studentId
       })
     },
-    updateEmailChanges(mailingList) {
+
+    updateEmailChanges(studentsIdList, mailingList, isAdditionOperation) {
       return axios.post('/api/students/update-mailing-list', {
         params: {
-          mailingList
+          ids: studentsIdList,
+          mailingList,
+          type: isAdditionOperation ? 'add' : 'remove'
         }
       })
     },

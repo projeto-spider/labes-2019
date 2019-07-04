@@ -1,11 +1,12 @@
 <template>
   <div class="container">
-    <SearchInput
-      :key="courseTag"
-      :default-course="courseTag"
-      :title="title"
+    <EmailCompare
+      :students="putStudents"
+      :is-addition="additionMode"
+      :display-changes="displayChanges"
       :mailing-list="mailingList"
-    ></SearchInput>
+      @email-list-changed="getChanges"
+    ></EmailCompare>
     <button
       v-if="hasEmailChanges"
       class="button is-success"
@@ -32,28 +33,18 @@
           : ''
       }}
     </button>
-    <b-modal :active.sync="activate">
-      <EmailCompare
-        :students="putStudents"
-        :is-addition="additionMode"
-        :mailing-list="mailingList"
-        @email-list-changed="getChanges"
-      ></EmailCompare>
-    </b-modal>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import EmailCompare from '@/components/EmailListCompare'
-import SearchInput from '@/components/SearchInput'
 import { errorsHandler } from '@/components/mixins/errors'
 
 export default {
   name: 'EmailComponent',
   components: {
-    EmailCompare,
-    SearchInput
+    EmailCompare
   },
   mixins: [errorsHandler],
   props: {
@@ -69,7 +60,8 @@ export default {
   data() {
     return {
       activate: false,
-      additionMode: false,
+      additionMode: true,
+      displayChanges: false,
       hasEmailChanges: false,
       emailChanges: {}
     }
@@ -92,6 +84,7 @@ export default {
 
   methods: {
     activateModal(mode) {
+      this.displayChanges = true
       this.activate = !this.activate
       this.additionMode = mode === 'additions'
     },
