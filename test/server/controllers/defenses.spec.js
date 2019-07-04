@@ -11,6 +11,7 @@ const useSeeds = require('../../use-seeds')
 const server = require('../../../server')
 const db = require('../../../server/db')
 const Defense = require('../../../server/models/Defense')
+const Student = require('../../../server/models/Student')
 const errors = require('../../../shared/errors')
 
 jest.useFakeTimers()
@@ -21,7 +22,7 @@ describe('/api/defenses', () => {
     await db.knex.migrate.latest()
   }, 100000)
   beforeEach(async () => {
-    await useSeeds(['users', 'defenses'])
+    await useSeeds(['users', 'defenses', 'students'])
   }, 100000)
   afterEach(async () => {
     await testUtils.wipe(db.knex)
@@ -218,6 +219,130 @@ describe('/api/defenses', () => {
     expect(defense.get('summary')).toEqual(payload.summary)
     expect(defense.get('status')).toEqual('pending')
 
+    const students = await Promise.all(
+      ['201704940001', '201304940002'].map(registrationNumber =>
+        Student.forge({ registrationNumber }).fetch()
+      )
+    )
+
+    for (const student of students) {
+      expect(student.get('defenseId')).toBe(res.body.id)
+    }
+
+    done()
+  })
+
+  test('POST /defenses to student with defense', async done => {
+    const { token } = await testUtils.user('teacher')
+
+    {
+      const payload = {
+        course: 'cbcc',
+        registrationNumbers: '201304940002',
+        students: 'LAURA CARDOSO CASTRO',
+        local: 'Auditório do ICEN',
+        title: 'Fundamentos da Comunicação Analógica',
+        keywords: 'Fundamental, comunicacional, analógico',
+        summary: 'Sumário fundamentacional',
+
+        advisorName: 'Jonathan Joestar',
+        advisorTitle: 'doctor',
+        advisorType: 'internal',
+
+        evaluator1Name: 'Robert E. O. Speedwagon',
+        evaluator1Title: 'doctor',
+        evaluator1Type: 'internal',
+
+        evaluator2Name: 'Narciso Anasui',
+        evaluator2Title: 'master',
+        evaluator2Type: 'external'
+      }
+
+      const res = await chai
+        .request(server.listen())
+        .post('/api/defenses')
+        .set('Authorization', `Bearer ${token}`)
+        .send(payload)
+
+      expect(res.status).toEqual(201)
+    }
+
+    const payload = {
+      course: 'cbcc',
+      registrationNumbers: '201704940001, 201304940002',
+      students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+      local: 'Auditório do ICEN',
+      title: 'Fundamentos da Comunicação Analógica',
+      keywords: 'Fundamental, comunicacional, analógico',
+      summary: 'Sumário fundamentacional',
+
+      advisorName: 'Jonathan Joestar',
+      advisorTitle: 'doctor',
+      advisorType: 'internal',
+
+      evaluator1Name: 'Robert E. O. Speedwagon',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+
+      evaluator2Name: 'Narciso Anasui',
+      evaluator2Title: 'master',
+      evaluator2Type: 'external'
+    }
+
+    const res = await chai
+      .request(server.listen())
+      .post('/api/defenses')
+      .set('Authorization', `Bearer ${token}`)
+      .send(payload)
+
+    expect(res.status).toEqual(422)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.STUDENT_HAS_DEFENSE)
+    expect(res.body.registrationNumbers.length).toBe(1)
+    expect(res.body.registrationNumbers).toContainEqual('201304940002')
+
+    done()
+  })
+
+  test('POST /defenses with invalid numbers', async done => {
+    const { token } = await testUtils.user('teacher')
+
+    const payload = {
+      course: 'cbcc',
+      registrationNumbers: '221704940001, 201304940002',
+      students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+      local: 'Auditório do ICEN',
+      title: 'Fundamentos da Comunicação Analógica',
+      keywords: 'Fundamental, comunicacional, analógico',
+      summary: 'Sumário fundamentacional',
+
+      advisorName: 'Jonathan Joestar',
+      advisorTitle: 'doctor',
+      advisorType: 'internal',
+
+      evaluator1Name: 'Robert E. O. Speedwagon',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+
+      evaluator2Name: 'Narciso Anasui',
+      evaluator2Title: 'master',
+      evaluator2Type: 'external'
+    }
+
+    const res = await chai
+      .request(server.listen())
+      .post('/api/defenses')
+      .set('Authorization', `Bearer ${token}`)
+      .send(payload)
+
+    expect(res.status).toEqual(422)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_REGISTRATION_NUMBERS)
+    expect(res.body.registrationNumbers.length).toBe(1)
+    expect(res.body.registrationNumbers).toContainEqual('221704940001')
+
     done()
   })
 
@@ -307,6 +432,131 @@ describe('/api/defenses', () => {
 
     expect(res.status).toEqual(404)
     expect(res.type).toEqual('application/json')
+
+    done()
+  })
+
+  test('PUT /defenses with one that already has defense', async done => {
+    const admin = await testUtils.user('admin')
+    const teacher = await testUtils.user('teacher')
+
+    const defensePayload = ({ registrationNumbers, students }) => ({
+      course: 'cbcc',
+      registrationNumbers,
+      students,
+      local: 'Auditório do ICEN',
+      title: 'Fundamentos da Comunicação Analógica',
+      keywords: 'Fundamental, comunicacional, analógico',
+      summary: 'Sumário fundamentacional',
+
+      advisorName: 'Jonathan Joestar',
+      advisorTitle: 'doctor',
+      advisorType: 'internal',
+
+      evaluator1Name: 'Robert E. O. Speedwagon',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+
+      evaluator2Name: 'Narciso Anasui',
+      evaluator2Title: 'master',
+      evaluator2Type: 'external'
+    })
+
+    const defenses = await Promise.all(
+      [
+        {
+          registrationNumbers: '201704940001',
+          students: 'FELIPE SOUZA FERREIRA'
+        },
+        {
+          registrationNumbers: '201304940002',
+          students: 'LAURA CARDOSO CASTRO'
+        }
+      ].map(args =>
+        chai
+          .request(server.listen())
+          .post('/api/defenses')
+          .set('Authorization', `Bearer ${teacher.token}`)
+          .send(defensePayload(args))
+          .then(res => res.body)
+      )
+    )
+
+    for (const defense of defenses) {
+      const payload = {
+        registrationNumbers: '201704940001, 201304940002',
+        students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO'
+      }
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/defenses/${defense.id}`)
+        .set('Authorization', `Bearer ${admin.token}`)
+        .send(payload)
+
+      expect(res.status).toEqual(422)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.STUDENT_HAS_DEFENSE)
+      expect(res.body.registrationNumbers.length).toBe(1)
+    }
+
+    done()
+  })
+
+  test('PUT /defenses with invalid numbers', async done => {
+    const admin = await testUtils.user('admin')
+    const teacher = await testUtils.user('teacher')
+
+    const defensePayload = ({ registrationNumbers, students }) => ({
+      course: 'cbcc',
+      registrationNumbers,
+      students,
+      local: 'Auditório do ICEN',
+      title: 'Fundamentos da Comunicação Analógica',
+      keywords: 'Fundamental, comunicacional, analógico',
+      summary: 'Sumário fundamentacional',
+
+      advisorName: 'Jonathan Joestar',
+      advisorTitle: 'doctor',
+      advisorType: 'internal',
+
+      evaluator1Name: 'Robert E. O. Speedwagon',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+
+      evaluator2Name: 'Narciso Anasui',
+      evaluator2Title: 'master',
+      evaluator2Type: 'external'
+    })
+
+    const defense = await chai
+      .request(server.listen())
+      .post('/api/defenses')
+      .set('Authorization', `Bearer ${teacher.token}`)
+      .send(
+        defensePayload({
+          registrationNumbers: '201704940001',
+          students: 'FELIPE SOUZA FERREIRA'
+        })
+      )
+      .then(res => res.body)
+
+    const payload = {
+      registrationNumbers: '201704940001, 221304940002',
+      students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO'
+    }
+    const res = await chai
+      .request(server.listen())
+      .put(`/api/defenses/${defense.id}`)
+      .set('Authorization', `Bearer ${admin.token}`)
+      .send(payload)
+
+    expect(res.status).toEqual(422)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_REGISTRATION_NUMBERS)
+    expect(res.body.registrationNumbers.length).toBe(1)
+    expect(res.body.registrationNumbers).toContainEqual('221304940002')
 
     done()
   })

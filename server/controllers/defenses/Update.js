@@ -1,6 +1,7 @@
 const Defense = require('../../models/Defense')
 const errors = require('../../../shared/errors')
 const utils = require('../../utils')
+const registrationNumbersToStudents = require('./registrationNumbersToStudents')
 
 const requiredFields = [
   'userId',
@@ -76,6 +77,44 @@ module.exports = async function updateDefense(ctx) {
     return
   }
 
-  await defense.save(payload)
+  const { students, invalidRegistrationNumbers } = payload.registrationNumbers
+    ? await registrationNumbersToStudents(payload.registrationNumbers)
+    : { students: [], invalidRegistrationNumbers: [] }
+
+  if (invalidRegistrationNumbers.length) {
+    ctx.status = 422
+    ctx.body = {
+      code: errors.INVALID_REGISTRATION_NUMBERS,
+      registrationNumbers: invalidRegistrationNumbers
+    }
+    return
+  }
+
+  const studentsWithDefense = students.filter(
+    student =>
+      student.get('defenseId') && student.get('defenseId') !== defense.get('id')
+  )
+  if (studentsWithDefense.length) {
+    ctx.status = 422
+    ctx.body = {
+      code: errors.STUDENT_HAS_DEFENSE,
+      registrationNumbers: studentsWithDefense.map(student =>
+        student.get('registrationNumber')
+      )
+    }
+    return
+  }
+
+  const studentsWithoutDefense = students.filter(
+    student => !student.get('defenseId')
+  )
+
+  await Promise.all([
+    defense.save(payload),
+    ...studentsWithoutDefense.map(student =>
+      student.save({ defenseId: defense.get('id') })
+    )
+  ])
+
   ctx.body = defense
 }

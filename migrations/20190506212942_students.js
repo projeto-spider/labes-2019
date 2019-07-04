@@ -53,6 +53,14 @@ exports.up = function(knex, Promise) {
       .string('period')
       .nullable()
       .defaultTo(null)
+    table
+      .integer('defenseId')
+      .unsigned()
+      .nullable()
+    table
+      .foreign('defenseId')
+      .references('id')
+      .inTable('defenses')
   })
 }
 
