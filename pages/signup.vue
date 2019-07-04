@@ -6,7 +6,7 @@
       </figure>
       <h3 class="title has-text-white">Cadastro de Usuário</h3>
       <div class="box">
-        <form>
+        <form @submit.prevent="signUp">
           <input-validation
             ref="emailIpt"
             valid-message="Ok"
@@ -67,14 +67,13 @@
               <option value="teacher">Professor</option>
             </b-select>
           </b-field>
-          <b-button
+          <button
             class="button is-block is-info is-large is-fullwidth"
+            type="submit"
             :disabled="disabled"
-            @click="signUp"
-            @click.prevent
           >
             Cadastrar
-          </b-button>
+          </button>
         </form>
       </div>
     </div>
