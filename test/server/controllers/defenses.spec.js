@@ -685,4 +685,24 @@ describe('/api/defenses', () => {
 
     done()
   })
+
+  test('GET /defenses/:id/pdf invalid query', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const res = await chai
+      .request(server.listen())
+      .get('/api/defenses/1/pdf')
+      .query({ invalid: 1 })
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(400)
+    expect(res.type).toBe('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.INVALID_QUERY)
+    expect(res.body.invalidParams).toBeDefined()
+    expect(res.body.invalidParams.length).toEqual(1)
+    expect(res.body.invalidParams).toContainEqual('invalid')
+
+    done()
+  })
 })

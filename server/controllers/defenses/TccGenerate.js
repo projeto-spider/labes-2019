@@ -1,5 +1,6 @@
 const PDFDocument = require('pdfkit')
 const errors = require('../../../shared/errors')
+const utils = require('../../utils')
 const Defense = require('../../models/Defense')
 const Cd = require('../../models/tccdocs/cd')
 const Ata = require('../../models/tccdocs/ata')
@@ -28,6 +29,12 @@ const translations = {
 }
 
 module.exports = async function generateAllDocs(ctx) {
+  const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
+  if (!valid) {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_QUERY, invalidParams }
+    return
+  }
   const { id, files } = ctx.params
   if (
     ![
@@ -44,7 +51,7 @@ module.exports = async function generateAllDocs(ctx) {
     ].includes(files)
   ) {
     ctx.status = 400
-    ctx.body = { param: files, code: errors.INVALID_REQUEST }
+    ctx.body = { code: errors.INVALID_REQUEST, param: files }
     return
   }
   const defenseFind = await Defense.where('id', id).fetch()
@@ -106,7 +113,7 @@ module.exports = async function generateAllDocs(ctx) {
     ].every(item => dados[item] !== '')
   ) {
     ctx.status = 400
-    ctx.body = { code: errors.INVALID_REQUEST }
+    ctx.body = { code: errors.UNPROCESSABLE_ENTITY }
     return
   }
   const grade = defenseFind.get('grade')
