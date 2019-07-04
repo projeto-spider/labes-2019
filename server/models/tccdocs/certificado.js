@@ -59,7 +59,7 @@ module.exports = function model(
   let trecho2 = `, apresentado pelo(a) discente ${discente}`
   let trecho3 = '.'
   if (isDiscente) {
-    trecho1 = `discente realizou a`
+    trecho1 = `discente ${pessoa} realizou a`
     trecho2 = ''
     trecho3 = `, sendo o trabalho ${aprovado} com conceito ${conceito}.`
   }
