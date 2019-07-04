@@ -3,7 +3,7 @@
     :label="inputLabel"
     :message="messageParams"
     :type="{
-      [updateValid ? 'is-success' : 'is-danger']: dirty
+      [valid ? 'is-success' : 'is-danger']: dirty
     }"
   >
     <slot></slot>
@@ -26,7 +26,7 @@ export default {
 
     validMessage: {
       type: String,
-      default: () => ''
+      default: ''
     },
 
     invalidMessage: {
@@ -47,14 +47,10 @@ export default {
   },
 
   computed: {
-    updateValid() {
-      return this.valid
-    },
-
     messageParams() {
       const obj = {}
       if (this.dirty) {
-        if (this.updateValid) {
+        if (this.valid) {
           obj[this.validMessage] = this.dirty
         } else {
           for (const msg of this.invalidMessage) {

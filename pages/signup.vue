@@ -149,9 +149,16 @@ export default {
       this.password = ''
       this.email = ''
       this.role = null
-      this.$refs.emailIpt.dirty = false
-      this.$refs.usernameIpt.dirty = false
-      this.$refs.passwdIpt.dirty = false
+      const refs = [
+        this.$refs.emailIpt,
+        this.$refs.usernameIpt,
+        this.$refs.passwdIpt
+      ]
+      for (const ref of refs) {
+        if (ref && ref.dirty) {
+          ref.dirty = false
+        }
+      }
     },
 
     async signUp() {
