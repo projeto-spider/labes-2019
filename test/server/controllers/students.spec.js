@@ -97,70 +97,49 @@ describe('/api/students', () => {
     expect(felipe.isGraduating).toBeFalsy()
     expect(felipe.isConcluding).toBeFalsy()
     expect(felipe.cancelled).toBeFalsy()
-    expect(felipe.recordSigned).toBeFalsy()
-    expect(felipe.termPaper).toBeFalsy()
     expect(felipe.cd).toBeFalsy()
-    expect(felipe.isUndergraduate).toBeFalsy()
 
     expect(laura.isActive).toBeFalsy()
     expect(laura.isForming).toBeFalsy()
     expect(laura.isGraduating).toBeFalsy()
     expect(laura.isConcluding).toBeTruthy()
     expect(laura.cancelled).toBeFalsy()
-    expect(laura.recordSigned).toBeFalsy()
-    expect(laura.termPaper).toBeFalsy()
     expect(laura.cd).toBeFalsy()
-    expect(laura.isUndergraduate).toBeFalsy()
 
     expect(jose.isActive).toBeFalsy()
     expect(jose.isForming).toBeFalsy()
     expect(jose.isGraduating).toBeFalsy()
     expect(jose.isConcluding).toBeTruthy()
     expect(jose.cancelled).toBeFalsy()
-    expect(jose.recordSigned).toBeFalsy()
-    expect(jose.termPaper).toBeFalsy()
     expect(jose.cd).toBeFalsy()
-    expect(jose.isUndergraduate).toBeFalsy()
 
     expect(enzo.isActive).toBeTruthy()
     expect(enzo.isGraduating).toBeFalsy()
     expect(enzo.isGraduating).toBeFalsy()
     expect(enzo.isConcluding).toBeFalsy()
     expect(enzo.cancelled).toBeFalsy()
-    expect(enzo.recordSigned).toBeFalsy()
-    expect(enzo.termPaper).toBeFalsy()
     expect(enzo.cd).toBeFalsy()
-    expect(enzo.isUndergraduate).toBeFalsy()
 
     expect(kauan.isActive).toBeFalsy()
     expect(kauan.isGraduating).toBeFalsy()
     expect(kauan.isGraduating).toBeFalsy()
     expect(kauan.isConcluding).toBeFalsy()
     expect(kauan.cancelled).toBeTruthy()
-    expect(kauan.recordSigned).toBeFalsy()
-    expect(kauan.termPaper).toBeFalsy()
     expect(kauan.cd).toBeFalsy()
-    expect(kauan.isUndergraduate).toBeFalsy()
 
     expect(eduardo.isActive).toBeTruthy()
     expect(eduardo.isGraduating).toBeFalsy()
     expect(eduardo.isGraduating).toBeFalsy()
     expect(eduardo.isConcluding).toBeFalsy()
     expect(eduardo.cancelled).toBeFalsy()
-    expect(eduardo.recordSigned).toBeFalsy()
-    expect(eduardo.termPaper).toBeFalsy()
     expect(eduardo.cd).toBeFalsy()
-    expect(eduardo.isUndergraduate).toBeFalsy()
 
     expect(julian.isActive).toBeFalsy()
     expect(julian.isGraduating).toBeFalsy()
     expect(julian.isGraduating).toBeFalsy()
     expect(julian.isConcluding).toBeTruthy()
     expect(julian.cancelled).toBeFalsy()
-    expect(julian.recordSigned).toBeFalsy()
-    expect(julian.termPaper).toBeFalsy()
     expect(julian.cd).toBeFalsy()
-    expect(julian.isUndergraduate).toBeFalsy()
 
     done()
   })
@@ -267,70 +246,49 @@ describe('/api/students', () => {
     expect(felipe.isGraduating).toBeFalsy()
     expect(felipe.isConcluding).toBeFalsy()
     expect(felipe.cancelled).toBeFalsy()
-    expect(felipe.recordSigned).toBeFalsy()
-    expect(felipe.termPaper).toBeFalsy()
     expect(felipe.cd).toBeFalsy()
-    expect(felipe.isUndergraduate).toBeFalsy()
 
     expect(laura.isActive).toBeFalsy()
     expect(laura.isForming).toBeFalsy()
     expect(laura.isGraduating).toBeFalsy()
     expect(laura.isConcluding).toBeTruthy()
     expect(laura.cancelled).toBeFalsy()
-    expect(laura.recordSigned).toBeFalsy()
-    expect(laura.termPaper).toBeFalsy()
     expect(laura.cd).toBeFalsy()
-    expect(laura.isUndergraduate).toBeFalsy()
 
     expect(jose.isActive).toBeFalsy()
     expect(jose.isForming).toBeFalsy()
     expect(jose.isGraduating).toBeFalsy()
     expect(jose.isConcluding).toBeTruthy()
     expect(jose.cancelled).toBeFalsy()
-    expect(jose.recordSigned).toBeFalsy()
-    expect(jose.termPaper).toBeFalsy()
     expect(jose.cd).toBeFalsy()
-    expect(jose.isUndergraduate).toBeFalsy()
 
     expect(enzo.isActive).toBeTruthy()
     expect(enzo.isGraduating).toBeFalsy()
     expect(enzo.isGraduating).toBeFalsy()
     expect(enzo.isConcluding).toBeFalsy()
     expect(enzo.cancelled).toBeFalsy()
-    expect(enzo.recordSigned).toBeFalsy()
-    expect(enzo.termPaper).toBeFalsy()
     expect(enzo.cd).toBeFalsy()
-    expect(enzo.isUndergraduate).toBeFalsy()
 
     expect(kauan.isActive).toBeFalsy()
     expect(kauan.isGraduating).toBeFalsy()
     expect(kauan.isGraduating).toBeFalsy()
     expect(kauan.isConcluding).toBeFalsy()
     expect(kauan.cancelled).toBeTruthy()
-    expect(kauan.recordSigned).toBeFalsy()
-    expect(kauan.termPaper).toBeFalsy()
     expect(kauan.cd).toBeFalsy()
-    expect(kauan.isUndergraduate).toBeFalsy()
 
     expect(eduardo.isActive).toBeTruthy()
     expect(eduardo.isGraduating).toBeFalsy()
     expect(eduardo.isGraduating).toBeFalsy()
     expect(eduardo.isConcluding).toBeFalsy()
     expect(eduardo.cancelled).toBeFalsy()
-    expect(eduardo.recordSigned).toBeFalsy()
-    expect(eduardo.termPaper).toBeFalsy()
     expect(eduardo.cd).toBeFalsy()
-    expect(eduardo.isUndergraduate).toBeFalsy()
 
     expect(julian.isActive).toBeFalsy()
     expect(julian.isGraduating).toBeFalsy()
     expect(julian.isGraduating).toBeFalsy()
     expect(julian.isConcluding).toBeTruthy()
     expect(julian.cancelled).toBeFalsy()
-    expect(julian.recordSigned).toBeFalsy()
-    expect(julian.termPaper).toBeFalsy()
     expect(julian.cd).toBeFalsy()
-    expect(julian.isUndergraduate).toBeFalsy()
 
     done()
   })
@@ -393,14 +351,10 @@ describe('/api/students', () => {
         academicHighlight: false,
         cancelled: false,
         mailingList: 'none',
-        entryDate: '05-28-2019',
         advisor: 'Novo Orientador',
         defenseDate: '06-30-2019',
         term: null,
-        recordSigned: false,
-        termPaper: false,
-        cd: true,
-        isUndergraduate: false
+        cd: true
       })
     expect(resComplete.status).toEqual(200)
     expect(resComplete.type).toEqual('application/json')
@@ -1478,14 +1432,10 @@ describe('/api/students', () => {
         academicHighlight: false,
         cancelled: false,
         mailingList: 'none',
-        entryDate: '05-28-2019',
         advisor: 'Novo Orientador',
         defenseDate: '06-30-2019',
         term: null,
-        recordSigned: false,
-        termPaper: false,
-        cd: true,
-        isUndergraduate: false
+        cd: true
       })
     expect(resComplete.status).toEqual(400)
     expect(resComplete.type).toEqual('application/json')
@@ -1685,14 +1635,10 @@ describe('/api/students', () => {
       mailingList: 'none',
       mailingListToRemove: 'none',
       mailingListToAdd: 'active',
-      entryDate: '04-20-2019',
       advisor: null,
       defenseDate: null,
       term: null,
-      recordSigned: false,
-      termPaper: false,
       cd: false, // important
-      isUndergraduate: false,
       period: null
     }).save()
 

@@ -15,14 +15,10 @@ module.exports = [
     mailingList: 'none',
     mailingListToRemove: 'none',
     mailingListToAdd: 'active',
-    entryDate: '05-28-2019',
     advisor: 'Orientador Válido',
     defenseDate: null,
     term: null,
-    recordSigned: false,
-    termPaper: false,
     cd: false,
-    isUndergraduate: false,
     period: null
   },
   {
@@ -41,14 +37,10 @@ module.exports = [
     mailingList: 'none',
     mailingListToRemove: 'none',
     mailingListToAdd: 'active',
-    entryDate: '05-27-2019',
     advisor: null,
     defenseDate: null,
     term: null,
-    recordSigned: false,
-    termPaper: false,
     cd: false,
-    isUndergraduate: false,
     period: '2018.3'
   },
   {
@@ -67,14 +59,10 @@ module.exports = [
     mailingList: 'active',
     mailingListToRemove: 'active',
     mailingListToAdd: 'concluding',
-    entryDate: '01-28-2019',
     advisor: 'Mais um orientador',
     defenseDate: null,
     term: null,
-    recordSigned: false,
-    termPaper: false,
     cd: false,
-    isUndergraduate: false,
     period: null
   },
   {
@@ -93,14 +81,10 @@ module.exports = [
     mailingList: 'none',
     mailingListToRemove: 'none',
     mailingListToAdd: 'active',
-    entryDate: '04-20-2019',
     advisor: null,
     defenseDate: null,
     term: null,
-    recordSigned: false,
-    termPaper: false,
     cd: false,
-    isUndergraduate: false,
     period: '2018.4'
   },
   {
@@ -119,14 +103,10 @@ module.exports = [
     mailingList: 'active',
     mailingListToRemove: 'active',
     mailingListToAdd: 'none',
-    entryDate: '05-18-2018',
     advisor: null,
     defenseDate: null,
     term: null,
-    recordSigned: false,
-    termPaper: false,
     cd: false,
-    isUndergraduate: false,
     period: null
   },
   {
@@ -145,14 +125,10 @@ module.exports = [
     mailingList: 'none',
     mailingListToRemove: 'none',
     mailingListToAdd: 'active',
-    entryDate: null,
     advisor: null,
     defenseDate: null,
     term: null,
-    recordSigned: false,
-    termPaper: false,
     cd: false,
-    isUndergraduate: false,
     period: null
   },
   {
@@ -171,14 +147,10 @@ module.exports = [
     mailingList: 'active',
     mailingListToRemove: 'active',
     mailingListToAdd: 'concluding',
-    entryDate: '02-01-2019',
     advisor: null,
     defenseDate: null,
     term: null,
-    recordSigned: false,
-    termPaper: false,
     cd: false,
-    isUndergraduate: false,
     period: null
   }
 ]

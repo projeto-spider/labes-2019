@@ -18,14 +18,10 @@ const fields = [
   'mailingList',
   'mailingListToAdd',
   'mailingListToRemove',
-  'entryDate',
   'advisor',
   'defenseDate',
   'term',
-  'recordSigned',
-  'termPaper',
   'cd',
-  'isUndergraduate',
   'period'
 ]
 

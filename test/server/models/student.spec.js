@@ -64,9 +64,7 @@ describe('Student', () => {
       isForming: 0,
       isGraduating: 1,
       academicHighlight: 0,
-      cancelled: 1,
-      recordSigned: 1,
-      termPaper: 0
+      cancelled: 1
     }).save()
 
     const booleanFields = [
@@ -76,9 +74,7 @@ describe('Student', () => {
       'isForming',
       'isGraduating',
       'academicHighlight',
-      'cancelled',
-      'recordSigned',
-      'termPaper'
+      'cancelled'
     ]
 
     const obj = JSON.parse(JSON.stringify(student))
