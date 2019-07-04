@@ -85,6 +85,12 @@
 
                 <template v-if="status === 'accepted'">
                   <b-button
+                    class="button is-normal is-primary is-modal"
+                    @click="toggleDisclosureModal"
+                  >
+                    Divulgação
+                  </b-button>
+                  <b-button
                     type="is-warning"
                     @click="move(selectedDefense, 'pending')"
                   >
@@ -110,6 +116,38 @@
             </div>
           </div>
         </b-modal>
+
+        <div class="modal" :class="{ 'is-active': isDisclosureModalActive }">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Modelo de divulgação</p>
+              <button
+                class="delete"
+                aria-label="close"
+                @click.stop.prevent="toggleDisclosureModal"
+              ></button>
+            </header>
+            <section class="modal-card-body">
+              <textarea
+                v-model="disclosure"
+                class="textarea"
+                rows="15"
+              ></textarea>
+            </section>
+            <footer class="modal-card-foot">
+              <button class="button is-primary" @click="doCopy">
+                Copiar
+              </button>
+              <button
+                class="button"
+                @click.stop.prevent="toggleDisclosureModal"
+              >
+                Cancelar
+              </button>
+            </footer>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -163,6 +201,7 @@ export default {
       selectedDefense: false,
       editDefense: false,
       searchStudentName: '',
+      isDisclosureModalActive: false,
       columns: [
         {
           field: 'advisorName',
@@ -195,7 +234,10 @@ export default {
   computed: {
     ...mapState({
       courseTag: state => state.courseTag
-    })
+    }),
+    disclosure() {
+      return disclosureModel(this.selectedDefense)
+    }
   },
 
   watch: {
@@ -290,8 +332,83 @@ export default {
           this.openErrorNotification(error.response.data.code)
           throw error
         })
+    },
+
+    toggleDisclosureModal() {
+      this.isDisclosureModalActive = !this.isDisclosureModalActive
+    },
+
+    doCopy() {
+      try {
+        const el = document.createElement('textarea')
+        el.value = this.disclosure
+        el.setAttribute('readonly', '')
+        el.style = { position: 'absolute', left: '-9999px' }
+        document.body.appendChild(el)
+        el.select()
+        document.execCommand('copy')
+        document.body.removeChild(el)
+        this.$toast.open({ message: 'Copiado!', type: 'is-success' })
+      } catch (e) {
+        this.$toast.open({ message: 'Erro ao copiar!', type: 'is-danger' })
+      }
     }
   }
+}
+
+function disclosureModel(selectedDefense) {
+  return `DEFESA PÚBLICA DO TRABALHO DE
+CONCLUSÃO DO CURSO DE ${
+    selectedDefense.course === 'cbcc'
+      ? 'CIÊNCIA DA COMPUTAÇÃO'
+      : 'SISTEMAS DE INFORMAÇÃO'
+  }
+
+Discente(s): ${selectedDefense.students}
+
+Título: ${selectedDefense.title}
+
+Banca:
+
+${formalTitle(selectedDefense.advisorTitle)}${
+    selectedDefense.advisorName
+  } (ORIENTADOR(A))
+${formalTitle(selectedDefense.coAdvisorTitle)}${
+    selectedDefense.coAdvisorName !== ''
+      ? `${selectedDefense.coAdvisorName} (COORIENTADOR(A))`
+      : ''
+  }
+${formalTitle(selectedDefense.evaluator1Title)}${
+    selectedDefense.evaluator1Name
+  } (AVALIADOR(A))
+${formalTitle(selectedDefense.evaluator2Title)}${
+    selectedDefense.evaluator2Name
+  } (AVALIADOR(A))
+${formalTitle(selectedDefense.evaluator2Title)}${
+    selectedDefense.evaluator3Name !== ''
+      ? `${selectedDefense.evaluator3Name} (AVALIADOR(A))`
+      : ''
+  }
+
+Data e local: ${selectedDefense.date} às ${selectedDefense.time} - ${
+    selectedDefense.local
+  }
+
+RESUMO
+
+${selectedDefense.summary}`
+}
+
+function formalTitle(title) {
+  if (title === 'doctor') {
+    return 'Doutor(a) '
+  }
+
+  if (title === 'master') {
+    return 'Mestre(a) '
+  }
+
+  return ''
 }
 </script>
 
