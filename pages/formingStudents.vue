@@ -200,8 +200,6 @@ export default {
       this.checkCrgsReady()
     },
     handleMove() {
-      // eslint-disable-next-line no-console
-      console.log('move')
       const refs = [
         this.$refs.fitGraduatingSearchInput,
         this.$refs.GraduatingSearchInput

@@ -134,7 +134,7 @@ export default {
     },
     isFit: {
       type: Boolean,
-      default: false
+      default: undefined
     },
     isForming: {
       type: Boolean,
@@ -249,7 +249,7 @@ export default {
         return {
           ...commonParams,
           isFit: this.isFit,
-          isGraduating: this.isGraduating,
+          isGraduating: true,
           ...(this.blankCrgFilter && { noCrg: true })
         }
       }
