@@ -26,8 +26,8 @@
     </section>
     <section v-else class="dtable">
       <div class="has-text-centered dcell">
-        <h1 class="title">Lorem ipsum</h1>
-        <h2 class="subtitle">Dolor sit amet</h2>
+        <h1 class="title">Nada para mostrar ainda!</h1>
+        <h2 class="subtitle">Selecione algum botão abaixo</h2>
       </div>
     </section>
   </div>
