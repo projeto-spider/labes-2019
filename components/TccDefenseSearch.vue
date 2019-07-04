@@ -573,7 +573,7 @@ function dateInFull(defenseDate) {
     'Novembro',
     'Dezembro'
   ]
-  if (typeof defenseDate === typeof '') {
+  if (typeof defenseDate === 'string') {
     const date = defenseDate.split('/')
     return `${date[0]} de ${month[date[1] - 1]} de ${date[2]}`
   }
@@ -581,7 +581,7 @@ function dateInFull(defenseDate) {
 }
 
 function hourFormmated(defenseHour) {
-  if (typeof defenseHour === typeof '') {
+  if (typeof defenseHour === 'string') {
     const hour = defenseHour
       .split(':')
       .join('h')
