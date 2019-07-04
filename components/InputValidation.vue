@@ -31,7 +31,7 @@ export default {
 
     invalidMessage: {
       type: Array,
-      default: [] // eslint-disable-line
+      default: () => []
     },
 
     valid: {
