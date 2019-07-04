@@ -64,7 +64,7 @@ export default {
       isActive: false,
       studentsData: [],
       currentPage: 1,
-      total: 2,
+      total: 0,
       perPage: 0
     }
   },
@@ -83,23 +83,14 @@ export default {
   methods: {
     openModal() {
       this.isActive = !this.isActive
-      this.$services.students
-        .fetchPage({ prescribed: true })
-        .then(res => {
-          this.studentsData = res.data
-          // this.total = res.headers['pagination-row-count']
-          this.perPage = res.headers['pagination-page-size']
-        })
-        .catch(e => {
-          this.openErrorNotification(e)
-        })
+      this.nextPage(1)
     },
     nextPage(page) {
       this.$services.students
         .fetchPage({ prescribed: true, page: page })
         .then(res => {
           this.studentsData = res.data
-          // this.total = res.headers['pagination-row-count']
+          this.total = res.headers['pagination-row-count']
           this.perPage = res.headers['pagination-page-size']
         })
         .catch(e => {
