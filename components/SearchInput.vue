@@ -130,7 +130,7 @@ export default {
     },
     showDefenseDate: {
       type: Boolean,
-      default: undefined
+      default: false
     },
     isFit: {
       type: Boolean,
@@ -234,6 +234,32 @@ export default {
       return this.studentsData.find(
         student => student.id === this.selectedStudent.id
       )
+    },
+    getParams() {
+      const commonParams = {
+        course: this.courseTag,
+        page: this.page,
+        sort: this.sortField,
+        order: this.sortOrder,
+        ...maybeParam('name', this.searchName),
+        ...maybeParam('registrationNumber', this.searchRegistration),
+        ...maybeParam('email', this.searchEmail)
+      }
+      if (this.isGraduating) {
+        return {
+          ...commonParams,
+          isFit: this.isFit,
+          isGraduating: true,
+          ...(this.blankCrgFilter && { noCrg: true })
+        }
+      }
+      return {
+        ...commonParams,
+        isActive: this.isActive,
+        isConcluding: this.isConcluding,
+        isForming: this.isForming,
+        mailingList: this.mailingList
+      }
     }
   },
   watch: {
@@ -278,17 +304,10 @@ export default {
     },
     total() {
       if (+this.total === 0) {
-        if (this.isActive) {
-          this.$toast.open({
-            message: 'Nenhum aluno(a) ativo(a) foi encontrado(a)!',
-            type: 'is-warning'
-          })
-        } else {
-          this.$toast.open({
-            message: `Nenhum aluno(a) foi encontrado(a)!`,
-            type: 'is-warning'
-          })
-        }
+        this.$toast.open({
+          message: `${this.title}: Nenhum aluno(a) foi encontrado(a)!`,
+          type: 'is-warning'
+        })
       }
     }
   },
@@ -308,31 +327,12 @@ export default {
   methods: {
     getStudentsFilters: pDebounce(function getStudentsFilters() {
       this.getStudents()
+      this.$emit('move')
     }, 500),
-
     getStudents() {
       this.loading = true
-      function maybeParam(key, value) {
-        return value && { [key]: `%${value}%` }
-      }
-      const params = {
-        course: this.courseTag,
-        page: this.page,
-        sort: this.sortField,
-        order: this.sortOrder,
-        isActive: this.isActive ? this.isActive : undefined,
-        mailingList: this.mailingList !== '' ? this.mailingList : undefined,
-        isConcluding: this.isConcluding ? this.isConcluding : undefined,
-        isForming: this.isForming ? this.isForming : undefined,
-        isFit: !this.isFit && this.isGraduating ? this.isFit : undefined,
-        isGraduating: this.isGraduating ? this.isGraduating : undefined,
-        ...maybeParam('name', this.searchName),
-        ...maybeParam('registrationNumber', this.searchRegistration),
-        ...maybeParam('email', this.searchEmail),
-        ...(this.blankCrgFilter && { noCrg: true })
-      }
       this.$services.students
-        .fetchPage(params)
+        .fetchPage(this.getParams)
         .then(res => {
           this.studentsData = res.data
           this.total = res.headers['pagination-row-count']
@@ -340,7 +340,7 @@ export default {
         })
         .catch(() => {
           this.$toast.open({
-            message: 'Falha ao carregar a lista de alunos.',
+            message: `${this.title}: Falha ao carregar a lista de alunos.`,
             type: 'is-danger'
           })
         })
@@ -365,6 +365,9 @@ export default {
       }
     }
   }
+}
+function maybeParam(key, value) {
+  return value && { [key]: `%${value}%` }
 }
 </script>
 

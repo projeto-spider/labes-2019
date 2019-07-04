@@ -38,15 +38,18 @@
       :default-sort-order="'desc'"
       :show-crg-filter="true"
       @toggleComboBox="onToggleComboBox"
+      @move="handleMove"
     ></SearchInput>
     <br />
     <SearchInput
+      ref="GraduatingSearchInput"
       :default-course="courseTag"
       title="Graduandos Não-Aptos"
       :is-graduating="true"
       :is-active="true"
       :show-defense-date="true"
       :is-fit="false"
+      @move="handleMove"
     ></SearchInput>
     <br />
     <SearchInput
@@ -195,6 +198,18 @@ export default {
 
     onToggleComboBox() {
       this.checkCrgsReady()
+    },
+    handleMove() {
+      const refs = [
+        this.$refs.fitGraduatingSearchInput,
+        this.$refs.GraduatingSearchInput
+      ]
+
+      for (const ref of refs) {
+        if (ref && ref.getStudents) {
+          ref.getStudents()
+        }
+      }
     }
   }
 }
