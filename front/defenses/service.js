@@ -49,6 +49,7 @@ export default function makeDefensesServices(axios) {
 
     update(defenseId, params) {
       const paramList = [
+        'status',
         'students',
         'registrationNumbers',
         'course',
