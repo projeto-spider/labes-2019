@@ -13,9 +13,7 @@
         :checked-rows.sync="checkedStudents"
         checkable
       ></b-table>
-      <div class="leicon() {
-      return this.isAddition ? 'plus-circle' : 'minus-circle'
-    }vel">
+      <div class="level">
         <div class="level-left"></div>
         <div class="level-right">
           <div class="level-item btn-margin">
