@@ -10,6 +10,7 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 
 chai.use(chaiHttp)
+jest.setTimeout(10000)
 
 const testUtils = require('../test-utils')
 const useSeeds = require('../../use-seeds')

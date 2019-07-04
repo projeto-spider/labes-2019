@@ -13,6 +13,7 @@ const db = require('../../../server/db')
 const errors = require('../../../shared/errors')
 
 jest.useFakeTimers()
+jest.setTimeout(10000)
 
 describe('/api/solicitations', () => {
   beforeAll(async () => {

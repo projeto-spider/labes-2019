@@ -310,7 +310,7 @@ exports.fileName = function filename(dirStudents, studentFind, documentType) {
  * @param {Array} knownProperties - Known keys list
  * @returns {valid:Boolean,invalidParams:Array}
  */
-exports.validatePayload = function validatePayload(payload, knownProperties) {
+function validatePayload(payload, knownProperties) {
   const keysObject = Object.keys(payload)
 
   const invalidParams = keysObject.filter(key => !knownProperties.includes(key))
@@ -318,10 +318,11 @@ exports.validatePayload = function validatePayload(payload, knownProperties) {
 
   return { valid, invalidParams }
 }
+exports.validatePayload = validatePayload
 
 exports.validateQuery = function validateQuery(payload, knownProperties) {
   const newKnownProperties = ['token', ...knownProperties]
-  return this.validatePayload(payload, newKnownProperties)
+  return validatePayload(payload, newKnownProperties)
 }
 
 /**

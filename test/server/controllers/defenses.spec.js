@@ -14,6 +14,7 @@ const Defense = require('../../../server/models/Defense')
 const errors = require('../../../shared/errors')
 
 jest.useFakeTimers()
+jest.setTimeout(10000)
 
 describe('/api/defenses', () => {
   beforeAll(async () => {
