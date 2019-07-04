@@ -48,17 +48,27 @@ module.exports = async function viewDocument(ctx) {
       '.pdf'
   )
 
-  const reader = fs.createReadStream(pathDocument)
+  try {
+    const reader = fs.createReadStream(pathDocument)
+    ctx.set('Content-Type', 'application/pdf')
+    ctx.set(
+      'Content-Disposition',
+      'filename="' +
+        studentFind.get('registrationNumber') +
+        '-' +
+        enums.documents[documentFind.get('type')] +
+        '.pdf"'
+    )
+    ctx.status = 200
+    ctx.body = reader
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      throw err
+    }
 
-  ctx.set('Content-Type', 'application/pdf')
-  ctx.set(
-    'Content-Disposition',
-    'filename="' +
-      studentFind.get('registrationNumber') +
-      '-' +
-      enums.documents[documentFind.get('type')] +
-      '.pdf"'
-  )
-  ctx.status = 200
-  ctx.body = reader
+    await documentFind.destroy()
+
+    ctx.status = 404
+    ctx.body = { code: errors.NOT_FOUND }
+  }
 }
