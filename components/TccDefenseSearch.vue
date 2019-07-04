@@ -558,7 +558,6 @@ function validExternalEvaluator(evaluator) {
   return validPerson(evaluator) && evaluator.type === 'external'
 }
 
-// 4/7/2019 => 4 de Julho de 2019
 function dateInFull(defenseDate) {
   const month = [
     'Janeiro',
