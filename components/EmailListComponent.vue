@@ -8,15 +8,34 @@
     ></SearchInput>
     <button
       v-if="hasEmailChanges"
-      class="button is-primary"
-      @click="activateModal"
+      class="button is-success"
+      :disabled="!emailChanges.additions.length"
+      @click="activateModal('additions')"
     >
-      Alterações pendentes
+      Estudantes a adicionar
+      {{
+        emailChanges.additions.length
+          ? `(${emailChanges.additions.length})`
+          : ''
+      }}
+    </button>
+    <button
+      v-if="hasEmailChanges"
+      class="button is-danger"
+      :disabled="!emailChanges.deletions.length"
+      @click="activateModal('deletions')"
+    >
+      Estudantes a remover
+      {{
+        emailChanges.deletions.length
+          ? `(${emailChanges.deletions.length})`
+          : ''
+      }}
     </button>
     <b-modal :active.sync="activate">
       <EmailCompare
-        :students-to-add="emailChanges.additions"
-        :students-to-remove="emailChanges.deletions"
+        :students="putStudents"
+        :is-addition="additionMode"
         :mailing-list="mailingList"
         @email-list-changed="getChanges"
       ></EmailCompare>
@@ -50,6 +69,7 @@ export default {
   data() {
     return {
       activate: false,
+      additionMode: false,
       hasEmailChanges: false,
       emailChanges: {}
     }
@@ -58,16 +78,24 @@ export default {
   computed: {
     ...mapState({
       courseTag: state => state.courseTag
-    })
+    }),
+
+    putStudents() {
+      return this.additionMode
+        ? this.emailChanges.additions
+        : this.emailChanges.deletions
+    }
   },
   created() {
     this.getChanges()
   },
 
   methods: {
-    activateModal() {
+    activateModal(mode) {
       this.activate = !this.activate
+      this.additionMode = mode === 'additions'
     },
+
     getChanges() {
       this.$services.students
         .fetchEmailChanges(this.mailingList)
@@ -83,8 +111,8 @@ export default {
             this.hasEmailChanges = false
           }
         })
-        .catch(resErro => {
-          this.openErrorNotification(resErro)
+        .catch(resError => {
+          this.openErrorNotification(resError)
         })
     }
   }

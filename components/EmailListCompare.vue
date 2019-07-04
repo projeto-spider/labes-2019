@@ -1,13 +1,17 @@
 <template>
   <div class="box">
-    <b-tabs position="is-centered" class="block">
-      <b-tab-item label="Emails a serem adicionados">
-        <b-table :data="studentsToAdd" :columns="columns"></b-table>
-      </b-tab-item>
-      <b-tab-item label="Emails a serem removidos">
-        <b-table :data="studentsToRemove" :columns="columns"> </b-table>
-      </b-tab-item>
-    </b-tabs>
+    <header class="card-header">
+      <b-icon pack="fas" :icon="icon()" size="is-small"></b-icon>
+      <p class="card-header-title">
+        Estudantes a {{ isAddition ? 'adicionar' : 'remover' }} da lista
+      </p>
+    </header>
+    <b-table
+      :data="students"
+      :columns="columns"
+      :checked-rows.sync="checkedStudents"
+      checkable
+    ></b-table>
     <div class="level">
       <div class="level-right">
         <div class="level-item">
@@ -26,17 +30,17 @@ export default {
   name: 'EmailCompare',
   mixins: [errorsHandler],
   props: {
-    studentsToAdd: {
-      type: Array,
-      default: () => []
-    },
-    studentsToRemove: {
+    students: {
       type: Array,
       default: () => []
     },
     mailingList: {
       type: String,
-      default: () => ''
+      default: ''
+    },
+    isAddition: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -44,7 +48,8 @@ export default {
       columns: [
         { field: 'name', label: 'Nome' },
         { field: 'email', label: 'E-mail' }
-      ]
+      ],
+      checkedStudents: []
     }
   },
   methods: {
@@ -67,9 +72,11 @@ export default {
             })
         }
       })
+    },
+
+    icon() {
+      return this.isAddition ? 'plus-circle' : 'minus-circle'
     }
   }
 }
 </script>
-
-<style></style>
