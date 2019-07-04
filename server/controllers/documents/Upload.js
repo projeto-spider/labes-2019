@@ -47,7 +47,20 @@ module.exports = async function uploadDocument(ctx) {
     ctx.body = { code: errors.UPLOAD_FILE_FIELD_MISSING }
     return
   }
-  const pdf = await readFile(filePath)
+
+  let pdf
+  try {
+    pdf = await readFile(filePath)
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      throw err
+    }
+
+    ctx.status = 404
+    ctx.body = { code: errors.NOT_FOUND }
+    return
+  }
+
   if (!pdf) {
     ctx.status = 400
     ctx.body = { code: errors.IMPORT_FILE_FAILED_TO_UPLOAD }
@@ -103,9 +116,9 @@ module.exports = async function uploadDocument(ctx) {
   )
 
   try {
-    await access(dirUploads)
+    await access(dirStudents)
   } catch (e) {
-    await mk(dirUploads)
+    await mk(dirStudents)
   }
 
   const file = ctx.request.files.file
