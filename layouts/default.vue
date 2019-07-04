@@ -5,7 +5,7 @@
   >
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a
+        <!-- <a
           v-if="showSideNavBurger"
           href="#"
           role="button"
@@ -19,7 +19,7 @@
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
-        </a>
+        </a> -->
         <a
           href="#"
           role="button"
@@ -27,7 +27,7 @@
           :class="{ 'is-active': showNavBurger }"
           aria-label="menu"
           aria-expanded="false"
-          data-target="navbarBasicExample"
+          data-targetf="navbarBasicExample"
           @click="showNavBurger = !showNavBurger"
         >
           <span aria-hidden="true"></span>
@@ -74,56 +74,37 @@
               </a>
             </div>
           </div>
+          <div class="navbar-item">
+            <b-collapse :open="open" aria-id="asideCollapse">
+              <a
+                slot="trigger"
+                href="#"
+                role="button"
+                class="navbar-burger burger"
+                :class="{ 'is-active': active }"
+                aria-label="menu"
+                aria-expanded="false"
+                aria-controls="asideCollapse"
+                @click="toggleOpen"
+              >
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+              </a>
+              <AsideBar :course-tag="courseTag" />
+            </b-collapse>
+          </div>
         </div>
       </div>
     </nav>
 
-    <div class="columns is-fullheight asideBackground">
-      <div class="column is-2" :class="{ 'is-hidden-mobile': !active }">
-        <aside id="asideBar" class="menu is-sidebar-menu">
-          <div class="menu-label text-uppercase">
-            {{ courseTag ? courseTag : 'selecionar curso' }}
-          </div>
-          <ul class="menu-list">
-            <li>
-              <nuxt-link to="/tccDefense">Defesas de TCC</nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="/formingStudents">Formandos</nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="/concludingStudents">Concluintes</nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="/activeStudents">Alunos Ativos</nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="/allStudents">Alunos Totais</nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="/subjects">Matérias</nuxt-link>
-            </li>
-          </ul>
-
-          <div class="menu-label">Grupos de Email</div>
-          <ul class="menu-list">
-            <li>
-              <nuxt-link to="/emailListActive">Email Principal</nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="/emailListFreshman">Calouros</nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="/emailListNewsletter">Newsletter</nuxt-link>
-            </li>
-          </ul>
-          <div class="menu-label">Importar</div>
-          <ul class="menu-list">
-            <li>
-              <a href="#" @click="activateModal = true">Importar Alunos</a>
-            </li>
-          </ul>
-        </aside>
+    <div id="asideContainer" class="columns is-fullheight asideBackground">
+      <div
+        v-if="!isActive()"
+        class="column is-2"
+        :class="{ 'is-hidden-mobile': !isActive() }"
+      >
+        <AsideBar :course-tag="courseTag" />
       </div>
       <b-modal :active.sync="activateModal" :width="640" scroll="keep">
         <ImportStudents />
@@ -138,15 +119,18 @@
 import { mapState, mapGetters } from 'vuex'
 
 import ImportStudents from '@/components/ImportStudents.vue'
+import AsideBar from '@/components/AsideBar.vue'
 export default {
   middleware: ['auth'],
   components: {
-    ImportStudents
+    ImportStudents,
+    AsideBar
   },
   data() {
     return {
       active: this.isActive(),
       activateModal: false,
+      open: false,
       showNavBurger: this.showSideNavBurger()
     }
   },
@@ -173,6 +157,9 @@ export default {
     }
   },
   methods: {
+    toggleOpen() {
+      this.open = !this.open
+    },
     isActive() {
       return !window.innerWidth > 768
     },
