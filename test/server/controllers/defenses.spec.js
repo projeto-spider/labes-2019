@@ -585,7 +585,7 @@ describe('/api/defenses', () => {
     done()
   })
 
-  test('GET /pdf/:id/:files', async done => {
+  test('GET /defenses/:id/pdf/:files', async done => {
     const teacher = await testUtils.user('teacher')
     const admin = await testUtils.user('admin')
 
@@ -624,7 +624,7 @@ describe('/api/defenses', () => {
 
     const resAll = await chai
       .request(server.listen())
-      .get('/api/pdf/1')
+      .get('/api/defenses/1/pdf')
       .set('Authorization', `Bearer ${admin.token}`)
     expect(resAll.type).toEqual('application/pdf')
     expect(resAll.body).toBeDefined()
@@ -632,7 +632,7 @@ describe('/api/defenses', () => {
 
     const resAta = await chai
       .request(server.listen())
-      .get('/api/pdf/1/ata')
+      .get('/api/defenses/1/pdf/ata')
       .set('Authorization', `Bearer ${admin.token}`)
     expect(resAta.type).toEqual('application/pdf')
     expect(resAta.body).toBeDefined()
@@ -640,7 +640,7 @@ describe('/api/defenses', () => {
 
     const resCd = await chai
       .request(server.listen())
-      .get('/api/pdf/1/cd')
+      .get('/api/defenses/1/pdf/cd')
       .set('Authorization', `Bearer ${admin.token}`)
     expect(resCd.type).toEqual('application/pdf')
     expect(resCd.body).toBeDefined()
@@ -648,7 +648,7 @@ describe('/api/defenses', () => {
 
     const resCertification = await chai
       .request(server.listen())
-      .get('/api/pdf/1/certificado1')
+      .get('/api/defenses/1/pdf/certificado1')
       .set('Authorization', `Bearer ${admin.token}`)
     expect(resCertification.type).toEqual('application/pdf')
     expect(resCertification.body).toBeDefined()
@@ -656,7 +656,7 @@ describe('/api/defenses', () => {
 
     const resCrendentials = await chai
       .request(server.listen())
-      .get('/api/pdf/1/credenciamento1')
+      .get('/api/defenses/1/pdf/credenciamento1')
       .set('Authorization', `Bearer ${admin.token}`)
     expect(resCrendentials.type).toEqual('application/pdf')
     expect(resCrendentials.body).toBeDefined()
@@ -664,7 +664,7 @@ describe('/api/defenses', () => {
 
     const resPublishing = await chai
       .request(server.listen())
-      .get('/api/pdf/1/divulgacao')
+      .get('/api/defenses/1/pdf/divulgacao')
       .set('Authorization', `Bearer ${admin.token}`)
     expect(resPublishing.type).toEqual('application/pdf')
     expect(resPublishing.body).toBeDefined()
@@ -672,16 +672,16 @@ describe('/api/defenses', () => {
 
     const resInvalid1 = await chai
       .request(server.listen())
-      .get('/api/pdf/1/lalilulelo')
+      .get('/api/defenses/1/pdf/lalilulelo')
       .set('Authorization', `Bearer ${admin.token}`)
     expect(resInvalid1.body).toBeDefined()
     expect(resInvalid1.status).toEqual(400)
     expect(resInvalid1.body.param).toEqual('lalilulelo')
-    expect(resInvalid1.body.code).toEqual(errors.INVALID_PARAMS)
+    expect(resInvalid1.body.code).toEqual(errors.INVALID_REQUEST)
 
     const resInvalid2 = await chai
       .request(server.listen())
-      .get('/api/pdf/99')
+      .get('/api/defenses/lalilulelo')
       .set('Authorization', `Bearer ${admin.token}`)
     expect(resInvalid2.body).toBeDefined()
     expect(resInvalid2.status).toEqual(404)
