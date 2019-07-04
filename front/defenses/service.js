@@ -19,6 +19,8 @@ export default function makeDefensesServices(axios) {
     create(params) {
       const paramList = [
         'students',
+        'registrationNumbers',
+        'course',
         'local',
         'title',
         'keywords',
@@ -48,6 +50,8 @@ export default function makeDefensesServices(axios) {
     update(defenseId, params) {
       const paramList = [
         'students',
+        'registrationNumbers',
+        'course',
         'local',
         'title',
         'keywords',
