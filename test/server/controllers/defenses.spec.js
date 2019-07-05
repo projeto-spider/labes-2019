@@ -653,7 +653,7 @@ describe('/api/defenses', () => {
 
     const resInvalidCert1 = await chai
       .request(server.listen())
-      .get('/api/defenses/1/pdf/certificado2')
+      .get('/api/defenses/1/pdf/certificado5')
       .set('Authorization', `Bearer ${token}`)
     expect(resInvalidCert1.status).toEqual(404)
     expect(resInvalidCert1.type).toEqual('application/json')
@@ -669,7 +669,7 @@ describe('/api/defenses', () => {
 
     const resCredentials = await chai
       .request(server.listen())
-      .get('/api/defenses/1/pdf/credenciamento2')
+      .get('/api/defenses/1/pdf/credenciamento4')
       .set('Authorization', `Bearer ${token}`)
     expect(resCredentials.status).toEqual(200)
     expect(resCredentials.type).toEqual('application/pdf')
@@ -677,7 +677,7 @@ describe('/api/defenses', () => {
 
     const resInvalidCred = await chai
       .request(server.listen())
-      .get('/api/defenses/1/pdf/credenciamento1')
+      .get('/api/defenses/1/pdf/credenciamento2')
       .set('Authorization', `Bearer ${token}`)
     expect(resInvalidCred.status).toEqual(404)
     expect(resInvalidCred.type).toEqual('application/json')
@@ -720,8 +720,8 @@ describe('/api/defenses', () => {
       .query({ invalid: 1 })
       .set('Authorization', `Bearer ${token}`)
 
-    expect(res.status).toBe(400)
-    expect(res.type).toBe('application/json')
+    expect(res.status).toEqual(400)
+    expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.code).toEqual(errors.INVALID_QUERY)
     expect(res.body.invalidParams).toBeDefined()
