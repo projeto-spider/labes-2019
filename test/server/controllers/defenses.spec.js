@@ -131,7 +131,7 @@ describe('/api/defenses', () => {
       const res = await chai
         .request(server.listen())
         .get('/api/defenses/')
-        .query({ status: 'done', grade: 5.0 })
+        .query({ status: 'done' })
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toEqual(200)
@@ -1061,6 +1061,51 @@ describe('/api/defenses', () => {
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.code).toEqual(errors.NOT_FOUND)
+
+    done()
+  })
+
+  test('PUT /defenses/:id done without grade', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const payload = {
+      userId: 1,
+      course: 'cbcc',
+      registrationNumbers: '201704940001, 201304940002',
+      students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+      local: 'Auditório do ICEN',
+      title: 'Fundamentos da Comunicação Analógica',
+      keywords: 'Fundamental, comunicacional, analógico',
+      summary: 'Sumário fundamentacional',
+
+      advisorName: 'Jonathan Joestar',
+      advisorTitle: 'doctor',
+      advisorType: 'internal',
+
+      evaluator1Name: 'Robert E. O. Speedwagon',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+
+      evaluator2Name: 'Narciso Anasui',
+      evaluator2Title: 'master',
+      evaluator2Type: 'external'
+    }
+
+    const defense = await Defense.forge(payload).save()
+
+    const update = { status: 'done' }
+
+    const res = await chai
+      .request(server.listen())
+      .put(`/api/defenses/${defense.get('id')}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(update)
+
+    expect(res.status).toEqual(422)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toEqual(errors.UNPROCESSABLE_ENTITY)
+    expect(res.body.message).toEqual('MISSING_GRADE')
 
     done()
   })
