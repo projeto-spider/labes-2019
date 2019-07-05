@@ -301,14 +301,6 @@ export default {
         isForming: this.isForming,
         mailingList: this.mailingList
       }
-    },
-    applyRowClass(row) {
-      if (row.academicHighlight) {
-        return 'is-academic-highlight'
-      } else if (row.missingCollation) {
-        return 'is-missing-collation'
-      }
-      return ''
     }
   },
   watch: {
@@ -438,6 +430,15 @@ export default {
           'is-missing-collation'
         )
       }
+    },
+
+    applyRowClass(row) {
+      if (row.academicHighlight) {
+        return 'is-academic-highlight'
+      } else if (row.missingCollation) {
+        return 'is-missing-collation'
+      }
+      return ''
     }
   }
 }
