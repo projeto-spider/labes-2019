@@ -53,7 +53,7 @@
                   </div>
                 </div>
                 <div class="columns scrollable-modal">
-                  <div class="hideRightColumn">
+                  <div class="hideLeftColumn">
                     <DefenseForm
                       v-if="modalOpen"
                       v-model="selectedDefense"
@@ -282,7 +282,7 @@ export default {
           label: 'Local'
         }
       ],
-      hideRightColumn: {
+      hideLeftColumn: {
         // eslint-disable-next-line prettier/prettier
         'column': true,
         'is-left': this.isAdmin,
