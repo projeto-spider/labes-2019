@@ -45,7 +45,8 @@ export default function makeDefensesServices(axios) {
         'evaluator2Type',
         'evaluator3Name',
         'evaluator3Title',
-        'evaluator3Type'
+        'evaluator3Type',
+        'status'
       ]
       const payload = selector(params, paramList)
       return axios.post('/api/defenses', payload)
