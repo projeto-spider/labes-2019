@@ -88,8 +88,8 @@ export default {
         .fetchPage({ prescribed: true, page: page })
         .then(res => {
           this.studentsData = res.data
-          this.total = res.headers['pagination-row-count']
-          this.perPage = res.headers['pagination-page-size']
+          this.total = +res.headers['pagination-page-count']
+          this.perPage = +res.headers['pagination-page-size']
         })
         .catch(e => {
           this.openErrorNotification(e)
