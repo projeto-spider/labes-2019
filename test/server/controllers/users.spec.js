@@ -157,8 +157,8 @@ describe('/api/users', () => {
       email: 'person@example.com',
       role: 'admin'
     }
-    const user = await User.forge().save(payload)
-    const update = { password: 'newpassword' }
+    const user = await User.forge(payload).save()
+    const update = { password: 'newpassword', username: 'newname' }
     {
       const res = await chai
         .request(server.listen())
@@ -168,23 +168,18 @@ describe('/api/users', () => {
       expect(res.status).toBe(200)
       expect(res.type).toBe('application/json')
       expect(res.body).toBeDefined()
-      expect(res.body.username).toBe(payload.username)
+      expect(res.body.username).toBe(update.username)
     }
     {
       const res = await chai
         .request(server.listen())
         .post(`/api/auth`)
-        .send({
-          username: 'person',
-          password: 'newpassword'
-        })
+        .send(update)
       expect(res.status).toBe(200)
       expect(res.type).toBe('application/json')
       expect(res.body).toBeDefined()
       expect(res.body.token).toBeDefined()
-      expect(res.body.user.username).toBe(payload.username)
-      expect(res.body.user.email).toBe(payload.email)
-      expect(res.body.user.role).toBe(payload.role)
+      expect(res.body.user.username).toBe(update.username)
     }
     done()
   })
@@ -245,6 +240,7 @@ describe('/api/users', () => {
     expect(res.body.code).toBe(errors.FORBIDDEN)
     done()
   })
+
   test('PUT /users/:id invalid', async done => {
     const { token } = await testUtils.user('admin')
     const payload = {
@@ -261,10 +257,9 @@ describe('/api/users', () => {
         .put(`/api/users/${user.get('id')}`)
         .set('Authorization', `Bearer ${token}`)
         .send(update)
-      expect(res.status).toBe(400)
+      expect(res.status).toBe(200)
       expect(res.type).toBe('application/json')
       expect(res.body).toBeDefined()
-      expect(res.body.code).toBe(errors.INVALID_REQUEST)
     }
     {
       const update = { password: 'newpassword' }
