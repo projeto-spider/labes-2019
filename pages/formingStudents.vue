@@ -19,33 +19,29 @@
       @toggleComboBox="onToggleComboBox"
       @move="handleMove"
     >
-      <div class="columns has-text-centered">
-        <div class="column is-half">
-          <b-tooltip
-            v-if="!allCrgsReady"
-            label="Alguns alunos estão sem CRG"
-            position="is-bottom"
-            animated
-            multilined
-          >
-            <button
-              class="button is-danger"
-              :disabled="isAcademicHighlightSelected"
-            >
-              Eleger Destaque Acadêmico
-            </button>
-          </b-tooltip>
+      <b-tooltip
+        v-if="!allCrgsReady"
+        label="Alguns alunos estão sem CRG"
+        position="is-bottom"
+        animated
+        multilined
+      >
+        <button
+          class="button is-danger"
+          :disabled="isAcademicHighlightSelected"
+        >
+          Eleger Destaque Acadêmico
+        </button>
+      </b-tooltip>
 
-          <button
-            v-else
-            class="button is-primary"
-            :disabled="isAcademicHighlightSelected"
-            @click="openModal"
-          >
-            Eleger Destaque Acadêmico
-          </button>
-        </div>
-      </div>
+      <button
+        v-else
+        class="button is-primary"
+        :disabled="isAcademicHighlightSelected"
+        @click="openModal"
+      >
+        Eleger Destaque Acadêmico
+      </button>
     </SearchInput>
     <br />
     <SearchInput

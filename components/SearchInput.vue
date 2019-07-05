@@ -5,7 +5,11 @@
         <strong>{{ title }}</strong>
       </h1>
     </div>
-    <slot></slot>
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <slot></slot>
+      </div>
+    </div>
     <br />
     <div class="columns is-centered">
       <div class="column is-10">
