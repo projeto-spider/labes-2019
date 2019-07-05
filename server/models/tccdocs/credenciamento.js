@@ -3,8 +3,9 @@ module.exports = function model(
   {
     tituloDiretor,
     curso,
-    discente,
+    nomeDosAlunos,
     matricula,
+    tituloMembroConvidado,
     membroConvidado,
     tituloOrientador,
     orientador,
@@ -14,6 +15,7 @@ module.exports = function model(
     diretor
   }
 ) {
+  const discente = nomeDosAlunos.replace('\n', ', ')
   doc
     .font('Times-Bold')
     .fontSize(15)
@@ -35,7 +37,7 @@ module.exports = function model(
   doc
     .fontSize(12)
     .text(
-      `De acordo com o Art. 94 do Regulamento da Graduação desta Universidade, solicito o credenciamento para participação de bancas de defesa de Trabalhos de Conclusão de Curso. Informo o convite recebido pelo(a) professor(a) ${tituloOrientador}${orientador}, para compor a banca de defesa do aluno concluinte do Curso de Bacharelado em ${curso}, ${discente}, matrícula ${matricula}.`,
+      `De acordo com o Art. 94 do Regulamento da Graduação desta Universidade, solicito o credenciamento para participação de bancas de defesa de Trabalhos de Conclusão de Curso. Informo o convite recebido pelo(a) professor(a) ${tituloOrientador}${orientador}, para compor a banca de defesa do(a)(s) aluno(a)(s) concluinte(s) do Curso de Bacharelado em ${curso}, ${discente}, matrícula(s) ${matricula}.\n                 Nestes termos, peço deferimento.`,
       50,
       140,
       {
@@ -43,18 +45,22 @@ module.exports = function model(
         align: 'justify'
       }
     )
-  doc.fontSize(12).text(`Nestes termos, peço deferimento.`, 100, 210, {
-    align: 'left'
-  })
   doc.fontSize(12).text(`Belém, ${dia} de ${mes} de ${ano}.`, 100, 240, {
     align: 'left'
   })
   doc.fontSize(12).text(`____________________________________`, 0, 300, {
     align: 'center'
   })
-  doc.fontSize(12).text(`${membroConvidado}\n\n(Membro convidado)`, 0, 320, {
-    align: 'center'
-  })
+  doc
+    .fontSize(12)
+    .text(
+      `${tituloMembroConvidado}${membroConvidado}\n\n(Membro convidado)`,
+      0,
+      320,
+      {
+        align: 'center'
+      }
+    )
   doc.fontSize(12).text(`____________________________________`, 0, 400, {
     align: 'center'
   })
