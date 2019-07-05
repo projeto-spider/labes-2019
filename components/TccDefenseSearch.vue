@@ -202,7 +202,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import pDebounce from 'p-debounce'
 import { errorsHandler } from '@/components/mixins/errors'
 import DefenseForm from '@/components/DefenseForm'
@@ -290,6 +290,8 @@ export default {
       courseTag: state => state.courseTag,
       token: state => state.auth.token
     }),
+
+    ...mapGetters({ currentUser: 'auth/currentUser/role' }),
 
     disclosure() {
       return disclosureModel(this.selectedDefense)
