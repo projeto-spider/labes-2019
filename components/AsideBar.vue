@@ -20,7 +20,7 @@
         <nuxt-link to="/allStudents">Alunos Totais</nuxt-link>
       </li>
       <li>
-        <nuxt-link to="/subjects">Matérias</nuxt-link>
+        <nuxt-link to="/subjects">Componentes Curriculares</nuxt-link>
       </li>
     </ul>
 
