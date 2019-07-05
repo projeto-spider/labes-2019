@@ -181,6 +181,14 @@ exports.batchUpdateStudents = function batchUpdateStudents(data) {
         const mailingListToRemove = changedMailingList
           ? model.mailingList
           : model.mailingListToRemove
+
+        // Client wants to force people that missed collation
+        // to isGraduating. Don't give much thought here.
+        if (model.missingCollation && student.isConcluding) {
+          student.isConcluding = false
+          student.isGraduating = true
+        }
+
         const payload = { ...student, mailingListToAdd, mailingListToRemove }
         return Student.forge({ id }).save(payload, {
           patch: true,

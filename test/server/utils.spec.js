@@ -593,4 +593,35 @@ describe('utils', () => {
       2
     )
   })
+
+  test("You can't escape missingCollation", async () => {
+    const csv = `Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status
+201304940001,2013,FIRST,222.222.222-22,4/14/1992,BIANCA RIBEIRO ROCHA,Belém,SISTEMAS DE INFORMAÇÃO,CONCLUÍDO`
+
+    {
+      const data = utils.parseCsv(csv)
+      const digested = utils.digestSigaaData(data)
+      await utils.batchUpdateStudents(digested)
+    }
+
+    const before = await Student.forge({ name: 'FIRST' }).fetch()
+
+    expect(before).toBeDefined()
+    expect(before.get('isConcluding')).toBe(true)
+    expect(before.get('isGraduating')).toBe(false)
+
+    await before.save({ missingCollation: true })
+
+    {
+      const data = utils.parseCsv(csv)
+      const digested = utils.digestSigaaData(data)
+      await utils.batchUpdateStudents(digested)
+    }
+
+    const after = await Student.forge({ name: 'FIRST' }).fetch()
+
+    expect(after).toBeDefined()
+    expect(after.get('isConcluding')).toBe(false)
+    expect(after.get('isGraduating')).toBe(true)
+  })
 })
