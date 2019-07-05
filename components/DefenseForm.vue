@@ -239,8 +239,8 @@
       <b-button type="is-primary is-large" native-type="submit">
         Enviar
       </b-button>
-      <nuxt-link to="/teacher/home"
-        ><b-button type="is-danger is-large">Cancelar</b-button>
+      <nuxt-link v-if="cancelRedirect" :to="cancelRedirect">
+        <b-button type="is-danger is-large">Cancelar</b-button>
       </nuxt-link>
     </div>
   </form>
@@ -302,6 +302,11 @@ export default {
 
     forceDisable: {
       type: Boolean,
+      default: false
+    },
+
+    cancelRedirect: {
+      type: [String, Boolean],
       default: false
     },
 

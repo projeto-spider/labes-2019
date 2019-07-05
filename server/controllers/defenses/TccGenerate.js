@@ -8,24 +8,28 @@ const Certificado = require('../../models/tccdocs/certificado')
 const Credenciamento = require('../../models/tccdocs/credenciamento')
 const Divulgacao = require('../../models/tccdocs/divulgacao')
 
-const translations = {
-  cbcc: 'Ciência da Computação',
-  cbsi: 'Sistemas de Informação',
-  doctor: 'Dr(a). ',
-  master: 'Me(a). ',
-  other: '',
-  '1': 'Janeiro',
-  '2': 'Fevereiro',
-  '3': 'Março',
-  '4': 'Abril',
-  '5': 'Maio',
-  '6': 'Junho',
-  '7': 'Julho',
-  '8': 'Agosto',
-  '9': 'Setembro',
-  '10': 'Outubro',
-  '11': 'Novembro',
-  '12': 'Dezembro'
+function translate(info) {
+  const translations = {
+    cbcc: 'Ciência da Computação',
+    cbsi: 'Sistemas de Informação',
+    doctor: 'Dr(a). ',
+    master: 'MSc. ',
+    other: '',
+    '1': 'Janeiro',
+    '2': 'Fevereiro',
+    '3': 'Março',
+    '4': 'Abril',
+    '5': 'Maio',
+    '6': 'Junho',
+    '7': 'Julho',
+    '8': 'Agosto',
+    '9': 'Setembro',
+    '10': 'Outubro',
+    '11': 'Novembro',
+    '12': 'Dezembro'
+  }
+  const result = translations[info]
+  return result === undefined ? info : result
 }
 
 module.exports = async function generateAllDocs(ctx) {
@@ -43,9 +47,15 @@ module.exports = async function generateAllDocs(ctx) {
       'certificado1',
       'certificado2',
       'certificado3',
+      'certificado4',
+      'certificado5',
+      'certificado6',
+      'certificado7',
       'credenciamento1',
       'credenciamento2',
       'credenciamento3',
+      'credenciamento4',
+      'credenciamento5',
       'divulgacao',
       undefined
     ].includes(files)
@@ -63,28 +73,28 @@ module.exports = async function generateAllDocs(ctx) {
   const defenseDate = defenseFind.get('date')
   const date = new Date()
   const dados = {
-    curso: translations[defenseFind.get('course')],
+    curso: translate(defenseFind.get('course')),
     tituloTCC: defenseFind.get('title'),
     nomeDosAlunos: defenseFind.get('students').replace(/, /g, '\n'),
-    tituloOrientador: translations[defenseFind.get('advisorTitle')],
+    tituloOrientador: translate(defenseFind.get('advisorTitle')),
     orientador: defenseFind.get('advisorName'),
-    tituloCoOrientador: translations[defenseFind.get('coAdvisorTitle')],
+    tituloCoOrientador: translate(defenseFind.get('coAdvisorTitle')),
     coOrientador: defenseFind.get('coAdvisorName'),
-    tituloAvaliador1: translations[defenseFind.get('evaluator1Title')],
+    tituloAvaliador1: translate(defenseFind.get('evaluator1Title')),
     avaliador1: defenseFind.get('evaluator1Name'),
-    tituloAvaliador2: translations[defenseFind.get('evaluator2Title')],
+    tituloAvaliador2: translate(defenseFind.get('evaluator2Title')),
     avaliador2: defenseFind.get('evaluator2Name'),
-    tituloAvaliador3: translations[defenseFind.get('evaluator3Title')],
+    tituloAvaliador3: translate(defenseFind.get('evaluator3Title')),
     avaliador3: defenseFind.get('evaluator3Name'),
     diaDefesa: defenseDate.split('/')[0],
-    mesDefesa: translations[Number(defenseDate.split('/')[1])],
+    mesDefesa: translate(Number(defenseDate.split('/')[1])),
     anoDefesa: defenseDate.split('/')[2],
     dia: date.getUTCDate(),
-    mes: translations[date.getUTCMonth()],
+    mes: translate(date.getUTCMonth()),
     ano: date.getUTCFullYear(),
-    tituloDiretor: translations.doctor,
+    tituloDiretor: translate('doctor'),
     diretor: 'Josivaldo de Souza Araújo',
-    matricula: defenseFind.get('registrationNumbers').split(', ')[0],
+    matricula: defenseFind.get('registrationNumbers'),
     discente: defenseFind.get('students').split(', ')[0],
     palavrasChave: defenseFind.get('keywords'),
     horarioDefesa: defenseFind.get('time').slice(0, -3),
@@ -125,60 +135,52 @@ module.exports = async function generateAllDocs(ctx) {
       name: dados.orientador,
       title: dados.tituloOrientador,
       condition: 'orientador',
-      isDiscente: false
+      isDiscente: false,
+      type: defenseFind.get('advisorType')
     },
     {
       name: dados.coOrientador,
       title: dados.tituloCoOrientador,
       condition: 'co-orientador',
-      isDiscente: false
+      isDiscente: false,
+      type: defenseFind.get('coAdvisorType')
     },
     {
       name: dados.avaliador1,
       title: dados.tituloAvaliador1,
       condition: 'avaliador',
-      isDiscente: false
+      isDiscente: false,
+      type: defenseFind.get('evaluator1Type')
     },
     {
       name: dados.avaliador2,
       title: dados.tituloAvaliador2,
       condition: 'avaliador',
-      isDiscente: false
+      isDiscente: false,
+      type: defenseFind.get('evaluator2Type')
     },
     {
       name: dados.avaliador3,
       title: dados.tituloAvaliador3,
       condition: 'avaliador',
-      isDiscente: false
+      isDiscente: false,
+      type: defenseFind.get('evaluator3Type')
     },
     {
       name: dados.discente,
       title: '',
       condition: 'discente',
       isDiscente: true
+    },
+    {
+      name: dados.nomeDosAlunos.split('\n')[1],
+      title: '',
+      condition: 'discente',
+      isDiscente: true
     }
   ]
   const validPeople = people.filter(person => person.name !== null)
-  const evaluators = [
-    {
-      name: dados.avaliador1,
-      title: dados.tituloAvaliador1,
-      type: defenseFind.get('evaluator1Type')
-    },
-    {
-      name: dados.avaliador2,
-      title: dados.tituloAvaliador2,
-      type: defenseFind.get('evaluator2Type')
-    },
-    {
-      name: dados.avaliador3,
-      title: dados.tituloAvaliador3,
-      type: defenseFind.get('evaluator3Type')
-    }
-  ]
-  const externalEvaluators = evaluators.filter(
-    evaluator => evaluator.type === 'external'
-  )
+  const externalPeople = people.filter(person => person.type === 'external')
   let usedPage = false
   const pageLayout = files === 'cd' ? 'landscape' : 'portrait'
   const doc = new PDFDocument({
@@ -206,39 +208,60 @@ module.exports = async function generateAllDocs(ctx) {
     doc.addPage()
     usedPage = false
   }
-  for (let i = 1; i <= validPeople.length; i++) {
-    if (allFiles || files === `certificado${i}`) {
+  if (files !== undefined && files.startsWith('certificado')) {
+    const index = +files.slice(-1)
+    if (people[index - 1].name === null || people[index - 1].name === '') {
+      ctx.status = 404
+      ctx.body = { code: errors.NOT_FOUND }
+      return
+    }
+    dados.tituloPessoa = people[index - 1].title
+    dados.pessoa = people[index - 1].name
+    dados.condicao = people[index - 1].condition
+    dados.isDiscente = people[index - 1].isDiscente
+    Certificado(doc, dados)
+  }
+  if (allFiles) {
+    for (let i = 1; i <= validPeople.length; i++) {
       dados.tituloPessoa = validPeople[i - 1].title
       dados.pessoa = validPeople[i - 1].name
       dados.condicao = validPeople[i - 1].condition
       dados.isDiscente = validPeople[i - 1].isDiscente
       Certificado(doc, dados)
-      usedPage = true
-    }
-    if (allFiles && usedPage) {
       doc.addPage()
-      usedPage = false
     }
+    usedPage = false
   }
-  for (let i = 1; i <= externalEvaluators.length; i++) {
-    if (allFiles || files === `credenciamento${i}`) {
-      dados.membroConvidado = externalEvaluators[i - 1].name
+  if (files !== undefined && files.startsWith('credenciamento')) {
+    const index = +files.slice(-1)
+    if (people[index - 1].type !== 'external') {
+      ctx.status = 404
+      ctx.body = { code: errors.NOT_FOUND }
+      return
+    }
+    dados.tituloMembroConvidado = people[index - 1].title
+    dados.membroConvidado = people[index - 1].name
+    Credenciamento(doc, dados)
+  }
+  if (allFiles) {
+    for (let i = 1; i <= externalPeople.length; i++) {
+      dados.tituloMembroConvidado = externalPeople[i - 1].title
+      dados.membroConvidado = externalPeople[i - 1].name
       Credenciamento(doc, dados)
-      usedPage = true
-    }
-    if (allFiles && usedPage) {
       doc.addPage()
-      usedPage = false
     }
+    usedPage = false
   }
   if (allFiles || files === 'divulgacao') {
     Divulgacao(doc, dados)
   }
-  doc.info.Title = `${dados.discente.toLowerCase()}${
+  const title = `${dados.discente.toLowerCase()}${
     files ? `-${files}` : ''
   }.pdf`.replace(/ /g, '-')
+  doc.info.Title = title
   await doc.end()
   ctx.status = 200
-  ctx.type = 'application/pdf'
+  ctx.set('Content-Type', 'application/pdf')
+  ctx.set('Content-Disposition', `filename=${title}`)
   ctx.body = doc
 }

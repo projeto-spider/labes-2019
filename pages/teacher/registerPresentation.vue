@@ -5,7 +5,12 @@
       <div class="box">
         <h2 class="subtitle">Dados da defesa:</h2>
 
-        <DefenseForm ref="form" v-model="model" :on-submit="onSubmit" />
+        <DefenseForm
+          ref="form"
+          v-model="model"
+          :on-submit="onSubmit"
+          cancel-redirect="/teacher/home"
+        />
       </div>
     </section>
   </div>

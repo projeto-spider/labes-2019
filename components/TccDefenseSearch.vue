@@ -63,7 +63,55 @@
                   </div>
 
                   <div class="column is-right is-half">
-                    <p>???</p>
+                    <div class="list is-hoverable list-pdfs">
+                      <a
+                        v-for="pdf in availablePdfs"
+                        :key="pdf.key"
+                        class="list-item"
+                        :href="
+                          `/api/defenses/` +
+                            selectedDefense.id +
+                            `/pdf/${pdf.key}?token=` +
+                            token
+                        "
+                        target="_blank"
+                      >
+                        <span>
+                          <b-icon
+                            pack="fas"
+                            icon="file-pdf"
+                            size="is-small"
+                            style="position: relative; top: 5px"
+                          />
+                          {{ pdf.prefix }} {{ pdf.name }}
+                        </span>
+                      </a>
+                    </div>
+
+                    <br />
+
+                    <div class="list is-hoverable list-pdfs">
+                      <a
+                        class="list-item"
+                        :href="
+                          '/api/defenses/' +
+                            selectedDefense.id +
+                            '/pdf?token=' +
+                            token
+                        "
+                        target="_blank"
+                      >
+                        <span>
+                          <b-icon
+                            pack="fas"
+                            icon="file-pdf"
+                            size="is-small"
+                            style="position: relative; top: 5px"
+                          />
+                          Ver Todos
+                        </span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -159,8 +207,14 @@ import pDebounce from 'p-debounce'
 import { errorsHandler } from '@/components/mixins/errors'
 import DefenseForm from '@/components/DefenseForm'
 
+const requiredDocuments = [
+  { prefix: 'Ata', key: 'ata' },
+  { prefix: 'Capa do CD', key: 'cd' },
+  { prefix: 'PDF de Divulgação', key: 'divulgacao' }
+]
+
 export default {
-  name: 'TccDefenseSearch',
+  prefix: 'TccDefenseSearch',
 
   components: {
     DefenseForm
@@ -233,10 +287,95 @@ export default {
 
   computed: {
     ...mapState({
-      courseTag: state => state.courseTag
+      courseTag: state => state.courseTag,
+      token: state => state.auth.token
     }),
+
     disclosure() {
       return disclosureModel(this.selectedDefense)
+    },
+
+    availablePdfs() {
+      if (!this.selectedDefense) {
+        return []
+      }
+
+      const studentNames = this.selectedDefense.students
+        .split(',')
+        .map(string => string.trim())
+
+      const certificates = [
+        {
+          prefix: 'Certificado do Orientador',
+          key: 'certificado1',
+          name: this.selectedDefense.advisorName
+        },
+        {
+          prefix: 'Certificado do Co-Orientador',
+          key: 'certificado2',
+          name: this.selectedDefense.coAdvisorName
+        },
+        {
+          prefix: 'Certificado do Avaliador',
+          key: 'certificado3',
+          name: this.selectedDefense.evaluator1Name
+        },
+        {
+          prefix: 'Certificado do Avaliador',
+          key: 'certificado4',
+          name: this.selectedDefense.evaluator2Name
+        },
+        {
+          prefix: 'Certificado do Avaliador',
+          key: 'certificado5',
+          name: this.selectedDefense.evaluator3Name
+        },
+        {
+          prefix: 'Certificado do Aluno',
+          key: 'certificado6',
+          name: studentNames[0]
+        },
+        {
+          prefix: 'Certificado do Aluno',
+          key: 'certificado7',
+          name: studentNames[1]
+        }
+      ].filter(validPerson)
+
+      const credentials = [
+        {
+          prefix: 'Credenciamento de Membro Externo',
+          key: 'credenciamento1',
+          name: this.selectedDefense.advisorName,
+          type: this.selectedDefense.advisorType
+        },
+        {
+          prefix: 'Credenciamento de Membro Externo',
+          key: 'credenciamento2',
+          name: this.selectedDefense.coAdvisorName,
+          type: this.selectedDefense.coAdvisorType
+        },
+        {
+          prefix: 'Credenciamento de Membro Externo',
+          key: 'credenciamento3',
+          name: this.selectedDefense.evaluator1Name,
+          type: this.selectedDefense.evaluator1Type
+        },
+        {
+          prefix: 'Credenciamento de Membro Externo',
+          key: 'credenciamento4',
+          name: this.selectedDefense.evaluator2Name,
+          type: this.selectedDefense.evaluator2Type
+        },
+        {
+          prefix: 'Credenciamento de Membro Externo',
+          key: 'credenciamento5',
+          name: this.selectedDefense.evaluator3Name,
+          type: this.selectedDefense.evaluator3Type
+        }
+      ].filter(validExternalEvaluator)
+
+      return requiredDocuments.concat(certificates).concat(credentials)
     }
   },
 
@@ -282,7 +421,7 @@ export default {
         .catch(() => {
           this.$toast.open({
             message: 'Falha ao carregar a lista de defesas.',
-            type: 'is-danger'
+            key: 'is-danger'
           })
           this.loading = false
         })
@@ -297,7 +436,7 @@ export default {
       return this.put(payload).then(updated => {
         this.$toast.open({
           message: 'Solicitação atualizada com sucesso!',
-          type: 'is-success'
+          key: 'is-success'
         })
 
         const original = this.defenses.find(
@@ -314,7 +453,7 @@ export default {
       return this.put(defense, { status }).then(updated => {
         this.$toast.open({
           message: 'Solicitação movida com sucesso!',
-          type: 'is-success'
+          key: 'is-success'
         })
 
         this.unselectDefense()
@@ -410,6 +549,14 @@ function formalTitle(title) {
 
   return ''
 }
+
+function validPerson({ name }) {
+  return !!name
+}
+
+function validExternalEvaluator(evaluator) {
+  return validPerson(evaluator) && evaluator.type === 'external'
+}
 </script>
 
 <style scoped>
@@ -434,5 +581,10 @@ function formalTitle(title) {
   position: absolute;
   right: 0;
   bottom: -40px;
+}
+
+.list-pdfs {
+  max-width: 90%;
+  margin: 0 auto;
 }
 </style>
