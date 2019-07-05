@@ -14,7 +14,7 @@
         >
           <button
             class="button is-danger"
-            :disabled="isSelectedAcademicHighlight"
+            :disabled="isAcademicHighlightSelected"
           >
             Eleger Destaque Acadêmico
           </button>
@@ -23,7 +23,7 @@
         <button
           v-else
           class="button is-primary"
-          :disabled="isSelectedAcademicHighlight"
+          :disabled="isAcademicHighlightSelected"
           @click="openModal"
         >
           Eleger Destaque Acadêmico
@@ -113,7 +113,7 @@ export default {
     allCrgsReady: false,
     isModalOpen: false,
     academicHighlightCandidates: [],
-    isSelectedAcademicHighlight: true
+    isAcademicHighlightSelected: true
   }),
   computed: {
     ...mapState({
@@ -122,16 +122,20 @@ export default {
   },
   created() {
     this.checkCrgsReady()
-    this.checkIsThereAcademicHighlight()
+    this.checkAreThereAcademicHighlight()
   },
 
   methods: {
-    checkIsThereAcademicHighlight() {
-      const params = { isHighlighted: true, isGraduating: true, isFit: true }
+    checkAreThereAcademicHighlight() {
+      const params = {
+        academicHighlight: true,
+        isGraduating: true,
+        isFit: true
+      }
       this.$services.students
         .fetchPage(params)
         .then(response => {
-          this.isSelectedAcademicHighlight = response.data.length !== 0
+          this.isAcademicHighlightSelected = response.data.length !== 0
         })
         .catch(e => this.openNotificationError(e))
     },
@@ -204,7 +208,7 @@ export default {
           this.$services.students
             .updateAcademicHighlight(studentId)
             .then(res => {
-              this.isSelectedAcademicHighlight = true
+              this.isAcademicHighlightSelected = true
               this.$toast.open({
                 message: 'Destaque acadêmico selecionado!',
                 type: 'is-success'
