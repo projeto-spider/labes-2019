@@ -231,7 +231,7 @@ export default {
       canEdit: false,
       ataCheck: false,
       laudaCheck: false,
-      missingCollationCheck: false,
+      missingCollationCheck: this.student.missingCollation,
       presCheck: false,
       cdCheck: this.student.cd,
       showPendencies: false,
