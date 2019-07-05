@@ -83,6 +83,7 @@ api.del('/subjects/:id', subjects.Destroy)
 
 // Defenses Routes
 api.get('/defenses/', isAdminOrTeacher, defenses.List)
+api.get('/defenses/:id', isAdmin, bodyJson, defenses.Show)
 api.get('/defenses/:id/pdf/', isAdmin, defenses.TccGenerate)
 api.get('/defenses/:id/pdf/:files', isAdmin, defenses.TccGenerate)
 api.post('/defenses/', isTeacher, bodyJson, defenses.Create)
