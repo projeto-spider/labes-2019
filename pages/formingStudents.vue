@@ -12,12 +12,20 @@
           animated
           multilined
         >
-          <button class="button is-danger" disabled>
+          <button
+            class="button is-danger"
+            :disabled="isAcademicHighlightSelected"
+          >
             Eleger Destaque Acadêmico
           </button>
         </b-tooltip>
 
-        <button v-else class="button is-primary" @click="openModal">
+        <button
+          v-else
+          class="button is-primary"
+          :disabled="isAcademicHighlightSelected"
+          @click="openModal"
+        >
           Eleger Destaque Acadêmico
         </button>
       </div>
@@ -104,7 +112,8 @@ export default {
   data: () => ({
     allCrgsReady: false,
     isModalOpen: false,
-    academicHighlightCandidates: []
+    academicHighlightCandidates: [],
+    isAcademicHighlightSelected: true
   }),
   computed: {
     ...mapState({
@@ -113,9 +122,23 @@ export default {
   },
   created() {
     this.checkCrgsReady()
+    this.checkAreThereAcademicHighlight()
   },
 
   methods: {
+    checkAreThereAcademicHighlight() {
+      const params = {
+        academicHighlight: true,
+        isGraduating: true,
+        isFit: true
+      }
+      this.$services.students
+        .fetchPage(params)
+        .then(response => {
+          this.isAcademicHighlightSelected = response.data.length !== 0
+        })
+        .catch(e => this.openNotificationError(e))
+    },
     checkCrgsReady() {
       const params = {
         isActive: true,
@@ -172,23 +195,35 @@ export default {
     },
 
     selectAcademicHighlight(studentId) {
-      this.isModalOpen = false
-      this.$services.students
-        .updateAcademicHighlight(studentId)
-        .then(res => {
-          this.$toast.open({
-            message: 'Destaque acadêmico selecionado!',
-            type: 'is-success'
-          })
+      this.$dialog.confirm({
+        title: 'Selecionar Destaque Acadêmico',
+        message:
+          'Você tem certeza que quer <b>selecionar</b> o destaque acadêmico? Essa ação não pode ser desfeita.',
+        confirmText: 'Selecionar',
+        type: 'is-warning',
+        hasIcon: true,
+        onConfirm: () => {
+          this.$toast.open('Destaque Acadêmico selecionado!')
+          this.isModalOpen = false
+          this.$services.students
+            .updateAcademicHighlight(studentId)
+            .then(res => {
+              this.isAcademicHighlightSelected = true
+              this.$toast.open({
+                message: 'Destaque acadêmico selecionado!',
+                type: 'is-success'
+              })
 
-          this.$refs.fitGraduatingSearchInput.getStudents()
-        })
-        .catch(() => {
-          this.$toast.open({
-            message: 'Falha ao selecionar destaque acadêmico.',
-            type: 'is-danger'
-          })
-        })
+              this.$refs.fitGraduatingSearchInput.getStudents()
+            })
+            .catch(() => {
+              this.$toast.open({
+                message: 'Falha ao selecionar destaque acadêmico.',
+                type: 'is-danger'
+              })
+            })
+        }
+      })
     },
 
     onToggleComboBox() {
