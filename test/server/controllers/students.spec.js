@@ -18,6 +18,7 @@ const Student = require('../../../server/models/Student')
 const Solicitation = require('../../../server/models/Solicitation')
 const errors = require('../../../shared/errors')
 const document = require('../../../server/models/Document')
+const utils = require('../../../server/utils')
 
 jest.useFakeTimers()
 jest.setTimeout(10000)
@@ -1784,6 +1785,57 @@ describe('/api/students', () => {
     expect(resComplete.body.code).toBe(errors.UNPROCESSABLE_ENTITY)
 
     done()
+  })
+
+  test("You can't escape missingCollation", async () => {
+    const { token } = await testUtils.user('admin')
+
+    const csv = `Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status
+221304940001,2013,FIRST,222.222.222-22,4/14/1992,BIANCA RIBEIRO ROCHA,Belém,SISTEMAS DE INFORMAÇÃO,CONCLUÍDO`
+
+    {
+      const data = utils.parseCsv(csv)
+      const digested = utils.digestSigaaData(data)
+      await utils.batchUpdateStudents(digested)
+    }
+
+    const before = await Student.forge({
+      name: 'FIRST'
+    }).fetch()
+
+    expect(before).toBeDefined()
+    expect(before.get('isConcluding')).toBe(true)
+    expect(before.get('isGraduating')).toBe(false)
+
+    const res = await chai
+      .request(server.listen())
+      .put(`/api/students/${before.get('id')}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        missingCollation: true
+      })
+
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.isConcluding).toBe(false)
+    expect(res.body.isGraduating).toBe(true)
+    expect(res.body.isFit).toBe(before.get('isFit'))
+
+    {
+      const data = utils.parseCsv(csv)
+      const digested = utils.digestSigaaData(data)
+      await utils.batchUpdateStudents(digested)
+    }
+
+    const after = await Student.forge({
+      name: 'FIRST'
+    }).fetch()
+
+    expect(after).toBeDefined()
+    expect(after.get('isConcluding')).toBe(false)
+    expect(after.get('isGraduating')).toBe(true)
+    expect(after.get('isFit')).toBe(before.get('isFit'))
   })
 })
 
