@@ -59,7 +59,7 @@
           :hoverable="isHoverable"
           :data="tableData"
           :selected.sync="selectedStudent"
-          :row-class="row => !!row.academicHighlight && 'is-academic-highlight'"
+          :row-class="applyRowClass"
           :columns="columns"
           class="searchInputTable"
           focusable
@@ -81,7 +81,16 @@
               :sortable="column.sortable"
             >
               <b-tooltip
-                v-if="!!props.row.academicHighlight && column.field === 'name'"
+                v-if="!!props.row.missingCollation && column.field === 'name'"
+                :always="forceMissingCollationTooltip"
+                label="Faltou à colação"
+              >
+                {{ props.row[column.field] }}
+              </b-tooltip>
+              <b-tooltip
+                v-else-if="
+                  !!props.row.academicHighlight && column.field === 'name'
+                "
                 :always="forceAcademicHighlightTooltip"
                 label="Destaque acadêmico"
               >
@@ -226,6 +235,7 @@ export default {
       emailFilter: false,
       blankCrgFilter: false,
       forceAcademicHighlightTooltip: false,
+      forceMissingCollationTooltip: false,
       activateModal: false
     }
   },
@@ -351,10 +361,12 @@ export default {
 
   mounted() {
     this.$el.addEventListener('mouseover', this.onMouseOver)
+    this.$el.addEventListener('mouseover', this.onMouseOverMissingCollation)
   },
 
   beforeDestroy() {
     this.$el.removeEventListener('mouseover', this.onMouseOver)
+    this.$el.removeEventListener('mouseover', this.onMouseOverMissingCollation)
   },
 
   methods: {
@@ -400,6 +412,23 @@ export default {
           '.is-academic-highlight'
         )
       }
+    },
+
+    onMouseOverMissingCollation(e) {
+      if (e.target && e.target.closest) {
+        this.forceMissingCollationTooltip = !!e.target.closest(
+          'is-missing-collation'
+        )
+      }
+    },
+
+    applyRowClass(row) {
+      if (row.academicHighlight) {
+        return 'is-academic-highlight'
+      } else if (row.missingCollation) {
+        return 'is-missing-collation'
+      }
+      return ''
     }
   }
 }
@@ -412,7 +441,12 @@ function maybeParam(key, value) {
 .searchInputTable div.table-wrapper table tbody tr td:nth-child(2) span {
   cursor: pointer;
 }
+
 tr.is-academic-highlight {
   background-color: #2ecc71 !important;
+}
+
+tr.is-missing-collation {
+  background-color: #1edcef !important;
 }
 </style>
