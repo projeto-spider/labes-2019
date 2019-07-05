@@ -118,7 +118,8 @@ describe('/api/defenses', () => {
 
       evaluator2Name: 'Narciso Anasui',
       evaluator2Title: 'master',
-      evaluator2Type: 'external'
+      evaluator2Type: 'external',
+      grade: 5.0
     }
 
     const defenses = await Promise.all([
@@ -130,7 +131,7 @@ describe('/api/defenses', () => {
       const res = await chai
         .request(server.listen())
         .get('/api/defenses/')
-        .query({ status: 'done' })
+        .query({ status: 'done', grade: 5.0 })
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toEqual(200)
@@ -402,7 +403,7 @@ describe('/api/defenses', () => {
 
     const defense = await Defense.forge(payload).save()
 
-    const update = { status: 'done' }
+    const update = { status: 'done', grade: 5.0 }
 
     const res = await chai
       .request(server.listen())
@@ -422,7 +423,7 @@ describe('/api/defenses', () => {
   test('PUT /defenses for invalid id', async done => {
     const { token } = await testUtils.user('admin')
 
-    const update = { status: 'done' }
+    const update = { status: 'done', grade: 5.0 }
 
     const res = await chai
       .request(server.listen())
@@ -752,7 +753,7 @@ describe('/api/defenses', () => {
 
       const defense = await Defense.forge(payload).save()
 
-      const update = { status: 'done' }
+      const update = { status: 'done', grade: 5.0 }
 
       const res = await chai
         .request(server.listen())
@@ -795,7 +796,8 @@ describe('/api/defenses', () => {
       const update = {
         status: 'done',
         invalid1: 1,
-        invalid2: 2
+        invalid2: 2,
+        grade: 5.0
       }
 
       const res = await chai
