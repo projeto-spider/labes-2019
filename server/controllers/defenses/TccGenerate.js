@@ -28,7 +28,8 @@ function translate(info) {
     '11': 'Novembro',
     '12': 'Dezembro'
   }
-  return translations[info] || info
+  const result = translations[info]
+  return result === undefined ? info : result
 }
 
 module.exports = async function generateAllDocs(ctx) {
@@ -53,6 +54,8 @@ module.exports = async function generateAllDocs(ctx) {
       'credenciamento1',
       'credenciamento2',
       'credenciamento3',
+      'credenciamento4',
+      'credenciamento5',
       'divulgacao',
       undefined
     ].includes(files)
@@ -91,7 +94,7 @@ module.exports = async function generateAllDocs(ctx) {
     ano: date.getUTCFullYear(),
     tituloDiretor: translate('doctor'),
     diretor: 'Josivaldo de Souza Araújo',
-    matricula: defenseFind.get('registrationNumbers').split(', ')[0],
+    matricula: defenseFind.get('registrationNumbers'),
     discente: defenseFind.get('students').split(', ')[0],
     palavrasChave: defenseFind.get('keywords'),
     horarioDefesa: defenseFind.get('time').slice(0, -3),
@@ -132,31 +135,36 @@ module.exports = async function generateAllDocs(ctx) {
       name: dados.orientador,
       title: dados.tituloOrientador,
       condition: 'orientador',
-      isDiscente: false
+      isDiscente: false,
+      type: defenseFind.get('advisorType')
     },
     {
       name: dados.coOrientador,
       title: dados.tituloCoOrientador,
       condition: 'co-orientador',
-      isDiscente: false
+      isDiscente: false,
+      type: defenseFind.get('coAdvisorType')
     },
     {
       name: dados.avaliador1,
       title: dados.tituloAvaliador1,
       condition: 'avaliador',
-      isDiscente: false
+      isDiscente: false,
+      type: defenseFind.get('evaluator1Type')
     },
     {
       name: dados.avaliador2,
       title: dados.tituloAvaliador2,
       condition: 'avaliador',
-      isDiscente: false
+      isDiscente: false,
+      type: defenseFind.get('evaluator2Type')
     },
     {
       name: dados.avaliador3,
       title: dados.tituloAvaliador3,
       condition: 'avaliador',
-      isDiscente: false
+      isDiscente: false,
+      type: defenseFind.get('evaluator3Type')
     },
     {
       name: dados.discente,
@@ -172,26 +180,7 @@ module.exports = async function generateAllDocs(ctx) {
     }
   ]
   const validPeople = people.filter(person => person.name !== null)
-  const evaluators = [
-    {
-      name: dados.avaliador1,
-      title: dados.tituloAvaliador1,
-      type: defenseFind.get('evaluator1Type')
-    },
-    {
-      name: dados.avaliador2,
-      title: dados.tituloAvaliador2,
-      type: defenseFind.get('evaluator2Type')
-    },
-    {
-      name: dados.avaliador3,
-      title: dados.tituloAvaliador3,
-      type: defenseFind.get('evaluator3Type')
-    }
-  ]
-  const externalEvaluators = evaluators.filter(
-    evaluator => evaluator.type === 'external'
-  )
+  const externalPeople = people.filter(person => person.type === 'external')
   let usedPage = false
   const pageLayout = files === 'cd' ? 'landscape' : 'portrait'
   const doc = new PDFDocument({
@@ -221,7 +210,7 @@ module.exports = async function generateAllDocs(ctx) {
   }
   if (files !== undefined && files.startsWith('certificado')) {
     const index = +files.slice(-1)
-    if (people[index - 1].name === null) {
+    if (people[index - 1].name === null || people[index - 1].name === '') {
       ctx.status = 404
       ctx.body = { code: errors.NOT_FOUND }
       return
@@ -232,40 +221,36 @@ module.exports = async function generateAllDocs(ctx) {
     dados.isDiscente = people[index - 1].isDiscente
     Certificado(doc, dados)
   }
-  for (let i = 1; i <= validPeople.length; i++) {
-    if (allFiles) {
+  if (allFiles) {
+    for (let i = 1; i <= validPeople.length; i++) {
       dados.tituloPessoa = validPeople[i - 1].title
       dados.pessoa = validPeople[i - 1].name
       dados.condicao = validPeople[i - 1].condition
       dados.isDiscente = validPeople[i - 1].isDiscente
       Certificado(doc, dados)
-      usedPage = true
-    }
-    if (allFiles && usedPage) {
       doc.addPage()
-      usedPage = false
     }
+    usedPage = false
   }
   if (files !== undefined && files.startsWith('credenciamento')) {
     const index = +files.slice(-1)
-    if (evaluators[index - 1].type !== 'external') {
+    if (people[index - 1].type !== 'external') {
       ctx.status = 404
       ctx.body = { code: errors.NOT_FOUND }
       return
     }
-    dados.membroConvidado = evaluators[index - 1].name
+    dados.tituloMembroConvidado = people[index - 1].title
+    dados.membroConvidado = people[index - 1].name
     Credenciamento(doc, dados)
   }
-  for (let i = 1; i <= externalEvaluators.length; i++) {
-    if (allFiles) {
-      dados.membroConvidado = externalEvaluators[i - 1].name
+  if (allFiles) {
+    for (let i = 1; i <= externalPeople.length; i++) {
+      dados.tituloMembroConvidado = externalPeople[i - 1].title
+      dados.membroConvidado = externalPeople[i - 1].name
       Credenciamento(doc, dados)
-      usedPage = true
-    }
-    if (allFiles && usedPage) {
       doc.addPage()
-      usedPage = false
     }
+    usedPage = false
   }
   if (allFiles || files === 'divulgacao') {
     Divulgacao(doc, dados)
