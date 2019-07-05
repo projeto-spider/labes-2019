@@ -406,4 +406,53 @@ describe('/api/users', () => {
     }
     done()
   })
+
+  test('GET /?username=ad% filter by username', async done => {
+    {
+      const { token } = await testUtils.user('admin')
+      const res = await chai
+        .request(server.listen())
+        .get('/api/users')
+        .query({ username: 'ad%' })
+        .set('Authorization', `Bearer ${token}`)
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.length).toBe(1)
+      expect(
+        res.body.every(({ username }) => username.startsWith('ad'))
+      ).toBeTruthy()
+    }
+    {
+      const { token } = await testUtils.user('admin')
+      const res = await chai
+        .request(server.listen())
+        .get('/api/users')
+        .query({ username: '%er' })
+        .set('Authorization', `Bearer ${token}`)
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.length).toBe(2)
+      expect(
+        res.body.every(({ username }) => username.endsWith('er'))
+      ).toBeTruthy()
+    }
+    {
+      const { token } = await testUtils.user('admin')
+      const res = await chai
+        .request(server.listen())
+        .get('/api/users')
+        .query({ username: '%a%' })
+        .set('Authorization', `Bearer ${token}`)
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.length).toBe(2)
+      expect(
+        res.body.every(({ username }) => username.includes('a'))
+      ).toBeTruthy()
+    }
+    done()
+  })
 })
