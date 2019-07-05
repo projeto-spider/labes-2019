@@ -82,7 +82,7 @@
             >
               <b-tooltip
                 v-if="
-                  !!props.row.missingCollation &&
+                  props.row.missingCollation &&
                     !props.row.academicHighlight &&
                     column.field === 'name'
                 "
@@ -93,7 +93,7 @@
               </b-tooltip>
               <b-tooltip
                 v-else-if="
-                  !!props.row.academicHighlight &&
+                  props.row.academicHighlight &&
                     !props.row.missingCollation &&
                     column.field === 'name'
                 "
@@ -104,7 +104,7 @@
               </b-tooltip>
               <b-tooltip
                 v-else-if="
-                  !!props.row.academicHighlight &&
+                  props.row.academicHighlight &&
                     !!props.row.missingCollation &&
                     column.field === 'name'
                 "
@@ -301,6 +301,14 @@ export default {
         isForming: this.isForming,
         mailingList: this.mailingList
       }
+    },
+    applyRowClass(row) {
+      if (row.academicHighlight) {
+        return 'is-academic-highlight'
+      } else if (row.missingCollation) {
+        return 'is-missing-collation'
+      }
+      return ''
     }
   },
   watch: {
@@ -378,12 +386,10 @@ export default {
 
   mounted() {
     this.$el.addEventListener('mouseover', this.onMouseOver)
-    this.$el.addEventListener('mouseover', this.onMouseOverMissingCollation)
   },
 
   beforeDestroy() {
     this.$el.removeEventListener('mouseover', this.onMouseOver)
-    this.$el.removeEventListener('mouseover', this.onMouseOverMissingCollation)
   },
 
   methods: {
@@ -428,24 +434,10 @@ export default {
         this.forceAcademicHighlightTooltip = !!e.target.closest(
           '.is-academic-highlight'
         )
-      }
-    },
-
-    onMouseOverMissingCollation(e) {
-      if (e.target && e.target.closest) {
         this.forceMissingCollationTooltip = !!e.target.closest(
           'is-missing-collation'
         )
       }
-    },
-
-    applyRowClass(row) {
-      if (row.academicHighlight) {
-        return 'is-academic-highlight'
-      } else if (row.missingCollation) {
-        return 'is-missing-collation'
-      }
-      return ''
     }
   }
 }
