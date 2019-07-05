@@ -24,7 +24,7 @@ const bodyJson = KoaBody()
 const bodyMultipart = KoaBody({ multipart: true })
 
 // Authorization
-api.use(['/students'], isLoggedIn, isAdmin)
+api.use(['/students'], isLoggedIn)
 api.use(['/defenses'], isLoggedIn)
 
 // User Routes
@@ -34,30 +34,40 @@ api.post('/users/', isLoggedIn, isAdmin, bodyJson, users.Create)
 api.put('/users/:id', isLoggedIn, bodyJson, users.Update)
 
 // Student Routes
-api.get('/students/email-changes', students.EmailChanges)
-api.get('/students/actives-mailing-list', students.ActiveMailList)
-api.get('/students/', students.List)
-api.get('/students/:id', students.Show)
-api.post('/students/from-csv', bodyMultipart, students.FromCsv)
+api.get('/students/email-changes', isAdmin, students.EmailChanges)
+api.get('/students/actives-mailing-list', isAdmin, students.ActiveMailList)
+api.get('/students/', isAdminOrTeacher, students.List)
+api.get('/students/:id', isAdmin, students.Show)
+api.post('/students/from-csv', isAdmin, bodyMultipart, students.FromCsv)
 api.put(
   '/students/update-academic-highlight',
   bodyJson,
   students.UpdateAcademicHighlight
 )
-api.put('/students/:id', bodyJson, students.Update)
-api.post('/students/update-mailing-list', bodyJson, students.UpdateMailingList)
-api.post('/students/from-csv', bodyMultipart, students.FromCsv)
+api.put('/students/:id', isAdmin, bodyJson, students.Update)
+api.post(
+  '/students/update-mailing-list',
+  isAdmin,
+  bodyJson,
+  students.UpdateMailingList
+)
+api.post('/students/from-csv', isAdmin, bodyMultipart, students.FromCsv)
 
 // Documents Routes
-api.get('/students/:studentId/documents', documents.List)
-api.get('/students/:studentId/documents/:id', documents.Show)
-api.del('/students/:studentId/documents/:id', documents.Delete)
-api.get('/students/:studentId/documents/:id/view', documents.View)
-api.post('/students/:studentId/documents', bodyMultipart, documents.Upload)
+api.get('/students/:studentId/documents', isAdmin, documents.List)
+api.get('/students/:studentId/documents/:id', isAdmin, documents.Show)
+api.del('/students/:studentId/documents/:id', isAdmin, documents.Delete)
+api.get('/students/:studentId/documents/:id/view', isAdmin, documents.View)
+api.post(
+  '/students/:studentId/documents',
+  isAdmin,
+  bodyMultipart,
+  documents.Upload
+)
 
 // Pendencies Routes
-api.get('/students/:studentId/pendencies/:id', pendencies.Show)
-api.get('/students/:studentId/pendencies/', pendencies.List)
+api.get('/students/:studentId/pendencies/:id', isAdmin, pendencies.Show)
+api.get('/students/:studentId/pendencies/', isAdmin, pendencies.List)
 api.post(
   '/students/:studentId/pendencies/batch',
   bodyJson,

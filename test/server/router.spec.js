@@ -77,26 +77,4 @@ describe('/api', () => {
     expect(resStudents.body.code).toBe(errors.UNAUTHORIZED)
     done()
   })
-
-  test('GET /[students|users] with invalid role', async done => {
-    const { token } = await testUtils.user('teacher')
-    const resStudents = await chai
-      .request(server.listen())
-      .get('/api/students')
-      .set('Authorization', `Bearer ${token}`)
-    expect(resStudents.status).toEqual(403)
-    expect(resStudents.type).toEqual('application/json')
-    expect(resStudents.body).toBeDefined()
-    expect(resStudents.body.code).toBe(errors.FORBIDDEN)
-
-    const resUsers = await chai
-      .request(server.listen())
-      .get('/api/users')
-      .set('Authorization', `Bearer ${token}`)
-    expect(resUsers.status).toEqual(403)
-    expect(resUsers.type).toEqual('application/json')
-    expect(resUsers.body).toBeDefined()
-    expect(resStudents.body.code).toBe(errors.FORBIDDEN)
-    done()
-  })
 })
