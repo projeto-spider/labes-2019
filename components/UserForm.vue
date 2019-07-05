@@ -140,6 +140,10 @@ export default {
       validator(value) {
         return ['update', 'signup'].includes(value)
       }
+    },
+    user: {
+      type: Object,
+      default: undefined
     }
   },
   data() {
@@ -202,7 +206,11 @@ export default {
   },
   created() {
     if (this.update) {
-      this.username = this.currentUser.username
+      if (this.user !== undefined) {
+        this.username = this.user.username
+      } else {
+        this.username = this.currentUser.username
+      }
     }
   },
 
@@ -246,9 +254,15 @@ export default {
       }
     },
     async updateUser() {
+      let id = ''
+      if (this.user !== undefined) {
+        id = this.user.id
+      } else {
+        id = this.currentUser.id
+      }
       try {
         await this.$store.dispatch('auth/update', {
-          id: this.currentUser.id,
+          id: id,
           username: this.username,
           password: this.password
         })
