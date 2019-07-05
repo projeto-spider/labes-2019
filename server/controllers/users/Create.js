@@ -6,6 +6,7 @@ module.exports = async function createUser(ctx) {
   const body = utils.validatePayload(ctx.request.body, [
     'email',
     'username',
+    'fullName',
     'password',
     'role'
   ])
@@ -27,9 +28,9 @@ module.exports = async function createUser(ctx) {
     return
   }
 
-  const { email, username, password, role } = ctx.request.body
+  const { email, username, fullName, password, role } = ctx.request.body
 
-  const validRequest = [email, username, password, role].every(
+  const validRequest = [email, username, fullName, password, role].every(
     item => item !== undefined
   )
   if (!validRequest) {
@@ -48,5 +49,11 @@ module.exports = async function createUser(ctx) {
   }
 
   ctx.status = 201
-  ctx.body = await User.forge({ email, username, password, role }).save()
+  ctx.body = await User.forge({
+    email,
+    username,
+    fullName,
+    password,
+    role
+  }).save()
 }

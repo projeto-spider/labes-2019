@@ -6,6 +6,7 @@ module.exports = async function updateUser(ctx) {
   {
     const { valid, invalidParams } = utils.validatePayload(ctx.request.body, [
       'password',
+      'fullName',
       'username'
     ])
     if (!valid) {
