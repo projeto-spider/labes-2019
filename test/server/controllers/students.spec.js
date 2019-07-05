@@ -1709,6 +1709,82 @@ describe('/api/students', () => {
 
     done()
   })
+
+  test('PUT /[studentId] missingCollation', async done => {
+    const { token } = await testUtils.user('admin')
+
+    // She's graduating
+    const student = await Student.forge({
+      name: 'LAURA CARDOSO CASTRO'
+    }).fetch()
+
+    const resComplete = await chai
+      .request(server.listen())
+      .put(`/api/students/${student.get('id')}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        missingCollation: true
+      })
+
+    expect(resComplete.status).toEqual(200)
+    expect(resComplete.type).toEqual('application/json')
+    expect(resComplete.body).toBeDefined()
+    expect(resComplete.body.isConcluding).toBe(false)
+    expect(resComplete.body.isGraduating).toBe(true)
+    expect(resComplete.body.isFit).toBe(student.get('isFit'))
+
+    done()
+  })
+
+  test('PUT /[studentId] kick isConcluding via missingCollation', async done => {
+    const { token } = await testUtils.user('admin')
+
+    // He's concluding
+    const student = await Student.forge({
+      name: 'JULIAN BARBOSA SANTOS'
+    }).fetch()
+
+    const resComplete = await chai
+      .request(server.listen())
+      .put(`/api/students/${student.get('id')}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        missingCollation: true
+      })
+
+    expect(resComplete.status).toEqual(200)
+    expect(resComplete.type).toEqual('application/json')
+    expect(resComplete.body).toBeDefined()
+    expect(resComplete.body.isConcluding).toBe(false)
+    expect(resComplete.body.isGraduating).toBe(true)
+    expect(resComplete.body.isFit).toBe(student.get('isFit'))
+
+    done()
+  })
+
+  test('PUT /[studentId] missingCollation UNPROCESSABLE_ENTITY', async done => {
+    const { token } = await testUtils.user('admin')
+
+    // Not graduating or concluding
+    const student = await Student.forge({
+      name: 'FELIPE SOUZA FERREIRA'
+    }).fetch()
+
+    const resComplete = await chai
+      .request(server.listen())
+      .put(`/api/students/${student.get('id')}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        missingCollation: true
+      })
+
+    expect(resComplete.status).toEqual(422)
+    expect(resComplete.type).toEqual('application/json')
+    expect(resComplete.body).toBeDefined()
+    expect(resComplete.body.code).toBe(errors.UNPROCESSABLE_ENTITY)
+
+    done()
+  })
 })
 
 function pdfFixture(name) {

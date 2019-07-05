@@ -13,6 +13,7 @@ const fields = [
   'isActive',
   'isForming',
   'isGraduating',
+  'missingCollation',
   'academicHighlight',
   'cancelled',
   'mailingList',
@@ -45,7 +46,7 @@ module.exports = async function updateStudent(ctx) {
     }
   }
   const { id } = ctx.params
-  const studentUpdate = ctx.request.body
+  const studentUpdate = { ...ctx.request.body }
 
   if (id === undefined) {
     ctx.status = 400
@@ -58,6 +59,24 @@ module.exports = async function updateStudent(ctx) {
     ctx.status = 404
     ctx.body = { code: errors.NOT_FOUND }
     return
+  }
+
+  if (
+    studentUpdate.missingCollation &&
+    !(studentFind.get('isConcluding') || studentFind.get('isGraduating'))
+  ) {
+    ctx.status = 422
+    ctx.body = { code: errors.UNPROCESSABLE_ENTITY }
+    return
+  }
+
+  // Client wants to force people that missed collation
+  // to isGraduating. Don't give much thought here.
+  const shouldKickToGraduating =
+    studentFind.get('isConcluding') && studentUpdate.missingCollation
+  if (shouldKickToGraduating) {
+    studentUpdate.isConcluding = false
+    studentUpdate.isGraduating = true
   }
 
   await studentFind.save(studentUpdate)

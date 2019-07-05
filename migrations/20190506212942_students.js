@@ -39,6 +39,10 @@ exports.up = function(knex, Promise) {
       .boolean('cancelled')
       .notNullable()
       .defaultTo(false)
+    table
+      .boolean('missingCollation')
+      .notNullable()
+      .defaultTo(false)
     table.enum('mailingList', mailingList).defaultTo('none')
     table.enum('mailingListToAdd', mailingList).defaultTo('none')
     table.enum('mailingListToRemove', mailingList).defaultTo('none')
