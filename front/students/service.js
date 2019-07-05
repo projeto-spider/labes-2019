@@ -58,9 +58,10 @@ export default function makeStudentServices(axios) {
 
     updateEmailChanges(params) {
       const paramList = ['mailingList', 'type', 'studentIds', 'solicitationIds']
-      return axios.post('/api/students/update-mailing-list', {
-        params: selector(params, paramList)
-      })
+      return axios.post(
+        '/api/students/update-mailing-list',
+        selector(params, paramList)
+      )
     },
 
     importFromCsv(studentCsv) {
