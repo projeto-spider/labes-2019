@@ -239,7 +239,7 @@
       <b-button type="is-primary is-large" native-type="submit">
         Enviar
       </b-button>
-      <nuxt-link v-if="cancelRedirect" :to="cancelRedirect">
+      <nuxt-link v-show="currentUser === 'teacher'" to="/teacher/home">
         <b-button type="is-danger is-large">Cancelar</b-button>
       </nuxt-link>
     </div>
@@ -247,7 +247,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import pDebounce from 'p-debounce'
 import DatePicker from '@/components/DatePicker'
 import TimePicker from '@/components/TimePicker'
@@ -332,6 +332,8 @@ export default {
     ...mapState({
       courseTag: state => state.courseTag
     }),
+
+    ...mapGetters({ currentUser: 'auth/currentUser/role' }),
 
     courseNameExtended() {
       const enumName = {
