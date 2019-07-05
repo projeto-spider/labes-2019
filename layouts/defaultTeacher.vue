@@ -130,7 +130,7 @@ export default {
       return enumName[this.courseTag] || ''
     },
     username() {
-      return this.currrentUser.username
+      return this.currrentUser.fullName || this.currrentUser.username
     }
   },
   methods: {
