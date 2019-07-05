@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     getAcademicHighlights() {
-      const params = { isHighlighted: true }
+      const params = { academicHighlight: true }
       this.$services.students
         .fetchPage(params)
         .then(response => {

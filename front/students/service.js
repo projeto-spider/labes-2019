@@ -13,7 +13,7 @@ export default function makeStudentServices(axios) {
     'page',
     'isForming',
     'isFit',
-    'isAcademicHighlight',
+    'academicHighlight',
     'prescribed',
     'cancelled',
     'mailingList',
