@@ -41,6 +41,11 @@ export const actions = {
   register({ commit, dispatch }, { email, username, password, role }) {
     return this.$services.users.create({ email, username, password, role })
   },
+  update({ commit }, { id, username, password }) {
+    return this.$services.users.update({ username, password }, id).then(res => {
+      return commit('setUser', res.data)
+    })
+  },
 
   logout({ commit }) {
     commit('setToken', false)

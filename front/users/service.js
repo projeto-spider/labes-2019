@@ -21,6 +21,11 @@ export default function makeUsersServices(axios) {
       const paramList = ['username', 'email', 'role', 'password']
       const payload = selector(params, paramList)
       return axios.post('/api/users', payload)
+    },
+    update(params, id) {
+      const paramList = ['username', 'email', 'role', 'password']
+      const payload = selector(params, paramList)
+      return axios.put(`/api/users/${id}`, payload)
     }
   }
 }

@@ -50,6 +50,9 @@
       <li>
         <nuxt-link to="/signup">Criar novo usuário</nuxt-link>
       </li>
+      <li>
+        <nuxt-link to="/updateUser">Atualizar meu usuário</nuxt-link>
+      </li>
     </ul>
   </aside>
 </template>

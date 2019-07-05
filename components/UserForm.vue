@@ -2,11 +2,13 @@
   <div class="hero has-background-grey has-text-centered is-fullheight">
     <div class="column is-4 is-offset-4">
       <figure class="avatar">
-        <img src="../assets/images/UFPA.png" width="100" height="90" />
+        <img src="@/assets/images/UFPA.png" width="100" height="90" />
       </figure>
-      <h3 class="title has-text-white">Cadastro de Usuário</h3>
+      <h3 class="title has-text-white">
+        {{ signUp ? 'Cadastro de Usuário' : 'Atualizar Usuário' }}
+      </h3>
       <div class="box">
-        <form @submit.prevent="signUp">
+        <form v-if="signUp" @submit.prevent="register">
           <InputValidation
             ref="emailIpt"
             valid-message="Ok"
@@ -75,6 +77,48 @@
             Cadastrar
           </button>
         </form>
+        <form v-if="update" @submit.prevent="updateUser">
+          <InputValidation
+            ref="usernameIpt"
+            valid-message="Ok"
+            :invalid-message="usernameError"
+            default-message="Campo obrigatório"
+            :valid="validUserName"
+          >
+            <b-input
+              v-model="username"
+              type="text"
+              maxlength="30"
+              placeholder="Nome de usuário"
+              @blur="onBlur('usernameIpt')"
+            ></b-input>
+          </InputValidation>
+
+          <InputValidation
+            ref="passwdIpt"
+            valid-message="Ok"
+            :invalid-message="passwdError"
+            default-message="Campo obrigatório"
+            :valid="validPassword"
+          >
+            <b-input
+              v-model="password"
+              type="password"
+              minlength="6"
+              placeholder="Senha"
+              password-reveal
+              @blur="onBlur('passwdIpt')"
+            >
+            </b-input>
+          </InputValidation>
+          <button
+            class="button is-block is-info is-large is-fullwidth"
+            type="submit"
+            :disabled="disabledUpdate"
+          >
+            Cadastrar
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -82,11 +126,21 @@
 
 <script>
 import InputValidation from '@/components/InputValidation'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Signup',
   components: {
     InputValidation
+  },
+  props: {
+    formType: {
+      type: String,
+      default: 'signup',
+      validator(value) {
+        return ['update', 'signup'].includes(value)
+      }
+    }
   },
   data() {
     return {
@@ -111,6 +165,7 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ currentUser: 'auth/currentUser' }),
     disabled() {
       return !(
         this.validUserName &&
@@ -119,7 +174,9 @@ export default {
         this.role
       )
     },
-
+    disabledUpdate() {
+      return !(this.validUserName && this.validPassword)
+    },
     validEmail() {
       const re = /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       return re.test(this.email)
@@ -135,6 +192,17 @@ export default {
 
     validPassword() {
       return !this.password.includes(' ') && this.password.length > 5
+    },
+    signUp() {
+      return this.formType === 'signup'
+    },
+    update() {
+      return this.formType === 'update'
+    }
+  },
+  created() {
+    if (this.update) {
+      this.username = this.currentUser.username
     }
   },
 
@@ -160,7 +228,7 @@ export default {
       }
     },
 
-    async signUp() {
+    async register() {
       try {
         await this.$store.dispatch('auth/register', {
           email: this.email,
@@ -170,11 +238,27 @@ export default {
         })
         this.clearInputs()
         this.$toast.open({
-          message: 'Usuario cadastrado com sucesso',
+          message: 'Usuário cadastrado com sucesso',
           type: 'is-success'
         })
       } catch (e) {
         this.$toast.open({ message: 'Falha ao cadastrar', type: 'is-danger' })
+      }
+    },
+    async updateUser() {
+      try {
+        await this.$store.dispatch('auth/update', {
+          id: this.currentUser.id,
+          username: this.username,
+          password: this.password
+        })
+        this.clearInputs()
+        this.$toast.open({
+          message: 'Usuário atualizado com sucesso',
+          type: 'is-success'
+        })
+      } catch (e) {
+        this.$toast.open({ message: 'Falha ao atualizar', type: 'is-danger' })
       }
     }
   }
