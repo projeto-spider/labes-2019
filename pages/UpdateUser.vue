@@ -9,14 +9,14 @@
         </div>
         <footer class="card-footer">
           <p class="card-footer-item">
-            <a class="button is-primary" @click="toggleUpdate('updateMyUser')"
-              >Atualizar meu usuário</a
-            >
+            <a class="button is-primary" @click="toggleUpdate('updateMyUser')">
+              Atualizar meu usuário
+            </a>
           </p>
           <p class="card-footer-item">
-            <a class="button is-info" @click="toggleUpdate('updateOtherUser')"
-              >Atualizar outro usuário</a
-            >
+            <a class="button is-info" @click="toggleUpdate('updateOtherUser')">
+              Atualizar outro usuário
+            </a>
           </p>
         </footer>
       </div>
@@ -56,7 +56,7 @@
       </div>
     </div>
     <UserForm v-if="updateMyUser" form-type="update" />
-    <UserForm v-if="otherUser" :user="selectedUser" form-type="update" />
+    <UserForm v-else-if="otherUser" :user="selectedUser" form-type="update" />
   </section>
 </template>
 

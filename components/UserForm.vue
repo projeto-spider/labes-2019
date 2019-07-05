@@ -77,12 +77,11 @@
             Cadastrar
           </button>
         </form>
-        <form v-if="update" @submit.prevent="updateUser">
+        <form v-else-if="update" @submit.prevent="updateUser">
           <InputValidation
             ref="usernameIpt"
             valid-message="Ok"
             :invalid-message="usernameError"
-            default-message="Campo obrigatório"
             :valid="validUserName"
           >
             <b-input
@@ -98,7 +97,6 @@
             ref="passwdIpt"
             valid-message="Ok"
             :invalid-message="passwdError"
-            default-message="Campo obrigatório"
             :valid="validPassword"
           >
             <b-input
@@ -116,7 +114,7 @@
             type="submit"
             :disabled="disabledUpdate"
           >
-            Cadastrar
+            Atualizar
           </button>
         </form>
       </div>
@@ -143,7 +141,7 @@ export default {
     },
     user: {
       type: Object,
-      default: undefined
+      default: null
     }
   },
   data() {
@@ -153,18 +151,13 @@ export default {
       email: '',
       role: null,
       usernameError: [
-        'Nome de usuário obrigatório e tamanho mínimo de 3 caracteres.',
+        'tamanho mínimo de 3 caracteres.',
         'Não pode conter espaços em branco.'
       ],
       passwdError: [
-        'Senha obrigatória e tamanho mínimo de 6 caracteres.',
+        'tamanho mínimo de 6 caracteres.',
         'Não pode conter espaços em branco.'
       ]
-    }
-  },
-  head() {
-    return {
-      title: 'Cadastro de usuário'
     }
   },
 
@@ -179,7 +172,7 @@ export default {
       )
     },
     disabledUpdate() {
-      return !(this.validUserName && this.validPassword)
+      return !(this.validUserName || this.validPassword)
     },
     validEmail() {
       const re = /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -206,7 +199,7 @@ export default {
   },
   created() {
     if (this.update) {
-      if (this.user !== undefined) {
+      if (this.user !== null) {
         this.username = this.user.username
       } else {
         this.username = this.currentUser.username
@@ -255,16 +248,24 @@ export default {
     },
     async updateUser() {
       let id = ''
-      if (this.user !== undefined) {
+      let username = ''
+      let password = ''
+      if (this.user !== null) {
         id = this.user.id
       } else {
         id = this.currentUser.id
       }
+      if (this.username !== '') {
+        username = this.username
+      }
+      if (this.password !== '') {
+        password = this.password
+      }
       try {
         await this.$store.dispatch('auth/update', {
           id: id,
-          username: this.username,
-          password: this.password
+          username: username,
+          password: password
         })
         this.clearInputs()
         this.$toast.open({
@@ -272,7 +273,7 @@ export default {
           type: 'is-success'
         })
       } catch (e) {
-        this.$toast.open({ message: 'Falha ao atualizar', type: 'is-danger' })
+        this.$toast.open({ message: e, type: 'is-danger' })
       }
     }
   }

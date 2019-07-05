@@ -42,9 +42,11 @@ export const actions = {
     return this.$services.users.create({ email, username, password, role })
   },
   update({ commit }, { id, username, password }) {
-    return this.$services.users
-      .update({ username, password }, id)
-      .then(res => {})
+    return this.$services.users.update({ username, password }, id).then(res => {
+      if ((id === state.user, id)) {
+        commit('setUser', res.data)
+      }
+    })
   },
 
   logout({ commit }) {
