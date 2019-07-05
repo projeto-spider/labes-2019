@@ -81,7 +81,11 @@
               :sortable="column.sortable"
             >
               <b-tooltip
-                v-if="!!props.row.missingCollation && column.field === 'name'"
+                v-if="
+                  !!props.row.missingCollation &&
+                    !props.row.academicHighlight &&
+                    column.field === 'name'
+                "
                 :always="forceMissingCollationTooltip"
                 label="Faltou à colação"
               >
@@ -89,10 +93,23 @@
               </b-tooltip>
               <b-tooltip
                 v-else-if="
-                  !!props.row.academicHighlight && column.field === 'name'
+                  !!props.row.academicHighlight &&
+                    !props.row.missingCollation &&
+                    column.field === 'name'
                 "
                 :always="forceAcademicHighlightTooltip"
                 label="Destaque acadêmico"
+              >
+                {{ props.row[column.field] }}
+              </b-tooltip>
+              <b-tooltip
+                v-else-if="
+                  !!props.row.academicHighlight &&
+                    !!props.row.missingCollation &&
+                    column.field === 'name'
+                "
+                :always="forceAcademicHighlightTooltip"
+                label="Destaque acadêmico, porém faltou à colação"
               >
                 {{ props.row[column.field] }}
               </b-tooltip>
