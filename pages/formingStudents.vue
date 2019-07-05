@@ -113,7 +113,7 @@ export default {
     allCrgsReady: false,
     isModalOpen: false,
     academicHighlightCandidates: [],
-    isSelectedAcademicHighlight: false
+    isSelectedAcademicHighlight: true
   }),
   computed: {
     ...mapState({
@@ -122,9 +122,19 @@ export default {
   },
   created() {
     this.checkCrgsReady()
+    this.checkIsThereAcademicHighlight()
   },
 
   methods: {
+    checkIsThereAcademicHighlight() {
+      const params = { isHighlighted: true, isGraduating: true, isFit: true }
+      this.$services.students
+        .fetchPage(params)
+        .then(response => {
+          this.isSelectedAcademicHighlight = response.data.length !== 0
+        })
+        .catch(e => this.openNotificationError(e))
+    },
     checkCrgsReady() {
       const params = {
         isActive: true,
