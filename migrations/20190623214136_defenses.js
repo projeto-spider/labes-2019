@@ -37,6 +37,10 @@ exports.up = function(knex, Promise) {
       const nullability = mandatory ? 'notNullable' : 'nullable'
 
       table.string(`${person}Name`)[nullability]() // advisorName
+      table
+        .boolean(`${person}IsTeacher`)
+        .defaultTo(false)
+        .notNullable()
       table // advisorTitle
         .enum(`${person}Title`, ['doctor', 'master', 'other'])
         [nullability]()
