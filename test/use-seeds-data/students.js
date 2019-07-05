@@ -15,8 +15,6 @@ module.exports = [
     mailingList: 'none',
     mailingListToRemove: 'none',
     mailingListToAdd: 'active',
-    advisor: 'Orientador Válido',
-    defenseDate: null,
     term: null,
     cd: false,
     period: null
@@ -37,8 +35,6 @@ module.exports = [
     mailingList: 'none',
     mailingListToRemove: 'none',
     mailingListToAdd: 'active',
-    advisor: null,
-    defenseDate: null,
     term: null,
     cd: false,
     period: '2018.3'
@@ -59,8 +55,6 @@ module.exports = [
     mailingList: 'active',
     mailingListToRemove: 'active',
     mailingListToAdd: 'concluding',
-    advisor: 'Mais um orientador',
-    defenseDate: null,
     term: null,
     cd: false,
     period: null
@@ -81,8 +75,6 @@ module.exports = [
     mailingList: 'none',
     mailingListToRemove: 'none',
     mailingListToAdd: 'active',
-    advisor: null,
-    defenseDate: null,
     term: null,
     cd: false,
     period: '2018.4'
@@ -103,8 +95,6 @@ module.exports = [
     mailingList: 'active',
     mailingListToRemove: 'active',
     mailingListToAdd: 'none',
-    advisor: null,
-    defenseDate: null,
     term: null,
     cd: false,
     period: null
@@ -125,8 +115,6 @@ module.exports = [
     mailingList: 'none',
     mailingListToRemove: 'none',
     mailingListToAdd: 'active',
-    advisor: null,
-    defenseDate: null,
     term: null,
     cd: false,
     period: null
@@ -147,8 +135,6 @@ module.exports = [
     mailingList: 'active',
     mailingListToRemove: 'active',
     mailingListToAdd: 'concluding',
-    advisor: null,
-    defenseDate: null,
     term: null,
     cd: false,
     period: null

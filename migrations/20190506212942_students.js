@@ -42,8 +42,6 @@ exports.up = function(knex, Promise) {
     table.enum('mailingList', mailingList).defaultTo('none')
     table.enum('mailingListToAdd', mailingList).defaultTo('none')
     table.enum('mailingListToRemove', mailingList).defaultTo('none')
-    table.string('advisor').nullable()
-    table.date('defenseDate').nullable()
     table.string('term').nullable()
     table
       .boolean('cd')
@@ -53,6 +51,14 @@ exports.up = function(knex, Promise) {
       .string('period')
       .nullable()
       .defaultTo(null)
+    table
+      .integer('defenseId')
+      .unsigned()
+      .nullable()
+    table
+      .foreign('defenseId')
+      .references('id')
+      .inTable('defenses')
   })
 }
 

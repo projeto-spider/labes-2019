@@ -19,7 +19,6 @@ const fields = [
   'mailingListToAdd',
   'mailingListToRemove',
   'advisor',
-  'defenseDate',
   'term',
   'cd',
   'period'

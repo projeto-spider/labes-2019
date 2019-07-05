@@ -2,6 +2,10 @@ import selector from '@/front/selector'
 
 export default function makeDefensesServices(axios) {
   return {
+    fetch(defenseId) {
+      return axios.get(`/api/defenses/${defenseId}`)
+    },
+
     fetchPage(params) {
       const paramList = ['page', 'query', 'course', 'status']
       const options = { params: selector(params, paramList, { page: 1 }) }

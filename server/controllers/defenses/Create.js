@@ -1,6 +1,7 @@
-const Defense = require('../../models/Defense.js')
+const Defense = require('../../models/Defense')
 const errors = require('../../../shared/errors')
 const utils = require('../../utils')
+const registrationNumbersToStudents = require('./registrationNumbersToStudents')
 
 const requiredFields = [
   'course',
@@ -69,6 +70,34 @@ module.exports = async function createDefense(ctx) {
     return
   }
 
+  const {
+    students,
+    invalidRegistrationNumbers
+  } = await registrationNumbersToStudents(payload.registrationNumbers)
+
+  if (invalidRegistrationNumbers.length) {
+    ctx.status = 422
+    ctx.body = {
+      code: errors.INVALID_REGISTRATION_NUMBERS,
+      registrationNumbers: invalidRegistrationNumbers
+    }
+    return
+  }
+
+  const studentsWithDefense = students.filter(student =>
+    student.get('defenseId')
+  )
+  if (studentsWithDefense.length) {
+    ctx.status = 422
+    ctx.body = {
+      code: errors.STUDENT_HAS_DEFENSE,
+      registrationNumbers: studentsWithDefense.map(student =>
+        student.get('registrationNumber')
+      )
+    }
+    return
+  }
+
   const fromPayload = allFields.reduce((acc, field) => {
     if (payload[field] !== undefined) {
       acc[field] = payload[field]
@@ -83,6 +112,14 @@ module.exports = async function createDefense(ctx) {
     status: 'pending'
   }
 
+  const defense = await Defense.forge(data).save()
+
+  await Promise.all(
+    students.map(student => {
+      return student.save({ defenseId: defense.get('id') })
+    })
+  )
+
   ctx.status = 201
-  ctx.body = await Defense.forge(data).save()
+  ctx.body = defense
 }

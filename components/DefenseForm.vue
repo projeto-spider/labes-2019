@@ -6,11 +6,19 @@
 
     <b-field v-for="(student, i) in model.students" :key="i" grouped>
       <b-field label="Nome do(a) Aluno(a)" expanded>
-        <b-input
+        <b-autocomplete
           v-model="model.students[i].name"
-          required
+          :data="possibleCompletionStudents.students"
+          :loading="possibleCompletionStudents.index === i"
+          field="name"
           :disabled="forceDisable"
-        ></b-input>
+          @typing="name => getStudentCompletions(i, name)"
+          @select="student => onSelectAutoCompleteStudent(i, student)"
+        >
+          <template slot="empty">
+            <span>Nenhum estudante encontrado</span>
+          </template>
+        </b-autocomplete>
       </b-field>
 
       <b-field label="Matrícula do(a) Aluno(a)" expanded>
@@ -18,8 +26,7 @@
           v-model="model.students[i].registrationNumber"
           expanded
           required
-          :disabled="forceDisable"
-          pattern="\d{12}"
+          :disabled="true"
         ></b-input>
       </b-field>
 
@@ -241,6 +248,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import pDebounce from 'p-debounce'
 import DatePicker from '@/components/DatePicker'
 import TimePicker from '@/components/TimePicker'
 
@@ -307,7 +315,11 @@ export default {
     const today = new Date()
     return {
       model: defaultModel(),
-      minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate())
+      minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+      possibleCompletionStudents: {
+        students: [],
+        index: undefined
+      }
     }
   },
 
@@ -370,6 +382,17 @@ export default {
     },
 
     handleSubmit() {
+      const missingRegistrationNumbers = this.model.students.some(
+        student => !student.registrationNumber
+      )
+      if (missingRegistrationNumbers) {
+        this.$toast.open({
+          message: 'Alguns alunos são inválidos.',
+          type: 'is-warning'
+        })
+        return
+      }
+
       const payload = this.preparePayload(this.model)
       return this.onSubmit(payload)
     },
@@ -383,6 +406,34 @@ export default {
         value.students.map(x => x.registrationNumber).join(', ')
 
       return { ...value, course, students, registrationNumbers }
+    },
+
+    getStudentCompletions: pDebounce(function getStudentCompletions(i, name) {
+      this.model.students[i].registrationNumber = ''
+      return this.$services.students
+        .fetchPage({
+          name: `%${name}%`
+        })
+        .then(res => {
+          this.possibleCompletionStudents.students = res.data.filter(
+            student =>
+              !this.model.students.find(
+                other => other.registrationNumber === student.registrationNumber
+              )
+          )
+        })
+    }, 500),
+
+    onSelectAutoCompleteStudent(i, student) {
+      this.possibleCompletionStudents.i = undefined
+      this.possibleCompletionStudents.students = []
+
+      if (!student) {
+        return
+      }
+
+      this.model.students[i].name = student.name
+      this.model.students[i].registrationNumber = student.registrationNumber
     }
   }
 }
