@@ -64,7 +64,7 @@ export default function makeStudentServices(axios) {
 
     importFromCsv(studentCsv) {
       const payload = new FormData()
-      payload.append('csv', this.studentsCsv)
+      payload.append('csv', studentCsv)
       return axios.post('/api/students/from-csv', payload)
     }
   }
