@@ -15,7 +15,7 @@
             />
             <BaseStudentDataRow
               title="Orientador"
-              :value="advisor ? advisor.username : '-'"
+              :value="advisor ? advisor.fullName || advisor.username : '-'"
             />
             <BaseStudentDataRow title="Status" :value="displayStatus" />
 
