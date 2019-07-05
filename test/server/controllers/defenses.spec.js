@@ -1108,4 +1108,83 @@ describe('/api/defenses', () => {
 
     done()
   })
+
+  test('DELETE /defenses', async done => {
+    const { token } = await testUtils.user('admin')
+
+    // Good case
+    {
+      const payload = {
+        userId: 1,
+        course: 'cbcc',
+        registrationNumbers: '201704940001, 201304940002',
+        students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+        local: 'Auditório do ICEN',
+        title: 'Fundamentos da Comunicação Analógica',
+        keywords: 'Fundamental, comunicacional, analógico',
+        summary: 'Sumário fundamentacional',
+
+        advisorName: 'Jonathan Joestar',
+        advisorTitle: 'doctor',
+        advisorType: 'internal',
+
+        evaluator1Name: 'Robert E. O. Speedwagon',
+        evaluator1Title: 'doctor',
+        evaluator1Type: 'internal',
+
+        evaluator2Name: 'Narciso Anasui',
+        evaluator2Title: 'master',
+        evaluator2Type: 'external'
+      }
+
+      const defense = await Defense.forge(payload).save()
+
+      const res = await chai
+        .request(server.listen())
+        .del(`/api/defenses/${defense.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+
+      expect(res.status).toEqual(204)
+    }
+
+    // Bad case
+    {
+      const payload = {
+        status: 'done', // look here
+        userId: 1,
+        course: 'cbcc',
+        registrationNumbers: '201704940001, 201304940002',
+        students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+        local: 'Auditório do ICEN',
+        title: 'Fundamentos da Comunicação Analógica',
+        keywords: 'Fundamental, comunicacional, analógico',
+        summary: 'Sumário fundamentacional',
+
+        advisorName: 'Jonathan Joestar',
+        advisorTitle: 'doctor',
+        advisorType: 'internal',
+
+        evaluator1Name: 'Robert E. O. Speedwagon',
+        evaluator1Title: 'doctor',
+        evaluator1Type: 'internal',
+
+        evaluator2Name: 'Narciso Anasui',
+        evaluator2Title: 'master',
+        evaluator2Type: 'external'
+      }
+
+      const defense = await Defense.forge(payload).save()
+
+      const res = await chai
+        .request(server.listen())
+        .del(`/api/defenses/${defense.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body.code).toBe(errors.INVALID_REQUEST)
+    }
+
+    done()
+  })
 })
