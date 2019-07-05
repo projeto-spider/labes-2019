@@ -25,18 +25,20 @@ describe('models/User', () => {
   }, 100000)
 
   test('Create a User', async done => {
-    const student = await User.forge({
-      username: 'admin',
+    const user = await User.forge({
+      username: 'pass',
+      fullName: 'Passarinho',
       password: 'pass',
       email: 'admin@example.com'
     }).save()
 
-    expect(student.id).toBeDefined()
-    expect(student.attributes.username).toEqual('admin')
-    expect(student.attributes.email).toEqual('admin@example.com')
-    expect(student.attributes.passwordDigest).toBeDefined()
-    expect(student.authenticate('pass')).resolves.toBe(student)
-    expect(student.authenticate('wrong')).rejects.not.toBe(student)
+    expect(user.id).toBeDefined()
+    expect(user.get('username')).toBe('pass')
+    expect(user.get('fullName')).toBe('Passarinho')
+    expect(user.get('email')).toBe('admin@example.com')
+    expect(user.get('passwordDigest')).toBeDefined()
+    expect(user.authenticate('pass')).resolves.toBe(user)
+    expect(user.authenticate('wrong')).rejects.not.toBe(user)
     done()
   })
 })

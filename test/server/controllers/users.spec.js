@@ -56,6 +56,7 @@ describe('/api/users', () => {
     const { token } = await testUtils.user('admin')
     const payload = {
       username: 'person',
+      fullName: 'Pessoa',
       password: 'person',
       email: 'person@example.com',
       role: 'admin'
@@ -70,6 +71,7 @@ describe('/api/users', () => {
     expect(res.type).toBe('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.username).toBe(payload.username)
+    expect(res.body.fullName).toBe(payload.fullName)
     expect(res.body.email).toBe(payload.email)
     expect(res.body.role).toBe(payload.role)
     done()
@@ -115,6 +117,7 @@ describe('/api/users', () => {
     const { token } = await testUtils.user('admin')
     const payload1 = {
       username: 'admin',
+      fullName: 'Administrador',
       password: 'person',
       email: 'person@example.com',
       role: 'admin'
@@ -132,6 +135,7 @@ describe('/api/users', () => {
 
     const payload2 = {
       username: 'person',
+      fullName: 'Pessoa',
       password: 'person',
       email: 'admin@domain.com',
       role: 'admin'
@@ -154,11 +158,16 @@ describe('/api/users', () => {
     const payload = {
       username: 'person',
       password: 'person',
+      fullName: 'Person',
       email: 'person@example.com',
       role: 'admin'
     }
     const user = await User.forge(payload).save()
-    const update = { password: 'newpassword', username: 'newname' }
+    const update = {
+      password: 'newpassword',
+      username: 'newname',
+      fullName: 'New Name'
+    }
     {
       const res = await chai
         .request(server.listen())
@@ -169,12 +178,17 @@ describe('/api/users', () => {
       expect(res.type).toBe('application/json')
       expect(res.body).toBeDefined()
       expect(res.body.username).toBe(update.username)
+      expect(res.body.fullName).toBe(update.fullName)
+    }
+    const credentials = {
+      password: update.password,
+      username: update.username
     }
     {
       const res = await chai
         .request(server.listen())
         .post(`/api/auth`)
-        .send(update)
+        .send(credentials)
       expect(res.status).toBe(200)
       expect(res.type).toBe('application/json')
       expect(res.body).toBeDefined()
@@ -280,6 +294,7 @@ describe('/api/users', () => {
     const { token } = await testUtils.user('teacher')
     const payload = {
       username: 'person',
+      fullName: 'Person',
       password: 'person',
       email: 'person@example.com',
       role: 'admin'
@@ -320,6 +335,7 @@ describe('/api/users', () => {
       const payload = {
         username: 'person',
         password: 'person',
+        fullName: 'Person',
         email: 'person@example.com',
         role: 'admin'
       }
@@ -340,6 +356,7 @@ describe('/api/users', () => {
     {
       const payload = {
         username: 'person',
+        fullName: 'Person',
         password: 'person',
         email: 'person@example.com',
         role: 'admin',
@@ -365,6 +382,7 @@ describe('/api/users', () => {
     const { token } = await testUtils.user('admin')
     const payload = {
       username: 'person',
+      fullName: 'Person',
       password: 'person',
       email: 'person@example.com',
       role: 'admin'
