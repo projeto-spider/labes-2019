@@ -45,7 +45,7 @@
                     </header>
                   </div>
 
-                  <div class="column is-half">
+                  <div v-show="isAdmin" class="column is-half">
                     <header class="card-header">
                       <b-icon pack="fas" icon="info" size="is-small"></b-icon>
                       <p class="card-header-title">Documentos Gerados</p>
@@ -53,7 +53,7 @@
                   </div>
                 </div>
                 <div class="columns scrollable-modal">
-                  <div class="column is-left is-half">
+                  <div class="hideRightColumn">
                     <DefenseForm
                       v-if="modalOpen"
                       v-model="selectedDefense"
@@ -62,7 +62,7 @@
                     />
                   </div>
 
-                  <div class="column is-right is-half">
+                  <div v-if="isAdmin" class="column is-right is-half">
                     <div class="list is-hoverable list-pdfs">
                       <a
                         v-for="pdf in availablePdfs"
@@ -281,7 +281,13 @@ export default {
           field: 'local',
           label: 'Local'
         }
-      ]
+      ],
+      hideRightColumn: {
+        // eslint-disable-next-line prettier/prettier
+        'column': true,
+        'is-left': this.isAdmin,
+        'is-half': this.isAdmin
+      }
     }
   },
 
@@ -291,7 +297,7 @@ export default {
       token: state => state.auth.token
     }),
 
-    ...mapGetters({ currentUser: 'auth/currentUser/role' }),
+    ...mapGetters({ currentUser: 'auth/currentUser' }),
 
     disclosure() {
       return disclosureModel(this.selectedDefense)
@@ -378,6 +384,9 @@ export default {
       ].filter(validExternalEvaluator)
 
       return requiredDocuments.concat(certificates).concat(credentials)
+    },
+    isAdmin() {
+      return this.currentUser.role === 'admin'
     }
   },
 
