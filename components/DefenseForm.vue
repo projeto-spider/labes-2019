@@ -239,7 +239,7 @@
       <b-button type="is-primary is-large" native-type="submit">
         Enviar
       </b-button>
-      <nuxt-link v-show="currentUser === 'teacher'" to="/teacher/home">
+      <nuxt-link v-show="currentUser.role === 'teacher'" to="/teacher/home">
         <b-button type="is-danger is-large">Cancelar</b-button>
       </nuxt-link>
     </div>
@@ -333,7 +333,7 @@ export default {
       courseTag: state => state.courseTag
     }),
 
-    ...mapGetters({ currentUser: 'auth/currentUser/role' }),
+    ...mapGetters({ currentUser: 'auth/currentUser' }),
 
     courseNameExtended() {
       const enumName = {
