@@ -22,13 +22,13 @@
       <li>
         <nuxt-link to="/subjects">Matérias</nuxt-link>
       </li>
+      <li>
+        <ModalPrescribedList></ModalPrescribedList>
+      </li>
     </ul>
 
     <div class="menu-label">Grupos de Email</div>
     <ul class="menu-list">
-      <li>
-        <ModalPrescribedList></ModalPrescribedList>
-      </li>
       <li>
         <nuxt-link to="/emailListActive">Email Principal</nuxt-link>
       </li>
