@@ -1,12 +1,12 @@
 <template>
   <div class="box">
-    <header v-if="displayChanges" class="card-header">
+    <header v-if="displayChanges && students.length" class="card-header">
       <b-icon pack="fas" :icon="icon" size="is-small"></b-icon>
       <p class="card-header-title">
         Estudantes a {{ isAddition ? 'adicionar' : 'remover' }} da lista
       </p>
     </header>
-    <section v-if="displayChanges">
+    <section v-if="displayChanges && students.length">
       <b-table
         :data="students"
         :columns="columns"
@@ -82,7 +82,7 @@ export default {
     confirmChange() {
       this.$dialog.confirm({
         message:
-          'Este processo é irreversivel, tem certeza que já foram realizadas todas as alterações?',
+          'Este processo é irreversível, tem certeza que já foram realizadas todas as alterações?',
         onConfirm: () => {
           const payload = {
             mailingList: this.mailingList,

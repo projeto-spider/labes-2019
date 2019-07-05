@@ -93,10 +93,7 @@ export default {
       this.$services.students
         .fetchEmailChanges(this.mailingList)
         .then(res => {
-          if (
-            res.data.additions.length !== 0 ||
-            res.data.deletions.length !== 0
-          ) {
+          if (res.data.additions.length || res.data.deletions.length) {
             this.emailChanges = res.data
             this.hasEmailChanges = true
           } else {
