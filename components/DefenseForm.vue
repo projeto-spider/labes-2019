@@ -256,8 +256,8 @@
         :disabled="disableSendButton"
       >
         Enviar
-      </b-button>
-      <nuxt-link v-show="currentUser.role === 'teacher'" to="/teacher/home">
+      </button>
+      <nuxt-link v-if="cancelRedirect" :to="cancelRedirect">
         <b-button type="is-danger is-large">Cancelar</b-button>
       </nuxt-link>
     </div>
