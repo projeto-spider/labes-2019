@@ -5,7 +5,8 @@ const utils = require('../../utils')
 module.exports = async function updateUser(ctx) {
   {
     const { valid, invalidParams } = utils.validatePayload(ctx.request.body, [
-      'password'
+      'password',
+      'username'
     ])
     if (!valid) {
       ctx.status = 400
@@ -31,13 +32,6 @@ module.exports = async function updateUser(ctx) {
     }
   }
   const payload = ctx.request.body
-
-  const validRequest = [payload.password, id].every(item => item !== undefined)
-  if (!validRequest) {
-    ctx.status = 400
-    ctx.body = { code: errors.INVALID_REQUEST }
-    return
-  }
 
   const user = await User.where({ id }).fetch()
   if (user === null) {
