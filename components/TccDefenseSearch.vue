@@ -300,6 +300,10 @@ export default {
         return []
       }
 
+      const studentNames = this.selectedDefense.students
+        .split(',')
+        .map(string => string.trim())
+
       const certificates = [
         {
           prefix: 'Certificado do Orientador',
@@ -325,6 +329,16 @@ export default {
           prefix: 'Certificado do Avaliador',
           key: 'certificado5',
           name: this.selectedDefense.evaluator3Name
+        },
+        {
+          prefix: 'Certificado do Aluno',
+          key: 'certificado6',
+          name: studentNames[0]
+        },
+        {
+          prefix: 'Certificado do Aluno',
+          key: 'certificado7',
+          name: studentNames[1]
         }
       ].filter(validPerson)
 
@@ -332,18 +346,30 @@ export default {
         {
           prefix: 'Credenciamento de Membro Externo',
           key: 'credenciamento1',
+          name: this.selectedDefense.advisorName,
+          type: this.selectedDefense.advisorType
+        },
+        {
+          prefix: 'Credenciamento de Membro Externo',
+          key: 'credenciamento2',
+          name: this.selectedDefense.coAdvisorName,
+          type: this.selectedDefense.coAdvisorType
+        },
+        {
+          prefix: 'Credenciamento de Membro Externo',
+          key: 'credenciamento3',
           name: this.selectedDefense.evaluator1Name,
           type: this.selectedDefense.evaluator1Type
         },
         {
           prefix: 'Credenciamento de Membro Externo',
-          key: 'credenciamento2',
+          key: 'credenciamento4',
           name: this.selectedDefense.evaluator2Name,
           type: this.selectedDefense.evaluator2Type
         },
         {
           prefix: 'Credenciamento de Membro Externo',
-          key: 'credenciamento3',
+          key: 'credenciamento5',
           name: this.selectedDefense.evaluator3Name,
           type: this.selectedDefense.evaluator3Type
         }
