@@ -123,10 +123,17 @@
         </b-select>
       </b-field>
       <b-field v-if="!forceDisable" label="Tipo">
-        <b-select v-model="model.advisorType" required :disabled="forceDisable">
-          <option value="internal">Interno</option>
-          <option value="external">Externo</option>
-        </b-select>
+        <input-validation ref="advisorIpt" :valid="validateExternalAdvisor">
+          <b-select
+            v-model="model.advisorType"
+            required
+            :disabled="forceDisable"
+            @blur="onBlur('advisorIpt')"
+          >
+            <option value="internal">Interno</option>
+            <option value="external">Externo</option>
+          </b-select>
+        </input-validation>
       </b-field>
     </b-field>
 
@@ -145,10 +152,16 @@
         </b-select>
       </b-field>
       <b-field label="Tipo">
-        <b-select v-model="model.coAdvisorType" :disabled="forceDisable">
-          <option value="internal">Interno</option>
-          <option value="external">Externo</option>
-        </b-select>
+        <input-validation ref="coAdvisorIpt" :valid="validateExternalAdvisor">
+          <b-select
+            v-model="model.coAdvisorType"
+            :disabled="forceDisable"
+            @blur="onBlur('coAdvisorIpt')"
+          >
+            <option value="internal">Interno</option>
+            <option value="external">Externo</option>
+          </b-select>
+        </input-validation>
       </b-field>
     </b-field>
 
@@ -237,7 +250,11 @@
     </b-field>
 
     <div v-if="!forceDisable" class="control">
-      <b-button type="is-primary is-large" native-type="submit">
+      <button
+        class="button is-primary is-large"
+        type="submit"
+        :disabled="disableSendButton"
+      >
         Enviar
       </b-button>
       <nuxt-link v-show="currentUser.role === 'teacher'" to="/teacher/home">
@@ -252,6 +269,7 @@ import { mapState, mapGetters } from 'vuex'
 import pDebounce from 'p-debounce'
 import DatePicker from '@/components/DatePicker'
 import TimePicker from '@/components/TimePicker'
+import InputValidation from '@/components/InputValidation'
 
 const defaultStudent = () => ({ name: '', registrationNumber: '' })
 const defaultModel = () => {
@@ -292,7 +310,8 @@ export default {
 
   components: {
     DatePicker,
-    TimePicker
+    TimePicker,
+    InputValidation
   },
 
   props: {
@@ -342,6 +361,25 @@ export default {
         cbcc: 'Ciência da Computação'
       }
       return enumName[this.courseTag] || ''
+    },
+
+    validateExternalAdvisor() {
+      if (
+        this.model.advisorType === 'external' &&
+        this.model.coAdvisorType === 'external'
+      ) {
+        this.$toast.open({
+          message:
+            'Orientador ou coorientador podem ser externos, mas apenas um deles',
+          type: 'is-danger'
+        })
+        return false
+      }
+      return true
+    },
+
+    disableSendButton() {
+      return !this.validateExternalAdvisor
     }
   },
 
@@ -359,6 +397,10 @@ export default {
   },
 
   methods: {
+    onBlur(refName) {
+      this.$refs[refName].dirty = true
+    },
+
     reset() {
       this.model = defaultModel()
     },
