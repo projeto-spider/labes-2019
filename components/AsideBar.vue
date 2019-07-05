@@ -55,8 +55,8 @@
 </template>
 
 <script>
-import ModalPrescribedList from '@/components/ModalPrescribedList'
 import { mapState } from 'vuex'
+import ModalPrescribedList from '@/components/ModalPrescribedList'
 
 export default {
   name: 'AsideBar',
