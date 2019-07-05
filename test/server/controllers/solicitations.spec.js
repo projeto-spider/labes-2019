@@ -31,7 +31,9 @@ describe('/api/solicitations', () => {
       name: 'Person',
       email: 'person.ufpa@example.com',
       registrationNumber: '201904940001',
-      type: 'concluding'
+      type: 'concluding',
+      course: 'Ciência da Computação',
+      admissionType: 'Processo Seletivo UFPa'
     }
     const res = await chai
       .request(server.listen())
@@ -45,11 +47,15 @@ describe('/api/solicitations', () => {
     expect(res.body.email).toBe(payload.email)
     expect(res.body.registrationNumber).toBe(payload.registrationNumber)
     expect(res.body.type).toBe(payload.type)
+    expect(res.body.course).toBe(payload.course)
+    expect(res.body.admissionType).toBe(payload.admissionType)
 
     const payload2 = {
       name: 'Person',
       email: 'person@example.com',
-      type: 'freshman'
+      type: 'freshman',
+      course: 'Sistemas de Informação',
+      admissionType: 'SiSU'
     }
     const res2 = await chai
       .request(server.listen())
@@ -62,13 +68,17 @@ describe('/api/solicitations', () => {
     expect(res2.body.name).toBe(payload2.name)
     expect(res2.body.email).toBe(payload2.email)
     expect(res2.body.type).toBe(payload2.type)
+    expect(res2.body.course).toBe(payload2.course)
+    expect(res2.body.admissionType).toBe(payload2.admissionType)
     done()
   })
 
   test('POST / with missing fields', async done => {
     const payload1 = {
       email: 'person.ufpa@example.com',
-      registrationNumber: '201904940001'
+      registrationNumber: '201904940001',
+      course: 'Ciência da Computação',
+      admissionType: 'Processo Seletivo UFPa'
     }
     const res1 = await chai
       .request(server.listen())
@@ -83,7 +93,9 @@ describe('/api/solicitations', () => {
     const payload2 = {
       name: 'Person',
       registrationNumber: '201804940001',
-      type: 'concluding'
+      type: 'concluding',
+      course: 'Ciência da Computação',
+      admissionType: 'Processo Seletivo UFPa'
     }
     const res2 = await chai
       .request(server.listen())
@@ -102,7 +114,9 @@ describe('/api/solicitations', () => {
       name: 'Victor Silva Machado',
       email: 'victorsilva@example.com',
       registrationNumber: '201904940012',
-      type: 'concluding'
+      type: 'concluding',
+      course: 'Ciência da Computação',
+      admissionType: 'Processo Seletivo UFPa'
     }
     const res1 = await chai
       .request(server.listen())
@@ -121,7 +135,9 @@ describe('/api/solicitations', () => {
       name: 'Victor Silva Machado',
       email: 'victor.silva@example.com',
       registrationNumber: '2019049400012',
-      type: 'freshman'
+      type: 'freshman',
+      course: 'Ciência da Computação',
+      admissionType: 'Processo Seletivo UFPa'
     }
     const res1 = await chai
       .request(server.listen())
@@ -139,7 +155,9 @@ describe('/api/solicitations', () => {
     const payload = {
       name: 'Person',
       email: 'person@gmail.com',
-      registrationNumber: '201904940001'
+      registrationNumber: '201904940001',
+      course: 'Ciência da Computação',
+      admissionType: 'Processo Seletivo UFPa'
     }
     const res = await chai
       .request(server.listen())
@@ -159,7 +177,9 @@ describe('/api/solicitations', () => {
         name: 'Person',
         email: 'person.ufpa@example.com',
         registrationNumber: '201904940001',
-        type: 'concluding'
+        type: 'concluding',
+        course: 'Ciência da Computação',
+        admissionType: 'Processo Seletivo UFPa'
       }
       const res = await chai
         .request(server.listen())
@@ -179,7 +199,9 @@ describe('/api/solicitations', () => {
         name: 'Person',
         email: 'person.ufpa@example.com',
         registrationNumber: '201904940001',
-        type: 'concluding'
+        type: 'concluding',
+        course: 'Ciência da Computação',
+        admissionType: 'Processo Seletivo UFPa'
       }
       const res = await chai
         .request(server.listen())
