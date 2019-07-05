@@ -1,9 +1,6 @@
 <template>
   <div>
-    <a
-      class="button is-normal is-primary is-modal"
-      @click.stop.prevent="openModal"
-    >
+    <a @click.stop.prevent="openModal">
       Gerar lista de prescrição
     </a>
     <div class="modal" :class="{ 'is-active': isActive }">
