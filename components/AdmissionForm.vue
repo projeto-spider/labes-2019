@@ -119,11 +119,13 @@ export default {
 
   courses: [
     { id: 'cbcc', name: 'Ciência da Computação' },
-    { id: 'cbsi', name: 'Sistemas de Informação' }
+    { id: 'cbsi', name: 'Sistemas de Informação' },
+    { id: 'other', name: 'Outro' }
   ],
   admissionTypes: [
     { id: 'psufpa', name: 'Processo Seletivo UFPa' },
-    { id: 'sisu', name: 'SiSU' }
+    { id: 'sisu', name: 'SiSU' },
+    { id: 'other', name: 'Outro' }
   ],
 
   data: () => ({

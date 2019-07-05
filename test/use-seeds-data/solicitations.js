@@ -20,8 +20,8 @@ module.exports = [
     email: 'gabrieladias@example.com',
     registrationNumber: '201804940003',
     type: 'concluding',
-    course: 'cbcc',
-    admissionType: 'psufpa'
+    course: 'other',
+    admissionType: 'other'
   },
   {
     name: 'Marisa Correia Castro',
@@ -37,6 +37,6 @@ module.exports = [
     registrationNumber: '201604940012',
     type: 'concluding',
     course: 'cbsi',
-    admissionType: 'sisu'
+    admissionType: 'other'
   }
 ]

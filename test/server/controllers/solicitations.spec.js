@@ -54,8 +54,8 @@ describe('/api/solicitations', () => {
       name: 'Person',
       email: 'person@example.com',
       type: 'freshman',
-      course: 'cbsi',
-      admissionType: 'sisu'
+      course: 'other',
+      admissionType: 'other'
     }
     const res2 = await chai
       .request(server.listen())
