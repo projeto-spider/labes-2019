@@ -10,7 +10,7 @@
       <b-table
         :data="students"
         :columns="columns"
-        :checked-rows.sync="checkedStudents"
+        :checked-rows.sync="checkedChanges"
         checkable
       ></b-table>
       <div class="level">
@@ -62,7 +62,7 @@ export default {
         { field: 'name', label: 'Nome' },
         { field: 'email', label: 'E-mail' }
       ],
-      checkedStudents: []
+      checkedChanges: []
     }
   },
 
@@ -73,14 +73,25 @@ export default {
   },
 
   methods: {
+    filterIds(type) {
+      return this.checkedChanges
+        .filter(change => change.type === type)
+        .map(change => change.id)
+    },
+
     confirmChange() {
       this.$dialog.confirm({
         message:
           'Este processo é irreversivel, tem certeza que já foram realizadas todas as alterações?',
         onConfirm: () => {
-          const ids = this.checkedStudents.map(stdt => stdt.id)
+          const payload = {
+            mailingList: this.mailingList,
+            type: this.isAddition ? 'add' : 'remove',
+            studentIds: this.filterIds('student'),
+            solicitationIds: this.filterIds('solicitation')
+          }
           this.$services.students
-            .updateEmailChanges(ids, this.mailingList, this.isAddition)
+            .updateEmailChanges(payload)
             .then(res => {
               this.$toast.open('Alterações realizadas com sucesso')
               this.$emit('email-list-changed')

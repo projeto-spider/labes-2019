@@ -56,13 +56,10 @@ export default function makeStudentServices(axios) {
       })
     },
 
-    updateEmailChanges(studentsIdList, mailingList, isAdditionOperation) {
+    updateEmailChanges(params) {
+      const paramList = ['mailingList', 'type', 'studentIds', 'solicitationIds']
       return axios.post('/api/students/update-mailing-list', {
-        params: {
-          ids: studentsIdList,
-          mailingList,
-          type: isAdditionOperation ? 'add' : 'remove'
-        }
+        params: selector(params, paramList)
       })
     },
 
