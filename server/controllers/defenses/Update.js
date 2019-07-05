@@ -37,7 +37,9 @@ const optionalFields = [
 
   'evaluator3Name',
   'evaluator3Title',
-  'evaluator3Type'
+  'evaluator3Type',
+  'grade',
+  'passed'
 ]
 
 const allFields = requiredFields.concat(optionalFields)
@@ -102,6 +104,12 @@ module.exports = async function updateDefense(ctx) {
         student.get('registrationNumber')
       )
     }
+    return
+  }
+
+  if (payload.status === 'done' && payload.grade === undefined) {
+    ctx.status = 422
+    ctx.body = { code: errors.MISSING_GRADE }
     return
   }
 
