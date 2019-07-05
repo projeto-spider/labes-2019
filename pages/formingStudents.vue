@@ -12,12 +12,20 @@
           animated
           multilined
         >
-          <button class="button is-danger" disabled>
+          <button
+            class="button is-danger"
+            :disabled="isSelectedAcademicHighlight"
+          >
             Eleger Destaque Acadêmico
           </button>
         </b-tooltip>
 
-        <button v-else class="button is-primary" @click="openModal">
+        <button
+          v-else
+          class="button is-primary"
+          :disabled="isSelectedAcademicHighlight"
+          @click="openModal"
+        >
           Eleger Destaque Acadêmico
         </button>
       </div>
@@ -104,7 +112,8 @@ export default {
   data: () => ({
     allCrgsReady: false,
     isModalOpen: false,
-    academicHighlightCandidates: []
+    academicHighlightCandidates: [],
+    isSelectedAcademicHighlight: false
   }),
   computed: {
     ...mapState({
@@ -172,23 +181,35 @@ export default {
     },
 
     selectAcademicHighlight(studentId) {
-      this.isModalOpen = false
-      this.$services.students
-        .updateAcademicHighlight(studentId)
-        .then(res => {
-          this.$toast.open({
-            message: 'Destaque acadêmico selecionado!',
-            type: 'is-success'
-          })
+      this.$dialog.confirm({
+        title: 'Selecionar Destaque Acadêmico',
+        message:
+          'Você tem certeza que quer <b>selecionar</b> o destaque acadêmico? Essa ação não pode ser desfeita.',
+        confirmText: 'Selecionar',
+        type: 'is-warning',
+        hasIcon: true,
+        onConfirm: () => {
+          this.$toast.open('Destaque Acadêmico selecionado!')
+          this.isModalOpen = false
+          this.$services.students
+            .updateAcademicHighlight(studentId)
+            .then(res => {
+              this.isSelectedAcademicHighlight = true
+              this.$toast.open({
+                message: 'Destaque acadêmico selecionado!',
+                type: 'is-success'
+              })
 
-          this.$refs.fitGraduatingSearchInput.getStudents()
-        })
-        .catch(() => {
-          this.$toast.open({
-            message: 'Falha ao selecionar destaque acadêmico.',
-            type: 'is-danger'
-          })
-        })
+              this.$refs.fitGraduatingSearchInput.getStudents()
+            })
+            .catch(() => {
+              this.$toast.open({
+                message: 'Falha ao selecionar destaque acadêmico.',
+                type: 'is-danger'
+              })
+            })
+        }
+      })
     },
 
     onToggleComboBox() {
