@@ -32,8 +32,8 @@ describe('/api/solicitations', () => {
       email: 'person.ufpa@example.com',
       registrationNumber: '201904940001',
       type: 'concluding',
-      course: 'Ciência da Computação',
-      admissionType: 'Processo Seletivo UFPa'
+      course: 'cbcc',
+      admissionType: 'psufpa'
     }
     const res = await chai
       .request(server.listen())
@@ -54,8 +54,8 @@ describe('/api/solicitations', () => {
       name: 'Person',
       email: 'person@example.com',
       type: 'freshman',
-      course: 'Sistemas de Informação',
-      admissionType: 'SiSU'
+      course: 'cbsi',
+      admissionType: 'sisu'
     }
     const res2 = await chai
       .request(server.listen())
@@ -77,8 +77,8 @@ describe('/api/solicitations', () => {
     const payload1 = {
       email: 'person.ufpa@example.com',
       registrationNumber: '201904940001',
-      course: 'Ciência da Computação',
-      admissionType: 'Processo Seletivo UFPa'
+      course: 'cbcc',
+      admissionType: 'psufpa'
     }
     const res1 = await chai
       .request(server.listen())
@@ -94,8 +94,8 @@ describe('/api/solicitations', () => {
       name: 'Person',
       registrationNumber: '201804940001',
       type: 'concluding',
-      course: 'Ciência da Computação',
-      admissionType: 'Processo Seletivo UFPa'
+      course: 'cbcc',
+      admissionType: 'psufpa'
     }
     const res2 = await chai
       .request(server.listen())
@@ -115,8 +115,8 @@ describe('/api/solicitations', () => {
       email: 'victorsilva@example.com',
       registrationNumber: '201904940012',
       type: 'concluding',
-      course: 'Ciência da Computação',
-      admissionType: 'Processo Seletivo UFPa'
+      course: 'cbcc',
+      admissionType: 'psufpa'
     }
     const res1 = await chai
       .request(server.listen())
@@ -136,8 +136,8 @@ describe('/api/solicitations', () => {
       email: 'victor.silva@example.com',
       registrationNumber: '2019049400012',
       type: 'freshman',
-      course: 'Ciência da Computação',
-      admissionType: 'Processo Seletivo UFPa'
+      course: 'cbcc',
+      admissionType: 'psufpa'
     }
     const res1 = await chai
       .request(server.listen())
@@ -156,8 +156,8 @@ describe('/api/solicitations', () => {
       name: 'Person',
       email: 'person@gmail.com',
       registrationNumber: '201904940001',
-      course: 'Ciência da Computação',
-      admissionType: 'Processo Seletivo UFPa'
+      course: 'cbcc',
+      admissionType: 'psufpa'
     }
     const res = await chai
       .request(server.listen())
@@ -178,8 +178,8 @@ describe('/api/solicitations', () => {
         email: 'person.ufpa@example.com',
         registrationNumber: '201904940001',
         type: 'concluding',
-        course: 'Ciência da Computação',
-        admissionType: 'Processo Seletivo UFPa'
+        course: 'cbcc',
+        admissionType: 'psufpa'
       }
       const res = await chai
         .request(server.listen())
@@ -200,8 +200,8 @@ describe('/api/solicitations', () => {
         email: 'person.ufpa@example.com',
         registrationNumber: '201904940001',
         type: 'concluding',
-        course: 'Ciência da Computação',
-        admissionType: 'Processo Seletivo UFPa'
+        course: 'cbcc',
+        admissionType: 'psufpa'
       }
       const res = await chai
         .request(server.listen())

@@ -4,39 +4,39 @@ module.exports = [
     email: 'anagomes@example.com',
     registrationNumber: '201804940001',
     type: 'concluding',
-    course: 'Ciência da Computação',
-    admissionType: 'Processo Seletivo UFPa'
+    course: 'cbcc',
+    admissionType: 'psufpa'
   },
   {
     name: 'Victor Silva Carvalho',
     email: 'victorsilva@example.com',
     registrationNumber: '201804940002',
     type: 'freshman',
-    course: 'Ciência da Computação',
-    admissionType: 'Processo Seletivo UFPa'
+    course: 'cbcc',
+    admissionType: 'psufpa'
   },
   {
     name: 'Gabriela Dias Cunha',
     email: 'gabrieladias@example.com',
     registrationNumber: '201804940003',
     type: 'concluding',
-    course: 'Ciência da Computação',
-    admissionType: 'Processo Seletivo UFPa'
+    course: 'cbcc',
+    admissionType: 'psufpa'
   },
   {
     name: 'Marisa Correia Castro',
     email: 'marisacastro@gmail.com',
     registrationNumber: '201804940023',
     type: 'freshman',
-    course: 'Sistemas de Informação',
-    admissionType: 'SiSU'
+    course: 'cbsi',
+    admissionType: 'sisu'
   },
   {
     name: 'Rodrigo Rodrigues Santos',
     email: 'rrsantos@ufpa.br',
     registrationNumber: '201604940012',
     type: 'concluding',
-    course: 'Sistemas de Informação',
-    admissionType: 'SiSU'
+    course: 'cbsi',
+    admissionType: 'sisu'
   }
 ]
