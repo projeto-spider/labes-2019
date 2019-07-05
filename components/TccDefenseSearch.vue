@@ -529,9 +529,9 @@ ${formalTitle(selectedDefense.evaluator2Title)}${
       : ''
   }
 
-Data e local: ${selectedDefense.date} às ${selectedDefense.time} - ${
-    selectedDefense.local
-  }
+Data e local: ${dateInFull(selectedDefense.date)} às ${hourFormatted(
+    selectedDefense.time
+  )} - ${selectedDefense.local}
 
 RESUMO
 
@@ -556,6 +556,47 @@ function validPerson({ name }) {
 
 function validExternalEvaluator(evaluator) {
   return validPerson(evaluator) && evaluator.type === 'external'
+}
+
+function dateInFull(defenseDate) {
+  const month = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro'
+  ]
+  if (typeof defenseDate !== 'string') {
+    return ''
+  }
+
+  const date = defenseDate.split('/')
+  return date.length === 3
+    ? `${date[0]} de ${month[date[1] - 1]} de ${date[2]}`
+    : ''
+}
+
+function hourFormatted(defenseHour) {
+  if (typeof defenseHour !== 'string') {
+    return ''
+  }
+  // '00:00:00'
+  const hour = defenseHour
+    // ['00', '00', '00']
+    .split(':')
+    // '00h00h00'
+    .join('h')
+    // '00h00'
+    .slice(0, 5)
+
+  return hour
 }
 </script>
 
