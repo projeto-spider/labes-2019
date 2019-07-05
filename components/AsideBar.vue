@@ -22,6 +22,9 @@
       <li>
         <nuxt-link to="/subjects">Componentes Curriculares</nuxt-link>
       </li>
+      <li>
+        <ModalPrescribedList></ModalPrescribedList>
+      </li>
     </ul>
 
     <div class="menu-label">Grupos de Email</div>
@@ -52,10 +55,14 @@
 </template>
 
 <script>
+import ModalPrescribedList from '@/components/ModalPrescribedList'
 import { mapState } from 'vuex'
 
 export default {
   name: 'AsideBar',
+  components: {
+    ModalPrescribedList
+  },
   computed: {
     ...mapState({
       courseTag: state => state.courseTag

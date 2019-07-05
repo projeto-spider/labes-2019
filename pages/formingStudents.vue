@@ -5,9 +5,6 @@
     </div>
     <div class="columns has-text-centered">
       <div class="column is-half">
-        <ModalPrescribedList></ModalPrescribedList>
-      </div>
-      <div class="column is-half">
         <b-tooltip
           v-if="!allCrgsReady"
           label="Alguns alunos estão sem CRG"
@@ -92,14 +89,12 @@
 <script>
 import { mapState } from 'vuex'
 import SearchInput from '@/components/SearchInput'
-import ModalPrescribedList from '@/components/ModalPrescribedList'
 
 export default {
   name: 'Forming',
   middleware: 'course',
   components: {
-    SearchInput,
-    ModalPrescribedList
+    SearchInput
   },
   head() {
     return {

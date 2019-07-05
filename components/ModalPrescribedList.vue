@@ -1,9 +1,6 @@
 <template>
   <div>
-    <a
-      class="button is-normal is-primary is-modal"
-      @click.stop.prevent="openModal"
-    >
+    <a @click.stop.prevent="openModal">
       Gerar lista de prescrição
     </a>
     <div class="modal" :class="{ 'is-active': isActive }">
@@ -91,8 +88,8 @@ export default {
         .fetchPage({ prescribed: true, page: page })
         .then(res => {
           this.studentsData = res.data
-          this.total = res.headers['pagination-row-count']
-          this.perPage = res.headers['pagination-page-size']
+          this.total = +res.headers['pagination-page-count']
+          this.perPage = +res.headers['pagination-page-size']
         })
         .catch(e => {
           this.openErrorNotification(e)
