@@ -109,7 +109,7 @@ module.exports = async function updateDefense(ctx) {
 
   if (payload.status === 'done' && payload.grade === undefined) {
     ctx.status = 422
-    ctx.body = { code: errors.UNPROCESSABLE_ENTITY, message: 'MISSING_GRADE' }
+    ctx.body = { code: errors.MISSING_GRADE }
     return
   }
 

@@ -1104,8 +1104,7 @@ describe('/api/defenses', () => {
     expect(res.status).toEqual(422)
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
-    expect(res.body.code).toEqual(errors.UNPROCESSABLE_ENTITY)
-    expect(res.body.message).toEqual('MISSING_GRADE')
+    expect(res.body.code).toEqual(errors.MISSING_GRADE)
 
     done()
   })
