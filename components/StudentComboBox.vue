@@ -44,7 +44,7 @@
             ></b-input>
             <br />
             <b-checkbox
-              v-if="studentData.isConcluding || studentData.isFit"
+              v-if="studentData.isConcluding || studentData.isGraduating"
               v-model="missingCollationCheck"
               label="Faltou à colação"
               :disabled="!canEdit"
