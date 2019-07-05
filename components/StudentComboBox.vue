@@ -15,19 +15,22 @@
             />
             <BaseStudentDataRow
               title="Orientador"
-              :value="studentData.advisor || '-'"
+              :value="advisor ? advisor.username : '-'"
             />
             <BaseStudentDataRow title="Status" :value="displayStatus" />
 
-            <strong>{{ hasDefended ? 'Defendeu em' : 'Data da defesa' }}</strong
-            ><br />
-            <b-field>
-              <DatePicker
-                v-model="studentData.defenseDate"
-                :max-date="hasDefended ? new Date() : undefined"
-                :disabled="!canEdit"
-              />
-            </b-field>
+            <template v-if="defense">
+              <strong>
+                {{ hasDefended ? 'Defendeu em' : 'Data da defesa' }}
+              </strong>
+
+              <br />
+
+              <b-field>
+                <DatePicker v-model="defense.date" :disabled="true" />
+              </b-field>
+            </template>
+
             <strong>E-mail</strong>:
             <b-input v-model="studentData.email" :disabled="!canEdit"></b-input>
             <br />
@@ -229,7 +232,9 @@ export default {
       studentSubjects: [],
       studentData: Object.assign({}, this.student),
       isLoading: false,
-      totalPendencies: 0
+      totalPendencies: 0,
+      defense: false,
+      advisor: false
     }
   },
   computed: {
@@ -261,6 +266,20 @@ export default {
         this.totalPendencies = res.data.length
       })
       .catch(e => this.openErrorNotification(e))
+
+    if (this.student.defenseId) {
+      this.$services.defenses
+        .fetch(this.student.defenseId)
+        .then(({ data: defense }) => {
+          this.defense = defense
+          const { userId } = defense
+
+          return this.$services.users.fetch(userId)
+        })
+        .then(({ data: advisor }) => {
+          this.advisor = advisor
+        })
+    }
   },
 
   methods: {
@@ -290,9 +309,9 @@ export default {
     putStudents() {
       this.isLoading = true
       const cd = this.cdCheck
-      const { defenseDate, email } = this.studentData
+      const { email } = this.studentData
       const crg = this.canEditCrg ? this.studentData.crg : undefined
-      const payload = { defenseDate, email, cd, crg }
+      const payload = { email, cd, crg }
       this.$services.students
         .update(this.studentData.id, payload)
         .then(res => {

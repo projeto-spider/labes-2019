@@ -352,8 +352,6 @@ describe('/api/students', () => {
         academicHighlight: false,
         cancelled: false,
         mailingList: 'none',
-        advisor: 'Novo Orientador',
-        defenseDate: '06-30-2019',
         term: null,
         cd: true
       })
@@ -363,9 +361,7 @@ describe('/api/students', () => {
     expect(resComplete.body.id).toEqual(1)
     expect(resComplete.body.name).toEqual('ATUALIZA NOME')
     expect(resComplete.body.crg).toEqual(9)
-    expect(resComplete.body.advisor).toEqual('Novo Orientador')
     expect(resComplete.body.cd).toBeTruthy()
-    expect(resComplete.body.defenseDate).toEqual('06-30-2019')
 
     const resNome = await chai
       .request(server.listen())
@@ -1433,8 +1429,6 @@ describe('/api/students', () => {
         academicHighlight: false,
         cancelled: false,
         mailingList: 'none',
-        advisor: 'Novo Orientador',
-        defenseDate: '06-30-2019',
         term: null,
         cd: true
       })
@@ -1636,8 +1630,6 @@ describe('/api/students', () => {
       mailingList: 'none',
       mailingListToRemove: 'none',
       mailingListToAdd: 'active',
-      advisor: null,
-      defenseDate: null,
       term: null,
       cd: false, // important
       period: null
