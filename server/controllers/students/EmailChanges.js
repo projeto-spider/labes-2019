@@ -37,18 +37,20 @@ module.exports = async function emailChanges(ctx) {
     additionsViaSolicitations = []
   ] = await Promise.all(promises)
 
-  const prepare = models =>
+  const prepare = (models, type) =>
     models.toJSON
-      ? models.toJSON().map(({ name, email }) => ({
+      ? models.toJSON().map(({ id, name, email }) => ({
+          id,
           name,
-          email
+          email,
+          type
         }))
       : []
 
-  const additions = prepare(additionsViaApp).concat(
-    prepare(additionsViaSolicitations)
+  const additions = prepare(additionsViaApp, 'student').concat(
+    prepare(additionsViaSolicitations, 'solicitation')
   )
-  const deletions = prepare(deletionsViaApp)
+  const deletions = prepare(deletionsViaApp, 'student')
 
   ctx.status = 200
   ctx.body = {
