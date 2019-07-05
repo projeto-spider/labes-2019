@@ -8,24 +8,27 @@ const Certificado = require('../../models/tccdocs/certificado')
 const Credenciamento = require('../../models/tccdocs/credenciamento')
 const Divulgacao = require('../../models/tccdocs/divulgacao')
 
-const translations = {
-  cbcc: 'Ciência da Computação',
-  cbsi: 'Sistemas de Informação',
-  doctor: 'Dr(a). ',
-  master: 'Me(a). ',
-  other: '',
-  '1': 'Janeiro',
-  '2': 'Fevereiro',
-  '3': 'Março',
-  '4': 'Abril',
-  '5': 'Maio',
-  '6': 'Junho',
-  '7': 'Julho',
-  '8': 'Agosto',
-  '9': 'Setembro',
-  '10': 'Outubro',
-  '11': 'Novembro',
-  '12': 'Dezembro'
+function translate(info) {
+  const translations = {
+    cbcc: 'Ciência da Computação',
+    cbsi: 'Sistemas de Informação',
+    doctor: 'Dr(a). ',
+    master: 'MSc. ',
+    other: '',
+    '1': 'Janeiro',
+    '2': 'Fevereiro',
+    '3': 'Março',
+    '4': 'Abril',
+    '5': 'Maio',
+    '6': 'Junho',
+    '7': 'Julho',
+    '8': 'Agosto',
+    '9': 'Setembro',
+    '10': 'Outubro',
+    '11': 'Novembro',
+    '12': 'Dezembro'
+  }
+  return translations[info] || info
 }
 
 module.exports = async function generateAllDocs(ctx) {
@@ -46,6 +49,7 @@ module.exports = async function generateAllDocs(ctx) {
       'certificado4',
       'certificado5',
       'certificado6',
+      'certificado7',
       'credenciamento1',
       'credenciamento2',
       'credenciamento3',
@@ -66,26 +70,26 @@ module.exports = async function generateAllDocs(ctx) {
   const defenseDate = defenseFind.get('date')
   const date = new Date()
   const dados = {
-    curso: translations[defenseFind.get('course')],
+    curso: translate(defenseFind.get('course')),
     tituloTCC: defenseFind.get('title'),
     nomeDosAlunos: defenseFind.get('students').replace(/, /g, '\n'),
-    tituloOrientador: translations[defenseFind.get('advisorTitle')],
+    tituloOrientador: translate(defenseFind.get('advisorTitle')),
     orientador: defenseFind.get('advisorName'),
-    tituloCoOrientador: translations[defenseFind.get('coAdvisorTitle')],
+    tituloCoOrientador: translate(defenseFind.get('coAdvisorTitle')),
     coOrientador: defenseFind.get('coAdvisorName'),
-    tituloAvaliador1: translations[defenseFind.get('evaluator1Title')],
+    tituloAvaliador1: translate(defenseFind.get('evaluator1Title')),
     avaliador1: defenseFind.get('evaluator1Name'),
-    tituloAvaliador2: translations[defenseFind.get('evaluator2Title')],
+    tituloAvaliador2: translate(defenseFind.get('evaluator2Title')),
     avaliador2: defenseFind.get('evaluator2Name'),
-    tituloAvaliador3: translations[defenseFind.get('evaluator3Title')],
+    tituloAvaliador3: translate(defenseFind.get('evaluator3Title')),
     avaliador3: defenseFind.get('evaluator3Name'),
     diaDefesa: defenseDate.split('/')[0],
-    mesDefesa: translations[Number(defenseDate.split('/')[1])],
+    mesDefesa: translate(Number(defenseDate.split('/')[1])),
     anoDefesa: defenseDate.split('/')[2],
     dia: date.getUTCDate(),
-    mes: translations[date.getUTCMonth()],
+    mes: translate(date.getUTCMonth()),
     ano: date.getUTCFullYear(),
-    tituloDiretor: translations.doctor,
+    tituloDiretor: translate('doctor'),
     diretor: 'Josivaldo de Souza Araújo',
     matricula: defenseFind.get('registrationNumbers').split(', ')[0],
     discente: defenseFind.get('students').split(', ')[0],
@@ -156,6 +160,12 @@ module.exports = async function generateAllDocs(ctx) {
     },
     {
       name: dados.discente,
+      title: '',
+      condition: 'discente',
+      isDiscente: true
+    },
+    {
+      name: dados.nomeDosAlunos.split('\n')[1],
       title: '',
       condition: 'discente',
       isDiscente: true

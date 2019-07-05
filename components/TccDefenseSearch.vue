@@ -71,7 +71,7 @@
                         :href="
                           `/api/defenses/` +
                             selectedDefense.id +
-                            '/pdf/${pdf.key}?token=' +
+                            `/pdf/${pdf.key}?token=` +
                             token
                         "
                         target="_blank"
