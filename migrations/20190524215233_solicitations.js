@@ -8,8 +8,12 @@ exports.up = function(knex, Promise) {
       .unique()
     table.string('registrationNumber').nullable()
     table.enum('type', ['freshman', 'concluding']).defaultTo('freshman')
-    table.string('course').notNullable()
-    table.string('admissionType').notNullable()
+    table
+      .enum('course', ['Ciência da Computação', 'Sistemas de Informação'])
+      .notNullable()
+    table
+      .enum('admissionType', ['Processo Seletivo UFPa', 'SiSU'])
+      .notNullable()
   })
 }
 
