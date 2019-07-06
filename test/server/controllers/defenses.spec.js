@@ -1138,11 +1138,25 @@ describe('/api/defenses', () => {
       }
 
       const defense = await Defense.forge(payload).save()
+      await Student.where('registrationNumber', 'in', [
+        '201704940001',
+        '201304940002'
+      ]).save({ defenseId: defense.get('id') }, { patch: true })
 
       const res = await chai
         .request(server.listen())
         .del(`/api/defenses/${defense.get('id')}`)
         .set('Authorization', `Bearer ${token}`)
+
+      const students = await Promise.all(
+        ['201704940001', '201304940002'].map(registrationNumber =>
+          Student.forge({ registrationNumber }).fetch()
+        )
+      )
+
+      for (const student of students) {
+        expect(student.get('defenseId')).toBe(null)
+      }
 
       expect(res.status).toEqual(204)
     }
@@ -1174,6 +1188,10 @@ describe('/api/defenses', () => {
       }
 
       const defense = await Defense.forge(payload).save()
+      await Student.where('registrationNumber', 'in', [
+        '201704940001',
+        '201304940002'
+      ]).save({ defenseId: defense.get('id') }, { patch: true })
 
       const res = await chai
         .request(server.listen())
@@ -1183,6 +1201,16 @@ describe('/api/defenses', () => {
       expect(res.status).toBe(400)
       expect(res.type).toBe('application/json')
       expect(res.body.code).toBe(errors.INVALID_REQUEST)
+
+      const students = await Promise.all(
+        ['201704940001', '201304940002'].map(registrationNumber =>
+          Student.forge({ registrationNumber }).fetch()
+        )
+      )
+
+      for (const student of students) {
+        expect(student.get('defenseId')).toBe(defense.get('id'))
+      }
     }
 
     done()

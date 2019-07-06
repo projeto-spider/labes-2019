@@ -2,6 +2,7 @@ const errors = require('../../../shared/errors')
 const utils = require('../../utils')
 
 const Defense = require('../../models/Defense')
+const Student = require('../../models/Student')
 
 module.exports = async function removeDefense(ctx) {
   const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
@@ -26,8 +27,14 @@ module.exports = async function removeDefense(ctx) {
     return
   }
 
-  await defense.destroy()
+  await Promise.all([
+    defense.destroy(),
+    Student.where({ defenseId: defense.get('id') }).save(
+      { defenseId: null },
+      { patch: true, require: false }
+    )
+  ])
 
   ctx.status = 204
-  ctx.body = undefined
+  ctx.body = {}
 }
