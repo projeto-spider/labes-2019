@@ -88,7 +88,8 @@ export default function makeDefensesServices(axios) {
         'evaluator3Name',
         'evaluator3Title',
         'evaluator3Type',
-        'evaluator3IsTeacher'
+        'evaluator3IsTeacher',
+        'grade'
       ]
       const payload = selector(params, paramList)
       return axios.put(`/api/defenses/${defenseId}`, payload)
