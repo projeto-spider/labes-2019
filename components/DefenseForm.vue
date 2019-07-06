@@ -30,7 +30,7 @@
         ></b-input>
       </b-field>
 
-      <b-field v-if="!forceDisable" label="⠀">
+      <b-field label="⠀">
         <div v-if="i === 0" class="control">
           <b-button
             class="button is-primary"
@@ -111,7 +111,7 @@
           :disabled="forceDisable"
         ></b-input>
       </b-field>
-      <b-field v-if="!forceDisable" label="Titulo">
+      <b-field label="Titulo">
         <b-select
           v-model="model.advisorTitle"
           required
@@ -122,7 +122,7 @@
           <option value="master">Mestre</option>
         </b-select>
       </b-field>
-      <b-field v-if="!forceDisable" label="Tipo">
+      <b-field label="Tipo">
         <input-validation ref="advisorIpt" :valid="validateExternalAdvisor">
           <b-select
             v-model="model.advisorType"
@@ -135,7 +135,7 @@
           </b-select>
         </input-validation>
       </b-field>
-      <b-field v-if="!forceDisable" class="centered" label="Professor">
+      <b-field class="centered" label="Professor">
         <b-checkbox v-model="model.advisorIsTeacher" :disabled="forceDisable">
         </b-checkbox>
       </b-field>
@@ -167,7 +167,7 @@
           </b-select>
         </input-validation>
       </b-field>
-      <b-field v-if="!forceDisable" class="centered" label="Professor">
+      <b-field class="centered" label="Professor">
         <b-checkbox v-model="model.coAdvisorIsTeacher" :disabled="forceDisable">
         </b-checkbox>
       </b-field>
@@ -202,7 +202,7 @@
           <option value="external">Externo</option>
         </b-select>
       </b-field>
-      <b-field v-if="!forceDisable" class="centered" label="Professor">
+      <b-field class="centered" label="Professor">
         <b-checkbox
           v-model="model.evaluator1IsTeacher"
           :disabled="forceDisable"
@@ -240,7 +240,7 @@
           <option value="external">Externo</option>
         </b-select>
       </b-field>
-      <b-field v-if="!forceDisable" class="centered" label="Professor">
+      <b-field class="centered" label="Professor">
         <b-checkbox
           v-model="model.evaluator2IsTeacher"
           :disabled="forceDisable"
@@ -269,7 +269,7 @@
           <option value="external">Externo</option>
         </b-select>
       </b-field>
-      <b-field v-if="!forceDisable" class="centered" label="Professor">
+      <b-field class="centered" label="Professor">
         <b-checkbox
           v-model="model.evaluator3IsTeacher"
           :disabled="forceDisable"
@@ -278,7 +278,7 @@
       </b-field>
     </b-field>
 
-    <div v-if="!forceDisable" class="control">
+    <div class="control">
       <button
         class="button is-primary is-large"
         type="submit"
