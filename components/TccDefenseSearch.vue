@@ -122,6 +122,13 @@
 
             <div v-if="!readOnly" class="card-buttons">
               <div class="buttons">
+                <b-button
+                  class="button is-danger bg-transition"
+                  :disabled="status === 'done'"
+                  @click="onClickDeleteDefense"
+                >
+                  <b-icon icon="trash"></b-icon>
+                </b-button>
                 <b-button @click.prevent="editDefense = !editDefense">
                   {{ editDefense ? 'Cancelar Edição' : 'Editar' }}
                 </b-button>
@@ -408,7 +415,46 @@ export default {
       this.modalOpen = true
       this.selectedDefense = row
     },
-
+    onClickDeleteDefense() {
+      this.loading = true
+      this.$dialog.confirm({
+        title: 'Excluir Defesa de TCC',
+        message:
+          'Você tem certeza que quer <b>Excluir</b> a defesa de TCC? Essa ação não pode ser desfeita.',
+        confirmText: 'Excluir',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm: () => {
+          this.deleteDefense()
+        },
+        onCancel: () => {
+          this.$toast.open({
+            message: 'Exclusão de Defesa de TCC cancelada.',
+            type: 'is-warning'
+          })
+        }
+      })
+    },
+    deleteDefense() {
+      this.$services.defenses
+        .destroy(this.selectedDefense.id)
+        .then(res => {
+          this.$toast.open({
+            message: 'Defesa excluída com sucesso!',
+            key: 'is-success'
+          })
+          this.loading = false
+          this.loadDefenses()
+          this.modalOpen = false
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: 'Falha ao excluir defesa.',
+            key: 'is-danger'
+          })
+          this.loading = false
+        })
+    },
     unselectDefense() {
       this.editDefense = false
       this.modalOpen = false
