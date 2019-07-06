@@ -41,10 +41,10 @@ module.exports = async function generateConcludingCertificate(ctx) {
         ? 'Ciência da Computação'
         : 'Sistemas de Informação',
     discente: studentFind.get('name'),
-    tituloDiretorInstituto: 'Dr(a). ',
-    diretorInstituto: 'Marcos Monteiro Diniz',
-    tituloDiretor: 'Dr(a). ',
-    diretor: 'Josivaldo de Souza Araújo'
+    tituloDiretorInstituto: 'Prof(a). ',
+    diretorInstituto: 'NÃO ENCONTRADO NAS CONFIGURAÇÕES!',
+    tituloDiretor: 'Prof(a). ',
+    diretor: 'NÃO ENCONTRADO NAS CONFIGURAÇÕES!'
   }
   const doc = new PDFDocument({
     layout: 'landscape',
