@@ -70,6 +70,18 @@ describe('/api/settings', () => {
     done()
   })
 
+  test('GET /:key não existe', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const res = await chai
+      .request(server.listen())
+      .get('/api/settings/x')
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toBe(404)
+    expect(res.body.code).toBe(errors.NOT_FOUND)
+    done()
+  })
+
   test('PUT /:key', async done => {
     const { token } = await testUtils.user('admin')
 

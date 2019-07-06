@@ -10,5 +10,13 @@ module.exports = async function showSetting(ctx) {
     return
   }
   const { key } = ctx.params
-  ctx.body = await Setting.where({ key }).fetch()
+  const setting = await Setting.where({ key }).fetch()
+
+  if (!setting) {
+    ctx.status = 404
+    ctx.body = { code: errors.NOT_FOUND }
+    return
+  }
+
+  ctx.body = setting
 }
