@@ -219,26 +219,7 @@ export default {
       isStriped: true,
       isHoverable: true,
       selectedStudent: null,
-      columns: [
-        {
-          field: 'registrationNumber',
-          label: 'Matrícula',
-          sortable: true
-        },
-        {
-          field: 'name',
-          label: 'Nome',
-          sortable: true
-        },
-        {
-          field: 'email',
-          label: 'Email'
-        },
-        {
-          field: 'status',
-          label: 'Status'
-        }
-      ],
+      columns: this.getColumns(),
       previousTotal: 0,
       total: 0,
       totalPages: 0,
@@ -360,6 +341,7 @@ export default {
   },
 
   created() {
+    this.getColumns()
     this.$services.students
       .fetchPage(this.getParams)
       .then(res => {
@@ -385,6 +367,54 @@ export default {
   },
 
   methods: {
+    getColumns() {
+      if (this.isGraduating || this.isForming || this.isConcluding) {
+        return [
+          {
+            field: 'registrationNumber',
+            label: 'Matrícula',
+            sortable: true
+          },
+          {
+            field: 'name',
+            label: 'Nome',
+            sortable: true
+          },
+          {
+            field: 'email',
+            label: 'Email'
+          },
+          {
+            field: 'term',
+            label: 'Período'
+          },
+          {
+            field: 'status',
+            label: 'Status'
+          }
+        ]
+      }
+      return [
+        {
+          field: 'registrationNumber',
+          label: 'Matrícula',
+          sortable: true
+        },
+        {
+          field: 'name',
+          label: 'Nome',
+          sortable: true
+        },
+        {
+          field: 'email',
+          label: 'Email'
+        },
+        {
+          field: 'status',
+          label: 'Status'
+        }
+      ]
+    },
     emptySelected() {
       this.selectedStudent = null
     },
