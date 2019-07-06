@@ -38,14 +38,14 @@
             <div class="card-content">
               <div class="content">
                 <div class="columns">
-                  <div class="column is-half">
+                  <div class="column" :class="{ 'is-half': isAdmin }">
                     <header class="card-header">
                       <b-icon pack="fas" icon="info" size="is-small"></b-icon>
                       <p class="card-header-title">Informações da defesa</p>
                     </header>
                   </div>
 
-                  <div v-show="isAdmin" class="column is-half">
+                  <div v-if="isAdmin" class="column is-half">
                     <header class="card-header">
                       <b-icon pack="fas" icon="info" size="is-small"></b-icon>
                       <p class="card-header-title">Documentos Gerados</p>
@@ -53,7 +53,10 @@
                   </div>
                 </div>
                 <div class="columns scrollable-modal">
-                  <div class="hideLeftColumn">
+                  <div
+                    class="hideLeftColumn"
+                    :class="{ 'defense-modal-teacher': !isAdmin }"
+                  >
                     <DefenseForm
                       v-if="modalOpen"
                       v-model="selectedDefense"
@@ -283,8 +286,7 @@ export default {
         }
       ],
       hideLeftColumn: {
-        // eslint-disable-next-line prettier/prettier
-        'column': true,
+        column: true,
         'is-left': this.isAdmin,
         'is-half': this.isAdmin
       }
@@ -638,5 +640,10 @@ function hourFormatted(defenseHour) {
 .list-pdfs {
   max-width: 90%;
   margin: 0 auto;
+}
+
+.defense-modal-teacher {
+  margin: 0 auto;
+  width: 85%;
 }
 </style>
