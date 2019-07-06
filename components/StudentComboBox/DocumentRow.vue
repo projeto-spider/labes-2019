@@ -10,8 +10,8 @@
 
       <td class="vertical-align-middle is-paddingless-y">
         <b-checkbox
-          v-model="check"
           :disabled="disable"
+          :value="check"
           @input="onCheckInput"
         ></b-checkbox>
       </td>
@@ -60,10 +60,10 @@
 
 <script>
 import { mapState } from 'vuex'
-
+import { errorsHandler } from '@/components/mixins/errors'
 export default {
   name: 'DocumentRow',
-
+  mixins: [errorsHandler],
   props: {
     value: {
       type: [Object, Boolean],
@@ -89,9 +89,11 @@ export default {
     }
   },
 
-  data: () => ({
-    file: File
-  }),
+  data() {
+    return {
+      file: File
+    }
+  },
 
   computed: {
     ...mapState({
