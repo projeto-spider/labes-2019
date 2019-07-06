@@ -25,6 +25,9 @@
       <li>
         <ModalPrescribedList></ModalPrescribedList>
       </li>
+      <li>
+        <nuxt-link to="/config">Configurações</nuxt-link>
+      </li>
     </ul>
 
     <div class="menu-label">Grupos de Email</div>
