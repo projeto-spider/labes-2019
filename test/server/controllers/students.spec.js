@@ -2187,6 +2187,7 @@ describe('/api/students', () => {
       expect(res.body).toBeDefined()
       expect(res.body.term).toBe('2018.2')
     }
+    done()
   })
 
   test('GET /students/:id/concluding-certificate', async done => {
