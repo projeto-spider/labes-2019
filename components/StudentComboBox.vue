@@ -352,9 +352,10 @@ export default {
     putStudents() {
       this.isLoading = true
       const cd = this.cdCheck
-      const { email, term } = this.studentData
+      const { email } = this.studentData
       const missingCollation = this.missingCollationCheck
       const crg = this.canEditCrg ? this.studentData.crg : undefined
+      const term = this.canEditTerm ? this.studentData.term : undefined
       const payload = { email, cd, crg, missingCollation, term }
       this.$services.students
         .update(this.studentData.id, payload)
