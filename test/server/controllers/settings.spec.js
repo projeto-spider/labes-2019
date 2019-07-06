@@ -104,6 +104,77 @@ describe('/api/settings', () => {
     done()
   })
 
+  test('PUT /:key without changing value', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const { id } = await Setting.forge({
+      key: 'x',
+      value: '10'
+    }).save()
+
+    let value = 'asd'
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .put('/api/settings/x')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ value })
+      expect(res.status).toBe(200)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.id).toBe(id)
+      expect(res.body.key).toBe('x')
+      expect(res.body.value).toBe(value)
+    }
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .put('/api/settings/x')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ value })
+      expect(res.status).toBe(200)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.id).toBe(id)
+      expect(res.body.key).toBe('x')
+      expect(res.body.value).toBe(value)
+    }
+
+    value = { x: 'asd' }
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .put('/api/settings/x')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ value })
+      expect(res.status).toBe(200)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.id).toBe(id)
+      expect(res.body.key).toBe('x')
+      expect(res.body.value).toEqual(value)
+    }
+
+    {
+      const res = await chai
+        .request(server.listen())
+        .put('/api/settings/x')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ value })
+      expect(res.status).toBe(200)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.id).toBe(id)
+      expect(res.body.key).toBe('x')
+      expect(res.body.value).toEqual(value)
+    }
+
+    done()
+  })
+
   test('PUT /:key for new setting', async done => {
     const { token } = await testUtils.user('admin')
 

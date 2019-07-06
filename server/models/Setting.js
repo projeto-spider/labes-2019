@@ -8,11 +8,9 @@ const Setting = bookshelf.model('Setting', {
   },
 
   onSaving(model, attrs) {
-    if (model.hasChanged('value')) {
-      const update = attrs.value || model.get('value')
-      const value = JSON.stringify(update)
-      model.set('value', value)
-    }
+    const update = attrs.value || model.get('value')
+    const value = JSON.stringify(update)
+    model.set('value', value)
   },
 
   // When you receive from database
