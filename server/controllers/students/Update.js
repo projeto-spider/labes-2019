@@ -61,6 +61,17 @@ module.exports = async function updateStudent(ctx) {
     return
   }
 
+  const editedTerm = studentUpdate.term
+  const canEditTerm =
+    studentFind.get('isForming') ||
+    studentFind.get('isGraduating') ||
+    studentFind.get('isConcluding')
+  if (editedTerm && !canEditTerm) {
+    ctx.status = 422
+    ctx.body = { code: errors.UNPROCESSABLE_ENTITY }
+    return
+  }
+
   if (
     studentUpdate.missingCollation &&
     !(studentFind.get('isConcluding') || studentFind.get('isGraduating'))

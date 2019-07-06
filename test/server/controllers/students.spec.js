@@ -353,7 +353,6 @@ describe('/api/students', () => {
         academicHighlight: false,
         cancelled: false,
         mailingList: 'none',
-        term: null,
         cd: true
       })
     expect(resComplete.status).toEqual(200)
@@ -1536,7 +1535,6 @@ describe('/api/students', () => {
         academicHighlight: false,
         cancelled: false,
         mailingList: 'none',
-        term: null,
         cd: true
       })
     expect(resComplete.status).toEqual(400)
@@ -1737,7 +1735,6 @@ describe('/api/students', () => {
       mailingList: 'none',
       mailingListToRemove: 'none',
       mailingListToAdd: 'active',
-      term: null,
       cd: false, // important
       period: null
     }).save()
@@ -2029,6 +2026,98 @@ describe('/api/students', () => {
       expect(res.body).toBeDefined()
       expect(res.body.code).toEqual(errors.INVALID_REQUEST)
     }
+    done()
+  })
+
+  test('PUT /[studentId] term', async done => {
+    const { token } = await testUtils.user('admin')
+
+    {
+      const student = await Student.forge({
+        isForming: false,
+        isGraduating: false,
+        isConcluding: false
+      }).fetch()
+
+      expect(student)
+
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/students/${student.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          term: '2018.2'
+        })
+
+      expect(res.status).toBe(422)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.UNPROCESSABLE_ENTITY)
+    }
+
+    {
+      const student = await Student.forge({
+        isForming: true
+      }).fetch()
+
+      expect(student)
+
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/students/${student.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          term: '2018.2'
+        })
+
+      expect(res.status).toBe(200)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.term).toBe('2018.2')
+    }
+
+    {
+      const student = await Student.forge({
+        isGraduating: true
+      }).fetch()
+
+      expect(student)
+
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/students/${student.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          term: '2018.2'
+        })
+
+      expect(res.status).toBe(200)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.term).toBe('2018.2')
+    }
+
+    {
+      const student = await Student.forge({
+        isConcluding: true
+      }).fetch()
+
+      expect(student)
+
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/students/${student.get('id')}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          term: '2018.2'
+        })
+
+      expect(res.status).toBe(200)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.term).toBe('2018.2')
+    }
+
     done()
   })
 })
