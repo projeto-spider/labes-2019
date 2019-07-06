@@ -46,6 +46,7 @@
           <b-button
             class="button is-danger"
             native-type="button"
+            :disabled="forceDisable"
             @click="removeStudent(i)"
           >
             Remover
@@ -136,7 +137,11 @@
         </input-validation>
       </b-field>
       <b-field class="centered" label="Professor">
-        <b-checkbox v-model="model.advisorIsTeacher" :disabled="forceDisable">
+        <b-checkbox
+          v-model="model.advisorIsTeacher"
+          class="is-teacher-checkbox"
+          :disabled="forceDisable"
+        >
         </b-checkbox>
       </b-field>
     </b-field>
@@ -168,7 +173,11 @@
         </input-validation>
       </b-field>
       <b-field class="centered" label="Professor">
-        <b-checkbox v-model="model.coAdvisorIsTeacher" :disabled="forceDisable">
+        <b-checkbox
+          v-model="model.coAdvisorIsTeacher"
+          class="is-teacher-checkbox"
+          :disabled="forceDisable"
+        >
         </b-checkbox>
       </b-field>
     </b-field>
@@ -205,6 +214,7 @@
       <b-field class="centered" label="Professor">
         <b-checkbox
           v-model="model.evaluator1IsTeacher"
+          class="is-teacher-checkbox"
           :disabled="forceDisable"
         >
         </b-checkbox>
@@ -243,6 +253,7 @@
       <b-field class="centered" label="Professor">
         <b-checkbox
           v-model="model.evaluator2IsTeacher"
+          class="is-teacher-checkbox"
           :disabled="forceDisable"
         >
         </b-checkbox>
@@ -272,6 +283,7 @@
       <b-field class="centered" label="Professor">
         <b-checkbox
           v-model="model.evaluator3IsTeacher"
+          class="is-teacher-checkbox"
           :disabled="forceDisable"
         >
         </b-checkbox>
@@ -347,7 +359,7 @@ const defaultModel = () => {
 }
 
 export default {
-  name: 'Defe3seForm',
+  name: 'DefenseForm',
 
   components: {
     DatePicker,
@@ -542,3 +554,9 @@ function prepareArray(maybeArray) {
   return []
 }
 </script>
+
+<style>
+.is-teacher-checkbox {
+  margin-top: 8px;
+}
+</style>
