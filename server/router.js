@@ -43,6 +43,11 @@ api.get(
   isAdmin,
   students.ConcludingCertificate
 )
+api.get(
+  '/students/:course/attendance-register',
+  isAdmin,
+  students.AttendanceRegister
+)
 api.post('/students/from-csv', isAdmin, bodyMultipart, students.FromCsv)
 api.put(
   '/students/update-academic-highlight',

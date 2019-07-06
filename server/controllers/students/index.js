@@ -7,6 +7,7 @@ const UpdateAcademicHighlight = require('./UpdateAcademicHighlight')
 const EmailChanges = require('./EmailChanges')
 const UpdateMailingList = require('./UpdateMailingList')
 const ConcludingCertificate = require('./ConcludingCertificate')
+const AttendanceRegister = require('./AttendanceRegister')
 
 module.exports = {
   List,
@@ -17,5 +18,6 @@ module.exports = {
   UpdateAcademicHighlight,
   EmailChanges,
   UpdateMailingList,
-  ConcludingCertificate
+  ConcludingCertificate,
+  AttendanceRegister
 }
