@@ -572,25 +572,33 @@ Título: ${selectedDefense.title}
 
 Banca:
 
-${formalTitle(selectedDefense.advisorTitle)}${
+${formalTitle(selectedDefense.advisorTitle, selectedDefense.advisorIsTeacher)}${
     selectedDefense.advisorName
   } (ORIENTADOR(A))
-${formalTitle(selectedDefense.coAdvisorTitle)}${
-    selectedDefense.coAdvisorName !== ''
-      ? `${selectedDefense.coAdvisorName} (COORIENTADOR(A))`
-      : ''
-  }
-${formalTitle(selectedDefense.evaluator1Title)}${
-    selectedDefense.evaluator1Name
-  } (AVALIADOR(A))
-${formalTitle(selectedDefense.evaluator2Title)}${
-    selectedDefense.evaluator2Name
-  } (AVALIADOR(A))
-${formalTitle(selectedDefense.evaluator2Title)}${
-    selectedDefense.evaluator3Name !== ''
-      ? `${selectedDefense.evaluator3Name} (AVALIADOR(A))`
-      : ''
-  }
+${
+  selectedDefense.coAdvisorName !== ''
+    ? formalTitle(
+        selectedDefense.coAdvisorTitle,
+        selectedDefense.coAdvisorIsTeacher
+      ) + `${selectedDefense.coAdvisorName} (COORIENTADOR(A))`
+    : ''
+}
+${formalTitle(
+  selectedDefense.evaluator1Title,
+  selectedDefense.evaluator1IsTeacher
+)}${selectedDefense.evaluator1Name} (AVALIADOR(A))
+${formalTitle(
+  selectedDefense.evaluator2Title,
+  selectedDefense.evaluator2IsTeacher
+)}${selectedDefense.evaluator2Name} (AVALIADOR(A))
+${
+  selectedDefense.evaluator3Name !== ''
+    ? formalTitle(
+        selectedDefense.evaluator3Title,
+        selectedDefense.evaluator3IsTeacher
+      ) + `${selectedDefense.evaluator3Name} (AVALIADOR(A))`
+    : ''
+}
 
 Data e local: ${dateInFull(selectedDefense.date)} às ${hourFormatted(
     selectedDefense.time
@@ -601,16 +609,18 @@ RESUMO
 ${selectedDefense.summary}`
 }
 
-function formalTitle(title) {
+function formalTitle(title, isTeacher = false) {
+  const prefix = isTeacher ? 'Prof(a). ' : ''
+
   if (title === 'doctor') {
-    return 'Doutor(a) '
+    return prefix + 'Doutor(a) '
   }
 
   if (title === 'master') {
-    return 'Mestre(a) '
+    return prefix + 'Mestre(a) '
   }
 
-  return ''
+  return prefix
 }
 
 function validPerson({ name }) {
