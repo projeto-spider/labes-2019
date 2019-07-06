@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import TccDefense from '~/pages/tccDefense'
 import { mapState } from 'vuex'
+import TccDefense from '~/pages/tccDefense'
 export default {
   name: 'TeacherHome',
   layout: 'defaultTeacher',

@@ -34,18 +34,23 @@ export default function makeDefensesServices(axios) {
         'advisorName',
         'advisorTitle',
         'advisorType',
+        'advisorIsTeacher',
         'coAdvisorName',
         'coAdvisorTitle',
         'coAdvisorType',
+        'coAdvisorIsTeacher',
         'evaluator1Name',
         'evaluator1Title',
         'evaluator1Type',
+        'evaluator1IsTeacher',
         'evaluator2Name',
         'evaluator2Title',
         'evaluator2Type',
+        'evaluator2IsTeacher',
         'evaluator3Name',
         'evaluator3Title',
         'evaluator3Type',
+        'evaluator3IsTeacher',
         'status'
       ]
       const payload = selector(params, paramList)
@@ -67,18 +72,23 @@ export default function makeDefensesServices(axios) {
         'advisorName',
         'advisorTitle',
         'advisorType',
+        'advisorIsTeacher',
         'coAdvisorName',
         'coAdvisorTitle',
         'coAdvisorType',
+        'coAdvisorIsTeacher',
         'evaluator1Name',
         'evaluator1Title',
         'evaluator1Type',
+        'evaluator1IsTeacher',
         'evaluator2Name',
         'evaluator2Title',
         'evaluator2Type',
+        'evaluator2IsTeacher',
         'evaluator3Name',
         'evaluator3Title',
-        'evaluator3Type'
+        'evaluator3Type',
+        'evaluator3IsTeacher'
       ]
       const payload = selector(params, paramList)
       return axios.put(`/api/defenses/${defenseId}`, payload)

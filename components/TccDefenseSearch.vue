@@ -38,14 +38,14 @@
             <div class="card-content">
               <div class="content">
                 <div class="columns">
-                  <div class="column" :class="{ 'is-half': isAdmin }">
+                  <div class="column is-7" :class="{ 'is-half': isAdmin }">
                     <header class="card-header">
                       <b-icon pack="fas" icon="info" size="is-small"></b-icon>
                       <p class="card-header-title">Informações da defesa</p>
                     </header>
                   </div>
 
-                  <div v-if="isAdmin" class="column is-half">
+                  <div v-if="isAdmin" class="column is-5">
                     <header class="card-header">
                       <b-icon pack="fas" icon="info" size="is-small"></b-icon>
                       <p class="card-header-title">Documentos Gerados</p>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="columns scrollable-modal">
                   <div
-                    class="hideLeftColumn"
+                    class="hideLeftColumn column is-left is-7"
                     :class="{ 'defense-modal-teacher': !isAdmin }"
                   >
                     <DefenseForm
@@ -65,7 +65,7 @@
                     />
                   </div>
 
-                  <div v-if="isAdmin" class="column is-right is-half">
+                  <div v-if="isAdmin" class="column is-right is-5">
                     <div class="list is-hoverable list-pdfs">
                       <a
                         v-for="pdf in availablePdfs"

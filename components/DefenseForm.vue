@@ -30,7 +30,7 @@
         ></b-input>
       </b-field>
 
-      <b-field v-if="!forceDisable" label="⠀">
+      <b-field label="⠀">
         <div v-if="i === 0" class="control">
           <b-button
             class="button is-primary"
@@ -46,6 +46,7 @@
           <b-button
             class="button is-danger"
             native-type="button"
+            :disabled="forceDisable"
             @click="removeStudent(i)"
           >
             Remover
@@ -111,7 +112,7 @@
           :disabled="forceDisable"
         ></b-input>
       </b-field>
-      <b-field v-if="!forceDisable" label="Titulo">
+      <b-field label="Titulo">
         <b-select
           v-model="model.advisorTitle"
           required
@@ -122,7 +123,7 @@
           <option value="master">Mestre</option>
         </b-select>
       </b-field>
-      <b-field v-if="!forceDisable" label="Tipo">
+      <b-field label="Tipo">
         <input-validation ref="advisorIpt" :valid="validateExternalAdvisor">
           <b-select
             v-model="model.advisorType"
@@ -134,6 +135,14 @@
             <option value="external">Externo</option>
           </b-select>
         </input-validation>
+      </b-field>
+      <b-field class="centered" label="Professor">
+        <b-checkbox
+          v-model="model.advisorIsTeacher"
+          class="is-teacher-checkbox"
+          :disabled="forceDisable"
+        >
+        </b-checkbox>
       </b-field>
     </b-field>
 
@@ -162,6 +171,14 @@
             <option value="external">Externo</option>
           </b-select>
         </input-validation>
+      </b-field>
+      <b-field class="centered" label="Professor">
+        <b-checkbox
+          v-model="model.coAdvisorIsTeacher"
+          class="is-teacher-checkbox"
+          :disabled="forceDisable"
+        >
+        </b-checkbox>
       </b-field>
     </b-field>
 
@@ -194,6 +211,14 @@
           <option value="external">Externo</option>
         </b-select>
       </b-field>
+      <b-field class="centered" label="Professor">
+        <b-checkbox
+          v-model="model.evaluator1IsTeacher"
+          class="is-teacher-checkbox"
+          :disabled="forceDisable"
+        >
+        </b-checkbox>
+      </b-field>
     </b-field>
 
     <b-field grouped>
@@ -225,6 +250,14 @@
           <option value="external">Externo</option>
         </b-select>
       </b-field>
+      <b-field class="centered" label="Professor">
+        <b-checkbox
+          v-model="model.evaluator2IsTeacher"
+          class="is-teacher-checkbox"
+          :disabled="forceDisable"
+        >
+        </b-checkbox>
+      </b-field>
     </b-field>
 
     <b-field grouped>
@@ -247,6 +280,14 @@
           <option value="external">Externo</option>
         </b-select>
       </b-field>
+      <b-field class="centered" label="Professor">
+        <b-checkbox
+          v-model="model.evaluator3IsTeacher"
+          class="is-teacher-checkbox"
+          :disabled="forceDisable"
+        >
+        </b-checkbox>
+      </b-field>
     </b-field>
 
     <div v-if="!forceDisable" class="control">
@@ -263,6 +304,13 @@
     </div>
   </form>
 </template>
+
+<style>
+.centered {
+  text-align: center;
+  vertical-align: center;
+}
+</style>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
@@ -286,22 +334,27 @@ const defaultModel = () => {
     advisorName: '',
     advisorTitle: 'other',
     advisorType: 'internal',
+    advisorIsTeacher: false,
 
     coAdvisorName: '',
     coAdvisorTitle: 'other',
     coAdvisorType: 'internal',
+    coAdvisorIsTeacher: false,
 
     evaluator1Name: '',
     evaluator1Title: 'other',
     evaluator1Type: 'internal',
+    evaluator1IsTeacher: false,
 
     evaluator2Name: '',
     evaluator2Title: 'other',
     evaluator2Type: 'internal',
+    evaluator2IsTeacher: false,
 
     evaluator3Name: '',
     evaluator3Title: 'other',
-    evaluator3Type: 'internal'
+    evaluator3Type: 'internal',
+    evaluator3IsTeacher: false
   }
 }
 
@@ -501,3 +554,9 @@ function prepareArray(maybeArray) {
   return []
 }
 </script>
+
+<style>
+.is-teacher-checkbox {
+  margin-top: 8px;
+}
+</style>
