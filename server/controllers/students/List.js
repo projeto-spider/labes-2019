@@ -26,7 +26,8 @@ module.exports = async function listStudents(ctx) {
     'isGraduating',
     'academicHighlight',
     'cancelled',
-    'mailingList'
+    'mailingList',
+    'noDefense'
   ])
   if (!valid) {
     ctx.status = 400
@@ -70,6 +71,7 @@ function filterStudents(filters) {
     maxCrg,
     eqCrg,
     noCrg,
+    noDefense,
     sort,
     order = 'ASC',
     gmail,
@@ -113,6 +115,9 @@ function filterStudents(filters) {
   }
   if (noCrg === 'true') {
     query = query.where('crg', null)
+  }
+  if (noDefense === 'true') {
+    query = query.where('defenseId', null)
   }
   if (gmail === 'true') {
     query = query.where('email', 'like', '%@gmail.com%')
