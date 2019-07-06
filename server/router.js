@@ -40,6 +40,11 @@ api.get('/students/email-changes', isAdmin, students.EmailChanges)
 api.get('/students/actives-mailing-list', isAdmin, students.ActiveMailList)
 api.get('/students/', isAdminOrTeacher, students.List)
 api.get('/students/:id', isAdmin, students.Show)
+api.get(
+  '/students/:id/concluding-certificate',
+  isAdmin,
+  students.ConcludingCertificate
+)
 api.post('/students/from-csv', isAdmin, bodyMultipart, students.FromCsv)
 api.put(
   '/students/update-academic-highlight',
