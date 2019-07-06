@@ -94,7 +94,7 @@
     <b-field label="Resumo">
       <b-input
         v-model="model.summary"
-        maxlength="400"
+        maxlength="1600"
         type="textarea"
         required
         :disabled="forceDisable"
