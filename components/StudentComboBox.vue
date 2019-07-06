@@ -367,11 +367,12 @@ export default {
       }
       this.$services.pendencies
         .update(this.studentData.id, this.studentSubjects)
-        .then(() => {
+        .then(res => {
           this.$toast.open({
             message: 'Pendências de aluno atualizadas com sucesso',
             type: 'is-success'
           })
+          this.totalPendencies = res.data.length
         })
         .catch(e => this.openErrorNotification(e))
 
