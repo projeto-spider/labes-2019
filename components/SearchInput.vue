@@ -368,32 +368,8 @@ export default {
 
   methods: {
     getColumns() {
-      if (this.isGraduating || this.isForming || this.isConcluding) {
-        return [
-          {
-            field: 'registrationNumber',
-            label: 'Matrícula',
-            sortable: true
-          },
-          {
-            field: 'name',
-            label: 'Nome',
-            sortable: true
-          },
-          {
-            field: 'email',
-            label: 'Email'
-          },
-          {
-            field: 'term',
-            label: 'Período'
-          },
-          {
-            field: 'status',
-            label: 'Status'
-          }
-        ]
-      }
+      const cond = this.isGraduating || this.isForming || this.isConcluding
+
       return [
         {
           field: 'registrationNumber',
@@ -409,6 +385,14 @@ export default {
           field: 'email',
           label: 'Email'
         },
+        ...(cond
+          ? [
+              {
+                field: 'term',
+                label: 'Período'
+              }
+            ]
+          : []),
         {
           field: 'status',
           label: 'Status'
