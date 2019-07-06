@@ -53,11 +53,13 @@ module.exports = async function generateAttendanceRegister(ctx) {
       course === 'cbcc' ? 'Ciência da Computação' : 'Sistemas de Informação'
   }
   const doc = new PDFDocument({
-    layout: 'landscape',
+    layout: 'portrait',
     size: [595, 841]
   })
   ListaFrequencia(doc, data)
   const title = 'lista-de-frequencia.pdf'
+  doc.info.Title = title
+  await doc.end()
   ctx.status = 200
   ctx.set('Content-Type', 'application/pdf')
   ctx.set('Content-Disposition', `filename=${title}`)
