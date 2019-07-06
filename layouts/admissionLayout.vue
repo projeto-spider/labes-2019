@@ -1,32 +1,36 @@
 <template>
-  <div class="container main is-fullhd">
-    <div class="columns is-centered capa">
-      <div class="column texto-capa">
-        <h1 class="title">Formulário de Admissão</h1>
+  <div class="main">
+    <section class="hero is-medium is-bold is-half is-pulled-left">
+      <div class="hero-body is-centered">
+        <h3 id="header" class="title">
+          <span class="formulario">Formulário</span>
+          <br />
+          <span class="resto">de Ingresso</span>
+        </h3>
       </div>
-    </div>
+    </section>
     <nuxt />
   </div>
 </template>
 
 <style>
-.main {
-  height: 100vh;
-  overflow: hidden;
-  width: 100vw;
+.hero {
+  margin: -1vh 0 0 10vw;
 }
-
-.texto-capa {
-  padding-top: 60px;
-  text-align: center;
-  display: table-cell;
-  vertical-align: middle;
+.hero-body {
+  background-color: #2aae87;
 }
-
-.capa {
-  height: 25%;
-  padding-bottom: 30px;
-  display: table;
-  background-color: #a588ad;
+.formulario {
+  font-weight: 900;
+  font-size: 150%;
+  color: white;
+}
+.resto {
+  font-weight: 200;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+}
+html {
+  background-image: linear-gradient(#68d8a6, #35c8c0);
 }
 </style>

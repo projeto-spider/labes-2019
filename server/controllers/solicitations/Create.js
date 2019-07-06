@@ -8,7 +8,9 @@ module.exports = async function createSolicitation(ctx) {
       'name',
       'email',
       'registrationNumber',
-      'type'
+      'type',
+      'course',
+      'admissionType'
     ])
 
     if (!valid) {
@@ -26,9 +28,18 @@ module.exports = async function createSolicitation(ctx) {
     }
   }
 
-  const { name, email, registrationNumber, type } = ctx.request.body
+  const {
+    name,
+    email,
+    registrationNumber,
+    type,
+    course,
+    admissionType
+  } = ctx.request.body
 
-  const validRequest = [name, email, type].every(item => item !== undefined)
+  const validRequest = [name, email, type, course, admissionType].every(
+    item => item !== undefined
+  )
   if (!validRequest) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_REQUEST }
@@ -51,6 +62,8 @@ module.exports = async function createSolicitation(ctx) {
     name,
     email,
     registrationNumber,
-    type
+    type,
+    course,
+    admissionType
   }).save()
 }

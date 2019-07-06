@@ -1,70 +1,103 @@
 <template>
-  <div class="container topper-margin">
-    <div class="columns is-centered">
-      <div class="column is-half">
-        <b-field
-          label="Nome"
-          :message="{
-            'Campo obrigatório': !dirty.name,
-            [validName ? 'ok' : `Mínimo de 9 caracteres`]: dirty.name
-          }"
-          :type="{
-            [validName ? 'is-success' : 'is-danger']: dirty.name
-          }"
-        >
-          <b-input
-            v-model="name"
-            type="text"
-            @blur="dirty.name = true"
-          ></b-input>
-        </b-field>
+  <div class="container form">
+    <div class="column is-half is-pulled-right">
+      <div class="card">
+        <div class="card-content">
+          <div class="column">
+            <b-field
+              label="Nome"
+              :message="{
+                'Campo obrigatório': !dirty.name,
+                [validName ? 'ok' : `Mínimo de 9 caracteres`]: dirty.name
+              }"
+              :type="{
+                [validName ? 'is-success' : 'is-danger']: dirty.name
+              }"
+            >
+              <b-input
+                v-model="name"
+                type="text"
+                @blur="dirty.name = true"
+              ></b-input>
+            </b-field>
 
-        <b-field
-          label="Email"
-          :message="{
-            'Campo obrigatório': !dirty.email,
-            [validEmail ? 'ok' : 'Digite um endereço de email']: dirty.email
-          }"
-          :type="{
-            [validEmail ? 'is-success' : 'is-danger']: dirty.email
-          }"
-        >
-          <b-input
-            v-model="email"
-            type="text"
-            @blur="dirty.email = true"
-          ></b-input>
-        </b-field>
+            <b-field
+              label="Email"
+              :message="{
+                'Campo obrigatório': !dirty.email,
+                [validEmail ? 'ok' : 'Digite um endereço de email']: dirty.email
+              }"
+              :type="{
+                [validEmail ? 'is-success' : 'is-danger']: dirty.email
+              }"
+            >
+              <b-input
+                v-model="email"
+                type="text"
+                @blur="dirty.email = true"
+              ></b-input>
+            </b-field>
 
-        <b-field
-          label="Matrícula"
-          :message="{
-            'Campo opcional': !dirty.registration,
-            [validRegistration
-              ? 'ok'
-              : 'Deve ter 12 caracteres numéricos']: dirty.registration
-          }"
-          :type="{
-            [validRegistration ? 'is-success' : 'is-danger']: dirty.registration
-          }"
-        >
-          <b-input
-            v-model="registration"
-            type="text"
-            @blur="dirty.registration = true"
-          ></b-input>
-        </b-field>
+            <b-field
+              label="Matrícula"
+              :message="{
+                'Campo opcional': !dirty.registration,
+                [validRegistration
+                  ? 'ok'
+                  : 'Deve ter 12 caracteres numéricos']: dirty.registration
+              }"
+              :type="{
+                [validRegistration
+                  ? 'is-success'
+                  : 'is-danger']: dirty.registration
+              }"
+            >
+              <b-input
+                v-model="registration"
+                type="text"
+                @blur="dirty.registration = true"
+              ></b-input>
+            </b-field>
 
-        <div class="level-right">
-          <div class="level-item">
-            reCaptcha!
+            <b-field
+              label="Curso"
+              :message="{
+                'Campo Obrigatório': !dirty.registration
+              }"
+            >
+            </b-field>
+            <div v-for="c in $options.courses" :key="c.id">
+              <div class="field">
+                <b-radio v-model="course" :native-value="c.id">
+                  {{ c.name }}
+                </b-radio>
+              </div>
+            </div>
+            <br />
+            <b-field
+              label="Forma de Ingresso"
+              :message="{
+                'Campo Obrigatório': !dirty.registration
+              }"
+            >
+            </b-field>
+            <div v-for="at in $options.admissionTypes" :key="at.id">
+              <div class="field">
+                <b-radio v-model="admissionType" :native-value="at.id">
+                  {{ at.name }}
+                </b-radio>
+              </div>
+            </div>
+            <div class="level-right">
+              <b-button
+                class="is-primary level-item"
+                :disabled="!enabledButton"
+                @click="sendSolicitation"
+              >
+                Enviar
+              </b-button>
+            </div>
           </div>
-          <b-button
-            class="is-primary level-item"
-            :disabled="!enabledButton"
-            @click="sendSolicitation"
-            >Enviar</b-button
-          >
         </div>
       </div>
     </div>
@@ -80,14 +113,27 @@ export default {
   props: {
     mailingList: {
       type: String,
-      default: () => ''
+      default: ''
     }
   },
+
+  courses: [
+    { id: 'cbcc', name: 'Ciência da Computação' },
+    { id: 'cbsi', name: 'Sistemas de Informação' },
+    { id: 'other', name: 'Outro' }
+  ],
+  admissionTypes: [
+    { id: 'psufpa', name: 'Processo Seletivo UFPa' },
+    { id: 'sisu', name: 'SiSU' },
+    { id: 'other', name: 'Outro' }
+  ],
 
   data: () => ({
     name: '',
     email: '',
     registration: '',
+    course: 'cbcc',
+    admissionType: 'psufpa',
     dirty: {
       name: false,
       email: false,
@@ -121,7 +167,9 @@ export default {
           name: this.name,
           email: this.email,
           ...(this.registration && { registrationNumber: this.registration }),
-          type: this.mailingList
+          type: this.mailingList,
+          course: this.course,
+          admissionType: this.admissionType
         })
         .then(response => {
           this.$toast.open({
@@ -131,6 +179,8 @@ export default {
           this.name = ''
           this.email = ''
           this.registration = ''
+          this.course = 'cbcc'
+          this.admissionType = 'psufpa'
           this.dirty.name = ''
           this.dirty.email = ''
           this.dirty.registration = ''
@@ -142,7 +192,7 @@ export default {
 </script>
 
 <style>
-.topper-margin {
-  margin-top: 30px;
+.form {
+  margin-top: -10vh;
 }
 </style>

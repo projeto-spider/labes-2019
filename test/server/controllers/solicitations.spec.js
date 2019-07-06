@@ -31,7 +31,9 @@ describe('/api/solicitations', () => {
       name: 'Person',
       email: 'person.ufpa@example.com',
       registrationNumber: '201904940001',
-      type: 'concluding'
+      type: 'concluding',
+      course: 'cbcc',
+      admissionType: 'psufpa'
     }
     const res = await chai
       .request(server.listen())
@@ -45,11 +47,15 @@ describe('/api/solicitations', () => {
     expect(res.body.email).toBe(payload.email)
     expect(res.body.registrationNumber).toBe(payload.registrationNumber)
     expect(res.body.type).toBe(payload.type)
+    expect(res.body.course).toBe(payload.course)
+    expect(res.body.admissionType).toBe(payload.admissionType)
 
     const payload2 = {
       name: 'Person',
       email: 'person@example.com',
-      type: 'freshman'
+      type: 'freshman',
+      course: 'other',
+      admissionType: 'other'
     }
     const res2 = await chai
       .request(server.listen())
@@ -62,38 +68,58 @@ describe('/api/solicitations', () => {
     expect(res2.body.name).toBe(payload2.name)
     expect(res2.body.email).toBe(payload2.email)
     expect(res2.body.type).toBe(payload2.type)
+    expect(res2.body.course).toBe(payload2.course)
+    expect(res2.body.admissionType).toBe(payload2.admissionType)
     done()
   })
 
   test('POST / with missing fields', async done => {
-    const payload1 = {
-      email: 'person.ufpa@example.com',
-      registrationNumber: '201904940001'
+    {
+      const payload = {
+        email: 'person.ufpa@example.com',
+        course: 'cbcc',
+        admissionType: 'psufpa'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/solicitations')
+        .send(payload)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_REQUEST)
     }
-    const res1 = await chai
-      .request(server.listen())
-      .post('/api/solicitations')
-      .send(payload1)
-
-    expect(res1.status).toBe(400)
-    expect(res1.type).toBe('application/json')
-    expect(res1.body).toBeDefined()
-    expect(res1.body.code).toBe(errors.INVALID_REQUEST)
-
-    const payload2 = {
-      name: 'Person',
-      registrationNumber: '201804940001',
-      type: 'concluding'
+    {
+      const payload = {
+        name: 'Person',
+        course: 'cbcc',
+        admissionType: 'psufpa'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/solicitations')
+        .send(payload)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_REQUEST)
     }
-    const res2 = await chai
-      .request(server.listen())
-      .post('/api/solicitations')
-      .send(payload2)
+    {
+      const payload = {
+        name: 'Person',
+        course: 'cbcc',
+        email: 'person.ufpa@example.com'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/solicitations')
+        .send(payload)
+      expect(res.status).toBe(400)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toBe(errors.INVALID_REQUEST)
+    }
 
-    expect(res2.status).toBe(400)
-    expect(res2.type).toBe('application/json')
-    expect(res2.body).toBeDefined()
-    expect(res2.body.code).toBe(errors.INVALID_REQUEST)
     done()
   })
 
@@ -102,7 +128,9 @@ describe('/api/solicitations', () => {
       name: 'Victor Silva Machado',
       email: 'victorsilva@example.com',
       registrationNumber: '201904940012',
-      type: 'concluding'
+      type: 'concluding',
+      course: 'cbcc',
+      admissionType: 'psufpa'
     }
     const res1 = await chai
       .request(server.listen())
@@ -121,7 +149,9 @@ describe('/api/solicitations', () => {
       name: 'Victor Silva Machado',
       email: 'victor.silva@example.com',
       registrationNumber: '2019049400012',
-      type: 'freshman'
+      type: 'freshman',
+      course: 'cbcc',
+      admissionType: 'psufpa'
     }
     const res1 = await chai
       .request(server.listen())
@@ -139,7 +169,9 @@ describe('/api/solicitations', () => {
     const payload = {
       name: 'Person',
       email: 'person@gmail.com',
-      registrationNumber: '201904940001'
+      registrationNumber: '201904940001',
+      course: 'cbcc',
+      admissionType: 'psufpa'
     }
     const res = await chai
       .request(server.listen())
@@ -159,7 +191,9 @@ describe('/api/solicitations', () => {
         name: 'Person',
         email: 'person.ufpa@example.com',
         registrationNumber: '201904940001',
-        type: 'concluding'
+        type: 'concluding',
+        course: 'cbcc',
+        admissionType: 'psufpa'
       }
       const res = await chai
         .request(server.listen())
@@ -179,7 +213,9 @@ describe('/api/solicitations', () => {
         name: 'Person',
         email: 'person.ufpa@example.com',
         registrationNumber: '201904940001',
-        type: 'concluding'
+        type: 'concluding',
+        course: 'cbcc',
+        admissionType: 'psufpa'
       }
       const res = await chai
         .request(server.listen())
@@ -192,6 +228,53 @@ describe('/api/solicitations', () => {
       expect(res.body.code).toEqual(errors.INVALID_BODY)
       expect(res.body.invalidParams.length).toEqual(1)
       expect(res.body.invalidParams).toContainEqual('invalid')
+    }
+    done()
+  })
+
+  test('POST / only requireds', async done => {
+    {
+      const payload = {
+        name: 'Person',
+        email: 'person.ufpa@example.com',
+        type: 'concluding',
+        course: 'cbcc',
+        admissionType: 'psufpa'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/solicitations')
+        .send(payload)
+      expect(res.status).toBe(201)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.name).toBe(payload.name)
+      expect(res.body.email).toBe(payload.email)
+      expect(res.body.registrationNumber).toBe(payload.registrationNumber)
+      expect(res.body.type).toBe(payload.type)
+      expect(res.body.course).toBe(payload.course)
+      expect(res.body.admissionType).toBe(payload.admissionType)
+    }
+    {
+      const payload = {
+        name: 'Person',
+        email: 'person@example.com',
+        type: 'freshman',
+        course: 'cbsi',
+        admissionType: 'psufpa'
+      }
+      const res = await chai
+        .request(server.listen())
+        .post('/api/solicitations')
+        .send(payload)
+      expect(res.status).toBe(201)
+      expect(res.type).toBe('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.name).toBe(payload.name)
+      expect(res.body.email).toBe(payload.email)
+      expect(res.body.type).toBe(payload.type)
+      expect(res.body.course).toBe(payload.course)
+      expect(res.body.admissionType).toBe(payload.admissionType)
     }
     done()
   })
