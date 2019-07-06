@@ -38,15 +38,26 @@ export const actions = {
       })
   },
 
-  register({ commit, dispatch }, { email, username, password, role }) {
-    return this.$services.users.create({ email, username, password, role })
-  },
-  update({ commit }, { id, username, password }) {
-    return this.$services.users.update({ username, password }, id).then(res => {
-      if ((id === state.user, id)) {
-        commit('setUser', res.data)
-      }
+  register(
+    { commit, dispatch },
+    { email, username, password, role, fullName }
+  ) {
+    return this.$services.users.create({
+      email,
+      username,
+      password,
+      role,
+      fullName
     })
+  },
+  update({ commit }, { id, username, password, fullName }) {
+    return this.$services.users
+      .update({ username, password, fullName }, id)
+      .then(res => {
+        if ((id === state.user, id)) {
+          commit('setUser', res.data)
+        }
+      })
   },
 
   logout({ commit }) {
