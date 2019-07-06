@@ -5,11 +5,13 @@
         <strong>{{ title }}</strong>
       </h1>
     </div>
-    <div class="columns is-centered has-text-centered">
+
+    <div v-if="$slots.top" class="columns is-centered has-text-centered">
       <div class="column">
-        <slot></slot>
+        <slot name="top"></slot>
       </div>
     </div>
+
     <br />
     <div class="columns is-centered">
       <div class="column is-10">
