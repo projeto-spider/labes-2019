@@ -10,6 +10,7 @@
           v-model="model"
           :on-submit="onSubmit"
           cancel-redirect="/teacher/home"
+          :show-grade-input="false"
         />
       </div>
     </section>

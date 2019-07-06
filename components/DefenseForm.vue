@@ -1,5 +1,15 @@
 <template>
   <form @submit.prevent="handleSubmit">
+    <b-field v-if="showGradeInput && value.status !== 'pending'" label="Nota">
+      <b-input
+        v-model="model.grade"
+        :min="0"
+        :max="10"
+        :disabled="forceDisable || currentUser.role !== 'admin'"
+        @blur="onGradeBlur"
+      ></b-input>
+    </b-field>
+
     <b-field label="Curso (para alterar, use a seleção no topo esquerdo)">
       <b-input :value="courseNameExtended" disabled></b-input>
     </b-field>
@@ -323,6 +333,7 @@ const defaultStudent = () => ({ name: '', registrationNumber: '' })
 const defaultModel = () => {
   const today = new Date()
   return {
+    grade: 0,
     students: [defaultStudent()],
     local: '',
     title: '',
@@ -376,6 +387,11 @@ export default {
     forceDisable: {
       type: Boolean,
       default: false
+    },
+
+    showGradeInput: {
+      type: Boolean,
+      default: true
     },
 
     cancelRedirect: {
@@ -538,6 +554,23 @@ export default {
 
       this.model.students[i].name = student.name
       this.model.students[i].registrationNumber = student.registrationNumber
+    },
+
+    onGradeBlur(e) {
+      let value =
+        typeof e.target.value === 'string'
+          ? +e.target.value.replace(',', '.')
+          : +e.target.value
+
+      if (typeof value !== 'number') {
+        return
+      }
+
+      if (value !== Math.floor(value)) {
+        value = Math.trunc(+value * 100) / 100
+      }
+
+      this.model.grade = Math.max(0, Math.min(10, value))
     }
   }
 }
