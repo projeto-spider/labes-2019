@@ -2,7 +2,7 @@ module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
   // const doc = new PDFDocument
 
   // Header
-  doc.image('./img/logoFacomp.png', 50, 30, {
+  doc.image('./server/models/tccdocs/img/logoFacomp.png', 50, 30, {
     width: 70,
     height: 80,
     align: 'left',
@@ -93,5 +93,4 @@ function row(doc, heigth) {
     .lineJoin('miter')
     .rect(10, heigth, 581, 20)
     .stroke()
-  return doc
 }
