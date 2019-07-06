@@ -66,29 +66,34 @@
 
     <b-modal :active.sync="isModalOpen" :width="640" scroll="keep">
       <div class="card" style="padding: 25px;">
-        <article
-          v-for="student in academicHighlightCandidates"
-          :key="student.id"
-          class="media"
-        >
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <strong>{{ student.name }}</strong>
-                <br />
-                <strong>CRG: </strong><small>{{ student.crg }}</small>
-              </p>
+        <div v-if="academicHighlightCandidates.length !== 0">
+          <article
+            v-for="student in academicHighlightCandidates"
+            :key="student.id"
+            class="media"
+          >
+            <div class="media-content">
+              <div class="content">
+                <p>
+                  <strong>{{ student.name }}</strong>
+                  <br />
+                  <strong>CRG: </strong><small>{{ student.crg }}</small>
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="media-right">
-            <button
-              class="button is-success"
-              @click="selectAcademicHighlight(student.id)"
-            >
-              Confirmar
-            </button>
-          </div>
-        </article>
+            <div class="media-right">
+              <button
+                class="button is-success"
+                @click="selectAcademicHighlight(student.id)"
+              >
+                Confirmar
+              </button>
+            </div>
+          </article>
+        </div>
+        <div v-else class="has-text-centered">
+          <p class="title">Não há candidatos a destaque acadêmico</p>
+        </div>
       </div>
     </b-modal>
   </div>
@@ -171,10 +176,6 @@ export default {
         .fetchPage(params)
         .then(res => {
           if (!res.data.length) {
-            this.$toast.open({
-              message: 'Não há candidatos a destaque acadêmico.',
-              type: 'is-danger'
-            })
             this.isModalOpen = true
             return
           }
