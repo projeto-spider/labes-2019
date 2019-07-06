@@ -4,13 +4,13 @@
     <div class="box">
       <form @submit.prevent="handleSubmit">
         <b-field label="Nome do Diretor">
-          <b-input></b-input>
+          <b-input v-model="directorName"></b-input>
         </b-field>
         <b-field label="Nome do Diretor do instituto">
-          <b-input></b-input>
+          <b-input v-model="departamentDirectorName"></b-input>
         </b-field>
         <b-field label="Nome do Reitor">
-          <b-input></b-input>
+          <b-input v-model="deanName"></b-input>
         </b-field>
         <b-field label="Período" message="formato : xxxx.[2,4]">
           <b-input
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Config',
   head() {
@@ -41,11 +42,24 @@ export default {
       term: ''
     }
   },
+  computed: {
+    ...mapGetters({
+      currentDirectorName: 'config/getDirectorName',
+      currentDepartamentDirectorName: 'config/getDepartamenteDirectorName',
+      currentDeanName: 'config/getDeanName',
+      currentTerm: 'config/getTerm'
+    })
+  },
   created() {
     // this.getConfigValues()
   },
   methods: {
-    getConfigValues() {},
+    getConfigValues() {
+      this.directorName = this.currentDirectorName
+      this.departamentDirectorName = this.currentDepartamentDirectorName
+      this.deanName = this.currentDeanName
+      this.currentTerm = this.currentTerm
+    },
     handleSubmit() {}
   }
 }
