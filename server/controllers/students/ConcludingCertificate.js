@@ -36,9 +36,14 @@ module.exports = async function generateConcludingCertificate(ctx) {
   }
   const defenseId = studentFind.get('defenseId')
   const defenseFind = await Defense.where('id', defenseId).fetch()
-  if (defenseFind === null || defenseFind.get('status') !== 'done') {
-    ctx.status = 422
-    ctx.body = { code: errors.UNPROCESSABLE_ENTITY }
+  if (defenseFind === null) {
+    ctx.status = 404
+    ctx.body = { code: errors.NOT_FOUND }
+    return
+  }
+  if (defenseFind.get('status') !== 'done') {
+    ctx.status = 400
+    ctx.body = { code: errors.INVALID_REQUEST }
     return
   }
   const today = new Date()
@@ -52,7 +57,7 @@ module.exports = async function generateConcludingCertificate(ctx) {
         : 'Sistemas de Informação',
     discente: studentFind.get('name'),
     tituloDiretorInstituto: 'Dr(a). ',
-    diretorInstituto: 'Josivaldo de Souza Araújo',
+    diretorInstituto: 'Marcos Monteiro Diniz',
     tituloDiretor: 'Dr(a). ',
     diretor: 'Josivaldo de Souza Araújo'
   }
