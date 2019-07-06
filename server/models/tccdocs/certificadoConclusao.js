@@ -1,25 +1,41 @@
-module.exports = function model(doc, { dia, mes, ano, curso, discente }) {
+module.exports = function model(
+  doc,
+  {
+    dia,
+    mes,
+    ano,
+    curso,
+    discente,
+    tituloDiretorInstituto,
+    diretorInstituto,
+    tituloDiretor,
+    diretor
+  }
+) {
   // const doc = new PDFDocument
 
   doc.addPage({
-    layout: 'landscape'
+    layout: 'landscape',
+    size: [595, 841]
   })
 
   doc
-    .polygon([10, 10], [780, 10], [780, 600], [10, 600])
+    .polygon([10, 10], [831, 10], [831, 585], [10, 585])
     .lineWidth(3)
     .stroke()
   // Header
-  doc.image('./server/models/tccdocs/img/logoRepublica.jpg', 150, 30, {
+  doc.image('./img/logoRepublica.jpg', 150, 30, {
+    width: 80,
+    height: 80,
     align: 'left',
     valign: 'top'
   })
   doc.fontSize(12).text(
     `
-    UNIVERSIDADE FEDERAL DO PARÁ
-    INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
-    FACULDADE DE COMPUTAÇÃO
-    `,
+  UNIVERSIDADE FEDERAL DO PARÁ
+  INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
+  FACULDADE DE COMPUTAÇÃO
+  `,
     60,
     40,
     {
@@ -27,7 +43,9 @@ module.exports = function model(doc, { dia, mes, ano, curso, discente }) {
     }
   )
 
-  doc.image('./server/models/tccdocs/img/logoUFPA.png', 580, 35, {
+  doc.image('./img/logoUFPA.png', 580, 35, {
+    width: 70,
+    height: 80,
     align: 'right',
     valign: 'top'
   })
@@ -102,18 +120,18 @@ module.exports = function model(doc, { dia, mes, ano, curso, discente }) {
   doc
     .fontSize(10)
     .fillColor('red')
-    .text(`${discente}`, 300, 490)
+    .text(`${tituloDiretorInstituto}(a) ${diretorInstituto}`, 300, 490)
     .fillColor('black')
-    .text('DIRETOR(A) DO ICEN', 30, 500, { align: 'center' })
+    .text('DIRETOR(A) DO ICEN', -100, 500, { align: 'center' })
 
   doc.fontSize(10).text(`____________________________________`, 540, 470)
 
   doc
     .fontSize(10)
     .fillColor('red')
-    .text(`${discente}`, 550, 490)
+    .text(`${tituloDiretor}(a) ${diretor}`, 550, 490)
     .fillColor('black')
-    .text('DIRETOR(A) DA FACOMP', 530, 500, { align: 'center' })
+    .text('DIRETOR(A) DA FACOMP', 450, 500, { align: 'center' })
 
   return doc
 }
