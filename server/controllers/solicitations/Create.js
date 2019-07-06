@@ -37,7 +37,9 @@ module.exports = async function createSolicitation(ctx) {
     admissionType
   } = ctx.request.body
 
-  const validRequest = [name, email, type].every(item => item !== undefined)
+  const validRequest = [name, email, type, course, admissionType].every(
+    item => item !== undefined
+  )
   if (!validRequest) {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_REQUEST }
