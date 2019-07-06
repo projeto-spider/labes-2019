@@ -50,7 +50,11 @@ module.exports = async function generateConcludingCertificate(ctx) {
       studentFind.get('course') === 'cbcc'
         ? 'Ciência da Computação'
         : 'Sistemas de Informação',
-    discente: studentFind.get('name')
+    discente: studentFind.get('name'),
+    tituloDiretorInstituto: 'Dr(a). ',
+    diretorInstituto: 'Josivaldo de Souza Araújo',
+    tituloDiretor: 'Dr(a). ',
+    diretor: 'Josivaldo de Souza Araújo'
   }
   const doc = new PDFDocument({
     layout: 'landscape',
@@ -58,6 +62,8 @@ module.exports = async function generateConcludingCertificate(ctx) {
   })
   CertificadoConlusao(doc, data)
   const title = `${data.discente}-certificado-conclusao.pdf`
+    .replace(' ', '-')
+    .toLocaleLowerCase()
   doc.info.Title = title
   await doc.end()
   ctx.status = 200
