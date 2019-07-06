@@ -57,8 +57,9 @@ module.exports = async function generateConcludingCertificate(ctx) {
     size: [595, 841]
   })
   CertificadoConlusao(doc, data)
-  await doc.end()
   const title = `${data.discente}-certificado-conclusao.pdf`
+  doc.info.Title = title
+  await doc.end()
   ctx.status = 200
   ctx.set('Content-Type', 'application/pdf')
   ctx.set('Content-Disposition', `filename=${title}`)
