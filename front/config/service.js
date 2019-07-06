@@ -6,30 +6,32 @@ export default function makeConfigServices(axios) {
     'departamentDirector',
     'currentTerm'
   ]
-  const url = 'placeholder'
+  /* model = {
+    name: 'Josivaldo',
+    title: 'doutor',
+    member: 'facomp',
+    isTeacher: true
+  } */
+  const url = '/api/settings'
   return {
-    fetch() {
-      return axios.get()
+    fetch(key) {
+      return axios.get(`${url}/${key}`)
     },
-    updateTerm(params) {
-      const payload = selector(params, paramList)
-      return axios.put(url, payload)
+    updateTerm(value) {
+      const payload = { value }
+      return axios.put(`${url}/currentTerm`, payload)
     },
-    updateFacultyDirectorName(params) {
-      const payload = selector(params, paramList)
-      return axios.put(url, payload)
+    updateFacultyDirectorName(value) {
+      const payload = selector(value, paramList)
+      return axios.put(`${url}/facultyDirectorName`, payload)
     },
-    updateDeanName(params) {
-      const payload = selector(params, paramList)
-      return axios.put(url, payload)
+    updateDeanName(value) {
+      const payload = selector(value, paramList)
+      return axios.put(`${url}/deanName`, payload)
     },
-    updateDepartamentDirector(params) {
-      const payload = selector(params, paramList)
-      return axios.put(url, payload)
-    },
-    updateConfig(params) {
-      const payload = selector(params, paramList)
-      return axios.put(url, payload)
+    updateDepartamentDirector(value) {
+      const payload = selector(value, paramList)
+      return axios.put(`${url}/departamentDirector`, payload)
     }
   }
 }

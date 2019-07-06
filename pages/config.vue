@@ -12,11 +12,11 @@
         <b-field label="Nome do Reitor">
           <b-input v-model="deanName"></b-input>
         </b-field>
-        <b-field label="Período" message="formato : xxxx.[2,4]">
+        <b-field label="Período" message="formato : xxxx.[1-4]">
           <b-input
             v-model="term"
             message="something"
-            pattern="[0-9]{4,4}\.[24]"
+            pattern="[0-9]{4,4}\.[1-4]"
           ></b-input>
         </b-field>
         <button class="button is-primary">Atualizar</button>
@@ -51,7 +51,10 @@ export default {
     })
   },
   created() {
-    // this.getConfigValues()
+    this.$store.dispatch('config/configTerm')
+    this.$store.dispatch('config/configDepartamentDirector')
+    this.$store.dispatch('config/configDeanName')
+    this.$store.dispatch('config/configDepartamentDirector')
   },
   methods: {
     getConfigValues() {
@@ -60,7 +63,11 @@ export default {
       this.deanName = this.currentDeanName
       this.currentTerm = this.currentTerm
     },
-    handleSubmit() {}
+    handleSubmit() {
+      this.$services.config
+        .updateTerm({ currentTerm: this.term })
+        .then(this.term)
+    }
   }
 }
 </script>

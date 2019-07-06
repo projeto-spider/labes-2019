@@ -36,15 +36,44 @@ export const getters = {
 }
 
 export const actions = {
-  config({ commit }) {
-    this.$services.config.fetch().then(res => {
-      commit('setDirectorName', res.data.directorName)
-      commit('setDepartamentDirectorName', res.data.departamentDirectorName)
-      commit('setDeanName', res.data.deanName)
+  configTerm({ commit }) {
+    this.$services.config.fetch('currentTerm').then(res => {
+      // eslint-disable-next-line no-console
+      console.log(res.data)
+      commit('setTerm', res.data.currentTerm)
+    })
+  },
+  configFacultyDirector({ commit }) {
+    this.$services.config.fetch('facultyDirectorName').then(res => {
       commit('setTerm', res.data.term)
     })
   },
-  updateConfig({ dispatch }, params) {
-    this.$services.config.updateConfig(params).then(dispatch('config'))
+  configDepartamentDirector({ commit }) {
+    this.$services.config.fetch('departamentDirector').then(res => {
+      commit('setTerm', res.data.term)
+    })
+  },
+  configDeanName({ commit }) {
+    this.$services.config.fetch('deanName').then(res => {
+      commit('setTerm', res.data.term)
+    })
+  },
+  updateConfigTerm({ dispatch }, params) {
+    this.$services.config.updateTerm(params).then(dispatch('configTerm'))
+  },
+  updateConfigFacultyDirectorName({ dispatch }, params) {
+    this.$services.config
+      .updateFacultyDirectorName(params)
+      .then(dispatch('configFacultyDirector'))
+  },
+  updateDeanName({ dispatch }, params) {
+    this.$services.config
+      .updateDeanName(params)
+      .then(dispatch('configDepartamentDirector'))
+  },
+  updateDepartamentDirector({ dispatch }, params) {
+    this.$services.config
+      .updateDepartamentDirector(params)
+      .then(dispatch('configDeanName'))
   }
 }
