@@ -483,16 +483,31 @@ describe('/api/users', () => {
       return { username, password, email }
     })
     await Promise.all(usersList.map(user => User.forge(user).save()))
-    const usersCreated = await User.count('*')
-    const res = await chai
-      .request(server.listen())
-      .get('/api/users')
-      .query({ paginate: false })
-      .set('Authorization', `Bearer ${token}`)
-    expect(res.status).toEqual(200)
-    expect(res.type).toEqual('application/json')
-    expect(res.body).toBeDefined()
-    expect(res.body.length).toBe(usersCreated)
+    {
+      const usersCreated = await User.count('*')
+      const res = await chai
+        .request(server.listen())
+        .get('/api/users')
+        .query({ paginate: false })
+        .set('Authorization', `Bearer ${token}`)
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.length).toBe(usersCreated)
+    }
+    {
+      const usersFilters = await User.where('username', 'like', 'user%').count()
+      const res = await chai
+        .request(server.listen())
+        .get('/api/users')
+        .query({ paginate: false, username: 'user%' })
+        .set('Authorization', `Bearer ${token}`)
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.length).toBe(usersFilters)
+      done()
+    }
     done()
   })
 })
