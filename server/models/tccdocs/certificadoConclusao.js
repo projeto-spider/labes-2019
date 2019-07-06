@@ -19,7 +19,7 @@ module.exports = function model(
     .lineWidth(3)
     .stroke()
   // Header
-  doc.image('./img/logoRepublica.jpg', 150, 30, {
+  doc.image('./server/models/tccdocs/img/logoRepublica.jpg', 150, 30, {
     width: 80,
     height: 80,
     align: 'left',
@@ -38,7 +38,7 @@ module.exports = function model(
     }
   )
 
-  doc.image('./img/logoUFPA.png', 580, 35, {
+  doc.image('./server/models/tccdocs/img/logoUFPA.png', 580, 35, {
     width: 70,
     height: 80,
     align: 'right',
