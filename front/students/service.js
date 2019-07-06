@@ -19,6 +19,7 @@ export default function makeStudentServices(axios) {
     'mailingList',
     'noCrg',
     'sort',
+    'missingCollation',
     'cd',
     'crg'
   ]

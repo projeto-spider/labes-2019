@@ -43,6 +43,15 @@
               @blur="onCrgBlur"
             ></b-input>
             <br />
+            <b-checkbox
+              v-if="studentData.isConcluding || studentData.isGraduating"
+              v-model="missingCollationCheck"
+              label="Faltou à colação"
+              :disabled="!canEdit"
+            >
+              Faltou à colação
+            </b-checkbox>
+            <br />
             <b-button
               v-if="student.isForming"
               class="is-primary"
@@ -222,6 +231,7 @@ export default {
       canEdit: false,
       ataCheck: false,
       laudaCheck: false,
+      missingCollationCheck: this.student.missingCollation,
       presCheck: false,
       cdCheck: this.student.cd,
       showPendencies: false,
@@ -310,8 +320,9 @@ export default {
       this.isLoading = true
       const cd = this.cdCheck
       const { email } = this.studentData
+      const missingCollation = this.missingCollationCheck
       const crg = this.canEditCrg ? this.studentData.crg : undefined
-      const payload = { email, cd, crg }
+      const payload = { email, cd, crg, missingCollation }
       this.$services.students
         .update(this.studentData.id, payload)
         .then(res => {
