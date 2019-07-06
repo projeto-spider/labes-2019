@@ -18,6 +18,7 @@ export default function makeStudentServices(axios) {
     'cancelled',
     'mailingList',
     'noCrg',
+    'noDefense',
     'sort',
     'missingCollation',
     'cd',

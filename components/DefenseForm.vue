@@ -462,7 +462,8 @@ export default {
       this.model.students[i].registrationNumber = ''
       return this.$services.students
         .fetchPage({
-          name: `%${name}%`
+          name: `%${name}%`,
+          noDefense: true
         })
         .then(res => {
           this.possibleCompletionStudents.students = res.data.filter(

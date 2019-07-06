@@ -84,8 +84,8 @@ export default function makeDefensesServices(axios) {
       return axios.put(`/api/defenses/${defenseId}`, payload)
     },
 
-    destroy(subjectId) {
-      return axios.delete(`/api/defenses/${subjectId}`)
+    destroy(defenseId) {
+      return axios.delete(`/api/defenses/${defenseId}`)
     }
   }
 }

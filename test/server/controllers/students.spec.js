@@ -604,6 +604,75 @@ describe('/api/students', () => {
     done()
   })
 
+  test('GET /?noDefense=true', async done => {
+    const { token } = await testUtils.user('admin')
+
+    let firstStudentId = null
+    {
+      const res = await chai
+        .request(server.listen())
+        .get('/api/students/')
+        .set('Authorization', `Bearer ${token}`)
+
+      firstStudentId = res.body[0].id
+    }
+
+    const student = await Student.forge({ id: firstStudentId }).fetch()
+
+    // Create defense
+    {
+      const { token } = await testUtils.user('teacher')
+      const payload = {
+        course: 'cbcc',
+        registrationNumbers: `${student.get('registrationNumber')}`,
+        students: `${student.get('name')}`,
+        local: 'Auditório do ICEN',
+        title: 'Fundamentos da Comunicação Analógica',
+        keywords: 'Fundamental, comunicacional, analógico',
+        summary: 'Sumário fundamentacional',
+
+        advisorName: 'Jonathan Joestar',
+        advisorTitle: 'doctor',
+        advisorType: 'internal',
+
+        evaluator1Name: 'Robert E. O. Speedwagon',
+        evaluator1Title: 'doctor',
+        evaluator1Type: 'internal',
+
+        evaluator2Name: 'Narciso Anasui',
+        evaluator2Title: 'master',
+        evaluator2Type: 'external'
+      }
+
+      const res = await chai
+        .request(server.listen())
+        .post('/api/defenses')
+        .set('Authorization', `Bearer ${token}`)
+        .send(payload)
+
+      expect(res.status).toEqual(201)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.id).toBeDefined()
+    }
+
+    const res = await chai
+      .request(server.listen())
+      .get('/api/students/')
+      .query({ noDefense: true })
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+
+    for (const student of res.body) {
+      expect(student.id).not.toBe(firstStudentId)
+    }
+
+    done()
+  })
+
   test('GET /?course=invalid', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai
