@@ -1,4 +1,8 @@
-module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
+module.exports = function model(
+  doc,
+  index,
+  { dia, mes, ano, nomeDosAlunos, curso }
+) {
   // const doc = new PDFDocument
 
   // Header
@@ -38,7 +42,10 @@ module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
   doc
     .font('Times-Roman')
     .fontSize(14)
-    .text(`COLAÇÃO DE GRAU REALIZADA NO DIA: `, 50, 220, { align: 'left', continued: true })
+    .text(`COLAÇÃO DE GRAU REALIZADA NO DIA: `, 50, 220, {
+      align: 'left',
+      continued: true
+    })
     .font('Times-Bold')
     .fillColor('red')
     .text(`${dia} de ${mes} de ${ano}`)
@@ -61,6 +68,7 @@ module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
     textInRow(doc, aluno, 10, rowHeight + 5)
 
     rowHeight += 20
+    index++
   }
 
   doc
