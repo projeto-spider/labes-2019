@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = function model(
   doc,
   index,
@@ -6,7 +8,7 @@ module.exports = function model(
   // const doc = new PDFDocument
 
   // Header
-  doc.image('./server/models/tccdocs/img/logoFacomp.png', 50, 30, {
+  doc.image(path.join(__dirname, './img/logoFacomp.png'), 50, 30, {
     width: 70,
     height: 80,
     align: 'left',

@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = function model(
   doc,
   {
@@ -19,7 +21,7 @@ module.exports = function model(
     .lineWidth(3)
     .stroke()
   // Header
-  doc.image('./server/models/tccdocs/img/logoRepublica.jpg', 150, 30, {
+  doc.image(path.join(__dirname, './img/logoRepublica.jpg'), 150, 30, {
     width: 80,
     height: 80,
     align: 'left',
@@ -41,7 +43,7 @@ module.exports = function model(
       }
     )
 
-  doc.image('./server/models/tccdocs/img/logoUFPA.png', 580, 35, {
+  doc.image(path.join(__dirname, './img/logoUFPA.png'), 580, 35, {
     width: 70,
     height: 80,
     align: 'right',
