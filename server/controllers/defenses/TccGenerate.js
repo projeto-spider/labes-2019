@@ -8,30 +8,6 @@ const Certificado = require('../../models/tccdocs/certificado')
 const Credenciamento = require('../../models/tccdocs/credenciamento')
 const Divulgacao = require('../../models/tccdocs/divulgacao')
 
-function translate(info) {
-  const translations = {
-    cbcc: 'Ciência da Computação',
-    cbsi: 'Sistemas de Informação',
-    doctor: 'Dr(a). ',
-    master: 'MSc. ',
-    other: '',
-    '1': 'Janeiro',
-    '2': 'Fevereiro',
-    '3': 'Março',
-    '4': 'Abril',
-    '5': 'Maio',
-    '6': 'Junho',
-    '7': 'Julho',
-    '8': 'Agosto',
-    '9': 'Setembro',
-    '10': 'Outubro',
-    '11': 'Novembro',
-    '12': 'Dezembro'
-  }
-  const result = translations[info]
-  return result === undefined ? info : result
-}
-
 module.exports = async function generateAllDocs(ctx) {
   const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
   if (!valid) {
@@ -73,27 +49,27 @@ module.exports = async function generateAllDocs(ctx) {
   const defenseDate = defenseFind.get('date')
   const date = new Date()
   const dados = {
-    curso: translate(defenseFind.get('course')),
+    curso: utils.translate(defenseFind.get('course')),
     tituloTCC: defenseFind.get('title'),
     nomeDosAlunos: defenseFind.get('students').replace(/, /g, '\n'),
-    tituloOrientador: translate(defenseFind.get('advisorTitle')),
+    tituloOrientador: utils.translate(defenseFind.get('advisorTitle')),
     orientador: defenseFind.get('advisorName'),
-    tituloCoOrientador: translate(defenseFind.get('coAdvisorTitle')),
+    tituloCoOrientador: utils.translate(defenseFind.get('coAdvisorTitle')),
     coOrientador: defenseFind.get('coAdvisorName'),
-    tituloAvaliador1: translate(defenseFind.get('evaluator1Title')),
+    tituloAvaliador1: utils.translate(defenseFind.get('evaluator1Title')),
     avaliador1: defenseFind.get('evaluator1Name'),
-    tituloAvaliador2: translate(defenseFind.get('evaluator2Title')),
+    tituloAvaliador2: utils.translate(defenseFind.get('evaluator2Title')),
     avaliador2: defenseFind.get('evaluator2Name'),
-    tituloAvaliador3: translate(defenseFind.get('evaluator3Title')),
+    tituloAvaliador3: utils.translate(defenseFind.get('evaluator3Title')),
     avaliador3: defenseFind.get('evaluator3Name'),
     diaDefesa: defenseDate.split('/')[0],
-    mesDefesa: translate(Number(defenseDate.split('/')[1])),
+    mesDefesa: utils.translate(Number(defenseDate.split('/')[1])),
     anoDefesa: defenseDate.split('/')[2],
     dia: date.getUTCDate(),
-    mes: translate(date.getUTCMonth()),
+    mes: utils.translate(date.getUTCMonth()),
     ano: date.getUTCFullYear(),
-    tituloDiretor: translate('doctor'),
-    diretor: 'Josivaldo de Souza Araújo',
+    tituloDiretor: utils.translate('temp'),
+    diretor: 'temp',
     matricula: defenseFind.get('registrationNumbers'),
     discente: defenseFind.get('students').split(', ')[0],
     palavrasChave: defenseFind.get('keywords'),
@@ -104,6 +80,16 @@ module.exports = async function generateAllDocs(ctx) {
     aprovado: !defenseFind.get('passed') ? 'reprovado' : 'aprovado',
     conceito: 'insuficiente'
   }
+  if (defenseFind.get('advisorIsTeacher'))
+    dados.tituloOrientador = `Prof(a). ${dados.tituloOrientador}`
+  if (defenseFind.get('coAdvisorIsTeacher'))
+    dados.tituloCoOrientador = `Prof(a). ${dados.tituloCoOrientador}`
+  if (defenseFind.get('evaluator1IsTeacher'))
+    dados.tituloAvaliador1 = `Prof(a). ${dados.tituloAvaliador1}`
+  if (defenseFind.get('evaluator2IsTeacher'))
+    dados.tituloAvaliador2 = `Prof(a). ${dados.tituloAvaliador2}`
+  if (defenseFind.get('evaluator3IsTeacher'))
+    dados.tituloAvaliador3 = `Prof(a). ${dados.tituloAvaliador3}`
   if (
     ![
       'curso',
