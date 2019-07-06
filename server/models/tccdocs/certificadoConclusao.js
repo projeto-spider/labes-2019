@@ -14,11 +14,6 @@ module.exports = function model(
 ) {
   // const doc = new PDFDocument
 
-  doc.addPage({
-    layout: 'landscape',
-    size: [595, 841]
-  })
-
   doc
     .polygon([10, 10], [831, 10], [831, 585], [10, 585])
     .lineWidth(3)
@@ -131,7 +126,5 @@ module.exports = function model(
     .fillColor('red')
     .text(`${tituloDiretor}(a) ${diretor}`, 550, 490)
     .fillColor('black')
-    .text('DIRETOR(A) DA FACOMP', 450, 500, { align: 'center' })
-
-  return doc
+    .text('DIRETOR(A) DA FACOMP', 530, 500, { align: 'center' })
 }
