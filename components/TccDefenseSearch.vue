@@ -38,14 +38,14 @@
             <div class="card-content">
               <div class="content">
                 <div class="columns">
-                  <div class="column is-half">
+                  <div class="column" :class="{ 'is-half': isAdmin }">
                     <header class="card-header">
                       <b-icon pack="fas" icon="info" size="is-small"></b-icon>
                       <p class="card-header-title">Informações da defesa</p>
                     </header>
                   </div>
 
-                  <div class="column is-half">
+                  <div v-if="isAdmin" class="column is-half">
                     <header class="card-header">
                       <b-icon pack="fas" icon="info" size="is-small"></b-icon>
                       <p class="card-header-title">Documentos Gerados</p>
@@ -53,7 +53,10 @@
                   </div>
                 </div>
                 <div class="columns scrollable-modal">
-                  <div class="column is-left is-half">
+                  <div
+                    class="hideLeftColumn"
+                    :class="{ 'defense-modal-teacher': !isAdmin }"
+                  >
                     <DefenseForm
                       v-if="modalOpen"
                       v-model="selectedDefense"
@@ -62,7 +65,7 @@
                     />
                   </div>
 
-                  <div class="column is-right is-half">
+                  <div v-if="isAdmin" class="column is-right is-half">
                     <div class="list is-hoverable list-pdfs">
                       <a
                         v-for="pdf in availablePdfs"
@@ -202,7 +205,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import pDebounce from 'p-debounce'
 import { errorsHandler } from '@/components/mixins/errors'
 import DefenseForm from '@/components/DefenseForm'
@@ -281,7 +284,12 @@ export default {
           field: 'local',
           label: 'Local'
         }
-      ]
+      ],
+      hideLeftColumn: {
+        column: true,
+        'is-left': this.isAdmin,
+        'is-half': this.isAdmin
+      }
     }
   },
 
@@ -290,6 +298,8 @@ export default {
       courseTag: state => state.courseTag,
       token: state => state.auth.token
     }),
+
+    ...mapGetters({ currentUser: 'auth/currentUser' }),
 
     disclosure() {
       return disclosureModel(this.selectedDefense)
@@ -376,6 +386,9 @@ export default {
       ].filter(validExternalEvaluator)
 
       return requiredDocuments.concat(certificates).concat(credentials)
+    },
+    isAdmin() {
+      return this.currentUser.role === 'admin'
     }
   },
 
@@ -627,5 +640,10 @@ function hourFormatted(defenseHour) {
 .list-pdfs {
   max-width: 90%;
   margin: 0 auto;
+}
+
+.defense-modal-teacher {
+  margin: 0 auto;
+  width: 85%;
 }
 </style>
