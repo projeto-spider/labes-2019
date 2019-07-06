@@ -402,7 +402,10 @@ export default {
   watch: {
     searchStudentName: pDebounce(function triggerSearch() {
       this.loadDefenses()
-    }, 500)
+    }, 500),
+    courseTag() {
+      this.loadDefenses()
+    }
   },
 
   created() {

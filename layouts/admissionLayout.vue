@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .hero {
   margin: -1vh 0 0 10vw;
 }
