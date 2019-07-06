@@ -76,7 +76,6 @@ module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
     .text(`Belém, ${dia} de ${mes} de ${ano}.`, 100, 660, {
       align: 'right'
     })
-  return doc
 }
 
 function textInRow(doc, text, width, heigth, options = {}) {

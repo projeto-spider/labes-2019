@@ -117,7 +117,7 @@ module.exports = function model(
   doc
     .fontSize(10)
     .fillColor('red')
-    .text(`${tituloDiretorInstituto}(a) ${diretorInstituto}`, 20, 490, {
+    .text(`${tituloDiretorInstituto}${diretorInstituto}`, 20, 490, {
       align: 'center'
     })
     .fillColor('black')
@@ -128,9 +128,7 @@ module.exports = function model(
   doc
     .fontSize(10)
     .fillColor('red')
-    .text(`${tituloDiretor}(a) ${diretor}`, 490, 490, { align: 'center' })
+    .text(`${tituloDiretor}${diretor}`, 490, 490, { align: 'center' })
     .fillColor('black')
     .text('DIRETOR(A) DA FACOMP', 490, 500, { align: 'center' })
-
-  return doc
 }
