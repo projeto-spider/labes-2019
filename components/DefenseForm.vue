@@ -35,7 +35,7 @@
           <b-button
             class="button is-primary"
             native-type="button"
-            :disabled="model.students.length > 1"
+            :disabled="forceDisable || model.students.length > 1"
             @click="pushStudent()"
           >
             Adicionar
