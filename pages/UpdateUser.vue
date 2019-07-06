@@ -61,8 +61,8 @@
 </template>
 
 <script>
-import UserForm from '@/components/UserForm'
 import pDebounce from 'p-debounce'
+import UserForm from '@/components/UserForm'
 
 export default {
   name: 'UpdateUser',

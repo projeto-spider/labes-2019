@@ -123,8 +123,8 @@
 </template>
 
 <script>
-import InputValidation from '@/components/InputValidation'
 import { mapGetters } from 'vuex'
+import InputValidation from '@/components/InputValidation'
 
 export default {
   name: 'Signup',
