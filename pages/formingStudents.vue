@@ -3,8 +3,23 @@
     <div class="columns is-centered has-text-centered">
       <h1 class="title"><strong>Alunos Formandos</strong></h1>
     </div>
-    <div class="columns has-text-centered">
-      <div class="column is-half">
+
+    <br />
+    <SearchInput
+      ref="fitGraduatingSearchInput"
+      :default-course="courseTag"
+      title="Graduandos Aptos"
+      :is-graduating="true"
+      :is-active="true"
+      :show-defense-date="true"
+      :is-fit="true"
+      :default-sort-field="'crg'"
+      :default-sort-order="'desc'"
+      :show-crg-filter="true"
+      @toggleComboBox="onToggleComboBox"
+      @move="handleMove"
+    >
+      <template v-slot:top>
         <b-tooltip
           v-if="!allCrgsReady"
           label="Alguns alunos estão sem CRG"
@@ -28,23 +43,8 @@
         >
           Eleger Destaque Acadêmico
         </button>
-      </div>
-    </div>
-    <br />
-    <SearchInput
-      ref="fitGraduatingSearchInput"
-      :default-course="courseTag"
-      title="Graduandos Aptos"
-      :is-graduating="true"
-      :is-active="true"
-      :show-defense-date="true"
-      :is-fit="true"
-      :default-sort-field="'crg'"
-      :default-sort-order="'desc'"
-      :show-crg-filter="true"
-      @toggleComboBox="onToggleComboBox"
-      @move="handleMove"
-    ></SearchInput>
+      </template>
+    </SearchInput>
     <br />
     <SearchInput
       ref="GraduatingSearchInput"

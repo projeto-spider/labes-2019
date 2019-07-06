@@ -5,12 +5,19 @@
         <strong>{{ title }}</strong>
       </h1>
     </div>
+
+    <div v-if="$slots.top" class="columns is-centered has-text-centered">
+      <div class="column">
+        <slot name="top"></slot>
+      </div>
+    </div>
+
     <br />
     <div class="columns is-centered">
       <div class="column is-10">
         <b-field horizontal class="box" label="Filtros: ">
           <b-checkbox v-model="nameFilter">Nome</b-checkbox>
-          <b-checkbox v-model="registrationFilter">Matricula</b-checkbox>
+          <b-checkbox v-model="registrationFilter">Matrícula</b-checkbox>
           <b-checkbox v-model="emailFilter">Email</b-checkbox>
           <b-checkbox v-if="showCrgFilter" v-model="blankCrgFilter">
             Sem CRG
@@ -29,7 +36,7 @@
         <b-input
           v-if="registrationFilter"
           v-model="searchRegistration"
-          placeholder="Digite a matricula"
+          placeholder="Digite a matrícula"
           type="search"
           icon="search"
           rounded
