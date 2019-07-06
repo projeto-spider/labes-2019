@@ -473,4 +473,26 @@ describe('/api/users', () => {
     }
     done()
   })
+
+  test('GET /?paginate=false ignore pagitnation', async done => {
+    const { token } = await testUtils.user('admin')
+    const usersList = [...Array(15).keys()].map(num => {
+      const username = 'user' + num
+      const email = 'user' + num + '@domain.com'
+      const password = 'user' + num
+      return { username, password, email }
+    })
+    await Promise.all(usersList.map(user => User.forge(user).save()))
+    const usersCreated = await User.count('*')
+    const res = await chai
+      .request(server.listen())
+      .get('/api/users')
+      .query({ paginate: false })
+      .set('Authorization', `Bearer ${token}`)
+    expect(res.status).toEqual(200)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.length).toBe(usersCreated)
+    done()
+  })
 })

@@ -5,7 +5,8 @@ const errors = require('../../../shared/errors')
 module.exports = async function listUsers(ctx) {
   const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [
     'page',
-    'username'
+    'username',
+    'paginate'
   ])
 
   if (!valid) {
@@ -13,10 +14,14 @@ module.exports = async function listUsers(ctx) {
     ctx.body = { code: errors.INVALID_QUERY, invalidParams }
     return
   }
-  const { page = 1, username } = ctx.request.query
+  const { page = 1, username, paginate } = ctx.request.query
   let query = User
   if (username !== undefined) {
     query = query.where('username', 'like', username)
+  }
+  if (paginate === 'false') {
+    ctx.body = await query.fetchAll()
+    return
   }
   utils.paginateContext(ctx, await query.fetchPage({ page }))
 }
