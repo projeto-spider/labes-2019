@@ -4,21 +4,6 @@ const utils = require('../../utils')
 const errors = require('../../../shared/errors')
 const ListaFrequencia = require('../../models/tccdocs/listaFrequencia')
 
-const month = {
-  '1': 'Janeiro',
-  '2': 'Fevereiro',
-  '3': 'Março',
-  '4': 'Abril',
-  '5': 'Maio',
-  '6': 'Junho',
-  '7': 'Julho',
-  '8': 'Agosto',
-  '9': 'Setembro',
-  '10': 'Outubro',
-  '11': 'Novembro',
-  '12': 'Dezembro'
-}
-
 module.exports = async function generateAttendanceRegister(ctx) {
   const { valid, invalidParams } = utils.validateQuery(ctx.request.query, [])
   if (!valid) {
@@ -43,7 +28,7 @@ module.exports = async function generateAttendanceRegister(ctx) {
   const today = new Date()
   const data = {
     dia: today.getUTCDate(),
-    mes: month[today.getUTCMonth()],
+    mes: utils.translate(today.getUTCMonth()),
     ano: today.getUTCFullYear(),
     nomeDosAlunos: studentList,
     curso:

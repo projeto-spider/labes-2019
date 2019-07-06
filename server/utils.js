@@ -345,3 +345,27 @@ exports.validateType = function validateType(payload, knownTypes) {
   const valid = invalidParams.length === 0
   return { valid, invalidParams }
 }
+
+exports.translate = function translate(info) {
+  const translations = {
+    cbcc: 'Ciência da Computação',
+    cbsi: 'Sistemas de Informação',
+    doctor: 'Dr(a). ',
+    master: 'MSc. ',
+    other: '',
+    '1': 'Janeiro',
+    '2': 'Fevereiro',
+    '3': 'Março',
+    '4': 'Abril',
+    '5': 'Maio',
+    '6': 'Junho',
+    '7': 'Julho',
+    '8': 'Agosto',
+    '9': 'Setembro',
+    '10': 'Outubro',
+    '11': 'Novembro',
+    '12': 'Dezembro'
+  }
+  const result = translations[info]
+  return result === undefined ? info : result
+}
