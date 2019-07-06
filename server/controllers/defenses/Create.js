@@ -35,7 +35,13 @@ const optionalFields = [
 
   'evaluator3Name',
   'evaluator3Title',
-  'evaluator3Type'
+  'evaluator3Type',
+
+  'advisorIsTeacher',
+  'coAdvisorIsTeacher',
+  'evaluator1IsTeacher',
+  'evaluator2IsTeacher',
+  'evaluator3IsTeacher'
 ]
 
 const allFields = requiredFields.concat(optionalFields)
@@ -107,6 +113,11 @@ module.exports = async function createDefense(ctx) {
   }, {})
 
   const data = {
+    advisorIsTeacher: false,
+    coAdvisorIsTeacher: false,
+    evaluator1IsTeacher: false,
+    evaluator2IsTeacher: false,
+    evaluator3IsTeacher: false,
     ...fromPayload,
     userId: user.id,
     status: 'pending'

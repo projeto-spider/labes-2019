@@ -189,14 +189,17 @@ describe('/api/defenses', () => {
       advisorName: 'Jonathan Joestar',
       advisorTitle: 'doctor',
       advisorType: 'internal',
+      advisorIsTeacher: true,
 
       evaluator1Name: 'Robert E. O. Speedwagon',
       evaluator1Title: 'doctor',
       evaluator1Type: 'internal',
+      evaluator1IsTeacher: false,
 
       evaluator2Name: 'Narciso Anasui',
       evaluator2Title: 'master',
-      evaluator2Type: 'external'
+      evaluator2Type: 'external',
+      evaluator2IsTeacher: true
     }
 
     const res = await chai
@@ -209,6 +212,11 @@ describe('/api/defenses', () => {
     expect(res.type).toEqual('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.id).toBeDefined()
+    expect(res.body.advisorIsTeacher).toBe(true)
+    expect(res.body.coAdvisorIsTeacher).toBe(false) // default
+    expect(res.body.evaluator1IsTeacher).toBe(false)
+    expect(res.body.evaluator2IsTeacher).toBe(true)
+    expect(res.body.evaluator3IsTeacher).toBe(false) // default
 
     const defense = await Defense.where('id', res.body.id).fetch()
 
@@ -403,7 +411,13 @@ describe('/api/defenses', () => {
 
     const defense = await Defense.forge(payload).save()
 
-    const update = { status: 'done', grade: 5.0 }
+    const update = {
+      status: 'done',
+      grade: 5.0,
+      advisorIsTeacher: false,
+      evaluator1IsTeacher: true,
+      evaluator2IsTeacher: true
+    }
 
     const res = await chai
       .request(server.listen())
@@ -416,6 +430,11 @@ describe('/api/defenses', () => {
     expect(res.body).toBeDefined()
     expect(res.body.id).toBeDefined()
     expect(res.body.status).toEqual(update.status)
+    expect(res.body.advisorIsTeacher).toBe(false)
+    expect(res.body.coAdvisorIsTeacher).toBe(false) // default
+    expect(res.body.evaluator1IsTeacher).toBe(true)
+    expect(res.body.evaluator2IsTeacher).toBe(true)
+    expect(res.body.evaluator3IsTeacher).toBe(false) // default
 
     done()
   })

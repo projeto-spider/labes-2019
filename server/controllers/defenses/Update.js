@@ -39,13 +39,20 @@ const optionalFields = [
   'evaluator3Title',
   'evaluator3Type',
   'grade',
-  'passed'
+  'passed',
+
+  'advisorIsTeacher',
+  'coAdvisorIsTeacher',
+  'evaluator1IsTeacher',
+  'evaluator2IsTeacher',
+  'evaluator3IsTeacher'
 ]
 
 const allFields = requiredFields.concat(optionalFields)
 
 module.exports = async function updateDefense(ctx) {
   const payload = ctx.request.body
+
   {
     const { valid, invalidParams } = utils.validatePayload(payload, allFields)
     if (!valid) {
