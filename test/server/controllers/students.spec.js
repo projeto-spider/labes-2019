@@ -2246,6 +2246,63 @@ describe('/api/students', () => {
     done()
   })
 
+  test('GET /students/:id/concluding-certificate', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const student = await Student.forge({
+      name: 'GRADUANDO FERREIRA ALVES',
+      registrationNumber: '221104940004',
+      crg: 7.89,
+      course: 'cbcc',
+      email: 'slug@gmail.com',
+      isFit: true,
+      isConcluding: false,
+      isActive: true,
+      isForming: false,
+      isGraduating: true, // important
+      academicHighlight: false,
+      cancelled: false,
+      mailingList: 'none',
+      mailingListToRemove: 'none',
+      mailingListToAdd: 'active',
+      term: null,
+      cd: false, // important
+      period: null
+    }).save()
+    const defense = await Defense.forge({
+      userId: 2,
+      course: student.get('course'),
+      status: 'accepted',
+      registrationNumbers: student.get('registrationNumber'),
+      students: student.get('name'),
+      local: 'FC-01',
+      title: 'Meu titulo de tcc',
+      keywords: 'Palavras, chave, tcc',
+      advisorName: 'Orientadeiro Um',
+      advisorTitle: 'master',
+      advisorType: 'internal',
+      evaluator1Name: 'Avaliadeiro Um',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+      evaluator2Name: 'Avaliadeiro Dois',
+      evaluator2Title: 'other',
+      evaluator2Type: 'external'
+    }).save()
+    student.save({ defenseId: defense.get('id') })
+
+    const res = await chai
+      .request(server.listen())
+      .get(`/api/students/${student.get('id')}/concluding-certificate`)
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(400)
+    expect(res.type).toBe('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.code).toBe(errors.INVALID_REQUEST)
+
+    done()
+  })
+
   test('GET /students/:id/concluding-certificate non existent defense', async done => {
     const { token } = await testUtils.user('admin')
 
@@ -2275,10 +2332,10 @@ describe('/api/students', () => {
       .get(`/api/students/${student.get('id')}/concluding-certificate`)
       .set('Authorization', `Bearer ${token}`)
 
-    expect(res.status).toBe(422)
+    expect(res.status).toBe(404)
     expect(res.type).toBe('application/json')
     expect(res.body).toBeDefined()
-    expect(res.body.code).toBe(errors.UNPROCESSABLE_ENTITY)
+    expect(res.body.code).toBe(errors.NOT_FOUND)
 
     done()
   })
@@ -2391,44 +2448,6 @@ describe('/api/students', () => {
     expect(res.body).toBeDefined()
     expect(res.body.code).toBe(errors.INVALID_REQUEST)
     expect(res.body.param).toBe('kkkk')
-
-    done()
-  })
-
-  test('GET /student/:course/attendance-register missing requierement', async done => {
-    const { token } = await testUtils.user('admin')
-
-    await Student.forge({
-      name: 'GRADUANDO FERREIRA ALVES',
-      registrationNumber: '221104940004',
-      crg: 7.89,
-      course: 'cbcc',
-      email: 'slug@gmail.com',
-      isFit: true,
-      isConcluding: false,
-      isActive: true,
-      isForming: false,
-      isGraduating: true, // important
-      academicHighlight: false,
-      cancelled: false,
-      missingCollation: true,
-      mailingList: 'none',
-      mailingListToRemove: 'none',
-      mailingListToAdd: 'active',
-      term: null,
-      cd: false, // important
-      period: null
-    }).save()
-
-    const res = await chai
-      .request(server.listen())
-      .get('/api/students/cbcc/attendance-register')
-      .set('Authorization', `Bearer ${token}`)
-
-    expect(res.status).toBe(422)
-    expect(res.type).toBe('application/json')
-    expect(res.body).toBeDefined()
-    expect(res.body.code).toBe(errors.UNPROCESSABLE_ENTITY)
 
     done()
   })
