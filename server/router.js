@@ -13,6 +13,7 @@ const auth = require('./controllers/auth')
 const solicitations = require('./controllers/solicitations')
 const pendencies = require('./controllers/pendencies')
 const defenses = require('./controllers/defenses')
+const settings = require('./controllers/settings')
 
 const router = new Router()
 const api = new Router({ prefix: '/api' })
@@ -26,6 +27,7 @@ const bodyMultipart = KoaBody({ multipart: true })
 // Authorization
 api.use(['/students'], isLoggedIn)
 api.use(['/defenses'], isLoggedIn)
+api.use(['/settings'], isLoggedIn, isAdmin)
 
 // User Routes
 api.get('/users/', isLoggedIn, isAdmin, users.List)
@@ -96,6 +98,11 @@ api.post('/auth', bodyJson, auth.Login)
 
 // Solicitation routes
 api.post('/solicitations/', bodyJson, solicitations.Create)
+
+// Settings routes
+api.get('/settings/', settings.List)
+api.get('/settings/:key', settings.Show)
+api.put('/settings/:key', bodyJson, settings.Update)
 
 // Not Found Routes
 api.all('/*', ctx => {
