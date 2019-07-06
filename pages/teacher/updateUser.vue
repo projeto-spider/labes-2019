@@ -1,19 +1,22 @@
 <template>
-  <UserForm form-type="signup" />
+  <div class="container">
+    <UserForm form-type="update" />
+  </div>
 </template>
 
 <script>
 import UserForm from '@/components/UserForm'
-
 export default {
-  name: 'SignUp',
+  name: 'UpdateUserTeacher',
   components: {
     UserForm
   },
   head() {
     return {
-      title: 'Cadastrar usuário'
+      title: 'Atualização de usuário'
     }
   }
 }
 </script>
+
+<style></style>

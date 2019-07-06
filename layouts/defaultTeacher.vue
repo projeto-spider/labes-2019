@@ -90,6 +90,9 @@
               <nuxt-link to="/teacher/registerPresentation">
                 Cadastrar defesa de TCC
               </nuxt-link>
+              <nuxt-link to="/teacher/updateUser">
+                Alterar meu usuário
+              </nuxt-link>
             </li>
           </ul>
         </aside>
