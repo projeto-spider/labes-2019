@@ -55,8 +55,16 @@
         </div>
       </div>
     </div>
-    <UserForm v-if="updateMyUser" form-type="update" />
-    <UserForm v-else-if="otherUser" :user="selectedUser" form-type="update" />
+    <UserForm v-if="updateMyUser" form-type="update">
+      <button class="button is-danger" @click="returnSelect('myUser')">
+        Voltar
+      </button>
+    </UserForm>
+    <UserForm v-else-if="otherUser" :user="selectedUser" form-type="update">
+      <button class="button is-danger" @click="returnSelect('otherUser')">
+        Voltar
+      </button>
+    </UserForm>
   </section>
 </template>
 
@@ -90,12 +98,11 @@ export default {
   },
   methods: {
     getUserCompletions: pDebounce(function getUserCompletions(name) {
-      const re = new RegExp(`.*${name}.*`)
-      return this.$services.users.fetchPage(false).then(res => {
-        this.possibleCompletionUsers.users = res.data.filter(user => {
-          return re.test(user.username)
+      return this.$services.users
+        .fetchPage({ username: `%${name}%`, page: false })
+        .then(res => {
+          this.possibleCompletionUsers.users = res.data
         })
-      })
     }, 500),
     onSelectedUser(user) {
       this.selectedUser = user
@@ -120,6 +127,17 @@ export default {
           message: 'Nenhum usuário selecionado',
           type: 'is-danger'
         })
+      }
+    },
+    returnSelect(page) {
+      if (page === 'myUser') {
+        this.updateMyUser = false
+        this.showSelectBox = true
+      }
+      if (page === 'otherUser') {
+        this.updateOtherUser = false
+        this.otherUser = false
+        this.showSelectBox = true
       }
     }
   }

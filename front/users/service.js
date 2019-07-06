@@ -6,10 +6,12 @@ export default function makeUsersServices(axios) {
       return axios.get(`/api/users/${userId}`)
     },
 
-    fetchPage(page) {
+    fetchPage(params) {
+      const paramList = ['username', 'email', 'role', 'password', 'page']
+      const options = selector(params, paramList)
       return axios.get(`/api/users/`, {
         params: {
-          page
+          ...options
         }
       })
     },

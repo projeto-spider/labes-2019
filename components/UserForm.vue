@@ -1,10 +1,10 @@
 <template>
-  <div class="hero has-background-grey has-text-centered is-fullheight">
+  <div class="has-text-centered is-fullheight">
     <div class="column is-4 is-offset-4">
       <figure class="avatar">
         <img src="@/assets/images/UFPA.png" width="100" height="90" />
       </figure>
-      <h3 class="title has-text-white">
+      <h3 class="title">
         {{ signUp ? 'Cadastro de Usuário' : 'Atualizar Usuário' }}
       </h3>
       <div class="box">
@@ -118,6 +118,7 @@
           </button>
         </form>
       </div>
+      <slot></slot>
     </div>
   </div>
 </template>

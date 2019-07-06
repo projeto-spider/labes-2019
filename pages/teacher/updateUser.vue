@@ -1,5 +1,7 @@
 <template>
-  <UserForm form-type="update" />
+  <div class="container">
+    <UserForm form-type="update" />
+  </div>
 </template>
 
 <script>
