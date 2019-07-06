@@ -53,7 +53,20 @@ module.exports = async function generateAttendanceRegister(ctx) {
     layout: 'portrait',
     size: [595, 841]
   })
-  ListaFrequencia(doc, data)
+  if (studentList.length > 10) {
+    const limit = studentList.length
+    let sliceStart = 0
+    let sliceEnd = 10
+    while (sliceEnd < limit) {
+      sliceEnd = sliceStart + 10 < limit ? sliceStart + 10 : limit
+      data.nomeDosAlunos = studentList.slice(sliceStart, sliceEnd)
+      ListaFrequencia(doc, sliceStart + 1, data)
+      if (sliceEnd < limit) doc.addPage()
+      sliceStart = sliceEnd
+    }
+  } else {
+    ListaFrequencia(doc, 1, data)
+  }
   const title = `${course}-lista-de-frequencia.pdf`
   doc.info.Title = title
   await doc.end()
