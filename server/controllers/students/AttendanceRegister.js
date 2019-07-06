@@ -57,7 +57,7 @@ module.exports = async function generateAttendanceRegister(ctx) {
     size: [595, 841]
   })
   ListaFrequencia(doc, data)
-  const title = 'temp.pdf'
+  const title = 'lista-de-frequencia.pdf'
   ctx.status = 200
   ctx.set('Content-Type', 'application/pdf')
   ctx.set('Content-Disposition', `filename=${title}`)
