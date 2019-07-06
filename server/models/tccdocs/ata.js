@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = function model(
   doc,
   {
@@ -29,7 +31,7 @@ module.exports = function model(
   if (coOrientador) {
     trechoCoorientador = `, ${tituloCoOrientador}${coOrientador} (COORIENTADOR(A))`
   }
-  doc.image('./server/models/tccdocs/img/logoFacomp.png', 50, 35, {
+  doc.image(path.join(__dirname, './img/logoFacomp.png'), 50, 35, {
     width: 76,
     height: 80,
     align: 'left',
@@ -50,7 +52,7 @@ module.exports = function model(
         align: 'center'
       }
     )
-  doc.image('./server/models/tccdocs/img/logoUFPA.png', 480, 35, {
+  doc.image(path.join(__dirname, './img/logoUFPA.png'), 480, 35, {
     width: 70,
     height: 80,
     align: 'right',
@@ -81,7 +83,7 @@ module.exports = function model(
   doc.fontSize(12).text(`Conceito:`, 30, 520, {
     align: 'left'
   })
-  doc.image('./server/models/tccdocs/img/checkbox.png', 85, 516, {
+  doc.image(path.join(__dirname, './img/checkbox.png'), 85, 516, {
     width: 195,
     height: 14,
     align: 'right',

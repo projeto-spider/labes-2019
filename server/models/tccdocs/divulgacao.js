@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = function model(
   doc,
   {
@@ -23,7 +25,7 @@ module.exports = function model(
     resumo
   }
 ) {
-  doc.image('./server/models/tccdocs/img/logoFacomp.png', 50, 35, {
+  doc.image(path.join(__dirname, './img/logoFacomp.png'), 50, 35, {
     width: 76,
     height: 80,
     align: 'left',
@@ -44,7 +46,7 @@ module.exports = function model(
         align: 'center'
       }
     )
-  doc.image('./server/models/tccdocs/img/logoUFPA.png', 480, 35, {
+  doc.image(path.join(__dirname, './img/logoUFPA.png'), 480, 35, {
     width: 70,
     height: 80,
     align: 'right',
