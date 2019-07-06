@@ -23,6 +23,21 @@
               @blur="onBlur('emailIpt')"
             ></b-input>
           </InputValidation>
+          <InputValidation
+            ref="fullNameIpt"
+            valid-message="Ok"
+            :invalid-message="fullNameError"
+            default-message="Campo obrigatório"
+            :valid="validFullName"
+          >
+            <b-input
+              v-model="fullName"
+              type="text"
+              maxlength="60"
+              placeholder="Nome Completo"
+              @blur="onBlur('fullNameIpt')"
+            ></b-input>
+          </InputValidation>
 
           <InputValidation
             ref="usernameIpt"
@@ -78,6 +93,21 @@
           </button>
         </form>
         <form v-else-if="update" @submit.prevent="updateUser">
+          <InputValidation
+            ref="fullNameIpt"
+            valid-message="Ok"
+            :invalid-message="fullNameError"
+            :valid="validFullName"
+          >
+            <b-input
+              v-model="fullName"
+              type="text"
+              maxlength="60"
+              placeholder="Nome Completo"
+              @blur="onBlur('fullNameIpt')"
+            ></b-input>
+          </InputValidation>
+
           <InputValidation
             ref="usernameIpt"
             valid-message="Ok"
@@ -148,6 +178,7 @@ export default {
   data() {
     return {
       username: '',
+      fullName: '',
       password: '',
       email: '',
       role: null,
@@ -155,6 +186,7 @@ export default {
         'tamanho mínimo de 3 caracteres.',
         'Não pode conter espaços em branco.'
       ],
+      fullNameError: ['tamanho mínimo de 3 caracteres.'],
       passwdError: [
         'tamanho mínimo de 6 caracteres.',
         'Não pode conter espaços em branco.'
@@ -187,7 +219,9 @@ export default {
         this.username.length > 3
       )
     },
-
+    validFullName() {
+      return this.fullName.length <= 60 && this.fullName.length >= 3
+    },
     validPassword() {
       return !this.password.includes(' ') && this.password.length > 5
     },
@@ -217,6 +251,7 @@ export default {
       this.username = ''
       this.password = ''
       this.email = ''
+      this.fullName = ''
       this.role = null
       const refs = [
         this.$refs.emailIpt,
@@ -236,6 +271,7 @@ export default {
           email: this.email,
           username: this.username,
           password: this.password,
+          fullName: this.fullName,
           role: this.role
         })
         this.clearInputs()
@@ -251,6 +287,7 @@ export default {
       let id = ''
       let username = ''
       let password = ''
+      let fullName = ''
       if (this.user !== null) {
         id = this.user.id
       } else {
@@ -262,11 +299,15 @@ export default {
       if (this.password !== '') {
         password = this.password
       }
+      if (this.fullName !== '') {
+        fullName = this.fullName
+      }
       try {
         await this.$store.dispatch('auth/update', {
           id: id,
           username: username,
-          password: password
+          password: password,
+          fullName: fullName
         })
         this.clearInputs()
         this.$toast.open({
