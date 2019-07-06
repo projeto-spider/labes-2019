@@ -135,6 +135,10 @@
           </b-select>
         </input-validation>
       </b-field>
+      <b-field v-if="!forceDisable" class="centered" label="Professor">
+        <b-checkbox v-model="model.advisorIsTeacher" :disabled="forceDisable">
+        </b-checkbox>
+      </b-field>
     </b-field>
 
     <b-field grouped>
@@ -162,6 +166,10 @@
             <option value="external">Externo</option>
           </b-select>
         </input-validation>
+      </b-field>
+      <b-field v-if="!forceDisable" class="centered" label="Professor">
+        <b-checkbox v-model="model.coAdvisorIsTeacher" :disabled="forceDisable">
+        </b-checkbox>
       </b-field>
     </b-field>
 
@@ -194,6 +202,13 @@
           <option value="external">Externo</option>
         </b-select>
       </b-field>
+      <b-field v-if="!forceDisable" class="centered" label="Professor">
+        <b-checkbox
+          v-model="model.evaluator1IsTeacher"
+          :disabled="forceDisable"
+        >
+        </b-checkbox>
+      </b-field>
     </b-field>
 
     <b-field grouped>
@@ -225,6 +240,13 @@
           <option value="external">Externo</option>
         </b-select>
       </b-field>
+      <b-field v-if="!forceDisable" class="centered" label="Professor">
+        <b-checkbox
+          v-model="model.evaluator2IsTeacher"
+          :disabled="forceDisable"
+        >
+        </b-checkbox>
+      </b-field>
     </b-field>
 
     <b-field grouped>
@@ -247,6 +269,13 @@
           <option value="external">Externo</option>
         </b-select>
       </b-field>
+      <b-field v-if="!forceDisable" class="centered" label="Professor">
+        <b-checkbox
+          v-model="model.evaluator3IsTeacher"
+          :disabled="forceDisable"
+        >
+        </b-checkbox>
+      </b-field>
     </b-field>
 
     <div v-if="!forceDisable" class="control">
@@ -263,6 +292,13 @@
     </div>
   </form>
 </template>
+
+<style>
+.centered {
+  text-align: center;
+  vertical-align: center;
+}
+</style>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
@@ -286,27 +322,32 @@ const defaultModel = () => {
     advisorName: '',
     advisorTitle: 'other',
     advisorType: 'internal',
+    advisorIsTeacher: false,
 
     coAdvisorName: '',
     coAdvisorTitle: 'other',
     coAdvisorType: 'internal',
+    coAdvisorIsTeacher: false,
 
     evaluator1Name: '',
     evaluator1Title: 'other',
     evaluator1Type: 'internal',
+    evaluator1IsTeacher: false,
 
     evaluator2Name: '',
     evaluator2Title: 'other',
     evaluator2Type: 'internal',
+    evaluator2IsTeacher: false,
 
     evaluator3Name: '',
     evaluator3Title: 'other',
-    evaluator3Type: 'internal'
+    evaluator3Type: 'internal',
+    evaluator3IsTeacher: false
   }
 }
 
 export default {
-  name: 'DefenseForm',
+  name: 'Defe3seForm',
 
   components: {
     DatePicker,
