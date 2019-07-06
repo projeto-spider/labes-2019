@@ -480,7 +480,10 @@ export default {
     },
 
     onCrgBlur(e) {
-      let value = +e.target.value
+      let value =
+        typeof e.target.value === 'string'
+          ? +e.target.value.replace(',', '.')
+          : +e.target.value
 
       if (typeof value !== 'number') {
         return
