@@ -25,18 +25,21 @@ module.exports = function model(
     align: 'left',
     valign: 'top'
   })
-  doc.fontSize(12).text(
-    `
+  doc
+    .font('Times-Roman')
+    .fontSize(12)
+    .text(
+      `
   UNIVERSIDADE FEDERAL DO PARÁ
   INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
   FACULDADE DE COMPUTAÇÃO
   `,
-    60,
-    40,
-    {
-      align: 'center'
-    }
-  )
+      60,
+      40,
+      {
+        align: 'center'
+      }
+    )
 
   doc.image('./server/models/tccdocs/img/logoUFPA.png', 580, 35, {
     width: 70,
@@ -51,7 +54,7 @@ module.exports = function model(
     .fontSize(18)
     .text(
       `C E R T I F I C A D O  D E  C O N C L U S Ã O  D E  C U R S O`,
-      130,
+      180,
       170,
       { underline: true }
     )
@@ -97,7 +100,6 @@ module.exports = function model(
     .text(`Belém - PA, ${dia} de ${mes} de ${ano}.`, -120, 400, {
       align: 'right'
     })
-
   doc
     .fontSize(10)
     .fillColor('black')
@@ -106,25 +108,29 @@ module.exports = function model(
   doc
     .fontSize(10)
     .fillColor('red')
-    .text(`${discente}`, 60, 490)
+    .text(`${discente}`, -500, 490, { align: 'center' })
     .fillColor('black')
-    .text('FORMANDO', -480, 500, { align: 'center' })
+    .text('FORMANDO', -490, 500, { align: 'center' })
 
-  doc.fontSize(10).text(`____________________________________`, 290, 470)
+  doc.fontSize(10).text(`____________________________________`, 300, 470)
 
   doc
     .fontSize(10)
     .fillColor('red')
-    .text(`${tituloDiretorInstituto}${diretorInstituto}`, 300, 490)
+    .text(`${tituloDiretorInstituto}(a) ${diretorInstituto}`, 20, 490, {
+      align: 'center'
+    })
     .fillColor('black')
-    .text('DIRETOR(A) DO ICEN', -100, 500, { align: 'center' })
+    .text('DIRETOR(A) DO ICEN', 20, 500, { align: 'center' })
 
-  doc.fontSize(10).text(`____________________________________`, 540, 470)
+  doc.fontSize(10).text(`____________________________________`, 535, 470)
 
   doc
     .fontSize(10)
     .fillColor('red')
-    .text(`${tituloDiretor}${diretor}`, 550, 490)
+    .text(`${tituloDiretor}(a) ${diretor}`, 490, 490, { align: 'center' })
     .fillColor('black')
-    .text('DIRETOR(A) DA FACOMP', 530, 500, { align: 'center' })
+    .text('DIRETOR(A) DA FACOMP', 490, 500, { align: 'center' })
+
+  return doc
 }

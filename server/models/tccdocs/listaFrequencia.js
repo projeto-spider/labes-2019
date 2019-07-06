@@ -8,24 +8,27 @@ module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
     align: 'left',
     valign: 'top'
   })
-  doc.fontSize(12).text(
-    `
+  doc
+    .font('Times-Roman')
+    .fontSize(12)
+    .text(
+      `
     UNIVERSIDADE FEDERAL DO PARÁ
     INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
     FACULDADE DE COMPUTAÇÃO
     `,
-    60,
-    40,
-    {
-      align: 'center'
-    }
-  )
+      60,
+      40,
+      {
+        align: 'center'
+      }
+    )
   // End of Header
 
   doc
     .font('Times-Bold')
-    .fontSize(15)
-    .text(`CURSO DE BACHARELADO EM `, 100, 170, {
+    .fontSize(14)
+    .text(`CURSO DE BACHARELADO EM `, 50, 170, {
       align: 'left',
       continued: true
     })
@@ -33,16 +36,18 @@ module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
     .text(curso.toUpperCase(), { underline: true, color: 'black' })
 
   doc
-    .fontSize(15)
-    .text(`COLAÇÃO DE GRAU REALIZADA NO DIA: `, 100, 220, { align: 'left' })
+    .font('Times-Roman')
+    .fontSize(14)
+    .text(`COLAÇÃO DE GRAU REALIZADA NO DIA: `, 50, 220, { align: 'left', continued: true })
+    .font('Times-Bold')
     .fillColor('red')
-    .text(`${dia} de ${mes} de ${ano}`, { indent: 72 })
+    .text(`${dia} de ${mes} de ${ano}`)
 
   doc
     .font('Times-Bold')
     .fontSize(13)
     .fillColor('black')
-    .text(`Lista de Presença`, 100, 300, {
+    .text(`Lista de Presença`, 50, 300, {
       align: 'left'
     })
 
@@ -68,7 +73,7 @@ module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
     .fillColor('red')
     .font('Times-Roman')
     .fontSize(12)
-    .text(`Belém, ${dia} de ${mes} de ${ano}.`, 100, 460, {
+    .text(`Belém, ${dia} de ${mes} de ${ano}.`, 100, 660, {
       align: 'right'
     })
   return doc
