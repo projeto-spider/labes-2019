@@ -32,17 +32,14 @@ module.exports = async function generateAttendanceRegister(ctx) {
     ctx.body = { code: errors.INVALID_REQUEST, param: course }
     return
   }
+  let studentList = []
   const students = await Student.where({ course })
     .where('isFit', true)
     .where('isGraduating', true)
-    .where('missingCollation', false)
     .fetchAll()
-  if (students === null || !students.length) {
-    ctx.status = 422
-    ctx.body = { code: errors.UNPROCESSABLE_ENTITY }
-    return
+  if (students !== null && Boolean(students.length)) {
+    studentList = students.map(student => student.get('name'), [])
   }
-  const studentList = students.map(student => student.get('name'), [])
   const today = new Date()
   const data = {
     dia: today.getUTCDate(),
@@ -57,7 +54,7 @@ module.exports = async function generateAttendanceRegister(ctx) {
     size: [595, 841]
   })
   ListaFrequencia(doc, data)
-  const title = 'lista-de-frequencia.pdf'
+  const title = `${course}-lista-de-frequencia.pdf`
   doc.info.Title = title
   await doc.end()
   ctx.status = 200
