@@ -26,6 +26,10 @@ export default function makeConfigServices(axios) {
     updateDepartamentDirector(params) {
       const payload = selector(params, paramList)
       return axios.put(url, payload)
+    },
+    updateConfig(params) {
+      const payload = selector(params, paramList)
+      return axios.put(url, payload)
     }
   }
 }
