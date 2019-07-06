@@ -1,20 +1,19 @@
 <template>
   <div class="container">
-    <div class="columns is-centered has-text-centered">
-      <h1 class="title"><strong>Alunos Concluintes</strong></h1>
-    </div>
-    <div class="columns is-centered has-text-centered">
-      <div class="column">
-        <b-button class="is-primary" @click="getAcademicHighlights">
-          Gerar lista de destaques acadêmicos
-        </b-button>
-      </div>
-    </div>
     <SearchInput
       :key="courseTag"
       :default-course="courseTag"
       :is-concluding="true"
-    ></SearchInput>
+      title="Alunos Concluintes"
+    >
+      <template v-slot:top class="columns is-centered has-text-centered">
+        <div class="column">
+          <b-button class="is-primary" @click="getAcademicHighlights">
+            Gerar lista de destaques acadêmicos
+          </b-button>
+        </div>
+      </template>
+    </SearchInput>
     <b-modal :active.sync="activeModal">
       <div class="card">
         <header class="card-header">

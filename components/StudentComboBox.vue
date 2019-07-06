@@ -30,7 +30,25 @@
                 <DatePicker v-model="defense.date" :disabled="true" />
               </b-field>
             </template>
-
+            <template v-if="canEditTerm">
+              <strong>
+                Período
+              </strong>
+              <br />
+              <InputValidation
+                ref="termIpt"
+                valid-message="Ok"
+                :invalid-message="['Mantenha no formato de xxxx.x']"
+                :valid="validTerm"
+              >
+                <b-input
+                  v-model="studentData.term"
+                  :disabled="!canEdit"
+                  @blur="onBlur('termIpt')"
+                >
+                </b-input>
+              </InputValidation>
+            </template>
             <strong>E-mail</strong>:
             <b-input v-model="studentData.email" :disabled="!canEdit"></b-input>
             <br />
@@ -207,7 +225,7 @@ import DocumentRow from '@/components/StudentComboBox/DocumentRow'
 import DatePicker from '@/components/DatePicker'
 import { errorsHandler } from '@/components/mixins/errors'
 import { studentStatus } from '@/components/mixins/studentStatus'
-
+import InputValidation from '@/components/InputValidation'
 const { documents } = process.env.enums
 const { ATA, LAUDA, LISTA_PRESCRICAO } = documents
 
@@ -216,7 +234,8 @@ export default {
   components: {
     DocumentRow,
     DatePicker,
-    BaseStudentDataRow
+    BaseStudentDataRow,
+    InputValidation
   },
   mixins: [errorsHandler, studentStatus],
   documents,
@@ -264,6 +283,17 @@ export default {
         Boolean(this.studentData.isGraduating) &&
         Boolean(this.studentData.isFit)
       )
+    },
+    canEditTerm() {
+      return (
+        this.studentData.isGraduating ||
+        this.studentData.isForming ||
+        this.studentData.isConcluding
+      )
+    },
+    validTerm() {
+      const re = new RegExp('[0-9]{4,4}\\.[1-4]')
+      return re.test(this.studentData.term)
     }
   },
 
@@ -293,6 +323,9 @@ export default {
   },
 
   methods: {
+    onBlur(refName) {
+      this.$refs[refName].dirty = true
+    },
     getStudentsDocument() {
       this.$services.documents
         .fetchAll(this.studentData.id)
@@ -319,10 +352,10 @@ export default {
     putStudents() {
       this.isLoading = true
       const cd = this.cdCheck
-      const { email } = this.studentData
+      const { email, term } = this.studentData
       const missingCollation = this.missingCollationCheck
       const crg = this.canEditCrg ? this.studentData.crg : undefined
-      const payload = { email, cd, crg, missingCollation }
+      const payload = { email, cd, crg, missingCollation, term }
       this.$services.students
         .update(this.studentData.id, payload)
         .then(res => {

@@ -22,7 +22,8 @@ export default function makeStudentServices(axios) {
     'sort',
     'missingCollation',
     'cd',
-    'crg'
+    'crg',
+    'term'
   ]
   return {
     fetch(id) {
