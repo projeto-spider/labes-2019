@@ -46,7 +46,10 @@ module.exports = async function generateConcludingCertificate(ctx) {
     dia: today.getUTCDate(),
     mes: month[today.getUTCMonth()],
     ano: today.getUTCFullYear(),
-    curso: studentFind.get('course'),
+    curso:
+      studentFind.get('course') === 'cbcc'
+        ? 'Ciência da Computação'
+        : 'Sistemas de Informação',
     discente: studentFind.get('name')
   }
   const doc = new PDFDocument({
