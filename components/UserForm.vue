@@ -309,7 +309,6 @@ export default {
           password: password,
           fullName: fullName
         })
-        this.clearInputs()
         this.$toast.open({
           message: 'Usuário atualizado com sucesso',
           type: 'is-success'
