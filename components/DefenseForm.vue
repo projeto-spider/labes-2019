@@ -1,6 +1,9 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <b-field v-if="showGradeInput && value.status !== 'pending'" label="Nota">
+    <b-field
+      v-if="showGradeInput && value.status !== 'pending'"
+      label="Nota (necessária para poder finalizar)"
+    >
       <b-input
         v-model="model.grade"
         :min="0"

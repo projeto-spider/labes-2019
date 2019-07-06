@@ -157,6 +157,7 @@
 
                   <b-button
                     type="is-success"
+                    :disabled="!selectedDefense.grade"
                     @click="move(selectedDefense, 'done')"
                   >
                     Finalizar
