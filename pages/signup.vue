@@ -1,5 +1,7 @@
 <template>
-  <UserForm form-type="signup" />
+  <div class="container">
+    <UserForm form-type="signup" />
+  </div>
 </template>
 
 <script>
