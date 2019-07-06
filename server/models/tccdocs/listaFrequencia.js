@@ -2,16 +2,18 @@ module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
   // const doc = new PDFDocument
 
   // Header
-  doc.image('./server/models/tccdocs/img/logoFacomp.png', 50, 30, {
+  doc.image('./img/logoFacomp.png', 50, 30, {
+    width: 70,
+    height: 80,
     align: 'left',
     valign: 'top'
   })
   doc.fontSize(12).text(
     `
-      UNIVERSIDADE FEDERAL DO PARÁ
-      INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
-      FACULDADE DE COMPUTAÇÃO
-      `,
+    UNIVERSIDADE FEDERAL DO PARÁ
+    INSTITUTO DE CIÊNCIAS EXATAS E NATURAIS
+    FACULDADE DE COMPUTAÇÃO
+    `,
     60,
     40,
     {
@@ -34,7 +36,7 @@ module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
     .fontSize(15)
     .text(`COLAÇÃO DE GRAU REALIZADA NO DIA: `, 100, 220, { align: 'left' })
     .fillColor('red')
-    .text(`${31} de ${'fevereiro'} de ${2030}`, { indent: 72 })
+    .text(`${dia} de ${mes} de ${ano}`, { indent: 72 })
 
   doc
     .font('Times-Bold')
@@ -45,14 +47,13 @@ module.exports = function model(doc, { dia, mes, ano, nomeDosAlunos, curso }) {
     })
 
   row(doc, 320)
-  textInRow(doc, 'NOME', 165, 325)
+  textInRow(doc, 'NOME', 145, 325)
   textInRow(doc, 'Assinatura', 445, 325)
 
-  const alunos = nomeDosAlunos.split(',')
   let rowHeight = 340
-  for (const aluno of alunos) {
+  for (const aluno of nomeDosAlunos) {
     row(doc, rowHeight)
-    textInRow(doc, aluno, 30, rowHeight + 5)
+    textInRow(doc, aluno, 10, rowHeight + 5)
 
     rowHeight += 20
   }
@@ -90,7 +91,7 @@ function textInRow(doc, text, width, heigth, options = {}) {
 function row(doc, heigth) {
   doc
     .lineJoin('miter')
-    .rect(30, heigth, 580, 20)
+    .rect(10, heigth, 581, 20)
     .stroke()
   return doc
 }
