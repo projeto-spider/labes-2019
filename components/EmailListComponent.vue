@@ -1,40 +1,50 @@
 <template>
   <div class="container">
-    <SearchInput
-      :key="courseTag"
-      :default-course="courseTag"
-      :title="title"
+    <EmailCompare
+      :students="putStudents"
+      :is-addition="additionMode"
+      :display-changes="displayChanges"
       :mailing-list="mailingList"
-    ></SearchInput>
+      @email-list-changed="getChanges"
+    ></EmailCompare>
     <button
       v-if="hasEmailChanges"
-      class="button is-primary"
-      @click="activateModal"
+      class="button is-success"
+      :disabled="!emailChanges.additions.length"
+      @click="activateModal('additions')"
     >
-      Alterações pendentes
+      Estudantes a adicionar
+      {{
+        emailChanges.additions.length
+          ? `(${emailChanges.additions.length})`
+          : ''
+      }}
     </button>
-    <b-modal :active.sync="activate">
-      <EmailCompare
-        :students-to-add="emailChanges.additions"
-        :students-to-remove="emailChanges.deletions"
-        :mailing-list="mailingList"
-        @email-list-changed="getChanges"
-      ></EmailCompare>
-    </b-modal>
+    <button
+      v-if="hasEmailChanges"
+      class="button is-danger"
+      :disabled="!emailChanges.deletions.length"
+      @click="activateModal('deletions')"
+    >
+      Estudantes a remover
+      {{
+        emailChanges.deletions.length
+          ? `(${emailChanges.deletions.length})`
+          : ''
+      }}
+    </button>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import EmailCompare from '@/components/EmailListCompare'
-import SearchInput from '@/components/SearchInput'
 import { errorsHandler } from '@/components/mixins/errors'
 
 export default {
   name: 'EmailComponent',
   components: {
-    EmailCompare,
-    SearchInput
+    EmailCompare
   },
   mixins: [errorsHandler],
   props: {
@@ -50,6 +60,8 @@ export default {
   data() {
     return {
       activate: false,
+      additionMode: true,
+      displayChanges: false,
       hasEmailChanges: false,
       emailChanges: {}
     }
@@ -58,24 +70,30 @@ export default {
   computed: {
     ...mapState({
       courseTag: state => state.courseTag
-    })
+    }),
+
+    putStudents() {
+      return this.additionMode
+        ? this.emailChanges.additions
+        : this.emailChanges.deletions
+    }
   },
   created() {
     this.getChanges()
   },
 
   methods: {
-    activateModal() {
+    activateModal(mode) {
+      this.displayChanges = true
       this.activate = !this.activate
+      this.additionMode = mode === 'additions'
     },
+
     getChanges() {
       this.$services.students
         .fetchEmailChanges(this.mailingList)
         .then(res => {
-          if (
-            res.data.additions.length !== 0 ||
-            res.data.deletions.length !== 0
-          ) {
+          if (res.data.additions.length || res.data.deletions.length) {
             this.emailChanges = res.data
             this.hasEmailChanges = true
           } else {
@@ -83,8 +101,8 @@ export default {
             this.hasEmailChanges = false
           }
         })
-        .catch(resErro => {
-          this.openErrorNotification(resErro)
+        .catch(resError => {
+          this.openErrorNotification(resError)
         })
     }
   }
