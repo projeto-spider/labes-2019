@@ -278,7 +278,7 @@
       </b-field>
     </b-field>
 
-    <div class="control">
+    <div v-if="!forceDisable" class="control">
       <button
         class="button is-primary is-large"
         type="submit"
