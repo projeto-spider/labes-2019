@@ -179,7 +179,7 @@ module.exports = async function generateAllDocs(ctx) {
       isDiscente: true
     }
   ]
-  const validPeople = people.filter(person => person.name !== null)
+  const validPeople = people.filter(person => Boolean(person.name))
   const externalPeople = people.filter(person => person.type === 'external')
   let usedPage = false
   const pageLayout = files === 'cd' ? 'landscape' : 'portrait'
