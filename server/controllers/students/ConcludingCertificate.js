@@ -33,9 +33,10 @@ module.exports = async function generateConcludingCertificate(ctx) {
     return
   }
   const today = new Date()
+  today.setHours(today.getHours() - 3)
   const data = {
     dia: today.getUTCDate(),
-    mes: utils.translate(today.getUTCMonth()),
+    mes: utils.translate(today.getUTCMonth() + 1),
     ano: today.getUTCFullYear(),
     curso:
       studentFind.get('course') === 'cbcc'

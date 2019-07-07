@@ -49,6 +49,7 @@ module.exports = async function generateAllDocs(ctx) {
   }
   const defenseDate = defenseFind.get('date')
   const date = new Date()
+  date.setHours(date.getHours() - 3)
   const dados = {
     curso: utils.translate(defenseFind.get('course')),
     tituloTCC: defenseFind.get('title'),
@@ -67,7 +68,7 @@ module.exports = async function generateAllDocs(ctx) {
     mesDefesa: utils.translate(Number(defenseDate.split('/')[1])),
     anoDefesa: defenseDate.split('/')[2],
     dia: date.getUTCDate(),
-    mes: utils.translate(date.getUTCMonth()),
+    mes: utils.translate(date.getUTCMonth() + 1),
     ano: date.getUTCFullYear(),
     tituloDiretor: 'Prof(a). ',
     diretor: 'NÃO ENCONTRADO NAS CONFIGURAÇÕES!',
