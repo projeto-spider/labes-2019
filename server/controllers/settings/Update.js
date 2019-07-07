@@ -25,17 +25,18 @@ module.exports = async function updateSetting(ctx) {
   const { key } = ctx.params
   const { value } = ctx.request.body
 
-  if (value === undefined) {
+  if (typeof value !== 'string') {
     ctx.status = 400
     ctx.body = { code: errors.INVALID_REQUEST }
     return
   }
 
-  const found = await Setting.where({ key }).fetch()
-  const setting = found || (await Setting.forge({ key, value }).save())
+  let setting = await Setting.where({ key }).fetch()
 
-  if (found) {
-    await setting.save({ value })
+  if (!setting) {
+    setting = await Setting.forge({ key, value }).save()
+  } else {
+    await setting.save({ value }, { require: false })
   }
 
   ctx.body = setting

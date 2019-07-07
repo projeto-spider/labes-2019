@@ -31,7 +31,7 @@ describe('Setting', () => {
     done()
   })
 
-  test('Test JSON value', async done => {
+  test('Test values', async done => {
     {
       const { id } = await Setting.forge({
         key: 'string',
@@ -44,37 +44,37 @@ describe('Setting', () => {
     {
       const { id } = await Setting.forge({
         key: 'number',
-        value: 10
+        value: '10'
       }).save()
       const setting = await Setting.forge({ id }).fetch()
-      expect(setting.get('value')).toBe(10)
+      expect(setting.get('value')).toBe('10')
     }
 
     {
       const { id } = await Setting.forge({
         key: 'array',
-        value: [1, 2, 3]
+        value: '[1, 2, 3]'
       }).save()
       const setting = await Setting.forge({ id }).fetch()
-      expect(setting.get('value')).toEqual([1, 2, 3])
+      expect(setting.get('value')).toEqual('[1, 2, 3]')
     }
 
     {
       const { id } = await Setting.forge({
         key: 'object',
-        value: { x: 1 }
+        value: '{ x: 1 }'
       }).save()
       const setting = await Setting.forge({ id }).fetch()
-      expect(setting.get('value')).toEqual({ x: 1 })
+      expect(setting.get('value')).toEqual('{ x: 1 }')
     }
 
     {
       const { id } = await Setting.forge({
         key: 'null',
-        value: null
+        value: 'null'
       }).save()
       const setting = await Setting.forge({ id }).fetch()
-      expect(setting.get('value')).toBe(null)
+      expect(setting.get('value')).toBe('null')
     }
 
     done()
