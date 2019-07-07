@@ -8,6 +8,7 @@
 import UserForm from '@/components/UserForm'
 export default {
   name: 'UpdateUserTeacher',
+  layout: 'defaultTeacher',
   components: {
     UserForm
   },
