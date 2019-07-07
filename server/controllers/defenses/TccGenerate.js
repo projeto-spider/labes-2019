@@ -1,6 +1,7 @@
 const PDFDocument = require('pdfkit')
 const errors = require('../../../shared/errors')
 const utils = require('../../utils')
+const Settings = require('../../models/Setting')
 const Defense = require('../../models/Defense')
 const Cd = require('../../models/tccdocs/cd')
 const Ata = require('../../models/tccdocs/ata')
@@ -68,8 +69,8 @@ module.exports = async function generateAllDocs(ctx) {
     dia: date.getUTCDate(),
     mes: utils.translate(date.getUTCMonth()),
     ano: date.getUTCFullYear(),
-    tituloDiretor: utils.translate('temp'),
-    diretor: 'temp',
+    tituloDiretor: 'Prof(a). ',
+    diretor: 'NÃO ENCONTRADO NAS CONFIGURAÇÕES!',
     matricula: defenseFind.get('registrationNumbers'),
     discente: defenseFind.get('students').split(', ')[0],
     palavrasChave: defenseFind.get('keywords'),
@@ -79,6 +80,14 @@ module.exports = async function generateAllDocs(ctx) {
     isDiscente: false,
     aprovado: !defenseFind.get('passed') ? 'reprovado' : 'aprovado',
     conceito: 'insuficiente'
+  }
+  const findFacompDirector = await Settings.where(
+    'key',
+    'facultyDirectorName'
+  ).fetch()
+  const facompDirectorName = findFacompDirector.get('value')
+  if (facompDirectorName) {
+    dados.diretor = facompDirectorName
   }
   if (defenseFind.get('advisorIsTeacher'))
     dados.tituloOrientador = `Prof(a). ${dados.tituloOrientador}`
