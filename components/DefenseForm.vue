@@ -387,6 +387,11 @@ export default {
       required: true
     },
 
+    original: {
+      type: Object,
+      required: true
+    },
+
     forceDisable: {
       type: Boolean,
       default: false
@@ -478,11 +483,13 @@ export default {
     },
 
     updateModel() {
-      if (!this.value) {
+      if (!this.original) {
         return
       }
-      const studentNames = prepareArray(this.value.students)
-      const registrationNumbers = prepareArray(this.value.registrationNumbers)
+      const studentNames = prepareArray(this.original.students)
+      const registrationNumbers = prepareArray(
+        this.original.registrationNumbers
+      )
       const receivedStudents = studentNames.map((name, i) => ({
         name,
         registrationNumber: registrationNumbers[i]
@@ -492,7 +499,8 @@ export default {
         ? receivedStudents
         : [defaultStudent()]
 
-      Object.assign(this.model, this.value, { students })
+      Object.assign(this.model, defaultModel(), this.original, { students })
+      this.$emit('input', this.preparePayload(this.model))
     },
 
     pushStudent() {

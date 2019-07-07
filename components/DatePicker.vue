@@ -57,6 +57,12 @@ export default {
     date: new Date()
   }),
 
+  watch: {
+    value() {
+      this.updateDate()
+    }
+  },
+
   created() {
     this.updateDate()
   },
