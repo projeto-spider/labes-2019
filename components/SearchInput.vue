@@ -7,7 +7,7 @@
     </div>
 
     <div v-if="$slots.top" class="columns is-centered has-text-centered">
-      <div class="column">
+      <div class="column" style="overflow: unset;">
         <slot name="top"></slot>
       </div>
     </div>

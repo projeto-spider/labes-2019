@@ -20,29 +20,50 @@
       @move="handleMove"
     >
       <template v-slot:top>
-        <b-tooltip
-          v-if="!allCrgsReady"
-          label="Alguns alunos estão sem CRG"
-          position="is-bottom"
-          animated
-          multilined
-        >
+        <template>
+          <b-tooltip
+            v-if="!allCrgsReady"
+            label="Alguns alunos estão sem CRG"
+            position="is-bottom"
+            animated
+            multilined
+          >
+            <button
+              class="button is-danger"
+              :disabled="isAcademicHighlightSelected"
+            >
+              Eleger Destaque Acadêmico
+            </button>
+          </b-tooltip>
+
           <button
-            class="button is-danger"
+            v-else
+            class="button is-primary"
             :disabled="isAcademicHighlightSelected"
+            @click="openModal"
           >
             Eleger Destaque Acadêmico
           </button>
-        </b-tooltip>
+        </template>
 
-        <button
-          v-else
-          class="button is-primary"
-          :disabled="isAcademicHighlightSelected"
-          @click="openModal"
-        >
-          Eleger Destaque Acadêmico
-        </button>
+        <template>
+          <b-tooltip
+            label="Cria lista de frequência da colação para alunos que defenderam"
+            position="is-bottom"
+            animated
+            multilined
+          >
+            <a
+              target="_blank"
+              :href="
+                `/api/students/${courseTag}/attendance-register?token=${token}`
+              "
+              class="button is-info"
+            >
+              Frequência da Colação
+            </a>
+          </b-tooltip>
+        </template>
       </template>
     </SearchInput>
     <br />
@@ -122,7 +143,8 @@ export default {
   }),
   computed: {
     ...mapState({
-      courseTag: state => state.courseTag
+      courseTag: state => state.courseTag,
+      token: state => state.auth.token
     })
   },
   created() {
