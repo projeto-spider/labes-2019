@@ -17,7 +17,7 @@
     "remakedb": "rm -f dev.sqlite test.sqlite && npm run makedb",
     "production": "npm run build && npm run production:makedb && npm run production:start",
     "production:makedb": "cross-env NODE_ENV=production npm run makedb",
-    "production:start": "cross-env NODE_ENV=production pm2 start ecosystem.config.js",
+    "production:start": "cross-env NODE_ENV=production pm2 --env production start ecosystem.config.js",
     "test": "jest --maxWorkers=4",
     "test:travis": "npm test && npm run lint"
   },
