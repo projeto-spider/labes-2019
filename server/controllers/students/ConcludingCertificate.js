@@ -1,6 +1,7 @@
 const PDFDocument = require('pdfkit')
 const Student = require('../../models/Student')
 const Defense = require('../../models/Defense')
+const Settings = require('../../models/Setting')
 const utils = require('../../utils')
 const errors = require('../../../shared/errors')
 const CertificadoConlusao = require('../../models/tccdocs/certificadoConclusao')
@@ -45,6 +46,22 @@ module.exports = async function generateConcludingCertificate(ctx) {
     diretorInstituto: 'NÃO ENCONTRADO NAS CONFIGURAÇÕES!',
     tituloDiretor: 'Prof(a). ',
     diretor: 'NÃO ENCONTRADO NAS CONFIGURAÇÕES!'
+  }
+  const findFacompDirector = await Settings.where(
+    'key',
+    'facultyDirectorName'
+  ).fetch()
+  const facompDirectorName = findFacompDirector.get('value')
+  if (facompDirectorName) {
+    data.diretor = facompDirectorName
+  }
+  const findIcenDirector = await Settings.where(
+    'key',
+    'departamentDirector'
+  ).fetch()
+  const icenDirectorName = findIcenDirector.get('value')
+  if (icenDirectorName) {
+    data.diretorInstituto = icenDirectorName
   }
   const doc = new PDFDocument({
     layout: 'landscape',
