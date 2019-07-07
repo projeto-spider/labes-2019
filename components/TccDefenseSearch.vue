@@ -59,7 +59,9 @@
                   >
                     <DefenseForm
                       v-if="modalOpen"
+                      ref="defenseForm"
                       v-model="selectedDefense"
+                      :original="preEditDefense"
                       :on-submit="onSubmit"
                       :force-disable="!editDefense"
                     />
@@ -73,7 +75,7 @@
                         class="list-item"
                         :href="
                           `/api/defenses/` +
-                            selectedDefense.id +
+                            preEditDefense.id +
                             `/pdf/${pdf.key}?token=` +
                             token
                         "
@@ -98,7 +100,7 @@
                         class="list-item"
                         :href="
                           '/api/defenses/' +
-                            selectedDefense.id +
+                            preEditDefense.id +
                             '/pdf?token=' +
                             token
                         "
@@ -129,7 +131,7 @@
                 >
                   <b-icon icon="trash"></b-icon>
                 </b-button>
-                <b-button @click.prevent="editDefense = !editDefense">
+                <b-button @click="toggleEditDefense">
                   {{ editDefense ? 'Cancelar Edição' : 'Editar' }}
                 </b-button>
 
@@ -264,6 +266,7 @@ export default {
       defenses: [],
       modalOpen: false,
       selectedDefense: false,
+      preEditDefense: false,
       editDefense: false,
       searchStudentName: '',
       isDisclosureModalActive: false,
@@ -310,15 +313,15 @@ export default {
     ...mapGetters({ currentUser: 'auth/currentUser' }),
 
     disclosure() {
-      return disclosureModel(this.selectedDefense)
+      return disclosureModel(this.preEditDefense)
     },
 
     availablePdfs() {
-      if (!this.selectedDefense) {
+      if (!this.preEditDefense) {
         return []
       }
 
-      const studentNames = this.selectedDefense.students
+      const studentNames = this.preEditDefense.students
         .split(',')
         .map(string => string.trim())
 
@@ -326,27 +329,27 @@ export default {
         {
           prefix: 'Certificado do Orientador',
           key: 'certificado1',
-          name: this.selectedDefense.advisorName
+          name: this.preEditDefense.advisorName
         },
         {
           prefix: 'Certificado do Co-Orientador',
           key: 'certificado2',
-          name: this.selectedDefense.coAdvisorName
+          name: this.preEditDefense.coAdvisorName
         },
         {
           prefix: 'Certificado do Avaliador',
           key: 'certificado3',
-          name: this.selectedDefense.evaluator1Name
+          name: this.preEditDefense.evaluator1Name
         },
         {
           prefix: 'Certificado do Avaliador',
           key: 'certificado4',
-          name: this.selectedDefense.evaluator2Name
+          name: this.preEditDefense.evaluator2Name
         },
         {
           prefix: 'Certificado do Avaliador',
           key: 'certificado5',
-          name: this.selectedDefense.evaluator3Name
+          name: this.preEditDefense.evaluator3Name
         },
         {
           prefix: 'Certificado do Aluno',
@@ -364,32 +367,32 @@ export default {
         {
           prefix: 'Credenciamento de Membro Externo',
           key: 'credenciamento1',
-          name: this.selectedDefense.advisorName,
-          type: this.selectedDefense.advisorType
+          name: this.preEditDefense.advisorName,
+          type: this.preEditDefense.advisorType
         },
         {
           prefix: 'Credenciamento de Membro Externo',
           key: 'credenciamento2',
-          name: this.selectedDefense.coAdvisorName,
-          type: this.selectedDefense.coAdvisorType
+          name: this.preEditDefense.coAdvisorName,
+          type: this.preEditDefense.coAdvisorType
         },
         {
           prefix: 'Credenciamento de Membro Externo',
           key: 'credenciamento3',
-          name: this.selectedDefense.evaluator1Name,
-          type: this.selectedDefense.evaluator1Type
+          name: this.preEditDefense.evaluator1Name,
+          type: this.preEditDefense.evaluator1Type
         },
         {
           prefix: 'Credenciamento de Membro Externo',
           key: 'credenciamento4',
-          name: this.selectedDefense.evaluator2Name,
-          type: this.selectedDefense.evaluator2Type
+          name: this.preEditDefense.evaluator2Name,
+          type: this.preEditDefense.evaluator2Type
         },
         {
           prefix: 'Credenciamento de Membro Externo',
           key: 'credenciamento5',
-          name: this.selectedDefense.evaluator3Name,
-          type: this.selectedDefense.evaluator3Type
+          name: this.preEditDefense.evaluator3Name,
+          type: this.preEditDefense.evaluator3Type
         }
       ].filter(validExternalEvaluator)
 
@@ -414,7 +417,17 @@ export default {
   },
 
   methods: {
+    toggleEditDefense() {
+      this.editDefense = !this.editDefense
+      if (this.editDefense === false) {
+        this.selectedDefense = Object.assign({}, this.preEditDefense)
+        if (this.$refs.defenseForm) {
+          this.$refs.defenseForm.updateModel()
+        }
+      }
+    },
     selectDefense(row) {
+      this.preEditDefense = Object.assign({}, row)
       this.editDefense = false
       this.modalOpen = true
       this.selectedDefense = row
@@ -430,12 +443,14 @@ export default {
         hasIcon: true,
         onConfirm: () => {
           this.deleteDefense()
+          this.loading = false
         },
         onCancel: () => {
           this.$toast.open({
             message: 'Exclusão de Defesa de TCC cancelada.',
             type: 'is-warning'
           })
+          this.loading = false
         }
       })
     },
@@ -496,19 +511,21 @@ export default {
     },
 
     onSubmit(payload) {
-      return this.put(payload).then(updated => {
+      return this.put(payload).then(res => {
         this.$toast.open({
           message: 'Solicitação atualizada com sucesso!',
           key: 'is-success'
         })
 
         const original = this.defenses.find(
-          defense => defense.id === updated.id
+          defense => defense.id === res.data.id
         )
 
         if (original) {
-          Object.assign(original, updated)
+          Object.assign(original, res.data)
         }
+
+        this.preEditDefense = { ...res.data }
       })
     },
 
