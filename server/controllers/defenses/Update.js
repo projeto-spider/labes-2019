@@ -114,7 +114,7 @@ module.exports = async function updateDefense(ctx) {
     return
   }
 
-  if (payload.status === 'done' && payload.grade === undefined) {
+  if (payload.status === 'done' && defense.get('grade') === undefined) {
     ctx.status = 422
     ctx.body = { code: errors.MISSING_GRADE }
     return
