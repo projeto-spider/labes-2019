@@ -54,10 +54,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import { errorsHandler } from '@/components/mixins/errors'
 export default {
   name: 'Login',
   layout: 'empty',
+  mixins: [errorsHandler],
   head() {
     return {
       title: 'Login'
@@ -92,7 +93,15 @@ export default {
           this.$router.push('/teacher/home')
         }
       } catch (e) {
-        this.$toast.open({ message: 'Falha ao autenticar', type: 'is-danger' })
+        const errorMessage = e.message
+        if (errorMessage === 'Network Error') {
+          this.openErrorNotification('Network Error')
+        } else {
+          this.$toast.open({
+            message: 'Ocorreu uma falha na autenticação',
+            type: 'is-danger'
+          })
+        }
       }
     }
   }
