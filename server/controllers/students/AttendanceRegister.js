@@ -26,9 +26,10 @@ module.exports = async function generateAttendanceRegister(ctx) {
     studentList = students.map(student => student.get('name'), [])
   }
   const today = new Date()
+  today.setHours(today.getHours() - 3)
   const data = {
     dia: today.getUTCDate(),
-    mes: utils.translate(today.getUTCMonth()),
+    mes: utils.translate(today.getUTCMonth() + 1),
     ano: today.getUTCFullYear(),
     nomeDosAlunos: studentList,
     curso:
