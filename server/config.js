@@ -19,7 +19,7 @@ const {
   JWT_SECRET = 'my-secret',
   API_PAGE_SIZE = 10,
   DATABASE = 'sqlite',
-  API_URL_BROWSER = '/',
+  API_URL_BROWSER = '/api',
   DATABASE_TYPE = 'sqlite',
   SQLITE_FILENAME = './dev.sqlite3',
   DATABASE_HOST = null,
