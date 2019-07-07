@@ -125,14 +125,20 @@
                   multilined
                 >
                   <a
+                    v-if="props.row.defenseId"
                     target="_blank"
                     :href="
-                      `/api/students/${props.row.id}/attendance-register?token=${token}`
+                      `/api/students/${
+                        props.row.id
+                      }/attendance-register?token=${token}`
                     "
                     class="button is-info"
                   >
                     <b-icon icon="file-pdf" class="is-inline-block"></b-icon>
                   </a>
+                  <p v-else>
+                    X
+                  </p>
                 </b-tooltip>
               </div>
 
