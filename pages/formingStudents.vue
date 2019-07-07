@@ -16,6 +16,7 @@
       :default-sort-field="'crg'"
       :default-sort-order="'desc'"
       :show-crg-filter="true"
+      :show-concluding-certificate="true"
       @toggleComboBox="onToggleComboBox"
       @move="handleMove"
     >

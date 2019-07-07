@@ -14,7 +14,7 @@
 
     <br />
     <div class="columns is-centered">
-      <div class="column is-10">
+      <div class="column is-10" style="overflow-y: unset;">
         <b-field horizontal class="box" label="Filtros: ">
           <b-checkbox v-model="nameFilter">Nome</b-checkbox>
           <b-checkbox v-model="registrationFilter">Matrícula</b-checkbox>
@@ -113,6 +113,29 @@
               >
                 {{ props.row[column.field] }}
               </b-tooltip>
+
+              <div
+                v-if="column.field === 'concludingCertificate'"
+                class="has-text-centered"
+              >
+                <b-tooltip
+                  label="Gera certificado de conclusão de curso"
+                  position="is-bottom"
+                  animated
+                  multilined
+                >
+                  <a
+                    target="_blank"
+                    :href="
+                      `/api/students/${props.row.id}/attendance-register?token=${token}`
+                    "
+                    class="button is-info"
+                  >
+                    <b-icon icon="file-pdf" class="is-inline-block"></b-icon>
+                  </a>
+                </b-tooltip>
+              </div>
+
               <span v-else>{{ props.row[column.field] }}</span>
             </b-table-column>
           </template>
@@ -208,6 +231,10 @@ export default {
     showCrgFilter: {
       type: Boolean,
       default: false
+    },
+    showConcludingCertificate: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -240,7 +267,8 @@ export default {
 
   computed: {
     ...mapState({
-      courseTag: state => state.courseTag
+      courseTag: state => state.courseTag,
+      token: state => state.auth.token
     }),
     tableData() {
       return this.studentsData.map(data => {
@@ -396,7 +424,10 @@ export default {
         {
           field: 'status',
           label: 'Status'
-        }
+        },
+        ...(this.showConcludingCertificate
+          ? [{ field: 'concludingCertificate', label: 'Certificado' }]
+          : [])
       ]
     },
     emptySelected() {
