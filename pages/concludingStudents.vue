@@ -78,7 +78,7 @@ export default {
           this.highlighted = response.data
           this.activeModal = true
         })
-        .catch(e => this.openNotificationError(e))
+        .catch(e => this.openErrorNotification(e))
     }
   }
 }

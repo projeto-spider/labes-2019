@@ -93,15 +93,10 @@ export default {
           this.$router.push('/teacher/home')
         }
       } catch (e) {
-        const errorMessage = e.message
-        if (errorMessage === 'Network Error') {
-          this.openErrorNotification('Network Error')
-        } else {
-          this.$toast.open({
-            message: 'Ocorreu uma falha na autenticação',
-            type: 'is-danger'
-          })
-        }
+        this.$toast.open({
+          message: 'Ocorreu uma falha na autenticação',
+          type: 'is-danger'
+        })
       }
     }
   }

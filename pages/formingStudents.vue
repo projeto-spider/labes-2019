@@ -142,7 +142,7 @@ export default {
         .then(response => {
           this.isAcademicHighlightSelected = response.data.length !== 0
         })
-        .catch(e => this.openNotificationError(e))
+        .catch(e => this.openErrorNotification(e))
     },
     checkCrgsReady() {
       const params = {
