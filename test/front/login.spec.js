@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
-import ImportStudents from '@/components/ImportStudents.vue'
+import Login from '@/pages/Login.vue'
 
 describe('ImportStudents', () => {
   test('is a Vue instance', () => {
-    const wrapper = mount(ImportStudents)
+    const wrapper = mount(Login)
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 })
