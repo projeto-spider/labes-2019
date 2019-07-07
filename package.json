@@ -1,8 +1,4 @@
 {
-  "name": "labes",
-  "version": "1.0.0",
-  "description": "My magnificent Nuxt.js project",
-  "author": "lubien",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
