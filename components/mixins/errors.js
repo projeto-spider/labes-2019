@@ -17,6 +17,8 @@ export const errorsHandler = {
           return 'Arquivo com tamanho superior a 6MB'
         case errors.NOT_FOUND:
           return 'Recurso não encontrado'
+        case errors.NETWORK_ERROR:
+          return 'Erro de conexão'
         default:
           return 'Ocorreu um erro'
       }
