@@ -32,7 +32,7 @@ describe('/api/settings', () => {
 
     const { id } = await Setting.forge({
       key: 'x',
-      value: 10
+      value: '10'
     }).save()
 
     const res = await chai
@@ -45,7 +45,7 @@ describe('/api/settings', () => {
     expect(res.body.length).toBe(1)
     expect(res.body[0].id).toBe(id)
     expect(res.body[0].key).toBe('x')
-    expect(res.body[0].value).toBe(10)
+    expect(res.body[0].value).toBe('10')
     done()
   })
 
@@ -54,7 +54,7 @@ describe('/api/settings', () => {
 
     const { id } = await Setting.forge({
       key: 'x',
-      value: 10
+      value: '10'
     }).save()
 
     const res = await chai
@@ -66,7 +66,7 @@ describe('/api/settings', () => {
     expect(res.body).toBeDefined()
     expect(res.body.id).toBe(id)
     expect(res.body.key).toBe('x')
-    expect(res.body.value).toBe(10)
+    expect(res.body.value).toBe('10')
     done()
   })
 
@@ -87,20 +87,20 @@ describe('/api/settings', () => {
 
     const { id } = await Setting.forge({
       key: 'x',
-      value: 10
+      value: '10'
     }).save()
 
     const res = await chai
       .request(server.listen())
       .put('/api/settings/x')
       .set('Authorization', `Bearer ${token}`)
-      .send({ value: 100 })
+      .send({ value: '100' })
     expect(res.status).toBe(200)
     expect(res.type).toBe('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.id).toBe(id)
     expect(res.body.key).toBe('x')
-    expect(res.body.value).toBe(100)
+    expect(res.body.value).toBe('100')
     done()
   })
 
@@ -142,7 +142,7 @@ describe('/api/settings', () => {
       expect(res.body.value).toBe(value)
     }
 
-    value = { x: 'asd' }
+    value = 'Something bigger'
 
     {
       const res = await chai
@@ -182,12 +182,12 @@ describe('/api/settings', () => {
       .request(server.listen())
       .put('/api/settings/x')
       .set('Authorization', `Bearer ${token}`)
-      .send({ value: 100 })
+      .send({ value: '100' })
     expect(res.status).toBe(200)
     expect(res.type).toBe('application/json')
     expect(res.body).toBeDefined()
     expect(res.body.key).toBe('x')
-    expect(res.body.value).toBe(100)
+    expect(res.body.value).toBe('100')
     done()
   })
 
