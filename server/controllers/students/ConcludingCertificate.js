@@ -51,18 +51,12 @@ module.exports = async function generateConcludingCertificate(ctx) {
     'key',
     'facultyDirectorName'
   ).fetch()
-  const facompDirectorName = findFacompDirector.get('value')
-  if (facompDirectorName) {
-    data.diretor = facompDirectorName
-  }
+  if (findFacompDirector) data.diretor = findFacompDirector.get('value')
   const findIcenDirector = await Settings.where(
     'key',
     'departamentDirector'
   ).fetch()
-  const icenDirectorName = findIcenDirector.get('value')
-  if (icenDirectorName) {
-    data.diretorInstituto = icenDirectorName
-  }
+  if (findIcenDirector) data.diretorInstituto = findIcenDirector.get('value')
   const doc = new PDFDocument({
     layout: 'landscape',
     size: [595, 841]

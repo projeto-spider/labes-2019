@@ -85,10 +85,7 @@ module.exports = async function generateAllDocs(ctx) {
     'key',
     'facultyDirectorName'
   ).fetch()
-  const facompDirectorName = findFacompDirector.get('value')
-  if (facompDirectorName) {
-    dados.diretor = facompDirectorName
-  }
+  if (findFacompDirector) dados.diretor = findFacompDirector.get('value')
   if (defenseFind.get('advisorIsTeacher'))
     dados.tituloOrientador = `Prof(a). ${dados.tituloOrientador}`
   if (defenseFind.get('coAdvisorIsTeacher'))
