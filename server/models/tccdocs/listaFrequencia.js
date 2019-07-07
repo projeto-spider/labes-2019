@@ -62,21 +62,30 @@ module.exports = function model(
 
   row(doc, 320)
   textInRow(doc, 'NOME', 145, 325)
-  textInRow(doc, 'Assinatura', 445, 325)
+  textInRow(doc, 'ASSINATURA', 435, 310)
 
   let rowHeight = 340
   for (const aluno of nomeDosAlunos) {
     row(doc, rowHeight)
-    textInRow(doc, aluno, 10, rowHeight + 5)
+    textInRow(doc, index < 10 ? '0' + index : index, 10, rowHeight + 5)
+    textInRow(doc, aluno.slice(0, 45), 30, rowHeight + 5)
 
     rowHeight += 20
     index++
   }
 
+  // index-name divisor line
   doc
     .lineCap('butt')
-    .moveTo(350, 320)
-    .lineTo(350, rowHeight)
+    .moveTo(30, 340)
+    .lineTo(30, rowHeight)
+    .stroke()
+
+  // name-signature divisor line
+  doc
+    .lineCap('butt')
+    .moveTo(360, 320)
+    .lineTo(360, rowHeight)
     .stroke()
 
   doc
