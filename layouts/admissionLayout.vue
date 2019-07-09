@@ -33,6 +33,8 @@
 </style>
 <style>
 html {
+  min-width: 100vw;
+  min-height: 100vh;
   background-image: linear-gradient(#68d8a6, #35c8c0);
 }
 </style>
