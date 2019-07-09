@@ -508,6 +508,6 @@ tr.is-academic-highlight {
 }
 
 tr.is-missing-collation {
-  background-color: #1edcef !important;
+  background-color: #e7d957 !important;
 }
 </style>
