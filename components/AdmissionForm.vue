@@ -58,36 +58,39 @@
                 @blur="dirty.registration = true"
               ></b-input>
             </b-field>
+            <div v-if="currentRouteName !== 'concludingAdmission'">
+              <b-field
+                label="Curso"
+                :message="{
+                  'Campo Obrigatório': !dirty.registration
+                }"
+              >
+              </b-field>
+              <div v-for="c in $options.courses" :key="c.id">
+                <div class="field">
+                  <b-radio v-model="course" :native-value="c.id">
+                    {{ c.name }}
+                  </b-radio>
+                </div>
+              </div>
+              <br v-if="currentRouteName !== 'concludingAdmission'" />
+              <b-field
+                v-if="currentRouteName !== 'concludingAdmission'"
+                label="Forma de Ingresso"
+                :message="{
+                  'Campo Obrigatório': !dirty.registration
+                }"
+              >
+              </b-field>
+              <div v-for="at in $options.admissionTypes" :key="at.id">
+                <div class="field">
+                  <b-radio v-model="admissionType" :native-value="at.id">
+                    {{ at.name }}
+                  </b-radio>
+                </div>
+              </div>
+            </div>
 
-            <b-field
-              label="Curso"
-              :message="{
-                'Campo Obrigatório': !dirty.registration
-              }"
-            >
-            </b-field>
-            <div v-for="c in $options.courses" :key="c.id">
-              <div class="field">
-                <b-radio v-model="course" :native-value="c.id">
-                  {{ c.name }}
-                </b-radio>
-              </div>
-            </div>
-            <br />
-            <b-field
-              label="Forma de Ingresso"
-              :message="{
-                'Campo Obrigatório': !dirty.registration
-              }"
-            >
-            </b-field>
-            <div v-for="at in $options.admissionTypes" :key="at.id">
-              <div class="field">
-                <b-radio v-model="admissionType" :native-value="at.id">
-                  {{ at.name }}
-                </b-radio>
-              </div>
-            </div>
             <div class="level-right">
               <b-button
                 class="is-primary level-item"
@@ -116,7 +119,6 @@ export default {
       default: ''
     }
   },
-
   courses: [
     { id: 'cbcc', name: 'Ciência da Computação' },
     { id: 'cbsi', name: 'Sistemas de Informação' },
@@ -127,20 +129,18 @@ export default {
     { id: 'sisu', name: 'SiSU' },
     { id: 'other', name: 'Outro' }
   ],
-
   data: () => ({
     name: '',
     email: '',
     registration: '',
-    course: 'cbcc',
-    admissionType: 'psufpa',
+    course: 'other',
+    admissionType: 'other',
     dirty: {
       name: false,
       email: false,
       registration: false
     }
   }),
-
   computed: {
     validName() {
       return this.dirty.name && this.name.length >= 9
@@ -157,6 +157,9 @@ export default {
 
     enabledButton() {
       return this.validName && this.validEmail && this.validRegistration
+    },
+    currentRouteName() {
+      return this.$route.name
     }
   },
 
