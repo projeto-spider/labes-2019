@@ -151,6 +151,7 @@ export default {
             message: 'Upload feito com sucesso',
             type: 'is-success'
           })
+          this.$emit('import')
           this.$parent.close()
         })
         .catch(error => {
