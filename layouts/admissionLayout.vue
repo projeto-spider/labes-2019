@@ -30,6 +30,8 @@
   color: white;
   font-family: 'Courier New', Courier, monospace;
 }
+</style>
+<style>
 html {
   background-image: linear-gradient(#68d8a6, #35c8c0);
 }
