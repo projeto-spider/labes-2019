@@ -92,10 +92,10 @@
         <AsideBar @activateModal="activateModal = true" />
       </div>
       <b-modal :active.sync="activateModal" :width="640" scroll="keep">
-        <ImportStudents />
+        <ImportStudents @import="onImport" />
       </b-modal>
       <div class="column has-background-grey-lighter">
-        <nuxt class="Fullscreen" />
+        <nuxt ref="page" class="Fullscreen" />
       </div>
     </div>
   </div>
@@ -151,6 +151,11 @@ export default {
     toggleOpen() {
       this.open = !this.open
     },
+
+    onImport() {
+      window.location.reload(true)
+    },
+
     setCourseTag(tag) {
       this.$store.dispatch('courseTag', { tag })
     },
