@@ -95,7 +95,7 @@
               <b-button
                 class="is-primary level-item"
                 :disabled="!enabledButton"
-                @click="sendSolicitation"
+                @click.prevent="sendSolicitation"
               >
                 Enviar
               </b-button>
