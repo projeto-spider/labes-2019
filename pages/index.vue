@@ -30,6 +30,7 @@
     <p>CAIO SHIMADA RABELLO</p>
     <p>DANIELA KARINE MARAVALHO AVELAR</p>
     <p>IAN CAMPOS BEZERRA REGO</p>
+    <p>JAIRO NASCIMENTO DE SOUSA FILHO</p>
     <p>JOÃO MARCELO SILVA DE OLIVEIRA</p>
     <br />
     <p class="subtitle">Equipe de Teste</p>
