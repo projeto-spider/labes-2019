@@ -130,7 +130,7 @@
                     :href="
                       `/api/students/${
                         props.row.id
-                      }/attendance-register?token=${token}`
+                      }/concluding-certificate?token=${token}`
                     "
                     class="button is-info"
                   >
