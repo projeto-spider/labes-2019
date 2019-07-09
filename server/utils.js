@@ -80,7 +80,6 @@ exports.digestSigaaData = function digestSigaaData(data) {
 
   function getFlags(student) {
     const base = {
-      isFit: false,
       isConcluding: false,
       isActive: true,
       isForming: false,
