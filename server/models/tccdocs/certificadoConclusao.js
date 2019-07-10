@@ -69,9 +69,7 @@ module.exports = function model(
       indent: 72,
       lineGap: 10
     })
-    .fillColor('red')
     .text(`${discente}`, { continued: true, underline: true })
-    .fillColor('black')
     .font('Times-Roman')
     .text(`, concluiu o Curso de ${curso}, nesta `, {
       continued: true,
@@ -81,22 +79,17 @@ module.exports = function model(
     .text(`UNIVERSIDADE FEDERAL DO PARÁ`, { continued: true })
     .font('Times-Roman')
     .text(`, tendo colado grau no dia `, { continued: true })
-    .fillColor('red')
     .text(`${dia} de ${mes} de ${ano}`, { continued: true })
-    .fillColor('black')
     .text(', recebendo o grau de ', { continued: true })
     .font('Times-Bold')
     .text('Bacharel em ', { continued: true })
-    .fillColor('red')
     .text(`${curso}`, { continued: true })
-    .fillColor('black')
     .font('Times-Roman')
     .text(
       `, estando seu diploma em fase de elaboração pelo órgão competente desta Universidade.`
     )
 
   doc
-    .fillColor('red')
     .font('Times-Roman')
     .fontSize(12)
     .text(`Belém - PA, ${dia} de ${mes} de ${ano}.`, -120, 400, {
@@ -109,28 +102,22 @@ module.exports = function model(
 
   doc
     .fontSize(10)
-    .fillColor('red')
     .text(`${discente}`, -500, 490, { align: 'center' })
-    .fillColor('black')
     .text('FORMANDO', -490, 500, { align: 'center' })
 
   doc.fontSize(10).text(`____________________________________`, 300, 470)
 
   doc
     .fontSize(10)
-    .fillColor('red')
     .text(`${tituloDiretorInstituto}${diretorInstituto}`, 20, 490, {
       align: 'center'
     })
-    .fillColor('black')
     .text('DIRETOR(A) DO ICEN', 20, 500, { align: 'center' })
 
   doc.fontSize(10).text(`____________________________________`, 535, 470)
 
   doc
     .fontSize(10)
-    .fillColor('red')
     .text(`${tituloDiretor}${diretor}`, 490, 490, { align: 'center' })
-    .fillColor('black')
     .text('DIRETOR(A) DA FACOMP', 490, 500, { align: 'center' })
 }

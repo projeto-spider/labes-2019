@@ -49,13 +49,11 @@ module.exports = function model(
       continued: true
     })
     .font('Times-Bold')
-    .fillColor('red')
     .text(`${dia} de ${mes} de ${ano}`)
 
   doc
     .font('Times-Bold')
     .fontSize(13)
-    .fillColor('black')
     .text(`Lista de Presença`, 50, 300, {
       align: 'left'
     })
@@ -89,7 +87,6 @@ module.exports = function model(
     .stroke()
 
   doc
-    .fillColor('red')
     .font('Times-Roman')
     .fontSize(12)
     .text(`Belém, ${dia} de ${mes} de ${ano}.`, 100, 660, {
@@ -101,7 +98,6 @@ function textInRow(doc, text, width, heigth, options = {}) {
   if (options.hasOwnProperty('bold')) doc.font('Times-Bold')
   doc.y = heigth
   doc.x = width
-  doc.fillColor('black')
   doc.text(text, {
     paragraphGap: 5,
     indent: 5,
