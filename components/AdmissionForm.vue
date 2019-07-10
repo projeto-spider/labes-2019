@@ -35,22 +35,22 @@
                 ></b-input>
               </input-validation>
 
-              <input-validation
-                ref="regIpt"
-                input-label="Matrícula"
-                default-message="Campo opcional"
-                :invalid-message="['Deve ter 12 caracteres numéricos']"
-                valid-message="Ok"
-                :valid="validRegistration"
-              >
-                <b-input
-                  v-model="registration"
-                  type="text"
-                  @blur="onBlur('regIpt')"
-                ></b-input>
-              </input-validation>
-
               <div v-if="currentRouteName !== 'concludingAdmission'">
+                <input-validation
+                  ref="regIpt"
+                  input-label="Matrícula"
+                  default-message="Campo opcional"
+                  :invalid-message="['Deve ter 12 caracteres numéricos']"
+                  valid-message="Ok"
+                  :valid="validRegistration"
+                >
+                  <b-input
+                    v-model="registration"
+                    type="text"
+                    @blur="onBlur('regIpt')"
+                  ></b-input>
+                </input-validation>
+
                 <b-field
                   label="Curso"
                   :message="{
