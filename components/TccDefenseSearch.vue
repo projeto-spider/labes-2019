@@ -685,6 +685,8 @@ function hourFormatted(defenseHour) {
     .join('h')
     // '00h00'
     .slice(0, 5)
+    // '00h00min'
+    .concat('min')
 
   return hour
 }
