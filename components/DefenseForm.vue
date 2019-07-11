@@ -577,6 +577,7 @@ export default {
       return this.$services.students
         .fetchPage({
           name: `%${name}%`,
+          course: this.courseTag,
           noDefense: true
         })
         .then(res => {
