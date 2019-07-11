@@ -119,7 +119,7 @@ describe('/api/defenses', () => {
       evaluator2Name: 'Narciso Anasui',
       evaluator2Title: 'master',
       evaluator2Type: 'external',
-      grade: 5.0
+      grade: 'REG'
     }
 
     const defenses = await Promise.all([
@@ -413,7 +413,7 @@ describe('/api/defenses', () => {
 
     const update = {
       status: 'done',
-      grade: 5.0,
+      grade: 'REG',
       advisorIsTeacher: false,
       evaluator1IsTeacher: true,
       evaluator2IsTeacher: true
@@ -430,6 +430,7 @@ describe('/api/defenses', () => {
     expect(res.body).toBeDefined()
     expect(res.body.id).toBeDefined()
     expect(res.body.status).toEqual(update.status)
+    expect(res.body.status).toEqual(update.grade)
     expect(res.body.advisorIsTeacher).toBe(false)
     expect(res.body.coAdvisorIsTeacher).toBe(false) // default
     expect(res.body.evaluator1IsTeacher).toBe(true)
@@ -442,7 +443,7 @@ describe('/api/defenses', () => {
   test('PUT /defenses for invalid id', async done => {
     const { token } = await testUtils.user('admin')
 
-    const update = { status: 'done', grade: 5.0 }
+    const update = { status: 'done', grade: 'REG' }
 
     const res = await chai
       .request(server.listen())
@@ -772,7 +773,7 @@ describe('/api/defenses', () => {
 
       const defense = await Defense.forge(payload).save()
 
-      const update = { status: 'done', grade: 5.0 }
+      const update = { status: 'done', grade: 'EXC' }
 
       const res = await chai
         .request(server.listen())
@@ -816,7 +817,7 @@ describe('/api/defenses', () => {
         status: 'done',
         invalid1: 1,
         invalid2: 2,
-        grade: 5.0
+        grade: 'REG'
       }
 
       const res = await chai
@@ -885,7 +886,7 @@ describe('/api/defenses', () => {
       evaluator2Type: 'external',
 
       passed: true,
-      grade: 10.0
+      grade: 'EXC'
     }
 
     await Defense.forge(payload).save()
@@ -1267,7 +1268,7 @@ describe('/api/defenses', () => {
     {
       const update = {
         status: 'done',
-        grade: 5.0,
+        grade: 'BOM',
         local: 'FC-01'
       }
       const res = await chai

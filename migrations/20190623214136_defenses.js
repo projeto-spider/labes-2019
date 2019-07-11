@@ -51,7 +51,7 @@ exports.up = function(knex, Promise) {
         .defaultTo('internal')
     }
     table.boolean('passed').nullable()
-    table.float('grade').nullable()
+    table.enum('grade', ['EXC', 'BOM', 'REG', 'INS']).nullable()
   })
 }
 

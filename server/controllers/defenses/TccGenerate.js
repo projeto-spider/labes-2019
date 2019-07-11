@@ -120,9 +120,9 @@ module.exports = async function generateAllDocs(ctx) {
     return
   }
   const grade = defenseFind.get('grade')
-  if (grade >= 5) dados.conceito = 'regular'
-  if (grade >= 7) dados.conceito = 'bom'
-  if (grade >= 9) dados.conceito = 'excelente'
+  if (grade === 'REG') dados.conceito = 'regular'
+  if (grade === 'BOM') dados.conceito = 'bom'
+  if (grade === 'EXC') dados.conceito = 'excelente'
   const people = [
     {
       name: dados.orientador,
