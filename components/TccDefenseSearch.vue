@@ -530,6 +530,7 @@ export default {
           Object.assign(this.selectedDefense, res.data)
         }
 
+        this.editDefense = false
         this.preEditDefense = { ...res.data }
       })
     },

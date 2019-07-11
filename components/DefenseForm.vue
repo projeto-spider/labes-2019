@@ -4,13 +4,40 @@
       v-if="showGradeInput && value.status !== 'pending'"
       label="Nota (necessária para poder finalizar)"
     >
-      <b-input
-        v-model="model.grade"
-        :min="0"
-        :max="10"
-        :disabled="forceDisable || currentUser.role !== 'admin'"
-        @blur="onGradeBlur"
-      ></b-input>
+      <div class="block">
+        <b-radio
+          v-model="model.grade"
+          native-value="INS"
+          :disabled="forceDisable || currentUser.role !== 'admin'"
+          @blur="onGradeBlur"
+        >
+          INS
+        </b-radio>
+        <b-radio
+          v-model="model.grade"
+          native-value="REG"
+          :disabled="forceDisable || currentUser.role !== 'admin'"
+          @blur="onGradeBlur"
+        >
+          REG
+        </b-radio>
+        <b-radio
+          v-model="model.grade"
+          native-value="BOM"
+          :disabled="forceDisable || currentUser.role !== 'admin'"
+          @blur="onGradeBlur"
+        >
+          BOM
+        </b-radio>
+        <b-radio
+          v-model="model.grade"
+          native-value="EXC"
+          :disabled="forceDisable || currentUser.role !== 'admin'"
+          @blur="onGradeBlur"
+        >
+          EXC
+        </b-radio>
+      </div>
     </b-field>
 
     <b-field label="Curso (para alterar, use a seleção no topo esquerdo)">
