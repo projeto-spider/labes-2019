@@ -122,28 +122,32 @@
               </div>
             </div>
 
-            <div v-if="!readOnly" class="card-buttons">
+            <div class="card-buttons">
               <div class="buttons">
                 <b-button
+                  v-if="!readOnly"
                   class="button is-danger bg-transition"
                   :disabled="status === 'done'"
                   @click="onClickDeleteDefense"
                 >
                   <b-icon icon="trash"></b-icon>
                 </b-button>
-                <b-button @click="toggleEditDefense">
+                <b-button
+                  v-if="status === 'pending' || !readOnly"
+                  @click="toggleEditDefense"
+                >
                   {{ editDefense ? 'Cancelar Edição' : 'Editar' }}
                 </b-button>
 
                 <b-button
-                  v-if="status === 'pending'"
+                  v-if="status === 'pending' && !readOnly"
                   type="is-success"
                   @click="move(selectedDefense, 'accepted')"
                 >
                   Confirmar
                 </b-button>
 
-                <template v-if="status === 'accepted'">
+                <template v-if="status === 'accepted' && !readOnly">
                   <b-button
                     class="button is-normal is-primary is-modal"
                     @click="toggleDisclosureModal"
@@ -167,7 +171,7 @@
                 </template>
 
                 <b-button
-                  v-if="status === 'done'"
+                  v-if="status === 'done' && !readOnly"
                   type="is-warning"
                   @click="move(selectedDefense, 'accepted')"
                 >
@@ -523,6 +527,7 @@ export default {
 
         if (original) {
           Object.assign(original, res.data)
+          Object.assign(this.selectedDefense, res.data)
         }
 
         this.preEditDefense = { ...res.data }
