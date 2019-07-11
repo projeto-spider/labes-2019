@@ -49,7 +49,7 @@
             class="button is-primary"
             native-type="button"
             :disabled="forceDisable || model.students.length > 1"
-            @click="pushStudent()"
+            @click="pushStudent"
           >
             Adicionar
           </b-button>
@@ -389,7 +389,7 @@ export default {
 
     original: {
       type: Object,
-      required: true
+      default: null
     },
 
     forceDisable: {

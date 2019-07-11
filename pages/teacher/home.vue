@@ -5,7 +5,7 @@
     </div>
     <div v-else class="container">
       <div class="box has-text-centered">
-        <p class="title is-warning">Por favor Selecione um curso.</p>
+        <p class="title is-warning">Por favor, selecione um curso.</p>
       </div>
     </div>
   </section>
