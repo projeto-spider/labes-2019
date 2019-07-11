@@ -3,7 +3,7 @@
     <div class="dcell">
       <div class="is-6 has-text-centered">
         <h1 class="title">Página não encontrada!</h1>
-        <nuxt-link to="/">
+        <nuxt-link :to="isAdmin ? '/' : '/teacher/home'">
           <h2>Volte à página inicial</h2>
         </nuxt-link>
       </div>
@@ -12,9 +12,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Error',
-  layout: 'empty'
+  layout: 'empty',
+  computed: {
+    ...mapGetters({ currentUser: 'auth/currentUser' }),
+    isAdmin() {
+      return this.currentUser.role === 'admin'
+    }
+  }
 }
 </script>
 
