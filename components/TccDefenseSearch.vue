@@ -706,7 +706,7 @@ function hourFormatted(defenseHour) {
 }
 
 .scrollable-modal {
-  overflow-y: scroll;
+  overflow-y: hidden;
   height: 500px;
 }
 
