@@ -430,7 +430,7 @@ describe('/api/defenses', () => {
     expect(res.body).toBeDefined()
     expect(res.body.id).toBeDefined()
     expect(res.body.status).toEqual(update.status)
-    expect(res.body.status).toEqual(update.grade)
+    expect(res.body.grade).toEqual(update.grade)
     expect(res.body.advisorIsTeacher).toBe(false)
     expect(res.body.coAdvisorIsTeacher).toBe(false) // default
     expect(res.body.evaluator1IsTeacher).toBe(true)
