@@ -303,7 +303,7 @@
       </b-field>
     </b-field>
 
-    <div v-if="!forceDisable" class="control">
+    <div v-if="!forceDisable && showSendButton" class="control">
       <button
         class="button is-primary is-large"
         type="submit"
@@ -397,6 +397,11 @@ export default {
       default: false
     },
 
+    showSendButton: {
+      type: Boolean,
+      default: true
+    },
+
     showGradeInput: {
       type: Boolean,
       default: true
@@ -464,7 +469,9 @@ export default {
     model: {
       deep: true,
       handler(value) {
-        this.$emit('input', this.preparePayload(value))
+        pDebounce(() => {
+          this.$emit('input', this.preparePayload(value))
+        }, 500)
       }
     }
   },
