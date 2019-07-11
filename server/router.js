@@ -99,7 +99,7 @@ api.get('/defenses/:id', isAdmin, bodyJson, defenses.Show)
 api.get('/defenses/:id/pdf/', isAdmin, defenses.TccGenerate)
 api.get('/defenses/:id/pdf/:files', isAdmin, defenses.TccGenerate)
 api.post('/defenses/', isTeacher, bodyJson, defenses.Create)
-api.put('/defenses/:id', isAdmin, bodyJson, defenses.Update)
+api.put('/defenses/:id', isAdminOrTeacher, bodyJson, defenses.Update)
 api.del('/defenses/:id', isAdmin, defenses.Delete)
 
 // Auth routes

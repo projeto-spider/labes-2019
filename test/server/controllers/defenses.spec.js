@@ -1234,4 +1234,72 @@ describe('/api/defenses', () => {
 
     done()
   })
+
+  test('PUT /defenses teahcer update only pending', async done => {
+    const { token, user } = await testUtils.user('teacher')
+    const userId = user.get('id')
+
+    const payload = {
+      userId,
+      course: 'cbcc',
+      registrationNumbers: '201704940001, 201304940002',
+      students: 'FELIPE SOUZA FERREIRA, LAURA CARDOSO CASTRO',
+      local: 'Auditório do ICEN',
+      title: 'Fundamentos da Comunicação Analógica',
+      keywords: 'Fundamental, comunicacional, analógico',
+      summary: 'Sumário fundamentacional',
+
+      advisorName: 'Jonathan Joestar',
+      advisorTitle: 'doctor',
+      advisorType: 'internal',
+
+      evaluator1Name: 'Robert E. O. Speedwagon',
+      evaluator1Title: 'doctor',
+      evaluator1Type: 'internal',
+
+      evaluator2Name: 'Narciso Anasui',
+      evaluator2Title: 'master',
+      evaluator2Type: 'external'
+    }
+
+    const defense = await Defense.forge(payload).save()
+    const defenseId = defense.get('id')
+    {
+      const update = {
+        status: 'done',
+        grade: 5.0,
+        local: 'FC-01'
+      }
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/defenses/${defenseId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+
+      expect(res.status).toEqual(200)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.local).toEqual(update.local)
+      expect(res.body.status).toEqual('pending')
+    }
+    {
+      await Defense.forge({ id: defenseId }).save({ status: 'accepted' })
+
+      const update = {
+        local: 'FC-01'
+      }
+      const res = await chai
+        .request(server.listen())
+        .put(`/api/defenses/${defenseId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(update)
+
+      expect(res.status).toEqual(403)
+      expect(res.type).toEqual('application/json')
+      expect(res.body).toBeDefined()
+      expect(res.body.code).toEqual(errors.FORBIDDEN)
+    }
+
+    done()
+  })
 })

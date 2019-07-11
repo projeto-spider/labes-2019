@@ -79,11 +79,27 @@ module.exports = async function updateDefense(ctx) {
     return
   }
 
-  const defense = await Defense.where({ id }).fetch()
+  const { user } = ctx.state.user
+
+  const isTeacher = user.role === 'teacher'
+
+  const defense = await (!isTeacher
+    ? Defense.where({ id }).fetch()
+    : Defense.where({ id, userId: user.id }).fetch())
+
   if (defense === null) {
     ctx.status = 404
     ctx.body = { code: errors.NOT_FOUND }
     return
+  }
+
+  if (isTeacher) {
+    if (defense.get('status') !== 'pending') {
+      ctx.status = 403
+      ctx.body = { code: errors.FORBIDDEN }
+      return
+    }
+    ;['status', 'grade', 'passed'].map(field => delete payload[field])
   }
 
   const { students, invalidRegistrationNumbers } = payload.registrationNumbers
