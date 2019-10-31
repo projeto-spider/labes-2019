@@ -146,13 +146,14 @@ exports.batchUpdateStudents = function batchUpdateStudents(data) {
     ({ registrationNumber }) => registrationNumber
   )
   return knex.transaction(async trx => {
-    const StudentsCollection = await Student.fetchAll({
+    const studentsCollection = await Student.fetchAll({
       transacting: trx
     })
-    const existingStudents = StudentsCollection.toJSON().filter(
-      ({ registrationNumber }) =>
+    const existingStudents = studentsCollection
+      .toJSON()
+      .filter(({ registrationNumber }) =>
         registrationNumbers.includes(registrationNumber)
-    )
+      )
     const existingRegistrationNumbers = new Set(
       existingStudents.map(({ registrationNumber }) => registrationNumber)
     )
