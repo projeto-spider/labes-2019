@@ -141,90 +141,76 @@ exports.digestSigaaData = function digestSigaaData(data) {
  *     const digested = digestSigaaData(data)
  *     await batchUpdateStudents(digested)
  */
-exports.batchUpdateStudents = function batchUpdateStudents(fullData) {
-  const sep = 100
-  return Promise.all(
-    range(0, fullData.length, sep).map(start => {
-      const data = fullData.slice(start, start + sep)
+exports.batchUpdateStudents = function batchUpdateStudents(data) {
+  const registrationNumbers = data.map(
+    ({ registrationNumber }) => registrationNumber
+  )
+  return knex.transaction(async trx => {
+    const StudentsCollection = await Student.fetchAll({
+      transacting: trx
+    })
+    const existingStudents = StudentsCollection.toJSON().filter(
+      ({ registrationNumber }) =>
+        registrationNumbers.includes(registrationNumber)
+    )
+    const existingRegistrationNumbers = new Set(
+      existingStudents.map(({ registrationNumber }) => registrationNumber)
+    )
+    const result = await Promise.all(
+      data.map(student => {
+        // New student
+        if (!existingRegistrationNumbers.has(student.registrationNumber)) {
+          return new Student(student).save(null, { transacting: trx })
+        }
 
-      const registrationNumbers = data.map(
-        ({ registrationNumber }) => registrationNumber
-      )
-      return knex.transaction(async trx => {
-        const existingStudentsCollection = await Student.query(
-          'where',
-          'registrationNumber',
-          'IN',
-          registrationNumbers
-        ).fetchAll({ transacting: trx })
-
-        const existingStudents = existingStudentsCollection.toJSON()
-
-        const existingRegistrationNumbers = new Set(
-          existingStudents.map(({ registrationNumber }) => registrationNumber)
+        // Old student
+        const model = existingStudents.find(
+          ({ registrationNumber }) =>
+            registrationNumber === student.registrationNumber
         )
+        const { id } = model
+        const changedMailingList =
+          student.mailingListToAdd !== model.mailingList
+        const mailingListToAdd = changedMailingList
+          ? student.mailingListToAdd
+          : 'none'
+        const mailingListToRemove = changedMailingList
+          ? model.mailingList
+          : model.mailingListToRemove
 
-        const result = await Promise.all(
-          data.map(student => {
-            // New student
-            if (!existingRegistrationNumbers.has(student.registrationNumber)) {
-              return new Student(student).save(null, { transacting: trx })
-            }
+        // Client wants to force people that missed collation
+        // to isGraduating. Don't give much thought here.
+        if (model.missingCollation && student.isConcluding) {
+          student.isConcluding = false
+          student.isGraduating = true
+        }
 
-            // Old student
-            const model = existingStudents.find(
-              ({ registrationNumber }) =>
-                registrationNumber === student.registrationNumber
-            )
-            const { id } = model
-            const changedMailingList =
-              student.mailingListToAdd !== model.mailingList
-            const mailingListToAdd = changedMailingList
-              ? student.mailingListToAdd
-              : 'none'
-            const mailingListToRemove = changedMailingList
-              ? model.mailingList
-              : model.mailingListToRemove
+        const payload = { ...student, mailingListToAdd, mailingListToRemove }
+        return Student.forge({ id }).save(payload, {
+          patch: true,
+          transacting: trx
+        })
+      })
+    )
 
-            // Client wants to force people that missed collation
-            // to isGraduating. Don't give much thought here.
-            if (model.missingCollation && student.isConcluding) {
-              student.isConcluding = false
-              student.isGraduating = true
-            }
-
-            const payload = {
-              ...student,
-              mailingListToAdd,
-              mailingListToRemove
-            }
-            return Student.forge({ id }).save(payload, {
-              patch: true,
+    await Promise.all(
+      result
+        .filter(student => student.get('isGraduating'))
+        .map(student =>
+          Pendency.where('studentId', student.get('id'))
+            .destroy({
               transacting: trx
             })
-          })
+            .catch(err => {
+              if (err.message !== 'No Rows Deleted') {
+                throw err
+              }
+            })
         )
+    )
 
-        await Promise.all(
-          result
-            .filter(student => student.get('isGraduating'))
-            .map(student =>
-              Pendency.where('studentId', student.get('id'))
-                .destroy({
-                  transacting: trx
-                })
-                .catch(err => {
-                  if (err.message !== 'No Rows Deleted') {
-                    throw err
-                  }
-                })
-            )
-        )
-
-        return result
-      })
-    })
-  )
+    return result
+  })
 }
 /**
  * Injects the pagination headers from Bookshelf to a Koa context
@@ -378,23 +364,4 @@ exports.translate = function translate(info) {
   }
   const result = translations[info]
   return result === undefined ? info : result
-}
-
-// https://stackoverflow.com/questions/8273047/javascript-function-similar-to-python-range
-function range(start, stop, step) {
-  if (typeof stop === 'undefined') {
-    stop = start
-    start = 0
-  }
-  if (typeof step === 'undefined') {
-    step = 1
-  }
-  if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
-    return []
-  }
-  const result = []
-  for (let i = start; step > 0 ? i < stop : i > stop; i += step) {
-    result.push(i)
-  }
-  return result
 }
