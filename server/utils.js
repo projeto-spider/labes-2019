@@ -20,7 +20,7 @@ const Pendency = require('./models/Pendency')
  *     parseCsv(csv) // [ { a: 1, b: 2, c: 3 } ]
  */
 exports.parseCsv = function parseCsv(str) {
-  const lines = str.replace('\r\n', '\n').split('\n')
+  const lines = str.split(/\n|\r\n/)
 
   if (!lines[lines.length - 1]) {
     lines.splice(-1, 1)
@@ -141,79 +141,90 @@ exports.digestSigaaData = function digestSigaaData(data) {
  *     const digested = digestSigaaData(data)
  *     await batchUpdateStudents(digested)
  */
-exports.batchUpdateStudents = function batchUpdateStudents(data) {
-  const registrationNumbers = data.map(
-    ({ registrationNumber }) => registrationNumber
-  )
-  return knex.transaction(async trx => {
-    const existingStudentsCollection = await Student.query(
-      'where',
-      'registrationNumber',
-      'IN',
-      registrationNumbers
-    ).fetchAll({ transacting: trx })
+exports.batchUpdateStudents = function batchUpdateStudents(fullData) {
+  const sep = 100
+  return Promise.all(
+    range(0, fullData.length, sep).map(start => {
+      const data = fullData.slice(start, start + sep)
 
-    const existingStudents = existingStudentsCollection.toJSON()
+      const registrationNumbers = data.map(
+        ({ registrationNumber }) => registrationNumber
+      )
+      return knex.transaction(async trx => {
+        const existingStudentsCollection = await Student.query(
+          'where',
+          'registrationNumber',
+          'IN',
+          registrationNumbers
+        ).fetchAll({ transacting: trx })
 
-    const existingRegistrationNumbers = new Set(
-      existingStudents.map(({ registrationNumber }) => registrationNumber)
-    )
+        const existingStudents = existingStudentsCollection.toJSON()
 
-    const result = await Promise.all(
-      data.map(student => {
-        // New student
-        if (!existingRegistrationNumbers.has(student.registrationNumber)) {
-          return new Student(student).save(null, { transacting: trx })
-        }
-
-        // Old student
-        const model = existingStudents.find(
-          ({ registrationNumber }) =>
-            registrationNumber === student.registrationNumber
+        const existingRegistrationNumbers = new Set(
+          existingStudents.map(({ registrationNumber }) => registrationNumber)
         )
-        const { id } = model
-        const changedMailingList =
-          student.mailingListToAdd !== model.mailingList
-        const mailingListToAdd = changedMailingList
-          ? student.mailingListToAdd
-          : 'none'
-        const mailingListToRemove = changedMailingList
-          ? model.mailingList
-          : model.mailingListToRemove
 
-        // Client wants to force people that missed collation
-        // to isGraduating. Don't give much thought here.
-        if (model.missingCollation && student.isConcluding) {
-          student.isConcluding = false
-          student.isGraduating = true
-        }
+        const result = await Promise.all(
+          data.map(student => {
+            // New student
+            if (!existingRegistrationNumbers.has(student.registrationNumber)) {
+              return new Student(student).save(null, { transacting: trx })
+            }
 
-        const payload = { ...student, mailingListToAdd, mailingListToRemove }
-        return Student.forge({ id }).save(payload, {
-          patch: true,
-          transacting: trx
-        })
-      })
-    )
+            // Old student
+            const model = existingStudents.find(
+              ({ registrationNumber }) =>
+                registrationNumber === student.registrationNumber
+            )
+            const { id } = model
+            const changedMailingList =
+              student.mailingListToAdd !== model.mailingList
+            const mailingListToAdd = changedMailingList
+              ? student.mailingListToAdd
+              : 'none'
+            const mailingListToRemove = changedMailingList
+              ? model.mailingList
+              : model.mailingListToRemove
 
-    await Promise.all(
-      result
-        .filter(student => student.get('isGraduating'))
-        .map(student =>
-          Pendency.where('studentId', student.get('id'))
-            .destroy({
+            // Client wants to force people that missed collation
+            // to isGraduating. Don't give much thought here.
+            if (model.missingCollation && student.isConcluding) {
+              student.isConcluding = false
+              student.isGraduating = true
+            }
+
+            const payload = {
+              ...student,
+              mailingListToAdd,
+              mailingListToRemove
+            }
+            return Student.forge({ id }).save(payload, {
+              patch: true,
               transacting: trx
             })
-            .catch(err => {
-              if (err.message !== 'No Rows Deleted') {
-                throw err
-              }
-            })
+          })
         )
-    )
 
-    return result
-  })
+        await Promise.all(
+          result
+            .filter(student => student.get('isGraduating'))
+            .map(student =>
+              Pendency.where('studentId', student.get('id'))
+                .destroy({
+                  transacting: trx
+                })
+                .catch(err => {
+                  if (err.message !== 'No Rows Deleted') {
+                    throw err
+                  }
+                })
+            )
+        )
+
+        return result
+      })
+    })
+  )
 }
 /**
  * Injects the pagination headers from Bookshelf to a Koa context
@@ -367,4 +378,23 @@ exports.translate = function translate(info) {
   }
   const result = translations[info]
   return result === undefined ? info : result
+}
+
+// https://stackoverflow.com/questions/8273047/javascript-function-similar-to-python-range
+function range(start, stop, step) {
+  if (typeof stop === 'undefined') {
+    stop = start
+    start = 0
+  }
+  if (typeof step === 'undefined') {
+    step = 1
+  }
+  if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
+    return []
+  }
+  const result = []
+  for (let i = start; step > 0 ? i < stop : i > stop; i += step) {
+    result.push(i)
+  }
+  return result
 }
