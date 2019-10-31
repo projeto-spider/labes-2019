@@ -20,6 +20,7 @@ const Pendency = require('./models/Pendency')
  *     parseCsv(csv) // [ { a: 1, b: 2, c: 3 } ]
  */
 exports.parseCsv = function parseCsv(str) {
+  const columnSplitter = /,|;/
   const lines = str.split(/\n|\r\n/)
 
   if (!lines[lines.length - 1]) {
@@ -28,9 +29,9 @@ exports.parseCsv = function parseCsv(str) {
 
   const [head, ...items] = lines
 
-  const headerItens = head.split(',')
+  const headerItens = head.split(columnSplitter)
   return items.map(item =>
-    item.split(',').reduce((acc, value, i) => {
+    item.split(columnSplitter).reduce((acc, value, i) => {
       const prop = headerItens[i]
       acc[prop] = value
       return acc

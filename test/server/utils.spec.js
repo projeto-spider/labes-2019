@@ -420,6 +420,23 @@ describe('utils', () => {
     done()
   }, 100000)
 
+  test('batchUpdateStudents with a real CSV', async done => {
+    const csvPath = path.join(
+      __dirname,
+      './fixtures/sigaa/consulta_geral_discente.csv'
+    )
+    const csv = fs.readFileSync(csvPath, 'latin1')
+    const data = utils.parseCsv(csv)
+    const digested = utils.digestSigaaData(data)
+    await utils.batchUpdateStudents(digested)
+
+    const students = (await Student.fetchAll()).toJSON()
+
+    expect(students.length).toEqual(9)
+
+    done()
+  }, 100000)
+
   test('updateStudentFitness', async done => {
     const studentsPromise = await Promise.all(
       [
