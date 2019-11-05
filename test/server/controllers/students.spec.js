@@ -147,6 +147,28 @@ describe('/api/students', () => {
     done()
   })
 
+  test('POST /from-csv valid ISO-8859-1 file', async done => {
+    const { token } = await testUtils.user('admin')
+
+    const res = await chai
+      .request(server.listen())
+      .post('/api/students/from-csv')
+      .set('Authorization', `Bearer ${token}`)
+      .attach(
+        'csv',
+        sigaaCsvFixture('consulta_geral_discente.csv'),
+        'export.csv'
+      )
+      .type('form')
+
+    expect(res.status).toEqual(201)
+    expect(res.type).toEqual('application/json')
+    expect(res.body).toBeDefined()
+    expect(res.body.count).toEqual(9)
+
+    done()
+  })
+
   test('POST /from-csv missing csv field', async done => {
     const { token } = await testUtils.user('admin')
     const res = await chai

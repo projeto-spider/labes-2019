@@ -1,5 +1,6 @@
 const fs = require('fs')
 const { promisify } = require('util')
+const detectCharacterEncoding = require('detect-character-encoding')
 const utils = require('../../utils')
 const errors = require('../../../shared/errors')
 
@@ -31,7 +32,7 @@ module.exports = async function studentsFromCsv(ctx) {
     return
   }
 
-  const csv = await readFile(filePath, 'utf8')
+  const csv = await readFileWithEncode(filePath)
 
   if (!csv) {
     ctx.status = 400
@@ -88,7 +89,10 @@ const validHeader =
  */
 function validate(csv) {
   try {
-    const lines = csv.replace('\r\n', '\n').split('\n')
+    const lines = csv
+      .replace(/;/g, ',')
+      .replace('\r\n', '\n')
+      .split('\n')
     if (!lines[lines.length - 1]) {
       lines.splice(-1, 1)
     }
@@ -97,12 +101,12 @@ function validate(csv) {
       return errors.IMPORT_CSV_INVALID_LENGTH
     }
 
-    if (lines[0] !== validHeader) {
+    if (!lines[0].startsWith(validHeader)) {
       return errors.IMPORT_CSV_INVALID_HEADER
     }
 
     const rightNumberOfColumns = lines.every(
-      line => line.split(',').length === 9
+      line => line.split(',').length >= 9
     )
 
     if (!rightNumberOfColumns) {
@@ -113,4 +117,20 @@ function validate(csv) {
   } catch (err) {
     return errors.IMPORT_CSV_INVALID_FILE
   }
+}
+
+async function readFileWithEncode(path) {
+  const buffer = await readFile(path)
+  let encoding = 'utf8'
+
+  try {
+    const detected = detectCharacterEncoding(buffer)
+    if (detected.encoding === 'ISO-8859-1') {
+      encoding = 'latin1'
+    }
+  } catch (err) {
+    // TODO
+  }
+
+  return buffer.toString(encoding)
 }

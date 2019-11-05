@@ -63,7 +63,6 @@ export default {
         reader.readAsText(this.studentsCsv)
         reader.onload = e => {
           csv = reader.result
-
           csv = csv.replace('\r\n', '\n')
           const lines = csv.split('\n')
           const col = lines[1].split(',')
@@ -90,55 +89,10 @@ export default {
         this.hasErrors = true
         return
       }
-      if (this.studentsCsv.name.split('.').pop() === 'csv') {
-        const reader = new FileReader()
-        reader.readAsText(this.studentsCsv)
-        reader.onload = e => {
-          const validation = this.validateCsv(reader.result)
-          if (typeof validation === 'string') {
-            this.openErrorNotification(validation)
-            this.studentsCsv = new File([''], 'Nenhum arquivo selecionado')
-            this.hasErrors = true
-          } else this.hasErrors = false
-        }
-      } else {
+      if (this.studentsCsv.name.split('.').pop() !== 'csv') {
         this.openErrorNotification(process.env.errors.IMPORT_CSV_INVALID_FILE)
         this.studentsCsv = new File([''], 'Nenhum arquivo selecionado')
         this.hasErrors = true
-      }
-    },
-    validateCsv(csv) {
-      const validHeader =
-        'Matrícula,AnoIngresso,Nome,CPF,DataNascimento,NomeMae,Municipio,Curso,Status'
-      const { errors } = process.env
-      csv = csv.replace('\r\n', '\n')
-
-      try {
-        const lines = csv.split('\n')
-        if (!lines[lines.length - 1]) {
-          lines.splice(-1, 1)
-        }
-
-        if (lines.length < 2) {
-          return errors.IMPORT_CSV_INVALID_LENGTH
-        }
-
-        if (lines[0] !== validHeader) {
-          return errors.IMPORT_CSV_INVALID_HEADER
-        }
-
-        const rightNumberOfColumns = lines.every(line => {
-          const arr = line.split(',')
-          return arr.length === 9
-        })
-
-        if (!rightNumberOfColumns) {
-          return errors.IMPORT_CSV_INVALID_COL_NUMBER
-        }
-
-        return true
-      } catch (err) {
-        return errors.IMPORT_CSV_INVALID_FILE
       }
     },
     uploadCsv() {
