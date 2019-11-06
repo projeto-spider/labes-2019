@@ -21,11 +21,7 @@ const Pendency = require('./models/Pendency')
  */
 exports.parseCsv = function parseCsv(str) {
   const columnSplitter = /,|;/
-  const lines = str.split(/\n|\r\n/)
-
-  if (!lines[lines.length - 1]) {
-    lines.splice(-1, 1)
-  }
+  const lines = str.split(/\n|\r\n/).filter(line => line)
 
   const [head, ...items] = lines
 
