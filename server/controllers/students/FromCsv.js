@@ -93,9 +93,7 @@ function validate(csv) {
       .replace(/;/g, ',')
       .replace('\r\n', '\n')
       .split('\n')
-    if (!lines[lines.length - 1]) {
-      lines.splice(-1, 1)
-    }
+      .filter(line => line)
 
     if (lines.length < 2) {
       return errors.IMPORT_CSV_INVALID_LENGTH
